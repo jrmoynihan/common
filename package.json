@@ -1,12 +1,12 @@
 {
 	"name": "@jrmoynihan/common",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
 		"package": "svelte-kit package",
-		"publish": "pnpm version patch --force && pnpm publish",
+		"publish-patch": "pnpm version patch --force && pnpm publish",
 		"test": "playwright test",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
