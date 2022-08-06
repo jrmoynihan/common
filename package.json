@@ -4,8 +4,9 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"package": "svelte-kit package",
 		"preview": "vite preview",
+		"package": "svelte-kit package",
+		"publish": "pnpm version patch --force && pnpm publish",
 		"test": "playwright test",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
