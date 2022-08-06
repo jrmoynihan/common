@@ -6,7 +6,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"package": "svelte-kit package",
-		"publish-patch": "pnpm version patch --force && pnpm publish",
+		"publish-patch": "svelte-kit package && cd package && pnpm version patch --force && pnpm publish",
 		"test": "playwright test",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
