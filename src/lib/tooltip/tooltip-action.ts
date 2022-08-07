@@ -78,7 +78,8 @@ export const tooltip = (
 					custom_component
 				},
 				intro: true,
-				target: element
+				// target: element
+				target: document.body
 			});
 
 			positionTooltip(
