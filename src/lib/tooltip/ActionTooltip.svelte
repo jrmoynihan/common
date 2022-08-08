@@ -12,7 +12,7 @@
 	export let start = 0;
 	export let opacity = 0;
 	export let duration = 350;
-	export let delay = 350;
+	export let delay = 100;
 	export let offsetHeight = 0;
 	export let clientHeight = 0;
 	export let clientWidth = 0;
@@ -59,7 +59,6 @@
 
 <style lang="scss">
 	.tooltip {
-		--default-arrow-size: 0.5rem;
 		box-sizing: border-box;
 		border: var(--tooltip-border, 1px solid #ddd);
 		box-shadow: var(--tooltip-shadow, 1px 1px 2px #ddd);
@@ -68,16 +67,16 @@
 		padding: var(--tooltip-padding, 0.5rem);
 		font-size: var(--tooltip-font-size, 0.5rem);
 		font-weight: var(--tooltip-font-weight, normal);
+		font-family: var(--tooltip-font-family, inherit);
 		position: fixed;
 		pointer-events: none;
-		transform: scale3d(var(--tooltip-scale-3d, 1, 1, 1));
+		transform: var(--tooltip-transform);
 		display: var(--tooltip-display, grid);
 		gap: var(--tooltip-gap, 0.25rem);
 		opacity: var(--tooltip-opacity, 1);
 		color: var(--tooltip-color, var(--text, inherit));
 	}
 	.arrow {
-		--tooltip-background-color: white;
 		position: absolute;
 		overflow: hidden;
 		&::after {
@@ -89,36 +88,39 @@
 		&.left,
 		&.right {
 			width: calc(
-				var(--tooltip-arrow-width, var(--default-arrow-size)) + var(--arrow-cushion, 4px)
+				var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) + var(--arrow-cushion, 4px)
 			);
-			height: calc(var(--tooltip-arrow-height, var(--default-arrow-size)) * 2);
-			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size)));
+			height: calc(var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) * 2);
+			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
 
 			&::after {
-				border-top: var(--tooltip-arrow-height, var(--default-arrow-size)) solid transparent;
-				border-bottom: var(--tooltip-arrow-height, var(--default-arrow-size)) solid transparent;
+				border-top: var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) solid transparent;
+				border-bottom: var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) solid
+					transparent;
 			}
 		}
 		&.bottom,
 		&.top {
-			width: calc(var(--tooltip-arrow-width, calc(var(--default-arrow-size) * 2)));
+			width: calc(var(--tooltip-arrow-width, calc(var(--default-arrow-size, 0.5rem) * 2)));
 			height: calc(
-				var(--tooltip-arrow-height, var(--default-arrow-size)) + var(--arrow-cushion, 4px)
+				var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + var(--arrow-cushion, 4px)
 			);
-			left: calc(50% - var(--tooltip-arrow-width, var(--default-arrow-size)));
+			left: calc(50% - var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)));
 
 			&::after {
-				border-left: var(--tooltip-arrow-height, var(--default-arrow-size)) solid transparent;
-				border-right: var(--tooltip-arrow-height, var(--default-arrow-size)) solid transparent;
+				border-left: var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) solid
+					transparent;
+				border-right: var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) solid
+					transparent;
 			}
 		}
 		&.bottom {
 			top: calc(
-				-1 * var(--tooltip-arrow-height, var(--default-arrow-size)) + -1 * var(--arrow-cushion, 4px)
+				-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 * var(--arrow-cushion, 4px)
 			); /* overlap with the tooltip box */
 
 			&::after {
-				border-bottom: var(--tooltip-arrow-width, var(--default-arrow-size)) solid
+				border-bottom: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
 					var(--tooltip-background-color, white);
 			}
 		}
@@ -126,7 +128,7 @@
 			top: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
 
 			&::after {
-				border-top: var(--tooltip-arrow-width, var(--default-arrow-size)) solid
+				border-top: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
 					var(--tooltip-background-color, white);
 			}
 		}
@@ -134,7 +136,7 @@
 			left: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
 
 			&::after {
-				border-left: var(--tooltip-arrow-width, var(--default-arrow-size)) solid
+				border-left: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
 					var(--tooltip-background-color, white);
 			}
 		}
@@ -142,7 +144,7 @@
 			left: calc(-1 * var(--tooltip-arrow-width, 0.75rem) + -1 * var(--arrow-cushion, 0px));
 
 			&::after {
-				border-right: var(--tooltip-arrow-width, var(--default-arrow-size)) solid
+				border-right: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
 					var(--tooltip-background-color, white);
 			}
 		}
