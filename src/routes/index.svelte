@@ -1,13 +1,10 @@
-<script lang="ts">
-	import { tooltip } from '$lib/tooltip/tooltip-action';
-</script>
-
-<h1 use:tooltip={{ position: 'left' }}>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<p>Click on a link to see examples</p>
 
 <style lang="scss">
-	h1 {
+	p {
 		margin: auto;
 		max-width: max-content;
+		font-weight: 400;
+		font-style: italic;
 	}
 </style>
