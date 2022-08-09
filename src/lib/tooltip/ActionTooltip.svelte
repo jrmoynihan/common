@@ -1,7 +1,7 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-	import type { SvelteComponent } from 'svelte/internal';
+	// import type { SvelteComponent } from 'svelte/internal';
 
 	import { scale } from 'svelte/transition';
 	export let title: string;
@@ -17,7 +17,7 @@
 	export let clientHeight = 0;
 	export let clientWidth = 0;
 	export let offsetWidth = 0;
-	export let custom_component: SvelteComponent | null = null;
+	export let custom_component: unknown | null = null;
 	export let show_arrow = true;
 </script>
 

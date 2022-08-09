@@ -1,5 +1,5 @@
+// import type { SvelteComponent, SvelteComponentTyped } from 'svelte';
 import Tooltip from './ActionTooltip.svelte';
-import type { SvelteComponent } from 'svelte';
 import { writable, get } from 'svelte/store';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
@@ -12,7 +12,7 @@ export interface TooltipParameters {
 	allow_dynamic_position?: boolean;
 	delay?: number;
 	duration?: number;
-	custom_component?: SvelteComponent;
+	custom_component?: unknown;
 }
 const default_parameters: TooltipParameters = {
 	position: 'top',
@@ -20,7 +20,7 @@ const default_parameters: TooltipParameters = {
 	horizontal_offset: 0,
 	delay: 0,
 	duration: 400,
-	custom_component: undefined,
+	custom_component: null,
 	allow_dynamic_position: true
 };
 
@@ -40,9 +40,9 @@ export const tooltip = (
 		horizontal_offset,
 		delay = 0,
 		duration = 400,
-		custom_component,
+		custom_component = null,
 		allow_dynamic_position = true
-	} = parameters;
+	}: TooltipParameters = parameters;
 
 	let original_position = get(position);
 
