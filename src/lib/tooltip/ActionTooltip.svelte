@@ -19,9 +19,17 @@
 	export let offsetWidth = 0;
 	export let custom_component: unknown | null = null;
 	export let show_arrow = true;
+	export let keep_visible = false;
+	export let css: [string, string][] = [];
+	let styles: string = '';
+
+	$: if (css.length > 0)
+		css?.forEach(([key, value]) => {
+			styles = styles.concat(`${key}: ${value};`);
+		});
 </script>
 
-{#if visible}
+{#if visible || keep_visible}
 	<div
 		class="tooltip"
 		bind:offsetHeight
@@ -29,12 +37,12 @@
 		bind:clientWidth
 		bind:offsetWidth
 		transition:scale={{ start, opacity, duration, delay }}
-		class:visible
+		class:visible={visible || keep_visible}
 		class:top={position === 'top'}
 		class:right={position === 'right'}
 		class:left={position === 'left'}
 		class:bottom={position === 'bottom'}
-		style={`left: ${x}px; top: ${y}px;`}
+		style={`left: ${x}px; top: ${y}px; ${styles}`}
 	>
 		{#if title}
 			{title}
@@ -72,9 +80,13 @@
 		pointer-events: none;
 		transform: var(--tooltip-transform);
 		display: var(--tooltip-display, grid);
+		place-items: var(--tooltip-place-items, center);
 		gap: var(--tooltip-gap, 0.25rem);
 		opacity: var(--tooltip-opacity, 1);
 		color: var(--tooltip-color, var(--text, inherit));
+		margin: var(--tooltip-margin, 0 1rem);
+		max-width: min(var(--tooltip-max-width, calc(100vw - 2rem)), calc(100vw - 2rem));
+		text-align: var(--tooltip-text-align, center);
 	}
 	.arrow {
 		position: absolute;
@@ -84,6 +96,7 @@
 			position: absolute;
 			inset: 0;
 			filter: drop-shadow(var(--tooltip-shadow, 0px 0px 2px #bbb));
+			border-color: var(--tooltip-background-color, inherit);
 		}
 		&.left,
 		&.right {

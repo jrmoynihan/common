@@ -9,64 +9,59 @@ export interface TooltipParameters {
 	horizontal_offset?: number;
 	vertical_offset?: number;
 	visible?: boolean;
+	keep_visible?: boolean;
 	allow_dynamic_position?: boolean;
 	delay?: number;
 	duration?: number;
+	css?: [string, string][];
 	custom_component?: unknown;
+	x?: number;
+	y?: number;
 }
 const default_parameters: TooltipParameters = {
 	position: 'top',
-	vertical_offset: 0,
-	horizontal_offset: 0,
 	delay: 0,
 	duration: 400,
+	keep_visible: false,
+	visible: false,
 	custom_component: null,
-	allow_dynamic_position: true
+	allow_dynamic_position: true,
+	css: []
 };
 
 export const tooltip = (
 	element: HTMLElement,
 	parameters: TooltipParameters = default_parameters
 ) => {
-	let title = writable<string>(parameters?.title);
-	let position = writable<TooltipDirections>(parameters?.position ?? 'top');
-	let visible = writable(parameters?.visible ?? true);
+	let tooltip_parameters = writable<TooltipParameters>({ ...default_parameters, ...parameters });
 	let title_attribute: string | null;
 	let tooltipComponent: Tooltip;
-	let x: number = 0;
-	let y: number = 0;
-	let {
-		vertical_offset,
-		horizontal_offset,
-		delay = 0,
-		duration = 400,
-		custom_component = null,
-		allow_dynamic_position = true
-	}: TooltipParameters = parameters;
 
-	let original_position = get(position);
+	// Find offsets if none were provided
+	tooltip_parameters.update((current_parameters) => {
+		let current_position = current_parameters.position ?? 'top';
+		if (current_parameters.horizontal_offset === undefined) {
+			current_parameters.horizontal_offset = getHorizontalOffset(current_position);
+		}
+		if (current_parameters.vertical_offset === undefined) {
+			current_parameters.vertical_offset = getVerticalOffset(current_position);
+		}
+		return current_parameters;
+	});
+	console.table(get(tooltip_parameters));
 
 	// TODO: add automatic tooltip positioning option: find the closest edge of the element from where the mouse event occurs
-
-	// Set defaults for offsets if they were not provided to the action
-	horizontal_offset = getHorizontalOffset(original_position, horizontal_offset);
-	vertical_offset = getVerticalOffset(original_position, vertical_offset);
 
 	// Add event listeners to the parent element
 	element.addEventListener('mouseenter', mouseEnter);
 	element.addEventListener('mouseleave', mouseLeave);
 	element.addEventListener('mousemove', mouseMove);
 
-	// Make the tooltip instance. It will exist in memory prior to being positioned and made visible in the DOM
+	// Make the tooltip instance.
 	tooltipComponent = new Tooltip({
 		props: {
-			title: get(title),
-			position: original_position,
-			x,
-			y,
-			duration,
-			delay,
-			custom_component
+			...get(tooltip_parameters),
+			keep_visible: false // NOTE: avoids showing the tooltip upon initialization even if you want it kept open upon mouseEnter
 		},
 		intro: true,
 		target: document.body
@@ -78,18 +73,15 @@ export const tooltip = (
 			// Remember the existing title attribute and set the title store to it can react to changes
 			storeTitle();
 
-			// Set store state for tooltip visibility
-			if (get(visible) === false) visible.set(parameters?.visible ?? false);
-
 			positionTooltip(
 				element,
 				tooltipComponent,
-				get(position),
-				allow_dynamic_position,
-				horizontal_offset,
-				vertical_offset
+				get(tooltip_parameters).position ?? 'top',
+				get(tooltip_parameters).allow_dynamic_position,
+				get(tooltip_parameters).horizontal_offset,
+				get(tooltip_parameters).vertical_offset
 			);
-			tooltipComponent.$set({ visible: get(visible) });
+			tooltipComponent.$set({ ...get(tooltip_parameters), visible: true });
 		}
 	}
 	function storeTitle() {
@@ -97,8 +89,11 @@ export const tooltip = (
 		title_attribute = element.getAttribute('title');
 
 		// Set the store to keep track of changing values for the tooltip's title
-		if (title_attribute) title.set(title_attribute);
-		else if (parameters?.title) title.set(parameters?.title);
+		if (get(tooltip_parameters).title === undefined) {
+			tooltip_parameters.update((current_params) => {
+				return { ...current_params, title: title_attribute ?? '' };
+			});
+		}
 
 		// Remove the `title` attribute, to prevent showing the default browser tooltip; set it back on `mouseleave`
 		element.removeAttribute('title');
@@ -109,10 +104,10 @@ export const tooltip = (
 			positionTooltip(
 				element,
 				tooltipComponent,
-				get(position),
-				allow_dynamic_position,
-				horizontal_offset,
-				vertical_offset
+				get(tooltip_parameters).position ?? 'top',
+				get(tooltip_parameters).allow_dynamic_position,
+				get(tooltip_parameters).horizontal_offset,
+				get(tooltip_parameters).vertical_offset
 			);
 		}
 	}
@@ -120,7 +115,7 @@ export const tooltip = (
 	async function mouseLeave(event: MouseEvent) {
 		// If the left-button isn't being pressed...
 		if (event.buttons !== 1 && tooltipComponent && element) {
-			await new Promise((r) => setTimeout(r, delay));
+			await new Promise((r) => setTimeout(r, get(tooltip_parameters).delay));
 			tooltipComponent.$set({ visible: false });
 			// Restore the `title` attribute
 			if (title_attribute) element.setAttribute('title', title_attribute);
@@ -130,51 +125,70 @@ export const tooltip = (
 	return {
 		update(new_parameters: TooltipParameters) {
 			if (tooltipComponent && new_parameters) {
-				if (new_parameters.title) title.set(new_parameters?.title);
-				if (new_parameters.visible) visible.set(new_parameters?.visible);
+				console.log(
+					get(tooltip_parameters).horizontal_offset,
+					get(tooltip_parameters).vertical_offset
+				);
+
+				// Temporarily store the old parameter values
+				let old_parameters = get(tooltip_parameters);
+
 				if (new_parameters.position) {
-					let old_position = get(position);
-					let pos = new_parameters.position;
-					position.set(pos);
-					// If the position swapped sides, invert the offsets
-					if (
-						(old_position === 'left' && pos === 'right') ||
-						(old_position === 'right' && pos === 'left')
-					) {
-						horizontal_offset = invertOffset(horizontal_offset);
-					}
-					if (
-						(old_position === 'top' && pos === 'bottom') ||
-						(old_position === 'bottom' && pos === 'top')
-					) {
-						vertical_offset = invertOffset(vertical_offset);
-					}
+					let { position: old_position } = old_parameters;
+					let { position: new_position } = new_parameters;
 
-					// If the position rotated, unset the horizontal offset
-					if (
-						((old_position === 'top' || old_position === 'bottom') &&
-							(pos === 'left' || pos === 'right')) ||
-						((old_position === 'left' || old_position === 'right') &&
-							(pos === 'top' || pos === 'bottom'))
-					) {
-						horizontal_offset = undefined;
-						vertical_offset = undefined;
-					}
+					// If the position swapped sides, invert the horizontal or vertical offsets, respectively
+					// if (
+					// 	(old_position === 'left' && new_position === 'right') ||
+					// 	(old_position === 'right' && new_position === 'left')
+					// ) {
+					// 	tooltip_parameters.update((current_parameters) => {
+					// 		return {
+					// 			...current_parameters,
+					// 			horizontal_offset: invertOffset(current_parameters.horizontal_offset)
+					// 		};
+					// 	});
+					// }
+					// if (
+					// 	(old_position === 'top' && new_position === 'bottom') ||
+					// 	(old_position === 'bottom' && new_position === 'top')
+					// ) {
+					// 	tooltip_parameters.update((current_parameters) => {
+					// 		return {
+					// 			...current_parameters,
+					// 			vertical_offset: invertOffset(current_parameters.vertical_offset)
+					// 		};
+					// 	});
+					// }
 
-					horizontal_offset = getHorizontalOffset(pos, horizontal_offset);
-					vertical_offset = getVerticalOffset(pos, vertical_offset);
+					tooltip_parameters.update((current_parameters) => {
+						return {
+							...current_parameters,
+							vertical_offset: getVerticalOffset(new_position),
+							horizontal_offset: getHorizontalOffset(new_position)
+						};
+					});
+
 					positionTooltip(
 						element,
 						tooltipComponent,
-						pos,
-						allow_dynamic_position,
-						horizontal_offset,
-						vertical_offset
+						new_position,
+						get(tooltip_parameters).allow_dynamic_position,
+						get(tooltip_parameters).horizontal_offset,
+						get(tooltip_parameters).vertical_offset
 					);
 				}
-				tooltipComponent.$set({
-					title: get(title)
+
+				// Update the parameters
+				tooltip_parameters.update((current_parameters) => {
+					return { ...current_parameters, ...new_parameters };
 				});
+				console.log(
+					get(tooltip_parameters).horizontal_offset,
+					get(tooltip_parameters).vertical_offset
+				);
+
+				tooltipComponent.$set({ ...new_parameters, visible: false, keep_visible: false });
 			}
 		},
 		destroy() {
@@ -191,21 +205,21 @@ function invertOffset(offset: number | undefined) {
 	}
 	return 0;
 }
-function getHorizontalOffset(position: string, horizontal_offset?: number) {
+function getHorizontalOffset(position: string) {
 	if (position === 'right') {
-		return horizontal_offset ?? 10;
+		return 10;
 	} else if (position === 'left') {
-		return horizontal_offset ?? -10;
+		return -10;
 	} else {
 		return 0;
 	}
 }
 
-function getVerticalOffset(position: string, vertical_offset?: number) {
+function getVerticalOffset(position: string) {
 	if (position === 'bottom') {
-		return vertical_offset ?? 10;
+		return 10;
 	} else if (position === 'top') {
-		return vertical_offset ?? -10;
+		return -10;
 	} else {
 		return 0;
 	}
@@ -217,9 +231,12 @@ function positionX(
 	tip_width: number,
 	width: number,
 	horizontal_middle: number,
-	horizontal_offset?: number
+	horizontal_offset?: number,
+	reposition_onscreen?: boolean
 ): number {
 	let x = 0;
+	let margin = 16; // The margin between the tooltip and the edge of the screen
+	let screen_width = window.innerWidth;
 	if (position === 'left') {
 		x = left - tip_width + (horizontal_offset ?? 0);
 	} else if (position === 'right') {
@@ -228,6 +245,10 @@ function positionX(
 		x = left + horizontal_middle - tip_width / 2 + (horizontal_offset ?? 0);
 	} else if (position === 'bottom') {
 		x = left + horizontal_middle - tip_width / 2 + (horizontal_offset ?? 0);
+	}
+	if (reposition_onscreen) {
+		if (x < 0) x = 0 + margin;
+		if (x + tip_width > screen_width) x = screen_width - tip_width - margin;
 	}
 	return x;
 }
@@ -238,9 +259,12 @@ function positionY(
 	tip_height: number,
 	bottom: number,
 	vertical_middle: number,
-	vertical_offset?: number
+	vertical_offset?: number,
+	reposition_onscreen?: boolean
 ): number {
 	let y = 0;
+	let margin = 16; // The margin between the tooltip and the edge of the screen
+	let screen_height = window.innerHeight;
 	if (position === 'left') {
 		y = top + vertical_middle - tip_height / 2 + (vertical_offset ?? 0);
 	} else if (position === 'right') {
@@ -249,6 +273,10 @@ function positionY(
 		y = top - tip_height + (vertical_offset ?? 0);
 	} else if (position === 'bottom') {
 		y = bottom + (vertical_offset ?? 0);
+	}
+	if (reposition_onscreen) {
+		if (y < 0) y = 0 + margin;
+		if (y + tip_height > screen_height) y = screen_height - tip_height - margin;
 	}
 	return y;
 }
@@ -295,13 +323,21 @@ function positionTooltip(
 	x = positionX(position, left, tip_offset_width, width, horizontal_middle, horizontal_offset);
 	y = positionY(position, top, tip_offset_height, bottom, vertical_middle, vertical_offset);
 
-	// Adjust the tooltip if it would be positioned outside the viewport
+	// ** Adjust the tooltip if it would be positioned outside the viewport **
 	// Outside left-edge:
 	if (x < 0) {
 		if (allow_dynamic_position) {
-			position = 'right';
+			if (position === 'left') position = 'right'; // Try flipping to opposing edge if there's room
 			horizontal_offset = invertOffset(horizontal_offset);
-			x = positionX(position, left, tip_offset_width, width, horizontal_middle, horizontal_offset);
+			x = positionX(
+				position,
+				left,
+				tip_offset_width,
+				width,
+				horizontal_middle,
+				horizontal_offset,
+				true
+			);
 		} else {
 			x = left;
 		}
@@ -309,9 +345,17 @@ function positionTooltip(
 	// Outside right-edge:
 	else if (x + tip_width > window.innerWidth) {
 		if (allow_dynamic_position) {
-			position = 'left';
+			if (position === 'right') position = 'left';
 			horizontal_offset = invertOffset(horizontal_offset);
-			x = positionX(position, left, tip_offset_width, width, horizontal_middle, horizontal_offset);
+			x = positionX(
+				position,
+				left,
+				tip_offset_width,
+				width,
+				horizontal_middle,
+				horizontal_offset,
+				true
+			);
 		} else {
 			x = window.innerWidth - tip_width;
 		}
@@ -319,9 +363,17 @@ function positionTooltip(
 	// Outside top-edge:
 	if (y < 0) {
 		if (allow_dynamic_position) {
-			position = 'bottom';
+			if (position === 'top') position = 'bottom';
 			vertical_offset = invertOffset(vertical_offset);
-			y = positionY(position, top, tip_offset_height, bottom, vertical_middle, vertical_offset);
+			y = positionY(
+				position,
+				top,
+				tip_offset_height,
+				bottom,
+				vertical_middle,
+				vertical_offset,
+				true
+			);
 		} else {
 			y = y * -1;
 		}
@@ -329,9 +381,17 @@ function positionTooltip(
 	// Outside bottom-edge:
 	else if (y + tip_height > window.innerHeight) {
 		if (allow_dynamic_position) {
-			position = 'top';
+			if (position === 'bottom') position = 'top';
 			vertical_offset = invertOffset(vertical_offset);
-			y = positionY(position, top, tip_offset_height, bottom, vertical_middle, vertical_offset);
+			y = positionY(
+				position,
+				top,
+				tip_offset_height,
+				bottom,
+				vertical_middle,
+				vertical_offset,
+				true
+			);
 		} else {
 			y = window.innerHeight - tip_height;
 		}
