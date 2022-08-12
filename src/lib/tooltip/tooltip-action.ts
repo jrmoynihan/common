@@ -188,7 +188,7 @@ export const tooltip = (
 					get(tooltip_parameters).vertical_offset
 				);
 
-				tooltipComponent.$set({ ...new_parameters, visible: false, keep_visible: false });
+				tooltipComponent.$set({ ...new_parameters, keep_visible: false });
 			}
 		},
 		destroy() {
@@ -229,7 +229,7 @@ function positionX(
 	position: string,
 	left: number,
 	tip_width: number,
-	width: number,
+	right: number,
 	horizontal_middle: number,
 	horizontal_offset?: number,
 	reposition_onscreen?: boolean
@@ -240,7 +240,7 @@ function positionX(
 	if (position === 'left') {
 		x = left - tip_width + (horizontal_offset ?? 0);
 	} else if (position === 'right') {
-		x = left + width + (horizontal_offset ?? 0);
+		x = right + tip_width + (horizontal_offset ?? 0);
 	} else if (position === 'top') {
 		x = left + horizontal_middle - tip_width / 2 + (horizontal_offset ?? 0);
 	} else if (position === 'bottom') {
@@ -320,7 +320,7 @@ function positionTooltip(
 	} = tooltipComponent;
 
 	// Change the position of the tooltip to the middle of the parent element's box, on the edge indicated by the 'position' parameter
-	x = positionX(position, left, tip_offset_width, width, horizontal_middle, horizontal_offset);
+	x = positionX(position, left, tip_offset_width, right, horizontal_middle, horizontal_offset);
 	y = positionY(position, top, tip_offset_height, bottom, vertical_middle, vertical_offset);
 
 	// ** Adjust the tooltip if it would be positioned outside the viewport **
@@ -333,7 +333,7 @@ function positionTooltip(
 				position,
 				left,
 				tip_offset_width,
-				width,
+				right,
 				horizontal_middle,
 				horizontal_offset,
 				true
@@ -351,7 +351,7 @@ function positionTooltip(
 				position,
 				left,
 				tip_offset_width,
-				width,
+				right,
 				horizontal_middle,
 				horizontal_offset,
 				true
