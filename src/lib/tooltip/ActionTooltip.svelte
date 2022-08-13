@@ -1,11 +1,10 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-	// import type { SvelteComponent } from 'svelte/internal';
-
 	import { scale } from 'svelte/transition';
-	export let title: string;
-	export let position: 'top' | 'bottom' | 'left' | 'right';
+	import type { TooltipDirections } from './tooltip-action';
+	export let title: string = '';
+	export let position: TooltipDirections;
 	export let x: number;
 	export let y: number;
 	export let visible = false;
@@ -13,31 +12,42 @@
 	export let opacity = 0;
 	export let duration = 350;
 	export let delay = 100;
-	export let offsetHeight = 0;
-	export let clientHeight = 0;
-	export let clientWidth = 0;
-	export let offsetWidth = 0;
+	export let offsetHeight: number;
+	export let clientHeight: number;
+	export let clientWidth: number;
+	export let offsetWidth: number;
+	export let marginTop: number;
+	export let marginLeft: number;
 	export let custom_component: unknown | null = null;
 	export let show_arrow = true;
 	export let keep_visible = false;
 	export let css: [string, string][] = [];
+	export let only_for_measuring = false;
 	let styles: string = '';
+	let tooltip_element: HTMLElement | null = null;
+	// TODO: expose a way to customize the animation
+	// export let transition_type: TransitionConfig;
+	// export let transition_params: ScaleParams | FlyParams | BlurParams | FadeParams | SlideParams | DrawParams | CrossfadeParams = { start, opacity, duration, delay };
 
 	$: if (css.length > 0)
 		css?.forEach(([key, value]) => {
 			styles = styles.concat(`${key}: ${value};`);
 		});
+	$: marginLeft = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginLeft) : 0;
+	$: marginTop = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginTop) : 0;
 </script>
 
 {#if visible || keep_visible}
 	<div
 		class="tooltip"
+		bind:this={tooltip_element}
 		bind:offsetHeight
 		bind:clientHeight
 		bind:clientWidth
 		bind:offsetWidth
 		transition:scale={{ start, opacity, duration, delay }}
 		class:visible={visible || keep_visible}
+		class:nothing={only_for_measuring}
 		class:top={position === 'top'}
 		class:right={position === 'right'}
 		class:left={position === 'left'}
@@ -68,6 +78,7 @@
 <style lang="scss">
 	.tooltip {
 		box-sizing: border-box;
+		position: fixed;
 		border: var(--tooltip-border, 1px solid #ddd);
 		box-shadow: var(--tooltip-shadow, 1px 1px 2px #ddd);
 		background-color: var(--tooltip-background-color, white);
@@ -76,17 +87,20 @@
 		font-size: var(--tooltip-font-size, 0.5rem);
 		font-weight: var(--tooltip-font-weight, normal);
 		font-family: var(--tooltip-font-family, inherit);
-		position: fixed;
-		pointer-events: none;
+		pointer-events: var(--tooltip-pointer-events, none);
 		transform: var(--tooltip-transform);
 		display: var(--tooltip-display, grid);
 		place-items: var(--tooltip-place-items, center);
 		gap: var(--tooltip-gap, 0.25rem);
 		opacity: var(--tooltip-opacity, 1);
 		color: var(--tooltip-color, var(--text, inherit));
-		margin: var(--tooltip-margin, 0 1rem);
+		margin: var(--tooltip-margin, 1rem);
 		max-width: min(var(--tooltip-max-width, calc(100vw - 2rem)), calc(100vw - 2rem));
 		text-align: var(--tooltip-text-align, center);
+	}
+	.nothing {
+		opacity: 0;
+		pointer-events: none;
 	}
 	.arrow {
 		position: absolute;

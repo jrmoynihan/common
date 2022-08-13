@@ -1,18 +1,26 @@
 <script lang="ts">
+	import { dev } from '$app/env';
 	import { tooltip, type TooltipDirections } from '$lib/tooltip/tooltip-action';
+	import { writable } from 'svelte/store';
 	let selected_position: TooltipDirections = 'left';
 	let positions = ['top', 'bottom', 'left', 'right'];
-	let innerWidth: number;
 	let max_width: number = 150;
 	let keep_visible = true;
-	let dynamic_tooltip_text = 'This is a tooltip whose text can be updated';
+	let dynamic_tooltip_text = 'Type here while hovering the header above';
+	let coords = writable({ x: 0, y: 0 });
 
 	function capitalize(str: string) {
 		return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 </script>
 
-<svelte:window bind:innerWidth />
+<svelte:window on:mousemove={(e) => coords.set({ x: e.clientX, y: e.clientY })} />
+{#if dev}
+	<div class="top-left">
+		<p>X: {$coords.x}</p>
+		<p>Y: {$coords.y}</p>
+	</div>
+{/if}
 <section>
 	{#each positions as position}
 		<label>
@@ -20,7 +28,6 @@
 			{capitalize(position)}
 		</label>
 	{/each}
-	<input type="range" bind:value={max_width} min={0} max={innerWidth} />
 
 	<h2
 		use:tooltip={{
@@ -79,6 +86,12 @@
 </section>
 
 <style lang="scss">
+	.top-left {
+		position: fixed;
+		top: 0;
+		left: 0;
+		padding: 1rem 2rem;
+	}
 	section {
 		display: grid;
 		gap: 1rem;
