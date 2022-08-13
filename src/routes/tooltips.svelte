@@ -65,19 +65,22 @@
 		Tooltips Can Stay Visible
 	</h2>
 	<label>
-		Check Here to Keep Tooltip Visible:
+		Keep Tooltip Visible:
 		<input type="checkbox" bind:checked={keep_visible} />
 	</label>
 	<h2
 		use:tooltip={{
 			position: selected_position,
 			title: `Tooltips can be styled`,
+			show_arrow: false,
+			horizontal_offset: 10,
+			vertical_offset: -50,
 			css: [
 				['max-width', `${max_width}px`],
-				['--tooltip-color', 'white'],
+				['--tooltip-color', 'black'],
 				['--tooltip-font-weight', '600'],
 				['--tooltip-font-size', '1.5rem'],
-				['--tooltip-background-color', 'blue']
+				['--tooltip-background-color', 'orange']
 			]
 		}}
 	>
