@@ -19,6 +19,7 @@ export interface TooltipParameters {
 	custom_component?: unknown;
 	x?: number;
 	y?: number;
+	disabled?: boolean;
 }
 
 // A non-optional default/private interface to ensure type-safety and all variables are set
@@ -49,7 +50,8 @@ const default_parameters: TooltipActionParameters = {
 	clientWidth: 0,
 	clientHeight: 0,
 	marginLeft: 0,
-	marginTop: 0
+	marginTop: 0,
+	disabled: false
 };
 
 export const tooltip = (
@@ -96,7 +98,7 @@ export const tooltip = (
 
 	function mouseEnter(event?: MouseEvent) {
 		// If not left-clicking while entering the element's box (i.e. dragging)...
-		if (event?.buttons !== 1) {
+		if (event?.buttons !== 1 && get(tooltip_parameters).disabled !== true) {
 			// Remember the existing title attribute and set the title store to it can react to changes
 			storeTitle();
 

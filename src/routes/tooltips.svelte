@@ -6,6 +6,7 @@
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width: number = 150;
 	let keep_visible = true;
+	let disabled = false;
 	let dynamic_tooltip_text = 'Type here while hovering the header above';
 	let coords = writable({ x: 0, y: 0 });
 
@@ -59,11 +60,16 @@
 		use:tooltip={{
 			position: selected_position,
 			title: keep_visible ? `I'll stick around` : `I'll disappear`,
-			keep_visible
+			keep_visible,
+			disabled
 		}}
 	>
 		Tooltips Can Stay Visible
 	</h2>
+	<label>
+		Disable Tooltip:
+		<input type="checkbox" bind:checked={disabled} />
+	</label>
 	<label>
 		Keep Tooltip Visible:
 		<input type="checkbox" bind:checked={keep_visible} />
