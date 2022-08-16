@@ -36,7 +36,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@fortawesome/free-solid-svg-icons": "^6.1.2",
 		"sass": "^1.54.3",
+		"svelte-fa": "^3.0.3",
 		"svelte2tsx": "^0.5.13"
 	}
 }
