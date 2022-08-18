@@ -2,10 +2,11 @@
 </script>
 
 <h1>
-	Welcome to <a href="/" sveltekit:prefetch class="cool-text">The Commons</a>
+	<a href="/" sveltekit:prefetch class="cool-text">The Commons</a>
 </h1>
 <section>
 	<a href="/tooltips" sveltekit:prefetch class="link">Tooltips</a>
+	<a href="/inputs" sveltekit:prefetch class="link">Inputs</a>
 </section>
 <main>
 	<slot />
@@ -28,6 +29,11 @@
 		font-weight: 800;
 		font-size: 5vh;
 		font-family: 'Fira Code iScript';
+		text-align: center;
+	}
+	main {
+		display: flex;
+		place-items: center;
 	}
 	.cool-text {
 		display: inline-flex;
@@ -43,7 +49,6 @@
 	}
 	section {
 		display: flex;
-		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		margin: 2rem auto;
