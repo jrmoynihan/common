@@ -1,23 +1,27 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Fa from 'svelte-fa';
-	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index.es';
-	import { tooltip, type TooltipParameters } from '@jrmoynihan/common';
+	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
+	import { tooltip, type TooltipParameters } from '$lib/tooltip/tooltip-action';
+	import type { DatalistOption } from '.';
 
 	export let value = '';
 	export let placeholder = '';
 	export let type: 'text' | 'datalist' = 'text';
 	export let title = '';
 	export let required = false;
-	export let pattern: RegExp = null;
-	export let list = '';
+	export let pattern: RegExp | null = null;
+	export let list = crypto?.randomUUID();
 	export let show_confirm = true;
-	export let options: { value: unknown; label: string }[] = [];
+	export let options: DatalistOption[] = [];
 	export let use_tooltip = false;
-	export let tooltip_options: TooltipParameters = { position: 'top' };
-	export let custom_validity_function: (
-		e: Event & { currentTarget: EventTarget & HTMLInputElement }
-	) => boolean = null;
+	export let tooltip_options: TooltipParameters = {
+		title,
+		disabled: !use_tooltip
+	};
+	export let custom_validity_function:
+		| ((arg0: Event & { currentTarget: EventTarget & HTMLInputElement }) => void)
+		| null = null;
 	let input: HTMLInputElement;
 	const dispatch = createEventDispatcher();
 
@@ -34,10 +38,7 @@
 	}
 </script>
 
-<div
-	class="text-input-container"
-	{title}
-	use:tooltip={use_tooltip ? { title, ...tooltip_options } : {}}>
+<div class="text-input-container" use:tooltip={{ ...tooltip_options }} {title}>
 	{#if type === 'text'}
 		<input
 			type="text"
@@ -46,7 +47,8 @@
 			class:value
 			{required}
 			pattern={pattern?.source}
-			on:input={(e) => passInput(e)} />
+			on:input={(e) => passInput(e)}
+		/>
 		<div class="placeholder">
 			{placeholder ?? ''}
 		</div>
@@ -59,7 +61,8 @@
 			{required}
 			pattern={pattern?.source}
 			{list}
-			on:input={(e) => passInput(e)} />
+			on:input={(e) => passInput(e)}
+		/>
 		<div class="placeholder">
 			{placeholder ?? ''}
 		</div>
@@ -72,7 +75,7 @@
 	<div class="btn-container">
 		{#if show_confirm}
 			<button class="confirm-btn" tabindex={value ? 0 : -1} class:value on:click={confirm}>
-				<Fa icon={faCheck} />
+				<Fa icon={faCheck} color="inherit" />
 			</button>
 		{/if}
 		{#if value}
@@ -81,8 +84,9 @@
 				class:no-confirm={!show_confirm}
 				tabindex={value ? 0 : -1}
 				class:value
-				on:click={clearInput}>
-				<Fa icon={faX} />
+				on:click={clearInput}
+			>
+				<Fa icon={faX} color="inherit" />
 			</button>
 		{/if}
 	</div>
@@ -111,20 +115,21 @@
 	}
 	input[type='text'] {
 		--input-border-radius: 1rem;
-		--btn-padding-space: 2.5rem;
+		--button-padding-space: 2.5rem;
 		box-sizing: border-box;
 		background-color: var(--background, white);
 		width: 100%;
 		margin: 0;
 		padding-bottom: 0.5rem;
 		border-radius: var(--input-border-radius, 1rem);
+		border: var(--input-border, none);
 		max-height: max-content;
 		min-height: 5ch;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		/* to make room for the cancel button */
-		padding-right: var(--btn-padding-space, 3rem);
+		padding-right: var(--button-padding-space, 3rem);
 
 		&:not(:focus):hover ~ .placeholder {
 			opacity: 0.2;
@@ -141,11 +146,12 @@
 		opacity: 0.6;
 	}
 	.btn-container {
-		--btn-margin: 0.15rem;
+		--button-margin: 0.15rem;
 		--input-border-radius: 1rem;
 		box-sizing: content-box;
 		margin: 0;
 		display: grid;
+		gap: 0.25rem;
 		place-items: center;
 		grid-area: 1 / 1;
 		place-self: center end;
@@ -160,12 +166,13 @@
 		height: min(50%, var(--max-width));
 		aspect-ratio: 1 / 1;
 		background-color: inherit;
-		color: var(--text);
-		// border: hsla(var(--text-value), 0.4) 1px solid;
+		color: var(--text-input-color, inherit);
+		border: var(--button-border, none);
+
 		transition: color 300ms ease, opacity 300ms ease;
 		opacity: 0;
-		padding: calc(var(--max-width) / 3.5);
-		margin-right: var(--btn-margin-right, var(--btn-margin));
+		padding: var(--text-input-button-padding, calc(var(--max-width) / 3.5));
+		margin-right: var(--button-margin-right, var(--button-margin));
 
 		&:focus {
 			accent-color: blue;
@@ -173,29 +180,32 @@
 		}
 
 		&.value {
-			opacity: 0.6;
-		}
-
-		&.value:hover {
-			opacity: 1;
-			transform: scale(1.02);
-		}
-		&.value:active {
-			transform: scale(0.97);
+			opacity: 0.4;
+			outline: 1px var(--button-outline, hsla(0, 0%, 0%, 0.2)) solid;
+			&:hover,
+			&:focus-visible {
+				opacity: 1;
+				outline: 1px var(--button-outline-hover-or-focus, hsla(0, 0%, 0%, 0.5)) solid;
+			}
 		}
 	}
 	.cancel-btn {
 		border-radius: var(--input-border-radius, 1rem) 0 var(--input-border-radius, 1rem) 0;
-		margin-bottom: var(--btn-margin-bottom, var(--btn-margin));
+		margin-bottom: var(--button-margin-bottom, var(--button-margin));
 		&.no-confirm {
+			box-sizing: border-box;
 			border-radius: var(--input-border-radius);
 			margin-bottom: 0;
-			padding: calc(var(--max-width) / 3.5) calc(var(--max-width) / 7);
+			padding: calc(var(--max-width) / 3.5) calc(var(--max-width) / 3);
+			height: 100%;
+			justify-self: end;
+			margin-right: 0;
+			aspect-ratio: unset;
 		}
 	}
 	.confirm-btn {
 		border-radius: 0 var(--input-border-radius, 1rem) 0 var(--input-border-radius, 1rem);
-		margin-top: var(--btn-margin-top, var(--btn-margin));
+		margin-top: var(--button-margin-top, var(--button-margin));
 	}
 
 	/* Move the placeholder div when anything in the container receives focus */
