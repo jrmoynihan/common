@@ -29,10 +29,12 @@
 	// export let transition_type: TransitionConfig;
 	// export let transition_params: ScaleParams | FlyParams | BlurParams | FadeParams | SlideParams | DrawParams | CrossfadeParams = { start, opacity, duration, delay };
 
-	$: if (css.length > 0)
+	$: {
+		if (css.length > 0) styles = '';
 		css?.forEach(([key, value]) => {
 			styles = styles.concat(`${key}: ${value};`);
 		});
+	}
 	$: marginLeft = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginLeft) : 0;
 	$: marginTop = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginTop) : 0;
 </script>
@@ -97,6 +99,7 @@
 		margin: var(--tooltip-margin, 1rem);
 		max-width: min(var(--tooltip-max-width, calc(100vw - 2rem)), calc(100vw - 2rem));
 		text-align: var(--tooltip-text-align, center);
+		z-index: var(--tooltip-z-index, 1000);
 	}
 	.nothing {
 		opacity: 0;
