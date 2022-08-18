@@ -1,4 +1,4 @@
-import Tooltip from './ActionTooltip.svelte';
+import Tooltip from '$lib/tooltip/ActionTooltip.svelte';
 import { writable, get } from 'svelte/store';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
@@ -83,8 +83,13 @@ export const tooltip = (
 	element.addEventListener('mousemove', mouseMove);
 
 	// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
-	const { horizontal_offset, vertical_offset, allow_dynamic_position, ...passing_parameters } =
-		get(tooltip_parameters);
+	const {
+		horizontal_offset,
+		vertical_offset,
+		allow_dynamic_position,
+		disabled,
+		...passing_parameters
+	} = get(tooltip_parameters);
 
 	// Make the tooltip instance.
 	tooltipComponent = new Tooltip({
@@ -422,7 +427,6 @@ function positionTooltip(
 	// Outside left-edge:
 	if (x < 0) {
 		if (allow_dynamic_position) {
-			if (position === 'left') position = 'right'; // Try flipping to opposing edge if there's room
 			horizontal_offset = getHorizontalOffset(position, horizontal_offset, true);
 			x = repositionX({
 				position,
@@ -440,7 +444,6 @@ function positionTooltip(
 	// Outside right-edge:
 	else if (x + tip_width > window.innerWidth) {
 		if (allow_dynamic_position) {
-			if (position === 'right') position = 'left';
 			horizontal_offset = getHorizontalOffset(position, horizontal_offset, true);
 			x = repositionX({
 				position,
@@ -458,7 +461,6 @@ function positionTooltip(
 	// Outside top-edge:
 	if (y < 0) {
 		if (allow_dynamic_position) {
-			if (position === 'top') position = 'bottom';
 			vertical_offset = getVerticalOffset(position, vertical_offset, true);
 			y = repositionY({
 				position,
@@ -476,7 +478,6 @@ function positionTooltip(
 	// Outside bottom-edge:
 	else if (y + tip_height > window.innerHeight) {
 		if (allow_dynamic_position) {
-			if (position === 'bottom') position = 'top';
 			vertical_offset = getVerticalOffset(position, vertical_offset, true);
 			y = repositionY({
 				position,
