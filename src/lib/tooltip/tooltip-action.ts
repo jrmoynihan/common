@@ -101,6 +101,7 @@ export const tooltip = (
 		intro: true,
 		target: document.body
 	});
+	// After a short delay upon mounting, calculate the position of the tooltip and show it if needed.
 	setTimeout(() => {
 		initializeTooltipPosition();
 		if (visible) tooltipComponent.$set({ visible: true });
@@ -140,7 +141,7 @@ export const tooltip = (
 			get(tooltip_parameters).vertical_offset ?? 0
 		);
 
-		// Move the real one to the same positionm and make it visible, triggering its transition
+		// Move the real one to the same position
 		tooltipComponent.$set({
 			...passing_parameters,
 			x: invisible_tooltip.x,
