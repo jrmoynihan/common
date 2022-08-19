@@ -40,41 +40,43 @@
 </script>
 
 {#if visible || keep_visible}
-	<div
-		class="tooltip"
-		bind:this={tooltip_element}
-		bind:offsetHeight
-		bind:clientHeight
-		bind:clientWidth
-		bind:offsetWidth
-		transition:scale={{ start, opacity, duration, delay }}
-		class:visible={visible || keep_visible}
-		class:nothing={only_for_measuring}
-		class:top={position === 'top'}
-		class:right={position === 'right'}
-		class:left={position === 'left'}
-		class:bottom={position === 'bottom'}
-		style={`left: ${x}px; top: ${y}px; ${styles}`}
-	>
-		{#if title}
-			{title}
-		{/if}
-		{#if custom_component}
-			<svelte:component this={custom_component} />
-		{/if}
-		{#if !title && !custom_component}
-			No tooltip or component provided
-		{/if}
-		{#if show_arrow}
-			<span
-				class="arrow"
-				class:bottom={position === 'bottom'}
-				class:top={position === 'top'}
-				class:left={position === 'left'}
-				class:right={position === 'right'}
-			/>
-		{/if}
-	</div>
+	{#key position}
+		<div
+			class="tooltip"
+			bind:this={tooltip_element}
+			bind:offsetHeight
+			bind:clientHeight
+			bind:clientWidth
+			bind:offsetWidth
+			transition:scale={{ start, opacity, duration, delay }}
+			class:visible={visible || keep_visible}
+			class:nothing={only_for_measuring}
+			class:top={position === 'top'}
+			class:right={position === 'right'}
+			class:left={position === 'left'}
+			class:bottom={position === 'bottom'}
+			style={`left: ${x}px; top: ${y}px; ${styles}`}
+		>
+			{#if title}
+				{title}
+			{/if}
+			{#if custom_component}
+				<svelte:component this={custom_component} />
+			{/if}
+			{#if !title && !custom_component}
+				No tooltip or component provided
+			{/if}
+			{#if show_arrow}
+				<span
+					class="arrow"
+					class:bottom={position === 'bottom'}
+					class:top={position === 'top'}
+					class:left={position === 'left'}
+					class:right={position === 'right'}
+				/>
+			{/if}
+		</div>
+	{/key}
 {/if}
 
 <style lang="scss">
