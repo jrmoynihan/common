@@ -27,24 +27,34 @@
 </script>
 
 <section class="text-inputs">
+	<h2>Text Inputs</h2>
 	<p>
 		<TextInput
 			placeholder="I'm a placeholder"
 			show_confirm={false}
-			tooltip_options={{ title: 'Nothing special here.' }}
+			tooltip_options={{ title: `I'm a plain text input with a cancel button!`, visible: true }}
 		/>
 	</p>
 	<p>
 		<TextInput
 			bind:value={selected_fruit}
+			on:confirm={(e) => {
+				alert(`Selected fruit: ${e.detail}`);
+			}}
 			type="datalist"
 			options={datalist}
 			placeholder="Pick a fruit"
+			tooltip_options={{
+				title: `I'm a datalist input with a cancel AND a confirmation button!`,
+				position: 'bottom',
+				visible: true
+			}}
 		/>
 		<span class="selected-fruit">{selected_fruit}</span>
 	</p>
 </section>
 <section class="date-inputs">
+	<h2>Date Inputs</h2>
 	<TemporalDateInput
 		date={Temporal.Now.zonedDateTimeISO().add({ days: 1 })}
 		min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
@@ -56,14 +66,26 @@
 		min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
 		max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
 	/>
+	<TemporalDateInput
+		type={'datetime'}
+		min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
+		max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
+	/>
+	<TemporalDateInput
+		type={'time'}
+		min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
+		max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
+	/>
 </section>
 
 <style lang="scss">
 	section {
 		display: flex;
 		place-items: center;
+		flex-wrap: wrap;
 	}
-	.text-inputs {
+	.text-inputs,
+	.date-inputs {
 		place-self: start;
 		display: flex;
 		flex-direction: column;

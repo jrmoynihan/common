@@ -59,10 +59,13 @@
 		text-decoration: none;
 		font-size: 1.5rem;
 		padding: 1rem;
-		// color: hsl(251, 48%, 34%);
 		color: white;
 		border-radius: 2rem;
-		// background-color: hsla(266, 73%, 78%, 1);
 		background-color: hsl(195, 61%, 34%);
+		transition: background-color 0.2s ease-in-out;
+		&:hover,
+		&:focus-visible {
+			background-color: hsl(195, 61%, 44%);
+		}
 	}
 </style>
