@@ -88,6 +88,7 @@ export const tooltip = (
 		vertical_offset,
 		allow_dynamic_position,
 		disabled,
+		visible,
 		...passing_parameters
 	} = get(tooltip_parameters);
 
@@ -100,6 +101,10 @@ export const tooltip = (
 		intro: true,
 		target: document.body
 	});
+	setTimeout(() => {
+		initializeTooltipPosition();
+		if (visible) tooltipComponent.$set({ visible: true });
+	}, 50);
 
 	function mouseEnter(event?: MouseEvent) {
 		// If not left-clicking while entering the element's box (i.e. dragging)...
@@ -107,37 +112,44 @@ export const tooltip = (
 			// Remember the existing title attribute and set the title store to it can react to changes
 			storeTitle();
 
-			// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
-			const { horizontal_offset, vertical_offset, allow_dynamic_position, ...passing_parameters } =
-				get(tooltip_parameters);
-
-			// Create a non-interactive copy of the tooltip that appears instantly so we can measure the full width of the new tooltip before positioning it
-			const invisible_tooltip = new Tooltip({
-				props: { ...passing_parameters, visible: true, only_for_measuring: true },
-				target: document.body
-			});
-			// Position the invisible tooltip
-			positionTooltip(
-				element,
-				invisible_tooltip,
-				get(tooltip_parameters).position ?? 'top',
-				get(tooltip_parameters).allow_dynamic_position,
-				get(tooltip_parameters).horizontal_offset ?? 0,
-				get(tooltip_parameters).vertical_offset ?? 0
-			);
-
-			// Move the real one to the same positionm and make it visible, triggering its transition
-			tooltipComponent.$set({
-				...passing_parameters,
-				x: invisible_tooltip.x,
-				y: invisible_tooltip.y,
-				position: invisible_tooltip.position,
-				visible: true
-			});
-
-			// Remove the invisible tooltip
-			invisible_tooltip.$destroy();
+			tooltipComponent.$set({ visible: true });
 		}
+	}
+	function initializeTooltipPosition() {
+		// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
+		const {
+			horizontal_offset,
+			vertical_offset,
+			allow_dynamic_position,
+			disabled,
+			...passing_parameters
+		} = get(tooltip_parameters);
+
+		// Create a non-interactive copy of the tooltip that appears instantly so we can measure the full width of the new tooltip before positioning it
+		const invisible_tooltip = new Tooltip({
+			props: { ...passing_parameters, visible: true, only_for_measuring: true },
+			target: document.body
+		});
+		// Position the invisible tooltip
+		positionTooltip(
+			element,
+			invisible_tooltip,
+			get(tooltip_parameters).position ?? 'top',
+			get(tooltip_parameters).allow_dynamic_position,
+			get(tooltip_parameters).horizontal_offset ?? 0,
+			get(tooltip_parameters).vertical_offset ?? 0
+		);
+
+		// Move the real one to the same positionm and make it visible, triggering its transition
+		tooltipComponent.$set({
+			...passing_parameters,
+			x: invisible_tooltip.x,
+			y: invisible_tooltip.y,
+			position: invisible_tooltip.position
+		});
+
+		// Remove the invisible tooltip
+		invisible_tooltip.$destroy();
 	}
 	function storeTitle() {
 		// Store any existing title attribute for use/re-use
@@ -155,14 +167,15 @@ export const tooltip = (
 	}
 
 	function mouseMove(event: MouseEvent) {
+		// Don't reposition if there's no tooltip or it's being kept open/visible
 		// if (tooltipComponent && !(tooltipComponent.visible && tooltipComponent.keep_visible)) {
 		// 	positionTooltip(
 		// 		element,
 		// 		tooltipComponent,
 		// 		get(tooltip_parameters).position ?? 'top',
 		// 		get(tooltip_parameters).allow_dynamic_position,
-		// 		get(tooltip_parameters).horizontal_offset,
-		// 		get(tooltip_parameters).vertical_offset
+		// 		get(tooltip_parameters).horizontal_offset ?? 0,
+		// 		get(tooltip_parameters).vertical_offset ?? 0
 		// 	);
 		// }
 	}
@@ -176,6 +189,64 @@ export const tooltip = (
 			if (title_attribute) element.setAttribute('title', title_attribute);
 		}
 	}
+	function changeOffsets(old_parameters: TooltipParameters, new_parameters: TooltipParameters) {
+		let old_position = old_parameters?.position ?? 'top';
+		let new_position = new_parameters?.position ?? 'top';
+
+		// If the position swapped sides, invert the horizontal or vertical offsets, respectively
+		if (
+			(old_position === 'left' && new_position === 'right') ||
+			(old_position === 'right' && new_position === 'left')
+		) {
+			tooltip_parameters.update((current_parameters) => {
+				return {
+					...current_parameters,
+					horizontal_offset: getHorizontalOffset(
+						new_position,
+						current_parameters.horizontal_offset,
+						true
+					)
+				};
+			});
+		} else if (
+			(old_position === 'top' && new_position === 'bottom') ||
+			(old_position === 'bottom' && new_position === 'top')
+		) {
+			tooltip_parameters.update((current_parameters) => {
+				return {
+					...current_parameters,
+					vertical_offset: getVerticalOffset(new_position, current_parameters.vertical_offset, true)
+				};
+			});
+		} else if (new_position === old_position) {
+			tooltip_parameters.update((current_parameters) => {
+				return {
+					...current_parameters,
+					horizontal_offset: getHorizontalOffset(
+						new_position,
+						current_parameters.horizontal_offset
+					),
+					vertical_offset: getVerticalOffset(new_position, current_parameters.vertical_offset)
+				};
+			});
+		} else {
+			tooltip_parameters.update((current_parameters) => {
+				return {
+					...current_parameters,
+					horizontal_offset: new_parameters.horizontal_offset ?? getHorizontalOffset(new_position),
+					vertical_offset: new_parameters.vertical_offset ?? getVerticalOffset(new_position)
+				};
+			});
+		}
+		positionTooltip(
+			element,
+			tooltipComponent,
+			new_parameters?.position ?? old_parameters?.position ?? 'top',
+			get(tooltip_parameters).allow_dynamic_position,
+			get(tooltip_parameters).horizontal_offset ?? 0,
+			get(tooltip_parameters).vertical_offset ?? 0
+		);
+	}
 
 	return {
 		update(new_parameters: TooltipParameters) {
@@ -183,72 +254,9 @@ export const tooltip = (
 				// Temporarily store the old parameter values
 				let old_parameters = get(tooltip_parameters);
 
-				if (new_parameters.position) {
-					let { position: old_position } = old_parameters;
-					let { position: new_position } = new_parameters;
+				if (new_parameters.position) changeOffsets(old_parameters, new_parameters);
 
-					// If the position swapped sides, invert the horizontal or vertical offsets, respectively
-					if (
-						(old_position === 'left' && new_position === 'right') ||
-						(old_position === 'right' && new_position === 'left')
-					) {
-						tooltip_parameters.update((current_parameters) => {
-							return {
-								...current_parameters,
-								horizontal_offset: getHorizontalOffset(
-									new_position,
-									current_parameters.horizontal_offset,
-									true
-								)
-							};
-						});
-					} else if (
-						(old_position === 'top' && new_position === 'bottom') ||
-						(old_position === 'bottom' && new_position === 'top')
-					) {
-						tooltip_parameters.update((current_parameters) => {
-							return {
-								...current_parameters,
-								vertical_offset: getVerticalOffset(
-									new_position,
-									current_parameters.vertical_offset,
-									true
-								)
-							};
-						});
-					} else if (new_position === old_position) {
-						tooltip_parameters.update((current_parameters) => {
-							return {
-								...current_parameters,
-								horizontal_offset: getHorizontalOffset(
-									new_position,
-									current_parameters.horizontal_offset
-								),
-								vertical_offset: getVerticalOffset(new_position, current_parameters.vertical_offset)
-							};
-						});
-					} else {
-						tooltip_parameters.update((current_parameters) => {
-							return {
-								...current_parameters,
-								horizontal_offset:
-									new_parameters.horizontal_offset ?? getHorizontalOffset(new_position),
-								vertical_offset: new_parameters.vertical_offset ?? getVerticalOffset(new_position)
-							};
-						});
-					}
-
-					positionTooltip(
-						element,
-						tooltipComponent,
-						new_position,
-						get(tooltip_parameters).allow_dynamic_position,
-						get(tooltip_parameters).horizontal_offset ?? 0,
-						get(tooltip_parameters).vertical_offset ?? 0
-					);
-				}
-
-				// Update the parameters
+				// Update the parameters store, overriting any existing values with new parameters
 				tooltip_parameters.update((current_parameters) => {
 					return { ...current_parameters, ...new_parameters };
 				});
@@ -266,7 +274,7 @@ export const tooltip = (
 };
 
 function getHorizontalOffset(
-	position: string,
+	position: TooltipDirections,
 	designated_offset?: number,
 	should_invert?: boolean
 ) {
@@ -282,7 +290,11 @@ function getHorizontalOffset(
 	}
 }
 
-function getVerticalOffset(position: string, designated_offset?: number, should_invert?: boolean) {
+function getVerticalOffset(
+	position: TooltipDirections,
+	designated_offset?: number,
+	should_invert?: boolean
+) {
 	if (designated_offset !== undefined) {
 		return should_invert ? -1 * designated_offset : designated_offset;
 	}
