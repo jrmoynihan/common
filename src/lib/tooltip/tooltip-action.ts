@@ -1,25 +1,52 @@
 import Tooltip from '$lib/tooltip/ActionTooltip.svelte';
 import { writable, get } from 'svelte/store';
+import type {
+	EasingFunction,
+	FadeParams,
+	FlyParams,
+	ScaleParams,
+	SlideParams,
+	TransitionConfig
+} from 'svelte/transition';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
 
 // An optional "public" interface for the user to pass into the tooltip action from elements
 export interface TooltipParameters {
+	/** Choose from top, bottom, right, left anchor positions for the tooltip. */
 	position?: TooltipDirections;
+	/** The text content of the tooltip.  Will be set as the title attribute after the tooltip is hidden. */
 	title?: string;
+	/** How far (in px) to horizontally offset the tooltip */
 	horizontal_offset?: number;
+	/** How far (in px) to vertically offset the tooltip */
 	vertical_offset?: number;
+	/** Allow the tooltip to start visible when mounted to the DOM and programmatically trigger its visibility. May be useful for e.g. guided tour interactions. */
 	visible?: boolean;
+	/** Allow the tooltip to stay visible even after the user moves the mouse outside the parent element. */
 	keep_visible?: boolean;
+	/** Enable or disable the tooltip arrow */
 	show_arrow?: boolean;
+	/** Allows the tooltip to reposition itself to fit on-screen */
 	allow_dynamic_position?: boolean;
+	/** Delay to the in/out transition of the tooltip.  An explicit transition config will override this! */
 	delay?: number;
+	/** Duration of the in/out transition of the tooltip.  An explicit transition config will override this! */
 	duration?: number;
+	/** Easing function of the in/out transition of the tooltip.  An explicit transition config will override this! */
+	easing?: EasingFunction;
+	/** Dynamic CSS properties/values that can change on the tooltip. */
 	css?: [string, string][];
+	/** A component to show inside the tooltip */
 	custom_component?: unknown;
-	x?: number;
-	y?: number;
+	/** Disabling the tooltip prevents it from appearing on mouseover events. */
 	disabled?: boolean;
+	/** A Svelte transition to use on the tooltip */
+	transition?: any;
+	/** An explicit transition config. Will override delay, duration, easing props on the tooltip action. */
+	transition_config?: FlyParams | FadeParams | ScaleParams | SlideParams | TransitionConfig;
+	/** For development-only.  Console log certain events/function calls. */
+	log_functions?: boolean;
 }
 
 // A non-optional default/private interface to ensure type-safety and all variables are set
@@ -51,7 +78,8 @@ const default_parameters: TooltipActionParameters = {
 	clientHeight: 0,
 	marginLeft: 0,
 	marginTop: 0,
-	disabled: false
+	disabled: false,
+	log_functions: false
 };
 
 export const tooltip = (
@@ -83,20 +111,12 @@ export const tooltip = (
 	element.addEventListener('mousemove', mouseMove);
 
 	// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
-	const {
-		horizontal_offset,
-		vertical_offset,
-		allow_dynamic_position,
-		disabled,
-		visible,
-		...passing_parameters
-	} = get(tooltip_parameters);
+	const new_tooltip_parameters = getParametersForNewTooltip();
 
 	// Make the tooltip instance.
 	tooltipComponent = new Tooltip({
 		props: {
-			...passing_parameters,
-			keep_visible: false // NOTE: avoids showing the tooltip upon initialization even if you want it kept open upon mouseEnter
+			...new_tooltip_parameters
 		},
 		intro: true,
 		target: document.body
@@ -104,7 +124,9 @@ export const tooltip = (
 	// After a short delay upon mounting, calculate the position of the tooltip and show it if needed.
 	setTimeout(() => {
 		initializeTooltipPosition();
-		if (visible) tooltipComponent.$set({ visible: true });
+		if (new_tooltip_parameters.visible) {
+			tooltipComponent.$set({ visible: true });
+		}
 	}, 50);
 
 	function mouseEnter(event?: MouseEvent) {
@@ -116,34 +138,43 @@ export const tooltip = (
 			tooltipComponent.$set({ visible: true });
 		}
 	}
-	function initializeTooltipPosition() {
-		// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
+	function getParametersForNewTooltip(): TooltipActionParameters {
 		const {
 			horizontal_offset,
 			vertical_offset,
 			allow_dynamic_position,
 			disabled,
+			log_functions,
 			...passing_parameters
 		} = get(tooltip_parameters);
-
-		// Create a non-interactive copy of the tooltip that appears instantly so we can measure the full width of the new tooltip before positioning it
-		const invisible_tooltip = new Tooltip({
-			props: { ...passing_parameters, visible: true, only_for_measuring: true },
+		return passing_parameters;
+	}
+	function makeInvisibleTooltip(parameters: TooltipActionParameters) {
+		return new Tooltip({
+			props: { ...parameters, visible: true, only_for_measuring: true },
 			target: document.body
 		});
+	}
+	function initializeTooltipPosition() {
+		// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
+		const new_tooltip_parameters = getParametersForNewTooltip();
+		const { horizontal_offset, vertical_offset } = get(tooltip_parameters);
+
+		// Create a non-interactive copy of the tooltip that appears instantly so we can measure the full width of the new tooltip before positioning it
+		const invisible_tooltip = makeInvisibleTooltip(new_tooltip_parameters);
 		// Position the invisible tooltip
 		positionTooltip(
 			element,
 			invisible_tooltip,
-			get(tooltip_parameters).position ?? 'top',
-			get(tooltip_parameters).allow_dynamic_position,
-			get(tooltip_parameters).horizontal_offset ?? 0,
-			get(tooltip_parameters).vertical_offset ?? 0
+			new_tooltip_parameters.position ?? 'top',
+			new_tooltip_parameters.allow_dynamic_position,
+			horizontal_offset,
+			vertical_offset
 		);
 
 		// Move the real one to the same position
 		tooltipComponent.$set({
-			...passing_parameters,
+			...new_tooltip_parameters,
 			x: invisible_tooltip.x,
 			y: invisible_tooltip.y,
 			position: invisible_tooltip.position
@@ -190,6 +221,8 @@ export const tooltip = (
 			if (title_attribute) element.setAttribute('title', title_attribute);
 		}
 	}
+
+	/** Updates the store values for the horizontal and vertical offset parameters when the position changes */
 	function changeOffsets(old_parameters: TooltipParameters, new_parameters: TooltipParameters) {
 		let old_position = old_parameters?.position ?? 'top';
 		let new_position = new_parameters?.position ?? 'top';
@@ -239,14 +272,129 @@ export const tooltip = (
 				};
 			});
 		}
-		positionTooltip(
-			element,
-			tooltipComponent,
-			new_parameters?.position ?? old_parameters?.position ?? 'top',
-			get(tooltip_parameters).allow_dynamic_position,
-			get(tooltip_parameters).horizontal_offset ?? 0,
-			get(tooltip_parameters).vertical_offset ?? 0
-		);
+	}
+	function positionTooltip(
+		parent_element: HTMLElement,
+		tooltipComponent: Tooltip,
+		new_position: TooltipDirections,
+		allow_dynamic_position: boolean | undefined,
+		horizontal_offset?: number,
+		vertical_offset?: number
+	) {
+		let x: number;
+		let y: number;
+
+		// Find the bounds of the parent element of the tooltip
+		const { top, bottom, left, right, height, width } = parent_element.getBoundingClientRect();
+		const vertical_middle = height / 2;
+		const horizontal_middle = width / 2;
+
+		// Measure the rendered tooltip's dimensions
+		let {
+			clientWidth: tip_width,
+			offsetWidth: tip_offset_width,
+			clientHeight: tip_height,
+			offsetHeight: tip_offset_height,
+			marginLeft: tip_margin_left,
+			marginTop: tip_margin_top,
+			position: current_position
+		} = tooltipComponent;
+
+		// Change the position of the tooltip to the middle of the parent element's box, on the edge indicated by the 'position' parameter
+		x = positionX({
+			position: new_position,
+			left,
+			width,
+			horizontal_middle,
+			horizontal_offset,
+			tip_offset_width,
+			tip_margin_left
+		});
+		y = positionY({
+			position: new_position,
+			top,
+			bottom,
+			vertical_middle,
+			vertical_offset,
+			tip_offset_height,
+			tip_margin_top
+		});
+
+		// ** Adjust the tooltip if it would be positioned outside the viewport **
+		// Outside left-edge:
+		if (x < 0) {
+			console.log('outside left edge...');
+			if (allow_dynamic_position) {
+				horizontal_offset = getHorizontalOffset(new_position, horizontal_offset, true);
+				x = repositionX({
+					position: new_position,
+					left,
+					width,
+					horizontal_middle,
+					horizontal_offset,
+					tip_offset_width,
+					tip_margin_left
+				});
+			} else {
+				x = left;
+			}
+		}
+		// Outside right-edge:
+		else if (x + tip_width > window.innerWidth) {
+			console.log('outside right edge...');
+			if (allow_dynamic_position) {
+				horizontal_offset = getHorizontalOffset(new_position, horizontal_offset, true);
+				x = repositionX({
+					position: new_position,
+					left,
+					width,
+					horizontal_middle,
+					horizontal_offset,
+					tip_offset_width,
+					tip_margin_left
+				});
+			} else {
+				x = window.innerWidth - tip_width;
+			}
+		}
+		// Outside top-edge:
+		if (y < 0) {
+			console.log('outside top edge...');
+			if (allow_dynamic_position) {
+				vertical_offset = getVerticalOffset(new_position, vertical_offset, true);
+				y = repositionY({
+					position: new_position,
+					top,
+					bottom,
+					vertical_middle,
+					vertical_offset,
+					tip_offset_height,
+					tip_margin_top
+				});
+			} else {
+				y = y * -1;
+			}
+		}
+		// Outside bottom-edge:
+		else if (y + tip_height > window.innerHeight) {
+			console.log('outside bottom edge...');
+			if (allow_dynamic_position) {
+				vertical_offset = getVerticalOffset(new_position, vertical_offset, true);
+				y = repositionY({
+					position: new_position,
+					top,
+					bottom,
+					vertical_middle,
+					vertical_offset,
+					tip_offset_height,
+					tip_margin_top
+				});
+			} else {
+				y = window.innerHeight - tip_height;
+			}
+		}
+		// Update the component state
+		tooltipComponent.$set({ x, y, position: new_position });
 	}
 
 	return {
@@ -255,14 +403,17 @@ export const tooltip = (
 				// Temporarily store the old parameter values
 				let old_parameters = get(tooltip_parameters);
 
-				if (new_parameters.position) changeOffsets(old_parameters, new_parameters);
-
 				// Update the parameters store, overriting any existing values with new parameters
 				tooltip_parameters.update((current_parameters) => {
 					return { ...current_parameters, ...new_parameters };
 				});
 
-				tooltipComponent.$set({ ...new_parameters, keep_visible: false });
+				if (new_parameters.position) {
+					changeOffsets(old_parameters, new_parameters);
+					initializeTooltipPosition();
+				}
+
+				tooltipComponent.$set({ ...new_parameters });
 			}
 		},
 		destroy() {
@@ -312,33 +463,31 @@ interface positionX_params {
 	left: number;
 	width: number;
 	horizontal_middle: number;
-	horizontal_offset: number;
 	tip_offset_width: number;
 	tip_margin_left: number;
+	horizontal_offset?: number;
 }
 function positionX(input: positionX_params): number {
-	let x = 0;
 	const {
 		position,
 		left,
 		width,
 		horizontal_middle,
-		horizontal_offset,
 		tip_offset_width,
-		tip_margin_left
+		tip_margin_left,
+		horizontal_offset = 0
 	} = input;
 	if (position === 'left') {
-		x = left - tip_offset_width - tip_margin_left + (horizontal_offset ?? 0);
+		return left - tip_offset_width - tip_margin_left + horizontal_offset;
 	} else if (position === 'right') {
-		x = left + width - tip_margin_left + (horizontal_offset ?? 0);
+		return left + width - tip_margin_left + horizontal_offset;
 	} else if (position === 'top') {
-		x =
-			left + horizontal_middle - tip_margin_left - tip_offset_width / 2 + (horizontal_offset ?? 0);
+		return left + horizontal_middle - tip_margin_left - tip_offset_width / 2 + horizontal_offset;
 	} else if (position === 'bottom') {
-		x =
-			left + horizontal_middle - tip_margin_left - tip_offset_width / 2 + (horizontal_offset ?? 0);
+		return left + horizontal_middle - tip_margin_left - tip_offset_width / 2 + horizontal_offset;
+	} else {
+		return 0;
 	}
-	return x;
 }
 function repositionX(input: positionX_params) {
 	let x = positionX(input);
@@ -355,31 +504,31 @@ interface positionY_params {
 	top: number;
 	bottom: number;
 	vertical_middle: number;
-	vertical_offset: number;
 	tip_offset_height: number;
 	tip_margin_top: number;
+	vertical_offset?: number;
 }
 function positionY(input: positionY_params): number {
-	let y = 0;
 	const {
 		position,
 		top,
 		bottom,
 		vertical_middle,
-		vertical_offset,
 		tip_offset_height,
-		tip_margin_top
+		tip_margin_top,
+		vertical_offset = 0
 	} = input;
 	if (position === 'left') {
-		y = top + vertical_middle - tip_margin_top - tip_offset_height / 2 + (vertical_offset ?? 0);
+		return top + vertical_middle - tip_margin_top - tip_offset_height / 2 + vertical_offset;
 	} else if (position === 'right') {
-		y = top + vertical_middle - tip_margin_top - tip_offset_height / 2 + (vertical_offset ?? 0);
+		return top + vertical_middle - tip_margin_top - tip_offset_height / 2 + vertical_offset;
 	} else if (position === 'top') {
-		y = top - tip_offset_height - tip_margin_top + (vertical_offset ?? 0);
+		return top - tip_offset_height - tip_margin_top + vertical_offset;
 	} else if (position === 'bottom') {
-		y = bottom - tip_margin_top + (vertical_offset ?? 0);
+		return bottom - tip_margin_top + vertical_offset;
+	} else {
+		return 0;
 	}
-	return y;
 }
 function repositionY(input: positionY_params) {
 	let y = positionY(input);
@@ -389,122 +538,4 @@ function repositionY(input: positionY_params) {
 	if (y < 0) y = 0 + min_margin;
 	if (y + tip_offset_height > screen_height) y = screen_height - tip_offset_height - min_margin;
 	return y;
-}
-function positionTooltip(
-	element: HTMLElement,
-	tooltipComponent: Tooltip,
-	position: TooltipDirections,
-	allow_dynamic_position: boolean | undefined,
-	horizontal_offset: number,
-	vertical_offset: number
-) {
-	let x: number;
-	let y: number;
-
-	// Find the bounds of the parent element of the tooltip
-	const { top, bottom, left, right, height, width } = element.getBoundingClientRect();
-	const vertical_middle = height / 2;
-	const horizontal_middle = width / 2;
-
-	// Measure the rendered tooltip's dimensions
-	let {
-		clientWidth: tip_width,
-		offsetWidth: tip_offset_width,
-		clientHeight: tip_height,
-		offsetHeight: tip_offset_height,
-		marginLeft: tip_margin_left,
-		marginTop: tip_margin_top
-	} = tooltipComponent;
-
-	// Change the position of the tooltip to the middle of the parent element's box, on the edge indicated by the 'position' parameter
-	x = positionX({
-		position,
-		left,
-		width,
-		horizontal_middle,
-		horizontal_offset,
-		tip_offset_width,
-		tip_margin_left
-	});
-	y = positionY({
-		position,
-		top,
-		bottom,
-		vertical_middle,
-		vertical_offset,
-		tip_offset_height,
-		tip_margin_top
-	});
-
-	// ** Adjust the tooltip if it would be positioned outside the viewport **
-	// Outside left-edge:
-	if (x < 0) {
-		if (allow_dynamic_position) {
-			horizontal_offset = getHorizontalOffset(position, horizontal_offset, true);
-			x = repositionX({
-				position,
-				left,
-				width,
-				horizontal_middle,
-				horizontal_offset,
-				tip_offset_width,
-				tip_margin_left
-			});
-		} else {
-			x = left;
-		}
-	}
-	// Outside right-edge:
-	else if (x + tip_width > window.innerWidth) {
-		if (allow_dynamic_position) {
-			horizontal_offset = getHorizontalOffset(position, horizontal_offset, true);
-			x = repositionX({
-				position,
-				left,
-				width,
-				horizontal_middle,
-				horizontal_offset,
-				tip_offset_width,
-				tip_margin_left
-			});
-		} else {
-			x = window.innerWidth - tip_width;
-		}
-	}
-	// Outside top-edge:
-	if (y < 0) {
-		if (allow_dynamic_position) {
-			vertical_offset = getVerticalOffset(position, vertical_offset, true);
-			y = repositionY({
-				position,
-				top,
-				bottom,
-				vertical_middle,
-				vertical_offset,
-				tip_offset_height,
-				tip_margin_top
-			});
-		} else {
-			y = y * -1;
-		}
-	}
-	// Outside bottom-edge:
-	else if (y + tip_height > window.innerHeight) {
-		if (allow_dynamic_position) {
-			vertical_offset = getVerticalOffset(position, vertical_offset, true);
-			y = repositionY({
-				position,
-				top,
-				bottom,
-				vertical_middle,
-				vertical_offset,
-				tip_offset_height,
-				tip_margin_top
-			});
-		} else {
-			y = window.innerHeight - tip_height;
-		}
-	}
-	// Update the component state
-	tooltipComponent.$set({ x, y, position });
 }
