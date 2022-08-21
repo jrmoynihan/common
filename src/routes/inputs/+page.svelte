@@ -3,6 +3,7 @@
 	import type { DatalistOption } from '$lib/inputs';
 	import { Temporal } from '@js-temporal/polyfill';
 	import TemporalDateInput from '$lib/inputs/TemporalDateInput.svelte';
+	import NumericInput from '$lib/inputs/NumericInput.svelte';
 
 	const unicode_apple = '\u{1F34E}';
 	const unicode_orange = '\u{1F34A}';
@@ -26,16 +27,14 @@
 	let selected_fruit: string;
 </script>
 
-<section class="text-inputs">
-	<h2>Text Inputs</h2>
-	<p>
+<div class="inputs-container">
+	<section class="text-inputs">
+		<h2>Text Inputs</h2>
 		<TextInput
 			placeholder="I'm a placeholder"
 			show_confirm={false}
-			tooltip_options={{ title: `I'm a plain text input with a cancel button!`, visible: true }}
+			tooltip_options={{ title: `I'm a plain text input with a cancel button!` }}
 		/>
-	</p>
-	<p>
 		<TextInput
 			bind:value={selected_fruit}
 			on:confirm={(e) => {
@@ -46,55 +45,69 @@
 			placeholder="Pick a fruit"
 			tooltip_options={{
 				title: `I'm a datalist input with a cancel AND a confirmation button!`,
-				position: 'bottom',
-				visible: true
+				position: 'bottom'
 			}}
 		/>
 		<span class="selected-fruit">{selected_fruit}</span>
-	</p>
-</section>
-<section class="date-inputs">
-	<h2>Date Inputs</h2>
-	<TemporalDateInput
-		date={Temporal.Now.zonedDateTimeISO().add({ days: 1 })}
-		min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
-		max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
-	/>
-	<TemporalDateInput
-		type={'datetime-local'}
-		date={Temporal.Now.zonedDateTimeISO().add({ days: 1 })}
-		min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
-		max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
-	/>
-	<TemporalDateInput
-		type={'datetime'}
-		min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
-		max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
-	/>
-	<TemporalDateInput
-		type={'time'}
-		min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
-		max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
-	/>
-</section>
+	</section>
+	<section class="date-inputs">
+		<h2>Date Inputs</h2>
+		<TemporalDateInput
+			date={Temporal.Now.zonedDateTimeISO().add({ days: 1 })}
+			min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
+			max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
+		/>
+		<TemporalDateInput
+			type={'datetime-local'}
+			date={Temporal.Now.zonedDateTimeISO().add({ days: 1 })}
+			min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
+			max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
+		/>
+		<TemporalDateInput
+			type={'datetime'}
+			min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
+			max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
+		/>
+		<TemporalDateInput
+			type={'time'}
+			min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
+			max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
+		/>
+	</section>
+	<section class="numeric-inputs">
+		<h2>Numeric Inputs</h2>
+		<NumericInput tooltip_options={{ title: `I'm an input with custom spinner buttons!` }} />
+		<NumericInput
+			tooltip_options={{ title: `That's not between 0 and 10 !` }}
+			max={10}
+			show_spinner_buttons={false}
+		/>
+	</section>
+</div>
 
 <style lang="scss">
+	.inputs-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		gap: 2rem 1rem;
+	}
 	section {
 		display: flex;
 		place-items: center;
 		flex-wrap: wrap;
 	}
 	.text-inputs,
-	.date-inputs {
+	.date-inputs,
+	.numeric-inputs {
 		place-self: start;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		padding: 2rem;
+		justify-self: center;
 		gap: 1rem;
-	}
-	p {
-		display: grid;
 	}
 	.selected-fruit {
 		margin: 1rem;

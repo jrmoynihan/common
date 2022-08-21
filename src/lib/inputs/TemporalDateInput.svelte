@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { tooltip, type TooltipDirections } from '$lib/tooltip';
-
+	import { tooltip, type TooltipDirections, type TooltipParameters } from '$lib/tooltip';
 	import { Temporal } from '@js-temporal/polyfill';
 	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';
@@ -17,6 +16,9 @@
 	export let input_styles: string = '';
 	export let invalid_msg: string | null | undefined = null;
 	export let invalid_msg_position: TooltipDirections = 'top';
+	export let tooltip_options: TooltipParameters = {
+		disabled: true
+	};
 	export let invalid_tooltip_css: [string, string][] = [
 		['font-size', 'smaller'],
 		['color', 'var(--date-input-invalid-message-color, salmon)'],
@@ -96,8 +98,6 @@
 		is_valid = dateInput?.checkValidity() ?? true;
 		invalid_msg = invalid_msg ? invalid_msg : dateInput?.validationMessage;
 	}
-	// $: console.log('internal', internal_string_date);
-	// $: console.log('date', date);
 </script>
 
 <label
@@ -109,7 +109,8 @@
 		title: `${invalid_msg}`,
 		visible: !is_valid,
 		disabled: is_valid || !invalid_msg,
-		css: invalid_tooltip_css
+		css: invalid_tooltip_css,
+		...tooltip_options
 	}}
 >
 	{#if label_position === 'before'}
