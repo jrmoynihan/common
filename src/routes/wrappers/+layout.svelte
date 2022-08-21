@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import PageTransition from '$lib/wrappers/PageTransition.svelte';
+	import Transition from '$lib/wrappers/Transition.svelte';
 	import type { LayoutServerData } from './$types';
 
 	export let data: LayoutServerData;
@@ -18,9 +17,9 @@
 			<a sveltekit:prefetch href={`/wrappers/${path}`}>{text}</a>
 		{/each}
 	</div>
-	<PageTransition bind:refresh={data}>
+	<Transition bind:refresh={data}>
 		<slot />
-	</PageTransition>
+	</Transition>
 </section>
 
 <style lang="scss">
