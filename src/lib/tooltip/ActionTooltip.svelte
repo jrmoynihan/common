@@ -1,7 +1,16 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-	import { scale } from 'svelte/transition';
+	import {
+		scale,
+		type EasingFunction,
+		type FadeParams,
+		type FlyParams,
+		type ScaleParams,
+		type SlideParams,
+		type TransitionConfig
+	} from 'svelte/transition';
+	import { cubicInOut } from 'svelte/easing';
 	import type { TooltipDirections } from './tooltip-action';
 	export let title: string = '';
 	export let position: TooltipDirections;
@@ -12,6 +21,7 @@
 	export let opacity = 0;
 	export let duration = 350;
 	export let delay = 100;
+	export let easing: EasingFunction = cubicInOut;
 	export let offsetHeight: number;
 	export let clientHeight: number;
 	export let clientWidth: number;
@@ -23,11 +33,21 @@
 	export let keep_visible = false;
 	export let css: [string, string][] = [];
 	export let only_for_measuring = false;
+	export let transition = scale;
+	export let transition_config:
+		| ScaleParams
+		| FlyParams
+		| FadeParams
+		| SlideParams
+		| TransitionConfig = {
+		delay,
+		duration,
+		easing,
+		start,
+		opacity
+	};
 	let styles: string = '';
 	let tooltip_element: HTMLElement | null = null;
-	// TODO: expose a way to customize the animation
-	// export let transition_type: TransitionConfig;
-	// export let transition_params: ScaleParams | FlyParams | BlurParams | FadeParams | SlideParams | DrawParams | CrossfadeParams = { start, opacity, duration, delay };
 
 	$: {
 		if (css.length > 0) styles = '';
@@ -48,7 +68,7 @@
 			bind:clientHeight
 			bind:clientWidth
 			bind:offsetWidth
-			transition:scale={{ start, opacity, duration, delay }}
+			transition:transition={transition_config}
 			class:visible={visible || keep_visible}
 			class:nothing={only_for_measuring}
 			class:top={position === 'top'}
@@ -84,7 +104,7 @@
 		box-sizing: border-box;
 		position: fixed;
 		border: var(--tooltip-border, 1px solid #ddd);
-		box-shadow: var(--tooltip-shadow, 1px 1px 2px #ddd);
+		filter: drop-shadow(var(--tooltip-drop-shadow, 1px 1px 4px hsla(0, 0%, 0%, 0.5)));
 		background-color: var(--tooltip-background-color, white);
 		border-radius: var(--tooltip-border-radius, 4px);
 		padding: var(--tooltip-padding, 0.5rem);
@@ -99,7 +119,10 @@
 		opacity: var(--tooltip-opacity, 1);
 		color: var(--tooltip-color, var(--text, inherit));
 		margin: var(--tooltip-margin, 1rem);
-		max-width: min(var(--tooltip-max-width, calc(100vw - 2rem)), calc(100vw - 2rem));
+		max-width: min(
+			var(--tooltip-max-width, min(calc(100vw - 2rem)), 250px),
+			min(calc(100vw - 2rem), 250px)
+		);
 		text-align: var(--tooltip-text-align, center);
 		z-index: var(--tooltip-z-index, 1000);
 	}
