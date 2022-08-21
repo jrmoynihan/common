@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { dev } from '$app/env';
 	import { tooltip, type TooltipDirections } from '$lib/tooltip/tooltip-action';
 	import Fa from 'svelte-fa';
 	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons/index';
-	import { writable } from 'svelte/store';
+	import { fly } from 'svelte/transition';
 	let selected_position: TooltipDirections = 'left';
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width: number = 150;
@@ -11,7 +10,6 @@
 	let disabled = false;
 	let dynamic_tooltip_text =
 		'Type in the text input while hovering the parent element to see the magic happen!';
-	let coords = writable({ x: 0, y: 0 });
 	let custom_CSS_rules: [string, string][] = [
 		['max-width', `${max_width}px`],
 		['--tooltip-color', 'black'],
@@ -25,13 +23,6 @@
 	}
 </script>
 
-<svelte:window on:mousemove={(e) => coords.set({ x: e.clientX, y: e.clientY })} />
-{#if dev}
-	<div class="top-left" style="color:orange">
-		<p>X: {$coords.x}</p>
-		<p>Y: {$coords.y}</p>
-	</div>
-{/if}
 <section>
 	<div class="settings full-width">
 		{#each positions as position}
@@ -53,10 +44,10 @@
 	<h3
 		class="full-width"
 		use:tooltip={{
-			position: selected_position,
 			keep_visible,
 			disabled,
-			title: `This is a tooltip positioned on the ${selected_position} side of the element. It will automatically reposition itself to stay within the viewport.`
+			title: `This is a tooltip positioned on top (by default). It will automatically reposition itself to stay within the viewport.`,
+			css: [['max-width', `min(100vw, 200px)`]]
 		}}
 	>
 		A Regular Tooltip
@@ -66,6 +57,8 @@
 			position: selected_position,
 			title: dynamic_tooltip_text,
 			disabled,
+			delay: 150,
+			css: [['max-width', 'min(100vw, 200px)']],
 			keep_visible
 		}}
 	>
@@ -76,6 +69,7 @@
 	<h3
 		use:tooltip={{
 			position: selected_position,
+			delay: 300,
 			title: keep_visible ? `I'll stick around` : `I'll disappear`,
 			keep_visible,
 			disabled
@@ -90,8 +84,15 @@
 			show_arrow: false,
 			disabled,
 			keep_visible,
+			delay: 200,
+			transition: fly,
+			transition_config: {
+				duration: 500,
+				x: -50,
+				y: -50
+			},
 			horizontal_offset: 10,
-			vertical_offset: -50,
+			vertical_offset: -30,
 			css: custom_CSS_rules
 		}}
 	>
@@ -99,6 +100,14 @@
 	</h3>
 	<div
 		style="display:grid; grid-template-columns: repeat(3, minmax(0,max-content)); column-gap: 0.5rem; row-gap:1rem;"
+		use:tooltip={{
+			delay: 600,
+			title: 'There are different delays on each the tooltips to achieve a staggered effect',
+			disabled: !keep_visible,
+			keep_visible,
+			position: 'left',
+			vertical_offset: -200
+		}}
 	>
 		<h4>Rule</h4>
 		<h4>Value</h4>
@@ -120,17 +129,14 @@
 </section>
 
 <style lang="scss">
-	.top-left {
-		position: fixed;
-		top: 0;
-		left: 0;
-		padding: 1rem 2rem;
-	}
 	section {
 		display: flex;
 		gap: 1rem;
 		flex-wrap: wrap;
 		place-items: center;
+		max-width: 80%;
+		justify-content: center;
+		margin: auto;
 	}
 	.settings {
 		display: flex;
