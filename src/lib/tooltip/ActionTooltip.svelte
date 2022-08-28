@@ -20,7 +20,7 @@
 	export let start = 0;
 	export let opacity = 0;
 	export let duration = 350;
-	export let delay = 100;
+	export let delay = 0;
 	export let easing: EasingFunction = cubicInOut;
 	export let offsetHeight: number;
 	export let clientHeight: number;
@@ -105,7 +105,7 @@
 		position: fixed;
 		border: var(--tooltip-border, 1px solid #ddd);
 		filter: drop-shadow(var(--tooltip-drop-shadow, 1px 1px 4px hsla(0, 0%, 0%, 0.5)));
-		background-color: var(--tooltip-background-color, white);
+		background: var(--tooltip-background, white);
 		border-radius: var(--tooltip-border-radius, 4px);
 		padding: var(--tooltip-padding, 0.5rem);
 		font-size: var(--tooltip-font-size, 0.5rem);
