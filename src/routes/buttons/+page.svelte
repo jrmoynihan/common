@@ -12,7 +12,7 @@
 		horizontal_distance: -1,
 		vertical_distance: 0
 	});
-	console.log(shadows);
+	console.log('shadows formed for buttons page', shadows);
 </script>
 
 <section class="buttons">
@@ -48,7 +48,7 @@
 			keep_visible
 		}}
 	/>
-	<button style={`${shadows} padding: 1rem; background: inherit; color: white;`}
+	<button style={`${shadows} padding: 1rem; background: inherit; color: var(--text);`}
 		>[WIP] Shadow Generation</button
 	>
 	<ToggleSwitch
