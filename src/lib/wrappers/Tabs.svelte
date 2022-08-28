@@ -13,6 +13,10 @@
 	export let transition_parameters: SvelteTransitionParams = null;
 	export let in_transition_parameters: SvelteTransitionParams = null;
 	export let out_transition_parameters: SvelteTransitionParams = null;
+	export let tab_container_styles = '';
+	export let tab_headers_styles = '';
+	export let header_label_styles = '';
+	export let header_text_styles = '';
 
 	export const checkForEnterOrSpace = (
 		e: KeyboardEvent & { currentTarget: EventTarget & HTMLLabelElement },
@@ -24,18 +28,19 @@
 	};
 </script>
 
-<div class="tabs-container">
-	<div class="tab-header">
+<div class="tabs-container" style={tab_container_styles}>
+	<div class="tab-headers" style={tab_headers_styles}>
 		{#if tabs}
 			{#each tabs as tab, i}
 				<label
+					style={header_label_styles}
 					class:active={tab === selected_tab}
 					for={tab.name}
 					tabindex="0"
 					on:keypress={(e) => checkForEnterOrSpace(e, i)}
 				>
 					<input type="radio" bind:group={selected_tab} value={tab} id={tab.name} />
-					<h3>{tab.name}</h3>
+					<h3 style={header_text_styles}>{tab.name}</h3>
 				</label>
 			{/each}
 		{/if}
@@ -58,13 +63,9 @@
 </div>
 
 <style lang="scss">
-	@import '../styles/mixins.scss';
 	.tabs-container {
 		grid-template-rows: max-content max-content;
 		margin: 1rem 0;
-		@include responsive_desktop_only {
-			margin: 1rem 5rem;
-		}
 	}
 	label {
 		box-sizing: border-box;
@@ -94,31 +95,23 @@
 		& > label:last-of-type {
 			border-radius: 0 1rem 1rem 0;
 		}
-		& > label.mobile {
-			border-radius: 1rem;
-		}
-		& > label:hover:not(.active),
-		& > label:focus-within:not(.active) {
-			&.dark {
-				background-color: hsla(var(--accent-value, hsl(37, 75%, 65%)), 20%);
-			}
-			&.light {
-				background-color: hsla(var(--accent-value, forestgreen), 60%);
-				color: var(--background);
-			}
-		}
+		// & > label.mobile {
+		// 	border-radius: 1rem;
+		// }
+		// & > label:hover:not(.active),
+		// & > label:focus-within:not(.active) {
+		// 	&.dark {
+		// 		background-color: hsla(var(--accent-value, hsl(37, 75%, 65%)), 20%);
+		// 	}
+		// 	&.light {
+		// 		background-color: hsla(var(--accent-value, forestgreen), 60%);
+		// 		color: var(--background);
+		// 	}
+		// }
 	}
 
 	input[type='radio'] {
 		visibility: hidden;
 		display: none;
-	}
-
-	.tab-component {
-		border-radius: 1rem;
-		display: grid;
-		align-items: center;
-		box-shadow: 0 0 2px 2px hsla(0, 0%, 0%, 0.3);
-		padding: 1rem;
 	}
 </style>
