@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import Tooltip from '$lib/tooltip/ActionTooltip.svelte';
 import { writable, get } from 'svelte/store';
 import type {
@@ -29,8 +30,14 @@ export interface TooltipParameters {
 	show_arrow?: boolean;
 	/** Allows the tooltip to reposition itself to fit on-screen */
 	allow_dynamic_position?: boolean;
-	/** Delay to the in/out transition of the tooltip.  An explicit transition config will override this! */
+	/** Delay the entrnace and exit transition of the tooltip symmetrically.  An explicit transition config's delay property will override this! */
 	delay?: number;
+	/** Delay just on the appearance of the tooltip.  Overrides the more general 'delay' property, but an explicit transition config's delay property will override this! */
+	in_delay?: number;
+	/** Delay just on the exit of the tooltip.  Overrides the more general 'delay' property, an explicit transition config's delay property will override this! */
+	out_delay?: number;
+	/** Delays the calculation of the tooltip's position upon mounting.  Useful for waiting for a transition to finish on the parent element before starting the position calculation. */
+	positioning_delay?: number;
 	/** Duration of the in/out transition of the tooltip.  An explicit transition config will override this! */
 	duration?: number;
 	/** Easing function of the in/out transition of the tooltip.  An explicit transition config will override this! */
@@ -64,6 +71,9 @@ interface TooltipActionParameters extends TooltipParameters {
 const default_parameters: TooltipActionParameters = {
 	position: 'top',
 	delay: 0,
+	in_delay: 0,
+	out_delay: 0,
+	positioning_delay: 0,
 	duration: 400,
 	keep_visible: false,
 	visible: false,
@@ -95,12 +105,11 @@ export const tooltip = (
 
 	// Find offsets if none were provided
 	tooltip_parameters.update((current_parameters) => {
-		let current_position = current_parameters.position ?? 'top';
 		if (current_parameters.horizontal_offset === undefined) {
-			current_parameters.horizontal_offset = getHorizontalOffset(current_position);
+			current_parameters.horizontal_offset = getHorizontalOffset(current_parameters.position);
 		}
 		if (current_parameters.vertical_offset === undefined) {
-			current_parameters.vertical_offset = getVerticalOffset(current_position);
+			current_parameters.vertical_offset = getVerticalOffset(current_parameters.position);
 		}
 		return current_parameters;
 	});
@@ -112,22 +121,60 @@ export const tooltip = (
 
 	// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
 	const new_tooltip_parameters = getParametersForNewTooltip();
+	const { visible, in_delay, out_delay, positioning_delay, ...all_other_new_tooltip_parameters } =
+		new_tooltip_parameters;
+	const { delay } = new_tooltip_parameters;
 
 	// Make the tooltip instance.
 	tooltipComponent = new Tooltip({
 		props: {
-			...new_tooltip_parameters
+			...all_other_new_tooltip_parameters
 		},
 		intro: true,
 		target: document.body
 	});
+
+	// Create a resize observer for the parent element
+	const resize_observer = new ResizeObserver((entries) => {
+		for (const entry of entries) {
+			if (entry.borderBoxSize) {
+				initializeTooltipPosition();
+			}
+		}
+	});
+	resize_observer.observe(element);
+
+	// Add a resize observer to the window that triggers repositioning/resizing of the tooltip, and a scroll event listener to the document
+	if (browser) {
+		window.addEventListener('resize', resize);
+		document.addEventListener('scroll', scroll);
+	}
+
 	// After a short delay upon mounting, calculate the position of the tooltip and show it if needed.
 	setTimeout(() => {
 		initializeTooltipPosition();
 		if (new_tooltip_parameters.visible) {
-			tooltipComponent.$set({ visible: true });
+			const visibility_delay = in_delay ?? delay ?? 0;
+			setTimeout(() => {
+				tooltipComponent.$set({ visible: true });
+			}, visibility_delay);
 		}
-	}, 50);
+	}, positioning_delay);
+
+	async function resize() {
+		initializeTooltipPosition();
+	}
+
+	let ticking = false;
+	async function scroll() {
+		if (!ticking) {
+			window.requestAnimationFrame(() => {
+				initializeTooltipPosition(true);
+				ticking = false;
+			});
+			ticking = true;
+		}
+	}
 
 	function mouseEnter(event?: MouseEvent) {
 		// If not left-clicking while entering the element's box (i.e. dragging)...
@@ -135,7 +182,9 @@ export const tooltip = (
 			// Remember the existing title attribute and set the title store to it can react to changes
 			storeTitle();
 
-			tooltipComponent.$set({ visible: true });
+			setTimeout(() => {
+				tooltipComponent.$set({ visible: true });
+			}, get(tooltip_parameters).in_delay);
 		}
 	}
 	function getParametersForNewTooltip(): TooltipActionParameters {
@@ -145,6 +194,9 @@ export const tooltip = (
 			allow_dynamic_position,
 			disabled,
 			log_functions,
+			out_delay,
+			in_delay,
+			positioning_delay,
 			...passing_parameters
 		} = get(tooltip_parameters);
 		return passing_parameters;
@@ -155,26 +207,28 @@ export const tooltip = (
 			target: document.body
 		});
 	}
-	function initializeTooltipPosition() {
+	async function initializeTooltipPosition(allow_offscreen: boolean = false) {
 		// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
 		const new_tooltip_parameters = getParametersForNewTooltip();
+		const { visible, ...parameters_without_visible } = new_tooltip_parameters;
 		const { horizontal_offset, vertical_offset } = get(tooltip_parameters);
 
 		// Create a non-interactive copy of the tooltip that appears instantly so we can measure the full width of the new tooltip before positioning it
 		const invisible_tooltip = makeInvisibleTooltip(new_tooltip_parameters);
 		// Position the invisible tooltip
-		positionTooltip(
+		await positionTooltip(
 			element,
 			invisible_tooltip,
 			new_tooltip_parameters.position ?? 'top',
 			new_tooltip_parameters.allow_dynamic_position,
 			horizontal_offset,
-			vertical_offset
+			vertical_offset,
+			allow_offscreen
 		);
 
 		// Move the real one to the same position
 		tooltipComponent.$set({
-			...new_tooltip_parameters,
+			...parameters_without_visible,
 			x: invisible_tooltip.x,
 			y: invisible_tooltip.y,
 			position: invisible_tooltip.position
@@ -210,12 +264,14 @@ export const tooltip = (
 		// 		get(tooltip_parameters).vertical_offset ?? 0
 		// 	);
 		// }
+		if (tooltipComponent) initializeTooltipPosition();
 	}
 
 	async function mouseLeave(event: MouseEvent) {
 		// If the left-button isn't being pressed...
 		if (event.buttons !== 1 && tooltipComponent && element) {
-			await new Promise((r) => setTimeout(r, get(tooltip_parameters).delay));
+			const { delay, out_delay } = get(tooltip_parameters);
+			await new Promise((r) => setTimeout(r, out_delay ?? delay));
 			tooltipComponent.$set({ visible: false });
 			// Restore the `title` attribute
 			if (title_attribute) element.setAttribute('title', title_attribute);
@@ -273,13 +329,14 @@ export const tooltip = (
 			});
 		}
 	}
-	function positionTooltip(
+	async function positionTooltip(
 		parent_element: HTMLElement,
 		tooltipComponent: Tooltip,
 		new_position: TooltipDirections,
 		allow_dynamic_position: boolean | undefined,
 		horizontal_offset?: number,
-		vertical_offset?: number
+		vertical_offset?: number,
+		allow_offscreen: boolean = false
 	) {
 		let x: number;
 		let y: number;
@@ -323,7 +380,6 @@ export const tooltip = (
 		// ** Adjust the tooltip if it would be positioned outside the viewport **
 		// Outside left-edge:
 		if (x < 0) {
-			console.log('outside left edge...');
 			if (allow_dynamic_position) {
 				horizontal_offset = getHorizontalOffset(new_position, horizontal_offset, true);
 				x = repositionX({
@@ -335,13 +391,12 @@ export const tooltip = (
 					tip_offset_width,
 					tip_margin_left
 				});
-			} else {
+			} else if (!allow_offscreen) {
 				x = left;
 			}
 		}
 		// Outside right-edge:
 		else if (x + tip_width > window.innerWidth) {
-			console.log('outside right edge...');
 			if (allow_dynamic_position) {
 				horizontal_offset = getHorizontalOffset(new_position, horizontal_offset, true);
 				x = repositionX({
@@ -353,13 +408,12 @@ export const tooltip = (
 					tip_offset_width,
 					tip_margin_left
 				});
-			} else {
+			} else if (!allow_offscreen) {
 				x = window.innerWidth - tip_width;
 			}
 		}
 		// Outside top-edge:
 		if (y < 0) {
-			console.log('outside top edge...');
 			if (allow_dynamic_position) {
 				vertical_offset = getVerticalOffset(new_position, vertical_offset, true);
 				y = repositionY({
@@ -371,13 +425,12 @@ export const tooltip = (
 					tip_offset_height,
 					tip_margin_top
 				});
-			} else {
+			} else if (!allow_offscreen) {
 				y = y * -1;
 			}
 		}
 		// Outside bottom-edge:
 		else if (y + tip_height > window.innerHeight) {
-			console.log('outside bottom edge...');
 			if (allow_dynamic_position) {
 				vertical_offset = getVerticalOffset(new_position, vertical_offset, true);
 				y = repositionY({
@@ -389,7 +442,7 @@ export const tooltip = (
 					tip_offset_height,
 					tip_margin_top
 				});
-			} else {
+			} else if (!allow_offscreen) {
 				y = window.innerHeight - tip_height;
 			}
 		}
@@ -421,6 +474,8 @@ export const tooltip = (
 			element.removeEventListener('mouseover', mouseEnter);
 			element.removeEventListener('mouseleave', mouseLeave);
 			element.removeEventListener('mousemove', mouseMove);
+			window.removeEventListener('resize', resize);
+			resize_observer.disconnect();
 		}
 	};
 };
