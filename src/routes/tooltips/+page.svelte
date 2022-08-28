@@ -3,19 +3,25 @@
 	import Fa from 'svelte-fa';
 	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons/index';
 	import { fly } from 'svelte/transition';
-	let selected_position: TooltipDirections = 'left';
+	let selected_position: TooltipDirections = 'top';
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width: number = 150;
 	let keep_visible = false;
 	let disabled = false;
+	let initially_visible_example = true;
 	let dynamic_tooltip_text =
 		'Type in the text input while hovering the parent element to see the magic happen!';
-	let custom_CSS_rules: [string, string][] = [
+	let styling_green_CSS: [string, string][] = [
 		['max-width', `${max_width}px`],
 		['--tooltip-color', 'black'],
 		['--tooltip-font-weight', '600'],
 		['--tooltip-font-size', '1.5rem'],
-		['--tooltip-background-color', 'yellow']
+		['--tooltip-background', 'radial-gradient( white 30%, lightgreen)'],
+		['--tooltip-drop-shadow', '0px 0px 10px lime']
+	];
+	let hot_sun_CSS: [string, string][] = [
+		['background-color', 'lightyellow'],
+		['box-shadow', '0px 0px 16px 8px orange']
 	];
 
 	function capitalize(str: string) {
@@ -41,18 +47,36 @@
 		</label>
 	</div>
 
-	<h3
+	<button
 		class="full-width"
 		use:tooltip={{
+			position: selected_position,
 			keep_visible,
 			disabled,
-			title: `This is a tooltip positioned on top (by default). It will automatically reposition itself to stay within the viewport.`,
+			title: `This is a tooltip positioned on ${selected_position} ${
+				selected_position === 'top' ? '(the default)' : ''
+			}. It will automatically reposition itself to stay within the viewport and can update its position dynamically.`,
 			css: [['max-width', `min(100vw, 200px)`]]
 		}}
 	>
-		A Regular Tooltip
-	</h3>
-	<h3
+		Tooltips Can Adjust Their Position Automatically
+	</button>
+	<button
+		class="full-width"
+		use:tooltip={{
+			position: selected_position,
+			visible: initially_visible_example,
+			delay: 250,
+			keep_visible,
+			disabled,
+			title: `This is a tooltip that is set to become visible as soon as its parent is mounted (after waiting for a specified delay). Mouseout its parent to hide the tooltip, or do it programmatically by clicking its parent button!`,
+			css: [['max-width', `min(100vw, 200px)`], ...hot_sun_CSS]
+		}}
+		on:click={() => (initially_visible_example = !initially_visible_example)}
+	>
+		Tooltips Can Be Used Without the Mouse
+	</button>
+	<button
 		use:tooltip={{
 			position: selected_position,
 			title: dynamic_tooltip_text,
@@ -63,21 +87,23 @@
 		}}
 	>
 		Dynamically Updating Tooltip Text
-	</h3>
+	</button>
 	<input type="text" class="tooltip-text-input" bind:value={dynamic_tooltip_text} />
 
-	<h3
+	<button
 		use:tooltip={{
 			position: selected_position,
 			delay: 300,
-			title: keep_visible ? `I'll stick around` : `I'll disappear`,
+			title: keep_visible
+				? `I'll stick around. It's useful for debugging styles on the tip too!`
+				: `I'll disappear after a short delay`,
 			keep_visible,
 			disabled
 		}}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
-	</h3>
-	<h3
+	</button>
+	<button
 		use:tooltip={{
 			position: selected_position,
 			title: `I'm so stylin'!`,
@@ -88,16 +114,14 @@
 			transition: fly,
 			transition_config: {
 				duration: 500,
-				x: -50,
-				y: -50
+				x: -70,
+				y: 70
 			},
-			horizontal_offset: 10,
-			vertical_offset: -30,
-			css: custom_CSS_rules
+			css: styling_green_CSS
 		}}
 	>
 		Tooltips Can Be Styled
-	</h3>
+	</button>
 	<div
 		style="display:grid; grid-template-columns: repeat(3, minmax(0,max-content)); column-gap: 0.5rem; row-gap:1rem;"
 		use:tooltip={{
@@ -105,6 +129,7 @@
 			title: 'There are different delays on each the tooltips to achieve a staggered effect',
 			disabled: !keep_visible,
 			keep_visible,
+			css: hot_sun_CSS,
 			position: 'left',
 			vertical_offset: -200
 		}}
@@ -112,17 +137,17 @@
 		<h4>Rule</h4>
 		<h4>Value</h4>
 		<div />
-		{#each custom_CSS_rules as [rule, value]}
+		{#each styling_green_CSS as [rule, value]}
 			<input type="text" bind:value={rule} />
 			<input type="text" bind:value />
 			<button
 				class="delete"
 				on:click={() =>
-					(custom_CSS_rules = custom_CSS_rules.filter((r) => r[0] !== rule && r[1] !== value))}
+					(styling_green_CSS = styling_green_CSS.filter((r) => r[0] !== rule && r[1] !== value))}
 				><Fa icon={faTrash} size="lg" /></button
 			>
 		{/each}
-		<button class="add" on:click={() => (custom_CSS_rules = [...custom_CSS_rules, ['', '']])}
+		<button class="add" on:click={() => (styling_green_CSS = [...styling_green_CSS, ['', '']])}
 			><Fa icon={faPlus} />Add CSS Rule</button
 		>
 	</div>
@@ -154,27 +179,35 @@
 		gap: 0.5rem;
 	}
 	button {
-		border-radius: 1rem;
-		padding: 0.5rem 1rem;
+		font-weight: bold;
+		font-size: large;
+		background-color: seagreen;
+		margin: auto;
+		max-width: max-content;
+		border-radius: 20px 50px 20px 50px;
+		padding: 1rem;
+		color: white;
+		border: none;
+		transition: transform 250ms ease-in-out;
+		&:active {
+			transform: scale3d(0.98, 0.98, 1);
+		}
+		&.delete,
+		&.add {
+			border: initial;
+			border-radius: 1rem;
+		}
 		&.delete {
 			background-color: darkred;
-			color: white;
 		}
 		&.add {
 			background-color: green;
-			color: white;
 			grid-column: 1 / span 2;
 			display: flex;
 			gap: 1rem;
 			place-items: center;
 			place-content: center;
 		}
-	}
-	h3 {
-		background-color: seagreen;
-		padding: 1rem;
-		margin: auto;
-		max-width: max-content;
 	}
 	h4 {
 		text-align: center;
@@ -184,5 +217,8 @@
 		padding: 1rem;
 		border-radius: 1rem;
 		margin: auto;
+	}
+	.tooltip-text-input {
+		width: 100%;
 	}
 </style>
