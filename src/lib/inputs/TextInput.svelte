@@ -110,26 +110,24 @@
 		grid-row: 1;
 		grid-column: 1;
 		height: 100%;
-		padding: var(--tex-input-padding, 1.25rem);
-		color: var(--text, black);
+		padding: var(--text-input-padding, 1.25rem);
+		color: var(--text-input-color, black);
 	}
 	input[type='text'] {
-		--input-border-radius: 1rem;
-		--button-padding-space: 2.5rem;
 		box-sizing: border-box;
-		background-color: var(--background, white);
+		background-color: var(--text-input-background, white);
 		width: 100%;
 		margin: 0;
 		padding-bottom: 0.5rem;
-		border-radius: var(--input-border-radius, 1rem);
-		border: var(--input-border, none);
+		border-radius: var(--text-input-border-radius, 1rem);
+		border: var(--text-input-border, none);
 		max-height: max-content;
 		min-height: 5ch;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		/* to make room for the cancel button */
-		padding-right: var(--button-padding-space, 3rem);
+		padding-right: var(--text-input-button-padding-space, 2.5rem);
 
 		&:not(:focus):hover ~ .placeholder {
 			opacity: 0.2;
@@ -146,7 +144,7 @@
 		opacity: 0.6;
 	}
 	.btn-container {
-		--button-margin: 0.15rem;
+		--text-input-button-margin: 0.15rem;
 		--input-border-radius: 1rem;
 		box-sizing: content-box;
 		margin: 0;
@@ -167,12 +165,12 @@
 		aspect-ratio: 1 / 1;
 		background-color: inherit;
 		color: var(--text-input-color, inherit);
-		border: var(--button-border, none);
+		border: var(--text-input-button-border, none);
 
 		transition: color 300ms ease, opacity 300ms ease;
 		opacity: 0;
 		padding: var(--text-input-button-padding, calc(var(--max-width) / 3.5));
-		margin-right: var(--button-margin-right, var(--button-margin));
+		margin-right: var(--text-input-button-margin-right, var(--text-input-button-margin));
 
 		&:focus {
 			accent-color: blue;
@@ -190,11 +188,11 @@
 		}
 	}
 	.cancel-btn {
-		border-radius: var(--input-border-radius, 1rem) 0 var(--input-border-radius, 1rem) 0;
+		border-radius: var(--text-input-border-radius, 1rem) 0 var(--text-input-border-radius, 1rem) 0;
 		margin-bottom: var(--button-margin-bottom, var(--button-margin));
 		&.no-confirm {
 			box-sizing: border-box;
-			border-radius: var(--input-border-radius);
+			border-radius: var(--text-input-border-radius);
 			margin-bottom: 0;
 			padding: calc(var(--max-width) / 3.5) calc(var(--max-width) / 3);
 			height: 100%;
@@ -204,8 +202,8 @@
 		}
 	}
 	.confirm-btn {
-		border-radius: 0 var(--input-border-radius, 1rem) 0 var(--input-border-radius, 1rem);
-		margin-top: var(--button-margin-top, var(--button-margin));
+		border-radius: 0 var(--text-input-border-radius, 1rem) 0 var(--text-input-border-radius, 1rem);
+		margin-top: var(--text-input-button-margin-top, var(--text-input-button-margin));
 	}
 
 	/* Move the placeholder div when anything in the container receives focus */

@@ -8,15 +8,6 @@ const config = {
 		alias: {
 			$routes: path.resolve('./src/routes')
 		}
-	},
-	ssr: {
-		external: ['$app/environment']
-	},
-	build: {
-		external: ['$app/environment']
-	},
-	optimizeDeps: {
-		exclude: ['$app/environment']
 	}
 };
 

@@ -6,7 +6,7 @@
 	 * directs the user to /home/interests and /home/books)*/
 	export let links: string[] = [];
 	/** The path prefix for all links in this navigation component */
-	export let parent_path = '/';
+	export let parent_path = '';
 	/** Styles for the <nav> parent element */
 	export let static_styles = '';
 	/** Styles to pass to the individual nav links */

@@ -19,7 +19,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		alias: {
-			'$app/environment': '.svelte-kit/runtime/env.js'
+			'$app/environment': '@sveltejs/kit/runtime/app/environment.js'
 		}
 	},
 
