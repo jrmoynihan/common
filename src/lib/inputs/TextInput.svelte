@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Fa from 'svelte-fa';
-	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
+	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index.es';
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
 	import type { DatalistOption } from '$lib/inputs';
 

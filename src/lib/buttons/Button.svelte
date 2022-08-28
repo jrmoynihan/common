@@ -5,6 +5,7 @@
 	import type { SvelteComponentTyped } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import type { IconSize, SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
+	import { browser } from '$app/environment';
 
 	/** Options to style the tooltip or modify its visible/disabled state */
 	export let tooltip_options: TooltipParameters = {
@@ -15,8 +16,12 @@
 	let styles = static_styles;
 	/** External classes to add to the button (typically, these are best done by wrapping a Button and passing in specific styles, making a styled component) */
 	export let classes = '';
-	/** An array of dynamic CSS style rules and values to apply to the button */
+	/** An array of dynamic CSS style rules and values  to apply to the button.  They will change when these variables change */
 	export let dynamic_styles: [string, string][] = [];
+	/** An array of hover CSS styles rules and values to apply to the button */
+	export let hover_styles: [string, string][] = [];
+	/** An array of focus CSS styles rules and values to apply to the button.  (default: uses the same styles as hover state). */
+	export let focus_styles: [string, string][] = hover_styles;
 	/** A font-awwesome icon to use inside the button */
 	export let icon: IconDefinition | null = null;
 	/** The size of the icon */
@@ -34,6 +39,9 @@
 	/** A Svelte transition to use on the button */
 	export let transition: SvelteTransition = fade;
 	export let transition_config: SvelteTransitionParams = { duration: 0 };
+	let button: HTMLButtonElement;
+	let hovered: boolean = false;
+	let focused: boolean = false;
 
 	$: {
 		if (dynamic_styles.length > 0) styles = static_styles;
@@ -41,9 +49,36 @@
 			styles = styles.concat(`${key}: ${value};`);
 		});
 	}
+	$: {
+		if (hover_styles.length > 0 && hovered && button && browser) {
+			hover_styles?.forEach(([key, value]) => {
+				button.style.setProperty(key, value);
+			});
+		} else if (!hovered && button && browser) {
+			hover_styles?.forEach(([key, value]) => {
+				button.style.removeProperty(key);
+			});
+			// Re-apply styles that should stay
+			styles = static_styles;
+		}
+	}
+	// $: {
+	// 	if (focus_styles.length > 0 && focused && button && browser) {
+	// 		focus_styles?.forEach(([key, value]) => {
+	// button.style.setProperty(key, value);
+	// 		});
+	// 	} else if (!focused && button && browser) {
+	// 		focus_styles?.forEach(([key, value]) => {
+	// button.style.removeProperty(key)
+	// 		});
+	// 		// Re-apply styles that should stay
+	// 		styles = static_styles;
+	// 	}
+	// }
 </script>
 
 <button
+	bind:this={button}
 	transition:transition={transition_config}
 	use:tooltip={{ ...tooltip_options }}
 	title={title ?? tooltip_options.title}
@@ -51,8 +86,14 @@
 	class:low={box_shadow === 'low'}
 	class:medium={box_shadow === 'medium'}
 	class:high={box_shadow === 'high'}
+	class:hovered
+	class:focused
 	style={`${styles}`}
 	{disabled}
+	on:mouseenter={() => (hovered = true)}
+	on:mouseleave={() => (hovered = false)}
+	on:focus={() => (focused = true)}
+	on:blur={() => (focused = false)}
 	on:click
 >
 	<slot />
@@ -105,15 +146,25 @@
 		padding: var(--button-padding, 1rem);
 		color: var(--button-color, inherit);
 		background: var(--button-background, inherit);
-		transition: var(--button-transition, all 0.3s ease-in-out);
+		transition: var(--button-transition, all 250ms);
 		&:hover,
 		&:focus-visible {
 			cursor: pointer;
 			background: var(--button-hover-background, initial);
+			box-shadow: var(--button-hover-box-shadow, initial);
+			&.low {
+				box-shadow: var(--button-hover-box-shadow, var(--shadow-elevation-low));
+			}
+			&.medium {
+				box-shadow: var(--button-hover-box-shadow, var(--shadow-elevation-medium));
+			}
+			&.high {
+				box-shadow: var(--button-hover-box-shadow, var(--shadow-elevation-high));
+			}
 		}
-		// &:not(:hover) {
-		// 	outline: var(--button-outline-hover, 1px solid hsla(0, 0%, 0%, 0.2));
-		// }
+		&:focus-visible {
+			outline: var(--button-hover-outline, -webkit-focus-ring-color auto 1px);
+		}
 		&:active {
 			transform: scale3d(1, 1, 1);
 			&.low {
@@ -138,5 +189,9 @@
 	.high {
 		transform: scale3d(1.025, 1.025, 1);
 		box-shadow: var(--shadow-elevation-high);
+	}
+	.hovered,
+	.focused {
+		opacity: 1;
 	}
 </style>

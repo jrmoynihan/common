@@ -53,8 +53,9 @@
 	<ToggleSwitch
 		bind:checked={keep_visible}
 		label_text={`I'm a toggle switch!`}
-		customButtonStyles={'display: grid; gap: 1rem; grid-auto-flow: column;'}
+		button_styles={'display: grid; gap: 1rem; grid-auto-flow: column;'}
 	/>
+	<Button hover_styles={[['box-shadow', '0 0 10px yellow']]} />
 </section>
 
 <style lang="scss">

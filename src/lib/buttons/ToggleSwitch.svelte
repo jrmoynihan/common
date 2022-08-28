@@ -13,10 +13,10 @@
 	export let slider_text = '';
 	// Add override styles
 	export let scale = '1rem';
-	export let sliderStyles = '';
-	export let labelStyles = '';
-	export let customButtonStyles = '';
-	export let customButtonClasses = '';
+	export let slider_styles = '';
+	export let label_styles = '';
+	export let button_styles = '';
+	export let button_classes = '';
 	export let transition = slide;
 	export let transition_config: TransitionConfig = {
 		duration: 0
@@ -59,11 +59,11 @@
 	{transition_config}
 	{disabled}
 	{title}
-	static_styles={`border: none; outline: none; --scale: ${scale}; ${customButtonStyles}`}
-	classes={`toggle ${customButtonClasses}`}
+	static_styles={`border: 0; --scale: ${scale}; ${button_styles}`}
+	classes={`toggle ${button_classes}`}
 >
 	{#if label_text !== ''}
-		<label class="label-text pointer" for={'toggle'} style={labelStyles}>
+		<label class="label-text pointer" for={'toggle'} style={label_styles}>
 			{label_text}
 		</label>
 	{/if}
@@ -76,7 +76,7 @@
 	>
 		<!-- NOTE: Subtle fix made by changing this to on:change event instead of on:click -->
 		<input type="checkbox" {disabled} bind:checked on:change|stopPropagation={toggleClicked} />
-		<span class="slider round" style={sliderStyles} data-slider-text={slider_text} />
+		<span class="slider round" style={slider_styles} data-slider-text={slider_text} />
 	</span>
 	{#if icon}
 		<span class="icon">
