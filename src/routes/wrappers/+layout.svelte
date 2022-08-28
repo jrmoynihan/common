@@ -1,48 +1,52 @@
 <script lang="ts">
 	import Transition from '$lib/wrappers/Transition.svelte';
-	import type { LayoutServerData } from './$types';
+	import { fly } from 'svelte/transition';
+	import Navigation from '$lib/navigation/Navigation.svelte';
+	import { beforeNavigate } from '$app/navigation';
 
-	export let data: LayoutServerData;
-	let links = [
-		{ path: 'route-1', text: 'Transition to Route 1' },
-		{ path: 'route-2', text: 'Transition to Route 2' }
-	];
-	console.log('data', data);
+	let refresh: boolean = false;
+	const links: string[] = ['transition', 'accordion', 'modal', 'tabs'];
+	const parent_path = '/wrappers';
+
+	beforeNavigate(async (nav) => {
+		const { from, to } = nav;
+		if (from?.pathname === to?.pathname) return;
+		if (from?.pathname && to?.pathname) {
+			const from_path_segments = from.pathname.split('/');
+			const to_path_segments = to.pathname.split('/');
+			const last_from_segment = from_path_segments.length - 1;
+			const last_to_segment = to_path_segments.length - 1;
+			console.log(
+				'from:',
+				from_path_segments[last_from_segment],
+				'to:',
+				to_path_segments[last_to_segment]
+			);
+			if (from_path_segments[2] !== to_path_segments[2]) {
+				refresh = !refresh;
+			}
+		}
+	});
 </script>
 
 <section>
-	<h2>Wrappers</h2>
-	<div class="wrapper-links">
-		{#each links as { path, text }}
-			<a sveltekit:prefetch href={`/wrappers/${path}`}>{text}</a>
-		{/each}
-	</div>
-	<Transition bind:refresh={data}>
+	<Navigation {links} {parent_path} />
+
+	<Transition
+		bind:refresh
+		in_transition={fly}
+		out_transition={fly}
+		in_transition_parameters={{ duration: 350, delay: 400, x: -100 }}
+		out_transition_parameters={{ duration: 400, x: 100 }}
+	>
 		<slot />
 	</Transition>
 </section>
 
 <style lang="scss">
-	h2 {
-		margin: auto;
-	}
-	.wrapper-links {
-		display: flex;
-		flex-direction: column;
-		align-items: start;
-		justify-items: center;
-	}
 	section {
 		display: grid;
 		grid-auto-rows: max-content;
 		grid-template-columns: 1fr;
-	}
-	a {
-		font-style: bold;
-		color: yellow;
-		padding: 0.5rem;
-		&:visited {
-			color: orange;
-		}
 	}
 </style>
