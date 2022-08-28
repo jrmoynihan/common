@@ -1,6 +1,6 @@
 {
 	"name": "@jrmoynihan/common",
-	"version": "2.6.9",
+	"version": "2.6.10",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
