@@ -2,10 +2,10 @@
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
-	import {Fa} from 'svelte-fa';
+	import { Fa } from 'svelte-fa';
 	import { cubicInOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
-	import Transition from './Transition.svelte';
+	import Transition from '$lib/wrappers/Transition.svelte';
 
 	export let summary_text: string = '';
 	export let expand_icon_position: 'left' | 'right' | 'none' = 'right';

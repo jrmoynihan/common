@@ -1,5 +1,5 @@
-import { browser } from '../../../.svelte-kit/runtime/app/env.js';
-import { myLog } from './logging.js';
+import { browser } from '$app/environment';
+import { myLog } from '$lib/functions';
 
 export const getLocalStorageItem = async <T>(key: string): Promise<any> => {
 	if (browser) {

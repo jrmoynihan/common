@@ -1,4 +1,4 @@
-import { defaultToast, errorToast, type myToastOptions } from '../toasts/toasts.js';
+import { defaultToast, errorToast, type myToastOptions } from '$lib/toasts';
 
 export interface myLogType {
 	msg: string;

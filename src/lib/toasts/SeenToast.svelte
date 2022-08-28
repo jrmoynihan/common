@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { browser } from '../../../.svelte-kit/runtime/app/env.js';
+	import { browser } from '$app/environment';
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
-	import { setLocalStorageItem } from '../functions/local-storage.js';
+	import { setLocalStorageItem } from '$lib/functions';
 
 	export let message_markup = '';
 	export let local_storage_key = browser ? crypto.randomUUID() : '';

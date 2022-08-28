@@ -6,7 +6,7 @@ const config = {
 	plugins: [sveltekit()],
 	resolve: {
 		alias: {
-			$app: path.resolve('.svelte-kit/runtime/app')
+			$routes: path.resolve('./src/routes')
 		}
 	}
 };

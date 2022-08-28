@@ -1,6 +1,6 @@
-import SeenToast from './SeenToast.svelte';
+import SeenToast from '$lib/toasts/SeenToast.svelte';
 import { toast } from '@zerodevx/svelte-toast';
-import { all_icons, policeCarLight } from '../functions/logging.js';
+import { all_icons, policeCarLight } from '$lib/functions/logging';
 
 export type myToastOptions = {
 	id?: number | null;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Tooltips from '../../tooltips/+page.svelte';
+	import Tooltips from '$routes/tooltips/+page.svelte';
 	import { Tab } from '$lib/wrappers/tab';
 	import Tabs from '$lib/wrappers/Tabs.svelte';
 	import Accordions from '../accordion/+page.svelte';

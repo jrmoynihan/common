@@ -1,4 +1,4 @@
-import { browser } from '../../../.svelte-kit/runtime/app/env.js';
+import { browser } from '$app/environment';
 import Tooltip from '$lib/tooltip/ActionTooltip.svelte';
 import { writable, get } from 'svelte/store';
 import type {
