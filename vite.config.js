@@ -8,6 +8,9 @@ const config = {
 		alias: {
 			$routes: path.resolve('./src/routes')
 		}
+	},
+	ssr: {
+		external: ['$app/environment']
 	}
 };
 

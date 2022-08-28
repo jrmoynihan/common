@@ -17,7 +17,10 @@ const config = {
 	],
 
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		alias: {
+			'$app/environment': '.svelte-kit/runtime/env.js'
+		}
 	},
 
 	vitePlugin: {
