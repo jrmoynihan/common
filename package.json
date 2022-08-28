@@ -5,7 +5,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"package": "svelte-kit package",
+		"package": "svelte-package",
 		"package-publish-patch": "pnpm version patch && svelte-kit package && cd package && pnpm publish",
 		"package-publish-minor": "svelte-kit package && cd package && pnpm version minor && pnpm publish",
 		"package-minor-test": "pnpm version minor && svelte-kit package && cd package",
@@ -35,12 +35,16 @@
 		"svelte2tsx": "^0.5.14",
 		"tslib": "^2.4.0",
 		"typescript": "^4.7.4",
-		"vite": "^3.0.9"
+		"vite": "^3.0.9",
+		"mdsvex": "^0.10.6"
 	},
 	"type": "module",
 	"dependencies": {
+		"@fortawesome/fontawesome-common-types": "^6.1.2",
 		"@fortawesome/free-solid-svg-icons": "^6.1.2",
 		"@js-temporal/polyfill": "^0.4.2",
+		"@sveltejs/package": "1.0.0-next.1",
+		"@zerodevx/svelte-toast": "^0.7.2",
 		"svelte-fa": "^3.0.3"
 	}
 }
