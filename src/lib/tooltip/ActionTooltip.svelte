@@ -11,7 +11,7 @@
 		type TransitionConfig
 	} from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
-	import type { TooltipDirections } from './tooltip-action';
+	import type { TooltipDirections } from './tooltip-action.js';
 	export let title: string = '';
 	export let position: TooltipDirections;
 	export let x: number;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TooltipParameters } from '$lib/tooltip/tooltip-action';
+	import type { TooltipParameters } from '../tooltip/tooltip-action.js';
 	import NavItem from './NavItem.svelte';
 
 	/** A list of strings to join to the parent path to make a complete link.  (e.g. parent path: '/home', links: ['interests', 'books']

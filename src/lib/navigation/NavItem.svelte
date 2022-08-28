@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { tooltip, type TooltipParameters } from '$lib/tooltip';
-	import { capitalize } from '$lib/functions/helpers';
+	import { page } from '.svelte-kit/runtime/app/stores.js';
+	import { tooltip, type TooltipParameters } from '../tooltip/index.js';
+	import { capitalize } from '../functions/helpers.js';
 
 	export let link: string;
 	export let tooltip_options: TooltipParameters | TooltipParameters[] = [];

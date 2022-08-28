@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tooltip, type TooltipDirections, type TooltipParameters } from '$lib/tooltip';
+	import { tooltip, type TooltipDirections, type TooltipParameters } from '../tooltip/index.js';
 	import { Temporal } from '@js-temporal/polyfill';
 	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';

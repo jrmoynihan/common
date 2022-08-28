@@ -1,5 +1,5 @@
-import { capitalize, arrayFromNumber, delay, clamp } from './helpers';
-import { getLocalStorageItem, setLocalStorageItem } from './local-storage';
+import { capitalize, arrayFromNumber, delay, clamp } from './helpers.js';
+import { getLocalStorageItem, setLocalStorageItem } from './local-storage.js';
 import {
 	myLog,
 	myWarning,
@@ -12,7 +12,7 @@ import {
 	type myErrorType,
 	type LogAndToastType,
 	type ErrorAndToastType
-} from './logging';
+} from './logging.js';
 
 export { arrayFromNumber, capitalize, clamp, delay };
 export { getLocalStorageItem, setLocalStorageItem };
