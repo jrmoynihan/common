@@ -12,7 +12,6 @@
 		horizontal_distance: -1,
 		vertical_distance: 0
 	});
-	console.log('shadows formed for buttons page', shadows);
 </script>
 
 <section class="buttons">
