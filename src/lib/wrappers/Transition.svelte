@@ -1,13 +1,29 @@
 <script lang="ts">
+	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
+	import { tooltip, type TooltipParameters } from '$lib/tooltip';
 	import { fly } from 'svelte/transition';
 
 	export let refresh: unknown;
-	export let customStyles = '';
-	export let customClasses = '';
-	export let inTransition = fly;
-	export let inTransitionParams = { duration: 200, x: -50, delay: 300 };
-	export let outTransition = fly;
-	export let outTransitionParams = { duration: 200, x: 50 };
+	export let inner_container_styles = '';
+	export let inner_container_classes = '';
+	export let transition: SvelteTransition = fly;
+	export let transition_parameters: SvelteTransitionParams = null;
+	export let in_transition: SvelteTransition = transition;
+	export let in_transition_parameters: SvelteTransitionParams = {
+		duration: 200,
+		x: -50,
+		delay: 300
+	};
+	export let out_transition: SvelteTransition = in_transition;
+	export let out_transition_parameters: SvelteTransitionParams = {
+		...in_transition_parameters,
+		x: -1 * in_transition_parameters.x
+	};
+	export let tooltip_parameters: TooltipParameters = { disabled: true };
+	$: internal_in_transition = transition ?? in_transition;
+	$: internal_out_transition = transition ?? out_transition;
+	$: internal_in_transition_parameters = transition_parameters ?? in_transition_parameters;
+	$: internal_out_transition_parameters = transition_parameters ?? out_transition_parameters;
 
 	// https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
 </script>
@@ -15,10 +31,11 @@
 <div class="transition-outer">
 	{#key refresh}
 		<div
-			class="transition-inner {customClasses}"
-			style={customStyles}
-			in:inTransition={inTransitionParams}
-			out:outTransition={outTransitionParams}
+			use:tooltip={tooltip_parameters}
+			class="transition-inner {inner_container_classes}"
+			style={inner_container_styles}
+			in:internal_in_transition={internal_in_transition_parameters}
+			out:internal_out_transition={internal_out_transition_parameters}
 		>
 			<slot />
 		</div>
@@ -41,6 +58,5 @@
 		grid-auto-rows: max-content;
 		grid-row: 1;
 		grid-column: 1;
-		justify-content: center;
 	}
 </style>
