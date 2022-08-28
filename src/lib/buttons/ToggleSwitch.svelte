@@ -17,8 +17,8 @@
 	export let labelStyles = '';
 	export let customButtonStyles = '';
 	export let customButtonClasses = '';
-	export let svelteTransition = slide;
-	export let transitionParams: TransitionConfig = {
+	export let transition = slide;
+	export let transition_config: TransitionConfig = {
 		duration: 0
 	};
 	export let bgColorHue: number | null = null; // = 246; // 207;
@@ -50,24 +50,13 @@
 	}
 </script>
 
-<!-- <button
-	class="toggle {customButtonClasses}"
-	class:iconGrid={icon}
-	style:scale
-	style={customButtonStyles}
-	transition:svelteTransition={transitionParams}
-	{disabled}
-	{title}
-	on:click={() => {
-		checked = !checked;
-		toggleClicked();
-	}}
-> -->
 <Button
 	on:click={() => {
 		checked = !checked;
 		toggleClicked();
 	}}
+	{transition}
+	{transition_config}
 	{disabled}
 	{title}
 	static_styles={`border: none; outline: none; --scale: ${scale}; ${customButtonStyles}`}
@@ -189,22 +178,6 @@
 	}
 	.pointer {
 		cursor: pointer;
-	}
-	.toggle {
-		display: grid;
-		grid-template-rows: minmax(auto, 1fr);
-		gap: 0.5rem;
-		align-items: center;
-		border-radius: 1rem;
-		padding: 0.5rem;
-	}
-	.toggle:hover,
-	.toggle:focus {
-		background-color: inherit;
-		color: var(--dark-text, currentColor);
-	}
-	.iconGrid {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 	.icon {
 		grid-row: span 2;
