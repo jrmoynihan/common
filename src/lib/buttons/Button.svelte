@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Fa } from 'svelte-fa';
+	import Fa from 'svelte-fa';
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import type { SvelteComponentTyped } from 'svelte';

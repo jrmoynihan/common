@@ -11,6 +11,12 @@ const config = {
 	},
 	ssr: {
 		external: ['$app/environment']
+	},
+	build: {
+		external: ['$app/environment']
+	},
+	optimizeDeps: {
+		exclude: ['$app/environment']
 	}
 };
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Fa } from 'svelte-fa';
+	import Fa from 'svelte-fa';
 	import { createEventDispatcher } from 'svelte';
 	import { slide, type TransitionConfig } from 'svelte/transition';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
