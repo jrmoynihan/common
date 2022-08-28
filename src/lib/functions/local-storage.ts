@@ -1,4 +1,4 @@
-import { browser } from '.svelte-kit/runtime/app/env.js';
+import { browser } from '../../../.svelte-kit/runtime/app/env.js';
 import { myLog } from './logging.js';
 
 export const getLocalStorageItem = async <T>(key: string): Promise<any> => {
