@@ -6,9 +6,9 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"package": "svelte-package",
-		"package-publish-patch": "pnpm version patch && svelte-kit package && cd package && pnpm publish",
-		"package-publish-minor": "svelte-kit package && cd package && pnpm version minor && pnpm publish",
-		"package-publish-major": "pnpm version major && svelte-kit package && cd package && pnpm publish",
+		"package-publish-patch": "svelte-package && cd package && pnpm version patch && pnpm publish",
+		"package-publish-minor": "svelte-package && cd package && pnpm version minor && pnpm publish",
+		"package-publish-major": "svelte-package && cd package && pnpm version major && pnpm publish",
 		"publish": "cd package && pnpm publish",
 		"test": "playwright test",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -20,11 +20,13 @@
 		"@playwright/test": "^1.25.0",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
+		"@sveltejs/package": "1.0.0-next.1",
 		"@typescript-eslint/eslint-plugin": "^5.33.1",
 		"@typescript-eslint/parser": "^5.33.1",
 		"eslint": "^8.22.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"mdsvex": "^0.10.6",
 		"prettier": "^2.7.1",
 		"prettier-plugin-svelte": "^2.7.0",
 		"sass": "^1.54.5",
@@ -34,15 +36,13 @@
 		"svelte2tsx": "^0.5.14",
 		"tslib": "^2.4.0",
 		"typescript": "^4.7.4",
-		"vite": "^3.0.9",
-		"mdsvex": "^0.10.6"
+		"vite": "^3.0.9"
 	},
 	"type": "module",
 	"dependencies": {
 		"@fortawesome/fontawesome-common-types": "^6.1.2",
 		"@fortawesome/free-solid-svg-icons": "^6.1.2",
 		"@js-temporal/polyfill": "^0.4.2",
-		"@sveltejs/package": "1.0.0-next.1",
 		"@zerodevx/svelte-toast": "^0.7.2",
 		"svelte-fa": "^3.0.3"
 	}
