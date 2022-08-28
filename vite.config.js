@@ -1,8 +1,14 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import path from 'path';
 
 /** @type {import('vite').UserConfig} */
 const config = {
-	plugins: [sveltekit()]
+	plugins: [sveltekit()],
+	resolve: {
+		alias: {
+			$app: path.resolve('.svelte-kit/runtime/app')
+		}
+	}
 };
 
 export default config;
