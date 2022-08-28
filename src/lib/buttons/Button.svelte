@@ -3,16 +3,8 @@
 	import { tooltip, type TooltipParameters } from '../tooltip';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import type { SvelteComponentTyped } from 'svelte';
-	import {
-		fade,
-		type EasingFunction,
-		type FadeParams,
-		type FlyParams,
-		type ScaleParams,
-		type SlideParams,
-		type TransitionConfig
-	} from 'svelte/transition';
-	import type { IconSize } from '$lib/lib_types';
+	import { fade } from 'svelte/transition';
+	import type { IconSize, SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
 
 	/** Options to style the tooltip or modify its visible/disabled state */
 	export let tooltip_options: TooltipParameters = {
@@ -40,29 +32,13 @@
 	/** Whether to use box-shadows */
 	export let box_shadow: 'low' | 'medium' | 'high' | 'none' = 'low';
 	/** A Svelte transition to use on the button */
-	export let transition: (
-		node: HTMLElement,
-		params: any
-	) => {
-		delay?: number;
-		duration?: number;
-		easing?: EasingFunction;
-		css?: (t: number, u: number) => string;
-		tick?: (t: number, u: number) => void;
-	} = fade;
-	export let transition_config:
-		| ScaleParams
-		| FlyParams
-		| FadeParams
-		| SlideParams
-		| TransitionConfig = { duration: 0 };
+	export let transition: SvelteTransition = fade;
+	export let transition_config: SvelteTransitionParams = { duration: 0 };
 
 	$: {
 		if (dynamic_styles.length > 0) styles = static_styles;
 		dynamic_styles?.forEach(([key, value]) => {
-			console.log(styles);
 			styles = styles.concat(`${key}: ${value};`);
-			console.log(styles);
 		});
 	}
 </script>
