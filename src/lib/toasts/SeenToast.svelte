@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { browser } from '.svelte-kit/runtime/app/env.js';
+	import { browser } from '../../../.svelte-kit/runtime/app/env.js';
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
 	import { setLocalStorageItem } from '../functions/local-storage.js';
 

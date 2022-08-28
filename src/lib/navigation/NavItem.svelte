@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '.svelte-kit/runtime/app/stores.js';
+	import { page } from '../../../.svelte-kit/runtime/app/stores.js';
 	import { tooltip, type TooltipParameters } from '../tooltip/index.js';
 	import { capitalize } from '../functions/helpers.js';
 
