@@ -83,7 +83,7 @@
 		// 	@include active($backgroundAlpha: 0.4);
 		// }
 	}
-	.tab-header {
+	.tab-headers {
 		// @include rounded;
 		align-items: center;
 		display: grid;
