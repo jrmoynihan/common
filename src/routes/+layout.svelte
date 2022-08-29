@@ -104,7 +104,7 @@
 	.top {
 		position: fixed;
 		top: 0;
-		padding: 1rem 2rem;
+		padding: 1rem;
 	}
 	.left {
 		left: 0;
@@ -136,6 +136,7 @@
 		&:hover,
 		&:focus-visible {
 			background-color: hsl(195, 61%, 34%);
+			color: white;
 		}
 	}
 </style>
