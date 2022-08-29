@@ -79,14 +79,25 @@
 	const storeDarkThemePreference = async () => {
 		await setLocalStorageItem('useDarkTheme', use_dark_theme);
 	};
+	function checkForSpace(e: KeyboardEvent & { currentTarget: EventTarget & HTMLLabelElement }) {
+		if (e.code === 'Space') {
+			use_dark_theme = !use_dark_theme;
+		}
+	}
 
 	// Update/set the CSS custom properties anytime the colors object changes
 	$: default_colors = use_dark_theme ? { ...dark_theme_colors } : { ...light_theme_colors };
 	$: setCSSvariables(default_colors);
 </script>
 
-<label class="switch" tabindex="0">
-	<input type="checkbox" bind:checked={use_dark_theme} on:change={storeDarkThemePreference} />
+<!-- NOTE: tabindex on label prevents the keyboard interaction from toggling the inner input like normal -->
+<label class="switch" tabindex="0" for="light-dark-toggle" on:keypress={(e) => checkForSpace(e)}>
+	<input
+		type="checkbox"
+		name="light-dark-toggle"
+		bind:checked={use_dark_theme}
+		on:change={storeDarkThemePreference}
+	/>
 	<div>
 		<span />
 	</div>
@@ -100,15 +111,15 @@
 		--duration: 0.3s;
 		--text: hsl(236, 20%, 68%);
 		cursor: pointer;
-		outline: none;
 		padding: 0.5rem;
 		user-select: none;
 		border-radius: 1rem;
+		display: grid;
 		&:focus {
-			box-shadow: var(--button-focus-shadow, darkblue);
+			box-shadow: var(--button-focus-shadow);
 		}
 		&:hover {
-			box-shadow: var(--button-hover-shadow, blue);
+			box-shadow: var(--button-hover-shadow);
 		}
 		input {
 			display: none;
