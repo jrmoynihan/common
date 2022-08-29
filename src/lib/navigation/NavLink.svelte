@@ -3,9 +3,9 @@
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
 	import { capitalize } from '$lib/functions';
 
-	export let link: string;
+	export let link: URL;
+	export let link_text: string | null = null;
 	export let tooltip_options: TooltipParameters | TooltipParameters[] = [];
-	export let parent_path: string;
 	export let is_current_page: boolean = false;
 	export let i: number;
 	export let static_styles = '';
@@ -14,16 +14,16 @@
 	function doesPathMatchCurrentURL(path: string, currentURL: string) {
 		return currentURL.includes(`/${path}`);
 	}
-	$: is_current_page = doesPathMatchCurrentURL(link, $page?.url?.pathname);
+	$: is_current_page = doesPathMatchCurrentURL(link.pathname, $page?.url?.pathname);
 </script>
 
 <a
 	use:tooltip={Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
-	href="{parent_path}/{link}"
+	href={link.href}
 	sveltekit:prefetch
 	class="link"
 	class:current-page={is_current_page}
-	style={static_styles}>{capitalize(link)}</a
+	style={static_styles}>{link_text ?? capitalize(link.pathname)}</a
 >
 
 <style lang="scss">

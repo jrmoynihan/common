@@ -10,9 +10,11 @@
 	import { onDestroy } from 'svelte';
 	import { use_dark_theme } from './stores';
 	import '../../src/mdsvex.css';
+	import { makeNavLinks, NavigationLink } from '$lib/navigation/navLink';
 
-	let coords = writable({ x: 0, y: 0 });
-	let links = ['tooltips', 'inputs', 'buttons', 'wrappers', 'recipes'];
+	const coords = writable({ x: 0, y: 0 });
+	const paths: string[] = ['tooltips', 'inputs', 'buttons', 'wrappers', 'recipes'];
+	const nav_links: NavigationLink[] = makeNavLinks(paths);
 	let refresh: boolean = false;
 	let tooltips_visible = true;
 	let tooltips_disabled = false;
@@ -79,7 +81,7 @@
 <h1>
 	<a href="/" sveltekit:prefetch class="cool-text">The Commons</a>
 </h1>
-<Navigation {links} bind:tooltip_options={link_tooltip_options} />
+<Navigation {nav_links} bind:tooltip_options={link_tooltip_options} />
 <main>
 	<Transition
 		bind:refresh

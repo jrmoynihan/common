@@ -3,10 +3,13 @@
 	import { fly } from 'svelte/transition';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { beforeNavigate } from '$app/navigation';
+	import type { NavigationLink } from '$lib';
+	import { makeNavLinks } from '$lib/navigation/navLink';
 
 	let refresh: boolean = false;
-	const links: string[] = ['transition', 'accordion', 'modal', 'tabs'];
-	const parent_path = '/wrappers';
+	const paths: string[] = ['transition', 'accordion', 'modal', 'tabs'];
+	const parent_path: string = 'wrappers';
+	const nav_links: NavigationLink[] = makeNavLinks(paths, parent_path);
 
 	beforeNavigate(async (nav) => {
 		const { from, to } = nav;
@@ -30,7 +33,7 @@
 </script>
 
 <section>
-	<Navigation {links} {parent_path} />
+	<Navigation {nav_links} />
 
 	<Transition
 		bind:refresh

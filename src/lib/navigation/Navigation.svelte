@@ -1,14 +1,13 @@
 <script lang="ts">
 	import type { TooltipParameters } from '$lib/tooltip';
-	import NavItem from '$lib/navigation/NavItem.svelte';
+	import NavItem from '$lib/navigation/NavLink.svelte';
 	import { beforeNavigate } from '$app/navigation';
 	import { browser } from '$app/environment';
+	import type { NavigationLink } from './navLink';
 
 	/** A list of strings to join to the parent path to make a complete link.  (e.g. parent path: '/home', links: ['interests', 'books']
 	 * directs the user to /home/interests and /home/books)*/
-	export let links: string[] = [];
-	/** The path prefix for all links in this navigation component */
-	export let parent_path = '';
+	export let nav_links: NavigationLink[] = [];
 	/** Styles for the <nav> parent element */
 	export let static_styles = '';
 	/** Styles to pass to the individual nav links */
@@ -29,14 +28,8 @@
 </script>
 
 <nav style={static_styles}>
-	{#each links as link, i}
-		<NavItem
-			bind:parent_path
-			bind:tooltip_options
-			bind:link
-			{i}
-			static_styles={nav_link_static_styles}
-		/>
+	{#each nav_links as nav_link, i}
+		<NavItem bind:tooltip_options {...nav_link} {i} static_styles={nav_link_static_styles} />
 	{/each}
 	<slot />
 </nav>
