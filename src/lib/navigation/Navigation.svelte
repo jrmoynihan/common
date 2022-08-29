@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { TooltipParameters } from '$lib/tooltip';
 	import NavItem from '$lib/navigation/NavItem.svelte';
+	import { beforeNavigate } from '$app/navigation';
+	import { browser } from '$app/environment';
 
 	/** A list of strings to join to the parent path to make a complete link.  (e.g. parent path: '/home', links: ['interests', 'books']
 	 * directs the user to /home/interests and /home/books)*/
@@ -13,6 +15,17 @@
 	export let nav_link_static_styles = '';
 	/** The tooltip options for all parameters, or an array of tooltip options.  Each item of the options array will be passed into each respective nav item.*/
 	export let tooltip_options: TooltipParameters | TooltipParameters[] = { disabled: true };
+
+	beforeNavigate(() => {
+		if (browser) {
+			const dialogs = document.getElementsByTagName('dialog');
+			if (dialogs.length > 0) {
+				for (const dialog of dialogs) {
+					dialog.close();
+				}
+			}
+		}
+	});
 </script>
 
 <nav style={static_styles}>
