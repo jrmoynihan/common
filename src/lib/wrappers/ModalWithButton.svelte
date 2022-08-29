@@ -5,7 +5,7 @@
 
 <script lang="ts">
 	import Button from '$lib/buttons/Button.svelte';
-	import type { ComponentProps } from 'svelte';
+	import type { ComponentProps } from 'svelte/internal';
 	import Modal from './Modal.svelte';
 
 	export let button_parameters: ButtonProps = {};
