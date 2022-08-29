@@ -103,7 +103,7 @@
 
 	.modal-foreground {
 		display: grid;
-		grid-auto-rows: 1fr;
+		grid-auto-rows: minmax(0, auto);
 		grid-auto-columns: 1fr;
 		place-items: center;
 		padding: 1rem;
