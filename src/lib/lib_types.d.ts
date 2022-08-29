@@ -21,9 +21,9 @@ export type IconSize =
 	| '9x'
 	| '10x';
 export type SvelteTransitionParams =
-	| BlurParams
-	| FadeParams
-	| FlyParams
-	| ScaleParams
-	| SlideParams;
-export type SvelteTransition = (node: Element, {}: SvelteTransitionParams) => TransitionConfig;
+	| (BlurParams & FadeParams & FlyParams & ScaleParams & SlideParams)
+	| undefined;
+export type SvelteTransition = (
+	node: Element,
+	{}: SvelteTransitionParams | undefined
+) => TransitionConfig;

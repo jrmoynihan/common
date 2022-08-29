@@ -12,7 +12,7 @@
 	/** The Svelte transition to use for animation the modal opening/closing */
 	export let transition: SvelteTransition = scale;
 	/** The transition parameters to use */
-	export let transition_parameters: SvelteTransitionParams | null = { delay: 0 };
+	export let transition_parameters: SvelteTransitionParams = { delay: 0 };
 
 	let modal: HTMLDialogElement;
 	let is_open = false;
@@ -38,7 +38,6 @@
 	});
 </script>
 
-<!-- transition:transition={transition_parameters} -->
 <dialog
 	bind:this={modal}
 	class:open={is_open}

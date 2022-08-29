@@ -7,7 +7,7 @@
 	export let inner_container_styles = '';
 	export let inner_container_classes = '';
 	export let transition: SvelteTransition = fly;
-	export let transition_parameters: SvelteTransitionParams = null;
+	export let transition_parameters: SvelteTransitionParams = undefined;
 	export let in_transition: SvelteTransition = transition;
 	export let in_transition_parameters: SvelteTransitionParams = {
 		duration: 200,
@@ -15,10 +15,14 @@
 		delay: 300
 	};
 	export let out_transition: SvelteTransition = in_transition;
-	export let out_transition_parameters: SvelteTransitionParams = {
-		...in_transition_parameters,
-		x: -1 * in_transition_parameters.x
-	};
+	export let out_transition_parameters: SvelteTransitionParams =
+		in_transition_parameters !== undefined
+			? {
+					...in_transition_parameters,
+					//@ts-ignore
+					x: -1 * in_transition_parameters?.x
+			  }
+			: undefined;
 	export let tooltip_parameters: TooltipParameters = { disabled: true };
 	$: internal_in_transition = transition ?? in_transition;
 	$: internal_out_transition = transition ?? out_transition;
