@@ -25,6 +25,7 @@
 			static_styles={nav_link_static_styles}
 		/>
 	{/each}
+	<slot />
 </nav>
 
 <style lang="scss">
