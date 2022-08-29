@@ -1,3 +1,11 @@
+import type {
+	BlurParams,
+	FadeParams,
+	FlyParams,
+	ScaleParams,
+	SlideParams
+} from 'svelte/transition';
+
 export type IconSize =
 	| 'xs'
 	| 'sm'
@@ -18,4 +26,4 @@ export type SvelteTransitionParams =
 	| FlyParams
 	| ScaleParams
 	| SlideParams;
-export type SvelteTransition = (node: Element, {}: AnyTransitionParams) => TransitionConfig;
+export type SvelteTransition = (node: Element, {}: SvelteTransitionParams) => TransitionConfig;
