@@ -3,45 +3,110 @@
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
 	import { capitalize } from '$lib/functions';
 
+	/** The URL object describing the link */
 	export let link: URL;
-	export let link_text: string | null = null;
+	/** The displayed text for the link (defaults to the link's pathname)*/
+	export let link_text: string = capitalize(link.pathname);
+	/** Tooltip options to apply to the nav links. If an array is passed, each options object will be applied to each link, individually.  Must pass the index in the array, `i` as well!  */
 	export let tooltip_options: TooltipParameters | TooltipParameters[] = [];
+	/** Is the link the currently active page/url? */
 	export let is_current_page: boolean = false;
-	export let i: number;
-	export let static_styles = '';
+	/** Index used to access tooltip options from an array */
+	export let i: number = 0;
+	/** Static styles to apply to the links. Will be re-applied when hover, focus, current-page status is lost*/
+	export let static_styles: string = '';
+	/** Styles to apply to a link when it is the active page URL. */
+	export let current_page_styles: [string, string][] = [];
+	/** Hover styles to apply to the links. */
+	export let hover_styles: [string, string][] = [];
+	/** Focus styles to apply to the links. */
+	export let focus_styles: [string, string][] = [];
+	let anchor: HTMLAnchorElement;
+	let styles = static_styles;
+	let hovered = false;
+	let focused = false;
 
 	// Determine if the current path matches a given path string
 	function doesPathMatchCurrentURL(path: string, currentURL: string) {
-		return currentURL.includes(`/${path}`);
+		return currentURL.includes(`${path}`);
 	}
 	$: is_current_page = doesPathMatchCurrentURL(link.pathname, $page?.url?.pathname);
+	$: {
+		if (current_page_styles?.length > 0 && is_current_page) {
+			current_page_styles.forEach(([key, value]) => {
+				anchor.style.setProperty(key, value);
+			});
+		} else {
+			current_page_styles?.forEach(([key, value]) => {
+				anchor.style.removeProperty(key);
+			});
+			// Re-apply styles that should stay
+			styles = static_styles;
+		}
+	}
+	$: {
+		if (hover_styles?.length > 0 && hovered) {
+			hover_styles.forEach(([key, value]) => {
+				anchor.style.setProperty(key, value);
+			});
+		} else {
+			hover_styles?.forEach(([key, value]) => {
+				anchor.style.removeProperty(key);
+			});
+			// Re-apply styles that should stay
+			styles = static_styles;
+		}
+	}
+	$: {
+		if (focus_styles?.length > 0 && focused) {
+			focus_styles.forEach(([key, value]) => {
+				anchor.style.setProperty(key, value);
+			});
+		} else {
+			focus_styles?.forEach(([key, value]) => {
+				anchor.style.removeProperty(key);
+			});
+			// Re-apply styles that should stay
+			styles = static_styles;
+		}
+	}
 </script>
 
 <a
+	bind:this={anchor}
 	use:tooltip={Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
 	href={link.href}
 	sveltekit:prefetch
 	class="link"
 	class:current-page={is_current_page}
-	style={static_styles}>{link_text ?? capitalize(link.pathname)}</a
+	style={styles}
+	on:mouseenter={() => (hovered = true)}
+	on:mouseleave={() => (hovered = false)}
+	on:focus={() => (focused = true)}
+	on:blur={() => (focused = false)}
+	on:click>{link_text}</a
 >
 
 <style lang="scss">
 	.link {
-		text-decoration: none;
-		font-size: 1.5rem;
-		padding: 1rem;
-		color: white;
-		border-radius: 2rem;
-		background-color: hsl(195, 61%, 34%);
-		transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+		font-family: var(--link-font, var(--font, inherit));
+		text-decoration: var(--link-text-decoration, none);
+		font-size: var(--link-font-size, 1rem);
+		padding: var(--link-padding, 1rem);
+		color: var(--link-color, var(--text, inherit));
+		border-radius: var(--link-border-radius, 1rem);
+		background-color: var(--link-background-color);
+		transition: var(--link-transition, all 200ms ease-in-out);
 		&:hover,
 		&:focus-visible {
-			background-color: hsl(195, 61%, 44%);
+			background-color: var(--link-hover-background-color);
+			color: var(--link-hover-color);
+			box-shadow: var(--link-hover-box-shadow);
 		}
 		&.current-page {
-			box-shadow: 0 0 14px 4px orange;
-			background-color: hsl(195, 61%, 44%);
+			box-shadow: var(--current-nav-page-box-shadow);
+			background-color: var(--current-nav-page-background-color);
+			color: var(--current-nav-page-color);
 		}
 	}
 </style>

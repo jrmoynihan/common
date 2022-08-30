@@ -81,7 +81,11 @@
 <h1>
 	<a href="/" sveltekit:prefetch class="cool-text">The Commons</a>
 </h1>
-<Navigation {nav_links} bind:tooltip_options={link_tooltip_options} />
+<Navigation
+	{nav_links}
+	bind:tooltip_options={link_tooltip_options}
+	hover_styles={[['background', 'red']]}
+/>
 <main>
 	<Transition
 		bind:refresh
@@ -102,6 +106,13 @@
 		--tooltip-color: black;
 		--tooltip-font-weight: 400;
 		--tooltip-font-size: 12px;
+		--link-font-size: 1.5rem;
+		--link-border-radius: 2rem;
+		--link-background-color: hsl(195, 61%, 34%);
+		--link-hover-box-shadow: 0 0 4px 1px orange;
+		--link-hover-background-color: hsl(195, 61%, 44%);
+		--current-nav-page-box-shadow: 0 0 14px 4px orange;
+		--current-nav-page-background-color: hsl(195, 61%, 44%);
 	}
 	.top {
 		position: fixed;
