@@ -138,7 +138,7 @@
 			position: absolute;
 			inset: 0;
 			filter: drop-shadow(var(--tooltip-shadow, 0px 0px 2px #bbb));
-			border-color: var(--tooltip-background-color, inherit);
+			border-color: var(--tooltip-background, var(--tooltip-background-color, inherit));
 		}
 		&.left,
 		&.right {
