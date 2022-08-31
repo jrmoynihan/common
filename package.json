@@ -1,6 +1,8 @@
 {
 	"name": "@jrmoynihan/common",
 	"version": "2.7.1",
+	"repository": "github:jrmoynihan/common",
+	"author": "James Moynihan",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
