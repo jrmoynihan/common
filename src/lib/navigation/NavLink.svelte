@@ -32,39 +32,39 @@
 	}
 	$: is_current_page = doesPathMatchCurrentURL(link.pathname, $page?.url?.pathname);
 	$: {
-		if (current_page_styles?.length > 0 && is_current_page) {
+		if (anchor && current_page_styles?.length > 0 && is_current_page) {
 			current_page_styles.forEach(([key, value]) => {
-				anchor.style.setProperty(key, value);
+				anchor?.style.setProperty(key, value);
 			});
 		} else {
 			current_page_styles?.forEach(([key, value]) => {
-				anchor.style.removeProperty(key);
+				anchor?.style.removeProperty(key);
 			});
 			// Re-apply styles that should stay
 			styles = static_styles;
 		}
 	}
 	$: {
-		if (hover_styles?.length > 0 && hovered) {
+		if (anchor && hover_styles?.length > 0 && hovered) {
 			hover_styles.forEach(([key, value]) => {
-				anchor.style.setProperty(key, value);
+				anchor?.style.setProperty(key, value);
 			});
 		} else {
 			hover_styles?.forEach(([key, value]) => {
-				anchor.style.removeProperty(key);
+				anchor?.style.removeProperty(key);
 			});
 			// Re-apply styles that should stay
 			styles = static_styles;
 		}
 	}
 	$: {
-		if (focus_styles?.length > 0 && focused) {
+		if (anchor && focus_styles?.length > 0 && focused) {
 			focus_styles.forEach(([key, value]) => {
-				anchor.style.setProperty(key, value);
+				anchor?.style.setProperty(key, value);
 			});
 		} else {
 			focus_styles?.forEach(([key, value]) => {
-				anchor.style.removeProperty(key);
+				anchor?.style.removeProperty(key);
 			});
 			// Re-apply styles that should stay
 			styles = static_styles;
