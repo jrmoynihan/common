@@ -84,7 +84,7 @@
 <Navigation
 	{nav_links}
 	bind:tooltip_options={link_tooltip_options}
-	hover_styles={[['background', 'red']]}
+	nav_link_hover_styles={[['background', 'red']]}
 />
 <main>
 	<Transition
