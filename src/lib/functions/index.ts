@@ -8,10 +8,10 @@ import {
 	ErrorAndToast,
 	all_icons,
 	defaultConsoleLogStyle,
-	type myLogType,
-	type myErrorType,
-	type LogAndToastType,
-	type ErrorAndToastType
+	type LogOptions,
+	type ErrorLogOptions,
+	type LogAndToastOptions,
+	type ErrorAndToastOptions
 } from './logging.js';
 
 export { arrayFromNumber, capitalize, clamp, delay };
@@ -24,8 +24,8 @@ export {
 	ErrorAndToast,
 	all_icons,
 	defaultConsoleLogStyle,
-	myLogType,
-	myErrorType,
-	LogAndToastType,
-	ErrorAndToastType
+	LogOptions,
+	ErrorLogOptions,
+	LogAndToastOptions,
+	ErrorAndToastOptions
 };
