@@ -1,4 +1,18 @@
-import { capitalize, arrayFromNumber, delay, clamp } from './helpers.js';
+import {
+	capitalize,
+	arrayFromNumber,
+	delay,
+	clamp,
+	splitCamelCase,
+	splitSnakeCase,
+	removeSpecialCharacters,
+	getRandomBetween,
+	getMax,
+	getMin,
+	getMinDate,
+	getMaxDate,
+	flattenObjectRecursively
+} from './helpers.js';
 import {
 	getLocalStorageItem,
 	setLocalStorageItem,
@@ -18,7 +32,21 @@ import {
 	type ErrorAndToastOptions
 } from './logging.js';
 
-export { arrayFromNumber, capitalize, clamp, delay };
+export {
+	arrayFromNumber,
+	capitalize,
+	clamp,
+	delay,
+	splitCamelCase,
+	splitSnakeCase,
+	removeSpecialCharacters,
+	getRandomBetween,
+	getMax,
+	getMin,
+	getMinDate,
+	getMaxDate,
+	flattenObjectRecursively
+};
 export { getLocalStorageItem, setLocalStorageItem, deleteLocalStorageItem };
 export {
 	Log,
