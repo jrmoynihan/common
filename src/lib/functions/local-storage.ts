@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { myLog } from '$lib/functions';
+import { Log } from '$lib/functions';
 
 export const getLocalStorageItem = async <T>(key: string): Promise<any> => {
 	if (browser) {
@@ -9,13 +9,20 @@ export const getLocalStorageItem = async <T>(key: string): Promise<any> => {
 			return parsed_item ?? null;
 		}
 	} else {
-		myLog({ msg: 'unable to check for local storage without the browser available' });
+		Log({ msg: 'unable to check for local storage without the browser available' });
 	}
 };
 export const setLocalStorageItem = async (key: string, value: unknown): Promise<void> => {
 	if (browser) {
 		localStorage.setItem(key, JSON.stringify(value));
 	} else {
-		myLog({ msg: 'unable to set item in local storage without the browser available' });
+		Log({ msg: 'unable to set item in local storage without the browser available' });
+	}
+};
+export const deleteLocalStorageItem = async (key: string): Promise<void> => {
+	if (browser) {
+		localStorage.removeItem(key);
+	} else {
+		Log({ msg: 'unable to delete item in local storage without the browser available' });
 	}
 };

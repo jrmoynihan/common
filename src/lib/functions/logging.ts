@@ -18,7 +18,7 @@ export interface ErrorLogOptions {
 export type LogAndToastOptions = ToastOptions & LogOptions;
 export type ErrorAndToastOptions = ToastOptions & ErrorLogOptions;
 
-export const myError = (input: ErrorLogOptions): void => {
+export const ErrorLog = (input: ErrorLogOptions): void => {
 	const { error, msg, icon = all_icons.policeCarLight, additional_params } = input;
 	let str = icon ? `%c${icon} ` : '%c';
 	str += `\n ${msg}\ `;
@@ -26,7 +26,7 @@ export const myError = (input: ErrorLogOptions): void => {
 	if (additional_params) args = args.concat(additional_params);
 	console.error(...args);
 };
-export const myLog = (input: LogOptions): void => {
+export const Log = (input: LogOptions): void => {
 	const { msg, icon, traceLocation, additional_params, use_warning } = input;
 	let str = icon ? `%c${icon} ` : '%c';
 	str += `\n ${msg}\ `;
@@ -45,18 +45,19 @@ export const myLog = (input: LogOptions): void => {
 		console.log(...args);
 	}
 };
-export const myWarning = (input: LogOptions): void => {
+
+export const WarningLog = (input: LogOptions): void => {
 	input.use_warning = true;
-	myLog(input);
+	Log(input);
 };
 
 export const LogAndToast = (options: LogAndToastOptions): number => {
-	myLog({ ...options });
+	Log({ ...options });
 	const toastId = defaultToast({ ...options });
 	return toastId;
 };
 export const ErrorAndToast = (options: ErrorAndToastOptions): number => {
-	myError({ ...options });
+	ErrorLog({ ...options });
 	const toastId = errorToast({ ...options });
 	return toastId;
 };

@@ -1,9 +1,13 @@
 import { capitalize, arrayFromNumber, delay, clamp } from './helpers.js';
-import { getLocalStorageItem, setLocalStorageItem } from './local-storage.js';
 import {
-	myLog,
-	myWarning,
-	myError,
+	getLocalStorageItem,
+	setLocalStorageItem,
+	deleteLocalStorageItem
+} from './local-storage.js';
+import {
+	Log,
+	WarningLog,
+	ErrorLog,
 	LogAndToast,
 	ErrorAndToast,
 	all_icons,
@@ -15,11 +19,11 @@ import {
 } from './logging.js';
 
 export { arrayFromNumber, capitalize, clamp, delay };
-export { getLocalStorageItem, setLocalStorageItem };
+export { getLocalStorageItem, setLocalStorageItem, deleteLocalStorageItem };
 export {
-	myLog,
-	myWarning,
-	myError,
+	Log,
+	WarningLog,
+	ErrorLog,
 	LogAndToast,
 	ErrorAndToast,
 	all_icons,
