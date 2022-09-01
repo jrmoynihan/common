@@ -124,9 +124,15 @@ export const errorToast = (options: ToastOptions) => {
 };
 
 export const reminderToast = (input: ToastOptions) => {
-	const { duration = 200_000, textFontWeight = '600', theme = undefined } = input;
+	const {
+		title = 'Reminder',
+		duration = 200_000,
+		textFontWeight = '600',
+		theme = undefined
+	} = input;
 	const id = defaultToast({
 		...input,
+		title,
 		duration,
 		textFontWeight,
 		theme
