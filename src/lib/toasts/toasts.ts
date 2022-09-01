@@ -2,7 +2,10 @@ import SeenToast from '$lib/toasts/SeenToast.svelte';
 import { toast } from '@zerodevx/svelte-toast';
 import { all_icons, policeCarLight } from '$lib/functions/logging';
 
-export type myToastOptions = {
+export interface ToastTheme {
+	[key: string]: string;
+}
+export interface ToastOptions {
 	id?: number | null;
 	title?: string;
 	msg?: string;
@@ -22,29 +25,31 @@ export type myToastOptions = {
 	toastBarWidth?: string;
 	toastProgressBorderRadius?: string;
 	icon?: string | null;
-};
+	theme?: ToastTheme;
+}
 
-export const defaultToast = ({
-	id = null,
-	title = '',
-	msg = '',
-	duration = 5000,
-	toastContainerTop = '21rem',
-	toastColor = 'var(--background)',
-	toastBackground = 'var(--accent)',
-	toastProgressBackground = 'var(--text)',
-	toastBoxShadow = '0 0 4px 6px hsla(0,0,0,0.4)',
-	toastBorderRadius = '5vh',
-	toastMsgPadding = '1.5rem 2rem',
-	useSeenToastComponent = false,
-	localStorageKey = 'toast',
-	textFontWeight = '600',
-	toastBarWidth = '90%',
-	toastBarLeft = '5%',
-	toastProgressBorderRadius = '5rem',
-	toastBarHeight = '4px',
-	icon = null
-}: myToastOptions) => {
+export const defaultToast = (input: ToastOptions) => {
+	const {
+		title = '',
+		msg = '',
+		duration = 5000,
+		toastContainerTop = '21rem',
+		toastColor = 'var(--background)',
+		toastBackground = 'var(--accent)',
+		toastProgressBackground = 'var(--text)',
+		toastBoxShadow = '0 0 4px 6px hsla(0,0,0,0.4)',
+		toastBorderRadius = '5vh',
+		toastMsgPadding = '1.5rem 2rem',
+		useSeenToastComponent = false,
+		localStorageKey = 'toast',
+		textFontWeight = '600',
+		toastBarWidth = '90%',
+		toastBarLeft = '5%',
+		toastProgressBorderRadius = '5rem',
+		toastBarHeight = '4px',
+		icon = null
+	} = input;
+	let { id } = input;
 	const msgBuilder = `<div style="display:grid;grid-template-columns:minmax(0,auto);text-align:center;font-weight:${textFontWeight}">
 						<h3>
 							${icon ?? ''} ${title}
@@ -107,7 +112,7 @@ export const defaultToast = ({
 	return id;
 };
 
-export const errorToast = (options: myToastOptions) => {
+export const errorToast = (options: ToastOptions) => {
 	const id = defaultToast({
 		title: 'Error!',
 		toastColor: 'white',
@@ -118,13 +123,13 @@ export const errorToast = (options: myToastOptions) => {
 	return id;
 };
 
-export const reminderToast = (title: string, msg: string, useSeenToastComponent = true) => {
+export const reminderToast = (input: ToastOptions) => {
+	const { duration = 200_000, textFontWeight = '600', theme = undefined } = input;
 	const id = defaultToast({
-		title,
-		msg,
-		duration: 200_000,
-		textFontWeight: '600',
-		useSeenToastComponent
+		...input,
+		duration,
+		textFontWeight,
+		theme
 	});
 	return id;
 };
