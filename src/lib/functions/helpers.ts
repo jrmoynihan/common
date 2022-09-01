@@ -1,3 +1,5 @@
+import { ErrorLog } from './logging';
+
 /**
  * Capitalize the first letter of a string
  * @param str the string to capitalize
@@ -110,24 +112,28 @@ export const getMaxDate = (array: Date[]): Date => {
 
 // Declare a flatten function that takes object as parameter and returns the flatten object
 export const flattenObjectRecursively = (obj: Object) => {
-	// The object which contains the final result
-	let result = {};
-	// loop through the object "ob"
-	if (typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Date)) {
-		for (const [key, value] of Object.entries(obj)) {
-			// We check the type of the i using typeof() function and recursively call the function again
-			if (typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
-				const temp = flattenObjectRecursively(value);
-				for (const [key2, val2] of Object.entries(temp)) {
-					// Store temp in result
-					result[key + '.' + key2] = val2;
+	try {
+		// The object which contains the final result
+		let result = {};
+		// loop through the object "ob"
+		if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Date)) {
+			for (const [key, value] of Object.entries(obj)) {
+				// We check the type of the i using typeof() function and recursively call the function again
+				if (typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
+					const temp = flattenObjectRecursively(value);
+					for (const [key2, val2] of Object.entries(temp)) {
+						// Store temp in result
+						result[key + '.' + key2] = val2;
+					}
+				}
+				// Else store ob[i] in result directly
+				else {
+					result[key] = obj[key];
 				}
 			}
-			// Else store ob[i] in result directly
-			else {
-				result[key] = obj[key];
-			}
 		}
+		return result;
+	} catch (error) {
+		if (error instanceof Error) ErrorLog({ msg: 'error in flattening object recursively', error });
 	}
-	return result;
 };
