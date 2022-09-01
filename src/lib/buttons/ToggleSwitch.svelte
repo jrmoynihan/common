@@ -59,7 +59,7 @@
 	{transition_config}
 	{disabled}
 	{title}
-	static_styles={`border: 0; --scale: ${scale}; ${button_styles}`}
+	static_styles={`border: 0; --scale: ${scale}; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-backgrond, inherit); ${button_styles}`}
 	classes={`toggle ${button_classes}`}
 >
 	{#if label_text !== ''}
