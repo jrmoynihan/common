@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Fa from 'svelte-fa';
-	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index.es';
+	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons';
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
 	import type { DatalistOption } from '$lib/inputs';
 
@@ -36,6 +36,7 @@
 		if (custom_validity_function) custom_validity_function(e);
 		dispatch('input', e.currentTarget.value);
 	}
+	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/ 
 </script>
 
 <div class="text-input-container" use:tooltip={{ ...tooltip_options }} {title}>
