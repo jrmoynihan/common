@@ -1,10 +1,10 @@
 ```svelte
 <script lang='ts'>
-    let open_three: () => Promise<void>;
+    let open: () => Promise<void>;
 </script>
 
 <ModalWithButton
-   bind:open={()=>open_three()}
+   bind:open
    button_parameters={{
         text: `I'm a modal with a button, all-in-one.`,
         static_styles: 'padding: 2rem; background-color: darkcyan ;'

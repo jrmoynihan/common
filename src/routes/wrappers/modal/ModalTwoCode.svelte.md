@@ -1,9 +1,11 @@
 ```svelte
 <script lang='ts'>
+	import { fly } from 'svelte/transition'
+
 	let open_two: () => Promise<void>;
 </script>
 
-	<Button on:click={() => open_two()}>Toggle the &nbsp;<b>fly</b>&nbsp; modal!</Button>
+	<Button on:click={() => open_two()}>Toggle the <strong>fly</strong> modal!</Button>
 	<Modal bind:open={open_two} transition={fly}>
 		<p slot="modal-content">Hi again!</p>
 	</Modal>
