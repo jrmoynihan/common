@@ -26,6 +26,8 @@
 	export let icon: IconDefinition | null = null;
 	/** The size of the icon */
 	export let icon_size: IconSize = 'lg';
+	/** The rotation of the icon */
+	export let icon_rotation: string | number | undefined = undefined;
 	/** The title of the button */
 	export let title = '';
 	/** Whether the button is disabled */
@@ -102,7 +104,7 @@
 	{/if}
 	{text}
 	{#if icon}
-		<Fa {icon} size={icon_size} />
+		<Fa {icon} size={icon_size} rotate={icon_rotation} />
 	{/if}
 </button>
 
