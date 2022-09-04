@@ -11,7 +11,9 @@ import {
 	getMin,
 	getMinDate,
 	getMaxDate,
-	flattenObjectRecursively
+	flattenObjectRecursively,
+	getAncestors,
+	getTransitionDurations
 } from './helpers.js';
 import {
 	getLocalStorageItem,
@@ -31,6 +33,12 @@ import {
 	type LogAndToastOptions,
 	type ErrorAndToastOptions
 } from './logging.js';
+import {
+	setWritableContext,
+	getWritableContext,
+	setReadableContext,
+	getReadableContext
+} from './store';
 
 export {
 	arrayFromNumber,
@@ -45,7 +53,9 @@ export {
 	getMin,
 	getMinDate,
 	getMaxDate,
-	flattenObjectRecursively
+	flattenObjectRecursively,
+	getAncestors,
+	getTransitionDurations
 };
 export { getLocalStorageItem, setLocalStorageItem, deleteLocalStorageItem };
 export {
@@ -61,3 +71,4 @@ export {
 	LogAndToastOptions,
 	ErrorAndToastOptions
 };
+export { setWritableContext, getWritableContext, setReadableContext, getReadableContext };

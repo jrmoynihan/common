@@ -110,17 +110,19 @@ export const getMaxDate = (array: Date[]): Date => {
 	return max;
 };
 
-// Declare a flatten function that takes object as parameter and returns the flatten object
-export const flattenObjectRecursively = (obj: Object) => {
+/** Take an object and return its entire structure flattened to the top-level of a new object's keys. */
+export const flattenObjectRecursively = (obj: Object & { [key: string]: unknown }) => {
 	try {
 		// The object which contains the final result
-		let result = {};
+		let result: { [key: string]: unknown } = {};
 		// loop through the object "ob"
 		if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Date)) {
 			for (const [key, value] of Object.entries(obj)) {
 				// We check the type of the i using typeof() function and recursively call the function again
 				if (typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
-					const temp = flattenObjectRecursively(value);
+					const val_typed = value as Object & { [key: string]: unknown };
+
+					const temp = flattenObjectRecursively(val_typed) as Object & { [key: string]: unknown };
 					for (const [key2, val2] of Object.entries(temp)) {
 						// Store temp in result
 						result[key + '.' + key2] = val2;
@@ -137,3 +139,32 @@ export const flattenObjectRecursively = (obj: Object) => {
 		if (error instanceof Error) ErrorLog({ msg: 'error in flattening object recursively', error });
 	}
 };
+/** Returns an array of the ancestor elements for the provided HTML element. */
+export const getAncestors = (element: HTMLElement) => {
+	let ancestors: HTMLElement[] = [];
+	let parent = element.parentElement;
+	try {
+		while (parent) {
+			ancestors.unshift(parent);
+			if (parent.parentElement) {
+				parent = parent.parentElement;
+			} else {
+				return ancestors;
+			}
+		}
+		return ancestors;
+	} catch (error) {
+		if (error instanceof Error)
+			ErrorLog({ error, msg: 'Encountered an error getting element ancestors.' });
+	}
+};
+export function getTransitionDurations(elements: HTMLElement[]): number[] {
+	const durations: number[] = [];
+	elements.forEach((ele) => {
+		const duration = window.getComputedStyle(ele).transitionDuration;
+		if (duration) {
+			durations.push(parseFloat(duration.replace('s', '')) as number);
+		}
+	});
+	return durations;
+}
