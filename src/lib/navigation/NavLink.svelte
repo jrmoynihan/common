@@ -76,7 +76,7 @@
 	bind:this={anchor}
 	use:tooltip={Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
 	href={link.href}
-	sveltekit:prefetch
+	data-sveltekit-prefetch
 	class="link"
 	class:current-page={is_current_page}
 	style={styles}
