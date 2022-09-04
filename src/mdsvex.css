@@ -1,6 +1,7 @@
 pre[class*='language-'],
 code[class*='language-'] {
 	color: #d4d4d4;
+	/* color: hsla(210, 50%, 60%); */
 	font-size: 13px;
 	text-shadow: none;
 	font-family: 'Fira Code iScript', 'Fira Code', Menlo, Monaco, Consolas, 'Andale Mono',
@@ -128,7 +129,8 @@ pre[class*='language-'] {
 }
 
 .token.keyword {
-	color: #569cd6;
+	color: hsl(315, 47.1%, 66.7%);
+	font-style: italic;
 }
 
 .token.keyword.module,
@@ -154,7 +156,7 @@ pre[class*='language-'] {
 }
 
 .token.constant {
-	color: #9cdcfe;
+	color: hsl(154.8, 65.7%, 46.9%);
 }
 
 .token.class-name,
@@ -230,6 +232,9 @@ pre[class*='language-'] {
 	color: hsl(324, 100%, 85%);
 	font-style: italic;
 }
+.token.builtin {
+	color: hsl(154.8, 65.7%, 46.9%);
+}
 /*********************************************************
 * Language Specific
 */
@@ -252,7 +257,8 @@ code[class*='language-css'] {
 
 pre[class*='language-html'],
 code[class*='language-html'] {
-	color: #d4d4d4;
+	/* color: #d4d4d4; */
+	color: hsla(210, 80%, 74%);
 }
 
 .language-regex .token.anchor {
@@ -260,8 +266,27 @@ code[class*='language-html'] {
 }
 
 .language-html .token.punctuation {
-	color: #808080;
+	color: #d4d4d4;
 }
+.language-html.token.tag:nth-of-type(1) {
+	color: orange;
+}
+.punctuation {
+	color: #9cdcfe;
+}
+.punctuation + .punctuation {
+	color: #d4d4d4;
+}
+/* .token.tag > .token.tag {
+	color: #569cd6;
+} */
+.token.tag {
+	color: hsl(154.8, 65.7%, 46.9%);
+}
+/* ending script tag */
+/* .script + .token.tag > .token.tag:has(.punctuation) {
+	color: #569cd6;
+} */
 /*********************************************************
 * Line highlighting
 */
