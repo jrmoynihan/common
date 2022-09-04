@@ -11,9 +11,10 @@
 	import { use_dark_theme } from './stores';
 	import '../../src/mdsvex.css';
 	import { makeNavLinks, NavigationLink } from '$lib/navigation/navLink';
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 
 	const coords = writable({ x: 0, y: 0 });
-	const paths: string[] = ['tooltips', 'inputs', 'buttons', 'wrappers', 'recipes'];
+	const paths: string[] = ['tooltips', 'inputs', 'buttons', 'wrappers', 'recipes', 'functions'];
 	const nav_links: NavigationLink[] = makeNavLinks(paths);
 	let refresh: boolean = false;
 	let tooltips_visible = true;
@@ -22,7 +23,7 @@
 	const delay_tips = (i: number) => {
 		return (i + 1) * 100 + 100;
 	};
-	let tooltip_words = ['Click', 'on a link', 'to explore', 'the cool stuff', 'available!'];
+	let tooltip_words = ['Click', 'on a', 'link', 'to explore', 'the cool stuff', 'available!'];
 	const getTitleSegment = (i: number) => {
 		return tooltip_words[i];
 	};
@@ -62,7 +63,6 @@
 	});
 	const countdown = setTimeout(() => {
 		disableTooltips();
-		console.log('ran countdown');
 	}, 5_000);
 
 	onDestroy(() => clearTimeout(countdown));
@@ -79,7 +79,7 @@
 	<LightDarkToggle bind:use_dark_theme={$use_dark_theme} />
 </div>
 <h1>
-	<a href="/" sveltekit:prefetch class="cool-text">The Commons</a>
+	<a href="/" class="cool-text">The Commons</a>
 </h1>
 <Navigation
 	{nav_links}
@@ -96,6 +96,8 @@
 		<slot />
 	</Transition>
 </main>
+
+<SvelteToast />
 
 <style lang="scss">
 	:root {
