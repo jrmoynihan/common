@@ -63,6 +63,7 @@
 
 <style lang="scss">
 	dialog {
+		overflow: visible; // added for tooltips to escape the edges, but should be silent/inactive usually
 		scrollbar-width: thin;
 		position: fixed;
 		border: none;
