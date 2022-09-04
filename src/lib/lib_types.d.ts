@@ -3,7 +3,8 @@ import type {
 	FadeParams,
 	FlyParams,
 	ScaleParams,
-	SlideParams
+	SlideParams,
+	TransitionConfig
 } from 'svelte/transition';
 
 export type IconSize =
