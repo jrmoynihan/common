@@ -14,6 +14,7 @@
 	import type { TooltipDirections } from '$lib/tooltip/tooltip-action.js';
 	export let title: string = '';
 	export let position: TooltipDirections;
+	export let position_type: 'fixed' | 'absolute' = 'fixed';
 	export let x: number;
 	export let y: number;
 	export let visible = false;
@@ -28,6 +29,8 @@
 	export let offsetWidth: number;
 	export let marginTop: number;
 	export let marginLeft: number;
+	export let marginRight: number;
+	export let marginBottom: number;
 	export let custom_component: unknown | null = null;
 	export let show_arrow = true;
 	export let keep_visible = false;
@@ -57,6 +60,8 @@
 	}
 	$: marginLeft = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginLeft) : 0;
 	$: marginTop = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginTop) : 0;
+	$: marginBottom = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginBottom) : 0;
+	$: marginRight = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginRight) : 0;
 </script>
 
 {#if visible || keep_visible}
@@ -75,7 +80,7 @@
 			class:right={position === 'right'}
 			class:left={position === 'left'}
 			class:bottom={position === 'bottom'}
-			style={`left: ${x}px; top: ${y}px; ${styles}`}
+			style={`left: ${x}px; top: ${y}px; position:${position_type}; ${styles}`}
 		>
 			{#if title}
 				{title}
@@ -102,7 +107,6 @@
 <style lang="scss">
 	.tooltip {
 		box-sizing: border-box;
-		position: fixed;
 		border: var(--tooltip-border, 1px solid #ddd);
 		filter: drop-shadow(var(--tooltip-drop-shadow, 1px 1px 4px hsla(0, 0%, 0%, 0.5)));
 		background: var(--tooltip-background, white);
@@ -125,6 +129,7 @@
 		);
 		text-align: var(--tooltip-text-align, center);
 		z-index: var(--tooltip-z-index, 1000);
+		transition: var(--tooltip-transition, all 300ms ease-in-out);
 	}
 	.nothing {
 		opacity: 0;
