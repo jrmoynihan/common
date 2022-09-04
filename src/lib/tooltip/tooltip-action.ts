@@ -42,8 +42,8 @@ export interface TooltipParameters {
 	in_delay?: number;
 	/** Delay just on the exit of the tooltip.  Overrides the more general 'delay' property, an explicit transition config's delay property will override this! */
 	out_delay?: number;
-	/** Delays the calculation of the tooltip's position upon mounting.  Tooltips inherently wait for parent transitions/animations to finish before calculating their positions (since it may change by the end of the transition). */
-	positioning_delay?: number;
+	/** Delays the calculation of the tooltip's position upon mounting.  Tooltips inherently wait for parent transitions/animations to finish before calculating their positions (since it may change by the end of the transition).  If you want the tooltip to be visible "immediately", it is recommended to add a positioning delay here to  */
+	visibility_delay?: number;
 	/** Duration of the in/out transition of the tooltip.  An explicit transition config will override this! */
 	duration?: number;
 	/** Easing function of the in/out transition of the tooltip.  An explicit transition config will override this! */
@@ -79,7 +79,7 @@ const default_parameters: TooltipActionParameters = {
 	delay: 0,
 	in_delay: 0,
 	out_delay: 0,
-	positioning_delay: 0,
+	visibility_delay: 0,
 	duration: 400,
 	keep_visible: false,
 	visible: false,
@@ -140,7 +140,7 @@ export const tooltip = (
 
 	// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
 	const new_tooltip_parameters = getParametersForNewTooltip();
-	const { visible, in_delay, out_delay, positioning_delay, ...all_other_new_tooltip_parameters } =
+	const { visible, in_delay, out_delay, visibility_delay, ...all_other_new_tooltip_parameters } =
 		new_tooltip_parameters;
 	const { delay } = new_tooltip_parameters;
 
@@ -166,27 +166,35 @@ export const tooltip = (
 
 	async function waitForAnimations() {
 		await delayFor(max_ancestor_transition_duration);
+		// Make sure all animations have settled (resolved or rejected); Rejection can happen when the element unmounts before the animation finishes
 		if (animations?.length > 0) {
 			const finishes = animations.map((a) => a.finished);
 			const finished = await Promise.allSettled(finishes);
 		}
 	}
 
-	const max_delay = Math.max(
-		get(tooltip_parameters).positioning_delay ?? 0,
-		in_delay ?? 0,
-		delay ?? 0
-	);
+	// NOTE: need to call get(tooltip_parameters) here to ensure accurate loading of the delay params, likely due to hoisting behaviour
+	const {
+		visibility_delay: v_delay,
+		delay: total_delay,
+		in_delay: i_delay
+	} = get(tooltip_parameters);
+	const delays = [];
+	if (v_delay) delays.push(v_delay);
+	if (total_delay) delays.push(total_delay);
+	if (i_delay) delays.push(i_delay);
+	const max_delay = getMax([...delays, 0]);
 
-	// Upon mounting, calculate the position of the tooltip after any preferred delays, and show it if needed.
-	setTimeout(async () => {
-		initializeTooltipPosition();
-		if (new_tooltip_parameters.visible) {
-			setTimeout(() => {
-				tooltipComponent.$set({ visible: true });
-			}, max_delay);
-		}
-	}, max_delay);
+	function makeVisibleAfterDelay() {
+		setTimeout(() => {
+			tooltipComponent.$set({ visible: true });
+		}, max_delay);
+	}
+
+	// If the tooltip is made visibile immediately upon mounting, allow a delay before triggering that visibility.
+	if (visible) {
+		makeVisibleAfterDelay();
+	}
 
 	// Add a resize observer to the window that triggers repositioning/resizing of the tooltip, and a scroll event listener to the document
 	if (browser) {
@@ -230,7 +238,7 @@ export const tooltip = (
 			log_functions,
 			out_delay,
 			in_delay,
-			positioning_delay,
+			visibility_delay: positioning_delay,
 			...passing_parameters
 		} = get(tooltip_parameters);
 		return passing_parameters;
@@ -506,7 +514,6 @@ export const tooltip = (
 				}
 			}
 		}
-		console.log('positioned at x:', x, ', y:', y);
 		// Update the component state
 		tooltipComponent.$set({ x, y, position: new_position });
 	}
