@@ -79,19 +79,18 @@
 	const storeDarkThemePreference = async () => {
 		await setLocalStorageItem('useDarkTheme', use_dark_theme);
 	};
-	function checkForSpace(e: KeyboardEvent & { currentTarget: EventTarget & HTMLLabelElement }) {
-		if (e.code === 'Space') {
-			use_dark_theme = !use_dark_theme;
-		}
-	}
 
 	// Update/set the CSS custom properties anytime the colors object changes
 	$: default_colors = use_dark_theme ? { ...dark_theme_colors } : { ...light_theme_colors };
 	$: setCSSvariables(default_colors);
 </script>
 
-<!-- NOTE: tabindex on label prevents the keyboard interaction from toggling the inner input like normal -->
-<label class="switch" tabindex="0" for="light-dark-toggle" on:keypress={(e) => checkForSpace(e)}>
+<button
+	class="switch"
+	tabindex="0"
+	for="light-dark-toggle"
+	on:click={() => (use_dark_theme = !use_dark_theme)}
+>
 	<input
 		type="checkbox"
 		name="light-dark-toggle"
@@ -101,7 +100,7 @@
 	<div>
 		<span />
 	</div>
-</label>
+</button>
 
 <style lang="scss">
 	.switch {
@@ -115,6 +114,8 @@
 		user-select: none;
 		border-radius: 1rem;
 		display: grid;
+		background-color: transparent;
+		border: none;
 		&:focus {
 			box-shadow: var(--button-focus-shadow);
 		}
