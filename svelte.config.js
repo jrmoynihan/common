@@ -10,17 +10,14 @@ const config = {
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
 	preprocess: [
+		mdsvex(mdsvexConfig),
 		preprocess({
 			scss: true
-		}),
-		mdsvex(mdsvexConfig)
+		})
 	],
 
 	kit: {
-		adapter: adapter(),
-		alias: {
-			'$app/environment': '@sveltejs/kit/runtime/app/environment.js'
-		}
+		adapter: adapter()
 	},
 
 	vitePlugin: {
