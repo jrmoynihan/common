@@ -11,7 +11,7 @@
 	const parent_path: string = 'wrappers';
 	const nav_links: NavigationLink[] = makeNavLinks(paths, parent_path);
 
-	beforeNavigate(async (nav) => {
+	beforeNavigate((nav) => {
 		const { from, to } = nav;
 		if (from?.pathname === to?.pathname) return;
 		if (from?.pathname && to?.pathname) {
