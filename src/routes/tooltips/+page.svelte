@@ -66,9 +66,9 @@
 		use:tooltip={{
 			position: selected_position,
 			visible: initially_visible_example,
-			delay: 250,
 			keep_visible,
 			disabled,
+			visibility_delay: 900,
 			title: `This is a tooltip that is set to become visible as soon as its parent is mounted (after waiting for a specified delay). Mouseout its parent to hide the tooltip, or do it programmatically by clicking its parent button!`,
 			css: [['max-width', `min(100vw, 200px)`], ...hot_sun_CSS]
 		}}
