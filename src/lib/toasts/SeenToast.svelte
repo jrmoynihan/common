@@ -2,8 +2,10 @@
 	import { browser } from '$app/environment';
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
 	import { setLocalStorageItem } from '$lib/functions';
+	import DefaultToast from './DefaultToast.svelte';
 
-	export let message_markup = '';
+	export let title: string = '';
+	export let msg: string = '';
 	export let local_storage_key = browser ? crypto.randomUUID() : '';
 	let checked = false;
 
@@ -15,7 +17,7 @@
 </script>
 
 <div class="grid">
-	{@html message_markup}
+	<DefaultToast {msg} {title} />
 
 	<div class="grid toggle">
 		<ToggleSwitch bind:checked />
@@ -30,7 +32,7 @@
 		display: grid;
 		place-items: center;
 		place-content: center;
-		gap: 0.75rem;
+		gap: 0.25rem;
 		margin: 0 auto;
 	}
 	.toggle {
