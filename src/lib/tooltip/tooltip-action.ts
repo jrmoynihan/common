@@ -212,6 +212,7 @@ export const tooltip = (
 
 	let ticking = false;
 	async function scroll() {
+		// FIXME: should only run if intersecting the viewport?
 		if (!ticking) {
 			window.requestAnimationFrame(() => {
 				initializeTooltipPosition({ allow_offscreen: true });
@@ -525,6 +526,7 @@ export const tooltip = (
 		tooltipComponent.$set({ x, y, position: new_position });
 	}
 
+	// FIXME: tooltip updates on scroll while not visible!
 	return {
 		update(new_parameters: TooltipParameters) {
 			if (tooltipComponent && new_parameters) {
