@@ -4,6 +4,7 @@
 
 	/** Bind this with your store that holds the state for light/dark theme selection */
 	export let use_dark_theme = false;
+	export let button_switch_styles = '';
 	let root: HTMLElement | null = browser ? document?.documentElement : null;
 
 	/** A set of key-value light theme colors */
@@ -16,7 +17,7 @@
 	export let dark_theme_colors = {
 		text: 'hsla(0, 0%, 100%, 1)', // main/text color
 		background: 'hsl(195, 61%, 14%)', // background/alternate color
-		accent: 'orange'
+		accent: 'hsla(39, 100%, 50%, 1)'
 	};
 	/** The default colors to start with (currently set to dark theme) */
 	export let default_colors = { ...dark_theme_colors };
@@ -27,7 +28,6 @@
 
 	// Set globally available CSS custom properties (AKA variables) on the root element
 	const setCSSvariables = (colors: { [x: string]: string }) => {
-		// console.table(colors);
 		for (const key of Object.keys(colors)) {
 			const color = colors[key];
 			if (browser && root) {
@@ -79,7 +79,6 @@
 	const storeDarkThemePreference = async () => {
 		await setLocalStorageItem('useDarkTheme', use_dark_theme);
 	};
-
 	// Update/set the CSS custom properties anytime the colors object changes
 	$: default_colors = use_dark_theme ? { ...dark_theme_colors } : { ...light_theme_colors };
 	$: setCSSvariables(default_colors);
@@ -87,6 +86,7 @@
 
 <button
 	class="switch"
+	style={button_switch_styles}
 	tabindex="0"
 	for="light-dark-toggle"
 	on:click={() => (use_dark_theme = !use_dark_theme)}
