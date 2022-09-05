@@ -19,9 +19,9 @@
 			set(new_number);
 		}
 	);
+	// These are equivalent:
 	const found = getReadableContext<number>('product');
 	const foundAgain: Readable<number> = getDerivedContext<number>('product');
-	console.log('got readable context from a derived store', $found, $foundAgain);
 </script>
 
 <p>Click on a link to see examples</p>
