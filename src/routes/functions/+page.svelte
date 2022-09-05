@@ -1,6 +1,7 @@
 <script lang="ts">
 	import WritableContextExample from './WritableContextExample.svelte.md';
 	import ReadableContextExample from './ReadableContextExample.svelte.md';
+	import DerivedContextExample from './DerivedContextExample.svelte.md';
 	import type Cat from '../+layout.svelte';
 	import { getReadableContext } from '$lib';
 	import Code from '$lib/internal/Code.svelte';
@@ -43,10 +44,28 @@
 			>context</ExternalLink
 		> with the given key for descendant components to look up, using <Code>getWritableContext</Code>
 		(or
-		<Code>getReadableContext</Code>).
+		<Code>getReadableContext</Code> -- all stores inherit the Readable interface).
 	</p>
 	<p>
 		<WritableContextExample />
+	</p>
+</section>
+<section>
+	<h3>setDerivedContext / getDerivedContext</h3>
+	<p>
+		<Code>setDerivedContext</Code> creates a Svelte
+		<ExternalLink url={new URL('https://svelte.dev/docs#run-time-svelte-store-derived')}
+			>derived store</ExternalLink
+		>
+		from the provided value, and assigns it to a
+		<ExternalLink url={new URL('https://svelte.dev/docs#run-time-svelte-setcontext')}
+			>context</ExternalLink
+		> with the given key for descendant components to look up, using <Code>getDerivedContext</Code>
+		(or
+		<Code>getReadableContext</Code> -- all stores inherit the Readable interface).
+	</p>
+	<p>
+		<DerivedContextExample />
 	</p>
 </section>
 
