@@ -4,6 +4,6 @@ import ErrorModal from './ErrorModal.svelte';
 import ModalWithButton from './ModalWithButton.svelte';
 import Tabs from './Tabs.svelte';
 import Transition from './Transition.svelte';
-import { Tab } from './tab';
 
-export { Accordion, Modal, ErrorModal, ModalWithButton, Tabs, Transition, Tab };
+export { Tab } from './tab';
+export { Accordion, Modal, ErrorModal, ModalWithButton, Tabs, Transition };
