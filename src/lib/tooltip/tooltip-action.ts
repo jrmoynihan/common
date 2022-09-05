@@ -60,6 +60,8 @@ export interface TooltipParameters {
 	transition_config?: FlyParams | FadeParams | ScaleParams | SlideParams | TransitionConfig;
 	/** For development-only.  Console log certain events/function calls. */
 	log_functions?: boolean;
+	/** Is the tooltip used on a top-layer element, like a <dialog> (more coming to HTML soon! https://chromestatus.com/feature/5463833265045504) */
+	used_on_top_layer?: boolean;
 }
 
 // A non-optional default/private interface to ensure type-safety and all variables are set
@@ -95,24 +97,25 @@ const default_parameters: TooltipActionParameters = {
 	marginLeft: 0,
 	marginTop: 0,
 	disabled: false,
-	log_functions: false
+	log_functions: false,
+	used_on_top_layer: false
 };
 
 export const tooltip = (
 	element: HTMLElement,
 	parameters: TooltipParameters = default_parameters
 ) => {
+	const { used_on_top_layer } = parameters;
+	// Get animations running on the document's body
 	const animations = document.body.getAnimations({ subtree: true });
-	const ancestor_nodes = getAncestors(element) as HTMLElement[];
-	// console.log('ancestor nodes of', element.textContent, ancestor_nodes);
 
 	// Find max transition/animation time on ancestor nodes
+	const ancestor_nodes = getAncestors(element) as HTMLElement[];
 	const ancestor_transition_durations = getTransitionDurations(ancestor_nodes);
 	const max_ancestor_transition_duration = getMax(ancestor_transition_durations) * 1000;
-	// console.log('max duration transition of ancestors:', max_ancestor_transition_duration);
 
+	// Is a dialog one of the anchor element's ancestor's?
 	const dialog = ancestor_nodes?.find((ele) => ele?.tagName === 'DIALOG') as HTMLDialogElement;
-	// if (dialog) 	console.log('found a dialog ancestor!');
 
 	let tooltip_parameters = writable<TooltipActionParameters>({
 		...default_parameters,
@@ -381,7 +384,7 @@ export const tooltip = (
 		}
 	}
 	async function positionTooltip(
-		affixed_element: HTMLElement,
+		anchor_element: HTMLElement,
 		tooltipComponent: Tooltip,
 		new_position: TooltipDirections,
 		allow_dynamic_position: boolean | undefined,
@@ -392,10 +395,10 @@ export const tooltip = (
 		let x: number;
 		let y: number;
 
-		// Find the bounds of the affixed elemetn and the padding of the parent of the affixed element for the tooltip (for absolute positioning within dialogs)
-		const { top, bottom, left, right, height, width } = affixed_element.getBoundingClientRect();
-		const parent_styles: CSSStyleDeclaration | null = affixed_element?.parentElement
-			? window.getComputedStyle(affixed_element?.parentElement)
+		// Find the bounds of the affixed element and the padding of the parent of the affixed element for the tooltip (for absolute positioning within dialogs)
+		const { top, bottom, left, right, height, width } = anchor_element.getBoundingClientRect();
+		const parent_styles: CSSStyleDeclaration | null = anchor_element?.parentElement
+			? window.getComputedStyle(anchor_element?.parentElement)
 			: null;
 
 		const vertical_middle = height / 2;
@@ -410,6 +413,10 @@ export const tooltip = (
 			marginLeft: tip_margin_left,
 			marginTop: tip_margin_top,
 			marginRight: tip_margin_right,
+			paddingTop: tip_padding_top,
+			paddingBottom: tip_padding_bottom,
+			paddingLeft: tip_padding_left,
+			paddingRight: tip_padding_right,
 			marginBottom: tip_margin_bottom,
 			position: current_position
 		} = tooltipComponent;
@@ -436,7 +443,7 @@ export const tooltip = (
 		// Change the position of the tooltip to the middle of the parent element's box, on the edge indicated by the 'position' parameter
 		x =
 			dialog && parent_styles
-				? positionXAbsolute({ ...x_params, tip_margin_right, parent_styles })
+				? positionXAbsolute({ ...x_params, tip_margin_right, tip_padding_left, parent_styles })
 				: positionX(x_params);
 		y =
 			dialog && parent_styles
@@ -600,6 +607,7 @@ interface positionX_params {
 }
 interface positionXAbsolute_params extends positionX_params {
 	tip_margin_right: number;
+	tip_padding_left: number;
 	parent_styles: CSSStyleDeclaration;
 }
 
@@ -632,6 +640,7 @@ function positionXAbsolute(input: positionXAbsolute_params): number {
 		tip_offset_width,
 		tip_margin_left,
 		tip_margin_right,
+		tip_padding_left,
 		horizontal_offset = 0,
 		parent_styles
 	} = input;
@@ -642,6 +651,7 @@ function positionXAbsolute(input: positionXAbsolute_params): number {
 		return (
 			horizontal_middle +
 			parent_padding_left +
+			tip_padding_left * 2 +
 			tip_margin_left -
 			tip_offset_width / 2 +
 			horizontal_offset

@@ -12,6 +12,7 @@
 	} from 'svelte/transition';
 	import { cubicInOut } from 'svelte/easing';
 	import type { TooltipDirections } from '$lib/tooltip/tooltip-action.js';
+
 	export let title: string = '';
 	export let position: TooltipDirections;
 	export let position_type: 'fixed' | 'absolute' = 'fixed';
@@ -31,6 +32,10 @@
 	export let marginLeft: number;
 	export let marginRight: number;
 	export let marginBottom: number;
+	export let paddingTop: number;
+	export let paddingBottom: number;
+	export let paddingLeft: number;
+	export let paddingRight: number;
 	export let custom_component: unknown | null = null;
 	export let show_arrow = true;
 	export let keep_visible = false;
@@ -62,6 +67,12 @@
 	$: marginTop = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginTop) : 0;
 	$: marginBottom = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginBottom) : 0;
 	$: marginRight = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginRight) : 0;
+	$: paddingTop = tooltip_element ? parseInt(getComputedStyle(tooltip_element).paddingTop) : 0;
+	$: paddingBottom = tooltip_element
+		? parseInt(getComputedStyle(tooltip_element).paddingBottom)
+		: 0;
+	$: paddingLeft = tooltip_element ? parseInt(getComputedStyle(tooltip_element).paddingLeft) : 0;
+	$: paddingRight = tooltip_element ? parseInt(getComputedStyle(tooltip_element).paddingRight) : 0;
 </script>
 
 {#if visible || keep_visible}
