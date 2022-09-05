@@ -181,7 +181,7 @@
 	button {
 		font-weight: bold;
 		font-size: large;
-		background-color: seagreen;
+		background: linear-gradient(darkcyan -70%, rgb(9, 94, 94) 25%, darkcyan 190%);
 		margin: auto;
 		max-width: max-content;
 		border-radius: 20px 50px 20px 50px;
@@ -198,10 +198,10 @@
 			border-radius: 1rem;
 		}
 		&.delete {
-			background-color: darkred;
+			background-color: hsl(0, 41%, 41%);
 		}
 		&.add {
-			background-color: green;
+			background-color: darkcyan;
 			grid-column: 1 / span 2;
 			display: flex;
 			gap: 1rem;
