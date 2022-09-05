@@ -13,7 +13,8 @@
 		border-radius: 0.25rem;
 		font-family: 'Fira Code iScript', 'Fira Code', Menlo, Monaco, Consolas, 'Andale Mono',
 			'Ubuntu Mono', 'Courier New', monospace;
-		line-height: 1.5em;
+		font-size: 0.85em;
+		line-height: 1.6em;
 		color: white;
 		&.dark {
 			background-color: hsla(195, 81%, 24%, 90%);
