@@ -1,11 +1,8 @@
 <script lang="ts">
 	import { tooltip } from '$lib';
-
 	import Button from '$lib/buttons/Button.svelte';
-	import { getWritableContext } from '$lib/functions/store';
 	import Modal from '$lib/wrappers/Modal.svelte';
 	import ModalWithButton from '$lib/wrappers/ModalWithButton.svelte';
-	import type { Writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 	import ModalOneCode from './ModalOneCode.svelte.md';
 	import ModalTwoCode from './ModalTwoCode.svelte.md';
@@ -14,8 +11,6 @@
 	let open_one: () => Promise<void>;
 	let open_two: () => Promise<void>;
 	let open: () => Promise<void>;
-	const loggedWritableContext: Writable<string> = getWritableContext('my-cat');
-	console.log(`my cat's name is`, $loggedWritableContext);
 	let offsetWidth: number;
 </script>
 
@@ -48,14 +43,14 @@
 			<svelte:fragment slot="modal-content">
 				<p
 					use:tooltip={{
-						title:
-							'Do tooltips still show up? What if we make it really quite long?  Like, if there was a loquacious, sesquipedalian at the helm of this library lexicon!',
+						title: 'I need to be fixed when dialog tooltips are made immediately visible!',
 						keep_visible: true,
-						position: 'right'
+						visibility_delay: 2000,
+						position: 'top'
 					}}
 					bind:offsetWidth
 				>
-					Hello from the modal! offsetWidth: {offsetWidth}
+					Hello from the modal!
 				</p>
 			</svelte:fragment>
 		</ModalWithButton>
