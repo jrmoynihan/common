@@ -1,19 +1,52 @@
 <script lang="ts">
-	import SetWritableContextExample from './SetWritableContextExample.svelte.md';
+	import WritableContextExample from './WritableContextExample.svelte.md';
+	import ReadableContextExample from './ReadableContextExample.svelte.md';
+	import type Cat from '../+layout.svelte';
+	import { getReadableContext } from '$lib';
+	import Code from '$lib/internal/Code.svelte';
+	import ExternalLink from '$lib/internal/ExternalLink.svelte';
+
+	const read = getReadableContext<Cat>('dude');
+	console.log(`tried reading 'dude'`, $read);
 </script>
 
 <section>
-	<h3>setWritableContext</h3>
+	<h3>setReadableContext / getReadableContext</h3>
 	<p>
-		A function that that creates a Svelte <mark
-			><a href="https://svelte.dev/docs#run-time-svelte-store-writable">writable store</a></mark
+		<Code>setReadableContext</Code> creates a Svelte
+		<ExternalLink url={new URL('https://svelte.dev/docs#run-time-svelte-store-readable')}
+			>readable store</ExternalLink
 		>
 		from the provided value, and assigns it to a
-		<mark><a href="https://svelte.dev/docs#run-time-svelte-setcontext">context</a></mark> with the given
-		key for descendant components to look up.
+		<ExternalLink url={new URL('https://svelte.dev/docs#run-time-svelte-setcontext')}
+			>context</ExternalLink
+		>
+		with the given key for descendant components to look up, using <Code>getReadableContext</Code>.
 	</p>
 	<p>
-		<SetWritableContextExample />
+		Note: Since these functions internally use a unique Symbol as the key for context lookups, you
+		can't use the normal <Code>getContext()</Code> function to obtain their values.
+	</p>
+	<p>
+		<ReadableContextExample />
+	</p>
+</section>
+<section>
+	<h3>setWritableContext / getWritableContext</h3>
+	<p>
+		<Code>setWritableContext</Code> creates a Svelte
+		<ExternalLink url={new URL('https://svelte.dev/docs#run-time-svelte-store-writable')}
+			>writable store</ExternalLink
+		>
+		from the provided value, and assigns it to a
+		<ExternalLink url={new URL('https://svelte.dev/docs#run-time-svelte-setcontext')}
+			>context</ExternalLink
+		> with the given key for descendant components to look up, using <Code>getWritableContext</Code>
+		(or
+		<Code>getReadableContext</Code>).
+	</p>
+	<p>
+		<WritableContextExample />
 	</p>
 </section>
 
@@ -21,18 +54,6 @@
 	section {
 		display: grid;
 		justify-content: center;
-	}
-	mark {
-		padding: 0.25rem;
-		background-color: hsl(0, 20%, 5%);
-		border-radius: 0.25rem;
-		color: orange;
-	}
-	a {
-		color: unset;
-		&:visited {
-			color: unset;
-		}
 	}
 	p {
 		max-width: 80ch;
