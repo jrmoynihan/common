@@ -37,7 +37,9 @@ import {
 	setWritableContext,
 	getWritableContext,
 	setReadableContext,
-	getReadableContext
+	getReadableContext,
+	setDerivedContext,
+	getDerivedContext
 } from './store';
 
 export {
@@ -71,4 +73,11 @@ export {
 	LogAndToastOptions,
 	ErrorAndToastOptions
 };
-export { setWritableContext, getWritableContext, setReadableContext, getReadableContext };
+export {
+	setWritableContext,
+	getWritableContext,
+	setReadableContext,
+	getReadableContext,
+	setDerivedContext,
+	getDerivedContext
+};
