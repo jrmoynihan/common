@@ -84,6 +84,7 @@
 <Navigation
 	{nav_links}
 	bind:tooltip_options={link_tooltip_options}
+	nav_link_static_styles={`color: white`}
 	nav_link_hover_styles={[['background', 'darkorange']]}
 />
 <main>
@@ -120,6 +121,7 @@
 		position: fixed;
 		top: 0;
 		padding: 1rem;
+		z-index: 1;
 	}
 	.left {
 		left: 0;
