@@ -51,10 +51,10 @@
 
 	beforeNavigate((nav) => {
 		const { from, to } = nav;
-		if (from?.pathname === to?.pathname) return;
-		if (from?.pathname && to?.pathname) {
-			const from_path_segments = from.pathname.split('/');
-			const to_path_segments = to.pathname.split('/');
+		if (from?.url.pathname === to?.url.pathname) return;
+		if (from?.url.pathname && to?.url.pathname) {
+			const from_path_segments = from.url.pathname.split('/');
+			const to_path_segments = to.url.pathname.split('/');
 			if (from_path_segments[1] !== to_path_segments[1]) {
 				refresh = !refresh;
 			}
