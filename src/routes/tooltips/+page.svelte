@@ -3,11 +3,13 @@
 	import Fa from 'svelte-fa';
 	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons/index';
 	import { fly } from 'svelte/transition';
+	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
 	let selected_position: TooltipDirections = 'top';
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width: number = 150;
 	let keep_visible = false;
 	let disabled = false;
+	let visible = false;
 	let initially_visible_example = true;
 	let dynamic_tooltip_text =
 		'Type in the text input while hovering the parent element to see the magic happen!';
@@ -20,12 +22,18 @@
 		['--tooltip-drop-shadow', '0px 0px 10px lime']
 	];
 	let hot_sun_CSS: [string, string][] = [
-		['background-color', 'lightyellow'],
+		['--tooltip-background', 'lightyellow'],
 		['box-shadow', '0px 0px 16px 8px orange']
 	];
 
 	function capitalize(str: string) {
 		return str.charAt(0).toUpperCase() + str.slice(1);
+	}
+	function hideAll() {
+		disabled = true;
+		keep_visible = false;
+		visible = false;
+		disabled = false;
 	}
 </script>
 
@@ -37,14 +45,23 @@
 				{capitalize(position)}
 			</label>
 		{/each}
-		<label>
+		<label for="disabled-toggle">
 			Disable Tooltip:
-			<input type="checkbox" bind:checked={disabled} />
+			<!-- <input type="checkbox" bind:checked={disabled} /> -->
+			<ToggleSwitch bind:checked={disabled} />
 		</label>
-		<label>
+		<label for="keep-visible-toggle">
 			Keep Tooltip Visible:
-			<input type="checkbox" bind:checked={keep_visible} />
+			<!-- <input type="checkbox" bind:checked={keep_visible} /> -->
+			<ToggleSwitch bind:checked={keep_visible} />
 		</label>
+		{#if keep_visible}
+			<button
+				transition:fly={{ x: 100, duration: 300 }}
+				style="box-shadow: 0 0 14px 1px yellow;"
+				on:click={hideAll}>Hide All Tooltips</button
+			>
+		{/if}
 	</div>
 
 	<button
@@ -52,6 +69,7 @@
 		use:tooltip={{
 			position: selected_position,
 			keep_visible,
+			visible,
 			disabled,
 			title: `This is a tooltip positioned on ${selected_position} ${
 				selected_position === 'top' ? '(the default)' : ''
@@ -65,7 +83,7 @@
 		class="full-width"
 		use:tooltip={{
 			position: selected_position,
-			visible: initially_visible_example,
+			visible: initially_visible_example && visible,
 			keep_visible,
 			disabled,
 			visibility_delay: 900,
@@ -164,9 +182,12 @@
 		margin: auto;
 	}
 	.settings {
-		display: flex;
-		gap: 1rem;
+		display: grid;
+		grid-template-columns: repeat(7, minmax(0, 1fr));
+		grid-template-rows: 4rem;
+		gap: 8rem;
 		place-content: center;
+		margin: 2rem;
 	}
 	.full-width {
 		width: 100%;
