@@ -3,17 +3,16 @@ import { capitalize } from '$lib/functions';
 import { get } from 'svelte/store';
 
 interface INavigationLink {
-	link: URL;
+	url: URL;
 	link_text?: string;
 }
 export class NavigationLink {
-	link: URL;
+	url: URL;
 	link_text: string;
 
 	constructor(args: INavigationLink) {
-		this.link = args?.link;
-		this.link_text =
-			args?.link_text ?? capitalize(this.getLastSegment(args?.link.pathname)) ?? null;
+		this.url = args?.url;
+		this.link_text = args?.link_text ?? capitalize(this.getLastSegment(args?.url.pathname)) ?? null;
 	}
 	getLastSegment(pathname: string): string {
 		const segments = pathname.split('/');
@@ -36,9 +35,9 @@ export function makeNavLinks(
 	});
 	const links = urls.map((url, i) => {
 		if (link_texts) {
-			return new NavigationLink({ link: url, link_text: link_texts[i] });
+			return new NavigationLink({ url: url, link_text: link_texts[i] });
 		}
-		return new NavigationLink({ link: url });
+		return new NavigationLink({ url: url });
 	});
 	return links;
 }
