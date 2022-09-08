@@ -4,9 +4,9 @@
 	import { capitalize } from '$lib/functions';
 
 	/** The URL object describing the link */
-	export let link: URL;
+	export let url: URL;
 	/** The displayed text for the link (defaults to the link's pathname)*/
-	export let link_text: string = capitalize(link.pathname);
+	export let link_text: string = capitalize(url.pathname);
 	/** Tooltip options to apply to the nav links. If an array is passed, each options object will be applied to each link, individually.  Must pass the index in the array, `i` as well!  */
 	export let tooltip_options: TooltipParameters | TooltipParameters[] = [];
 	/** Is the link the currently active page/url? */
@@ -30,7 +30,7 @@
 	function doesPathMatchCurrentURL(path: string, currentURL: string) {
 		return currentURL.includes(`${path}`);
 	}
-	$: is_current_page = doesPathMatchCurrentURL(link.pathname, $page?.url?.pathname);
+	$: is_current_page = doesPathMatchCurrentURL(url.pathname, $page?.url?.pathname);
 	$: {
 		if (anchor && current_page_styles?.length > 0 && is_current_page) {
 			current_page_styles.forEach(([key, value]) => {
@@ -75,7 +75,7 @@
 <a
 	bind:this={anchor}
 	use:tooltip={Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
-	href={link.href}
+	href={url.href}
 	data-sveltekit-prefetch
 	class="link"
 	class:current-page={is_current_page}
