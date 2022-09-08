@@ -48,7 +48,7 @@ export interface TooltipParameters {
 	duration?: number;
 	/** Easing function of the in/out transition of the tooltip.  An explicit transition config will override this! */
 	easing?: EasingFunction;
-	/** Dynamic CSS properties/values that can change on the tooltip. */
+	/** CSS properties/value pairs. These can change dynamically on the tooltip.  Note: use '--tooltip'-prefixed CSS custom properties wherever possible (e.g. --tooltip-background: 'white' instead of background: 'white'). */
 	css?: [string, string][];
 	/** A component to show inside the tooltip */
 	custom_component?: unknown;
@@ -242,6 +242,7 @@ export const tooltip = (
 			log_functions,
 			out_delay,
 			in_delay,
+			used_on_top_layer,
 			visibility_delay: positioning_delay,
 			...passing_parameters
 		} = get(tooltip_parameters);
