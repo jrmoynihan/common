@@ -51,14 +51,8 @@
 
 	beforeNavigate((nav) => {
 		const { from, to } = nav;
-		if (from?.url.pathname === to?.url.pathname) return;
-		if (from?.url.pathname && to?.url.pathname) {
-			const from_path_segments = from.url.pathname.split('/');
-			const to_path_segments = to.url.pathname.split('/');
-			if (from_path_segments[1] !== to_path_segments[1]) {
-				refresh = !refresh;
-			}
-		}
+		if (from?.routeId === to?.routeId) return;
+		refresh = !refresh;
 		disableTooltips();
 	});
 	const countdown = setTimeout(() => {
@@ -91,8 +85,8 @@
 	<Transition
 		bind:refresh
 		transition={fly}
-		in_transition_parameters={{ duration: 400, x: -100, delay: 450 }}
-		out_transition_parameters={{ duration: 400, x: 100 }}
+		in_transition_parameters={{ duration: 350, x: -100, delay: 300 }}
+		out_transition_parameters={{ duration: 350, x: 100 }}
 	>
 		<slot />
 	</Transition>

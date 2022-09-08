@@ -1,3 +1,5 @@
+```svelte
+<!-- +layout.svelte -->
 <script lang="ts">
 	import Transition from '$lib/wrappers/Transition.svelte';
 	import { fly } from 'svelte/transition';
@@ -14,7 +16,7 @@
 	beforeNavigate((nav) => {
 		const { from, to } = nav;
 		if (from?.routeId === to?.routeId) return;
-		refresh = !refresh;
+			refresh = !refresh;
 	});
 </script>
 
@@ -25,17 +27,10 @@
 		bind:refresh
 		in_transition={fly}
 		out_transition={fly}
-		in_transition_parameters={{ duration: 250, delay: 300, x: -100 }}
-		out_transition_parameters={{ duration: 300, x: 100 }}
+		in_transition_parameters={{ duration: 350, delay: 400, x: -100 }}
+		out_transition_parameters={{ duration: 400, x: 100 }}
 	>
 		<slot />
 	</Transition>
 </section>
-
-<style lang="scss">
-	section {
-		display: grid;
-		grid-auto-rows: max-content;
-		grid-template-columns: 1fr;
-	}
-</style>
+```
