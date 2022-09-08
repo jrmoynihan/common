@@ -16,7 +16,7 @@ export function getDerivedContext<T>(key: string): Readable<T> {
 }
 ```
 ##### Usage
-```html
+```svelte
 <!-- ParentComponent.svelte -->
 <script lang='ts'>
     import { setDerivedContext } from '@jrmoynihan/common/store'
@@ -43,7 +43,7 @@ export function getDerivedContext<T>(key: string): Readable<T> {
 <!-- No prop drilling or bind:prop syntax needed! -->
 <ChildComponent />
 ```
-```html
+```svelte
 <!-- ChildComponent.svelte -->
 <script lang='ts'>
     import { getDerivedContext, getWritableContext } from '@jrmoynihan/common/store'

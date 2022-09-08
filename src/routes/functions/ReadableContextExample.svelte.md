@@ -11,7 +11,7 @@ export function getReadableContext<T>(key: string): Readable<T> {
 }
 ```
 ##### Usage
-```html
+```svelte
 <!-- ParentComponent.svelte -->
 <script lang='ts' context="module" >
 	export interface Pet = {
@@ -35,7 +35,7 @@ export function getReadableContext<T>(key: string): Readable<T> {
 
 <ChildComponent />
 ```
-```html
+```svelte
 <!-- ChildComponent.svelte -->
 <script lang='ts'>
     import { getReadableContext } from '@jrmoynihan/common/store'

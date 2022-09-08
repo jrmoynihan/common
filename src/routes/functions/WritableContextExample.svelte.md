@@ -11,7 +11,7 @@ export function getWritableContext<T>(key: string): Writable<T> {
 }
 ```
 ##### Usage
-```html
+```svelte
 <!-- ParentComponent.svelte -->
 <script lang='ts' context="module" >
 	export interface Pet = {
@@ -33,7 +33,7 @@ export function getWritableContext<T>(key: string): Writable<T> {
 <!-- No prop drilling or bind:prop syntax needed! -->
 <ChildComponent />
 ```
-```html
+```svelte
 <!-- ChildComponent.svelte -->
 <script lang='ts'>
     import { getReadableContext } from '@jrmoynihan/common/store'
