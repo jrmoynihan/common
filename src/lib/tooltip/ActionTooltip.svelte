@@ -154,7 +154,11 @@
 			position: absolute;
 			inset: 0;
 			filter: drop-shadow(var(--tooltip-shadow, 0px 0px 2px #bbb));
-			border-color: var(--tooltip-background, var(--tooltip-background-color, inherit));
+			border-color: var(
+				--tooltip-arrow-color,
+				var(--tooltip-background, var(--tooltip-background-color, white))
+			);
+			border-width: var(--default-arrow-size, 0.5rem);
 		}
 		&.left,
 		&.right {
@@ -192,7 +196,10 @@
 
 			&::after {
 				border-bottom: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
-					var(--tooltip-background-color, white);
+					var(
+						--tooltip-arrow-color,
+						var(--tooltip-background, var(--tooltip-background-color, white))
+					);
 			}
 		}
 		&.top {
@@ -200,7 +207,10 @@
 
 			&::after {
 				border-top: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
-					var(--tooltip-background-color, white);
+					var(
+						--tooltip-arrow-color,
+						var(--tooltip-background, var(--tooltip-background-color, white))
+					);
 			}
 		}
 		&.left {
@@ -208,7 +218,10 @@
 
 			&::after {
 				border-left: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
-					var(--tooltip-background-color, white);
+					var(
+						--tooltip-arrow-color,
+						var(--tooltip-background, var(--tooltip-background-color, white))
+					);
 			}
 		}
 		&.right {
@@ -216,7 +229,10 @@
 
 			&::after {
 				border-right: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
-					var(--tooltip-background-color, white);
+					var(
+						--tooltip-arrow-color,
+						var(--tooltip-background, var(--tooltip-background-color, white))
+					);
 			}
 		}
 	}
