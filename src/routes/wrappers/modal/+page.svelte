@@ -11,7 +11,6 @@
 	let open_one: () => Promise<void>;
 	let open_two: () => Promise<void>;
 	let open: () => Promise<void>;
-	let offsetWidth: number;
 </script>
 
 <section class="modals">
@@ -48,7 +47,6 @@
 						visibility_delay: 2000,
 						position: 'top'
 					}}
-					bind:offsetWidth
 				>
 					Hello from the modal!
 				</p>
