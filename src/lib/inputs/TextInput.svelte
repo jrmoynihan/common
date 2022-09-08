@@ -4,6 +4,8 @@
 	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons';
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
 	import type { DatalistOption } from '$lib/inputs';
+	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
+	import { fade } from 'svelte/transition';
 
 	export let value = '';
 	export let placeholder = '';
@@ -14,6 +16,12 @@
 	export let list = crypto?.randomUUID();
 	export let show_confirm = true;
 	export let options: DatalistOption[] = [];
+	export let input_container_styles = '';
+	export let input_styles = '';
+	export let button_styles = '';
+	export let placeholder_styles = '';
+	export let transition: SvelteTransition = fade;
+	export let transition_parameters: SvelteTransitionParams = { duration: 0 };
 	export let use_tooltip = false;
 	export let tooltip_options: TooltipParameters = {
 		title,
@@ -36,10 +44,16 @@
 		if (custom_validity_function) custom_validity_function(e);
 		dispatch('input', e.currentTarget.value);
 	}
-	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/ 
+	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
-<div class="text-input-container" use:tooltip={{ ...tooltip_options }} {title}>
+<div
+	class="text-input-container"
+	use:tooltip={{ ...tooltip_options }}
+	{title}
+	style={input_container_styles}
+	transition:transition={transition_parameters}
+>
 	{#if type === 'text'}
 		<input
 			type="text"
@@ -50,7 +64,7 @@
 			pattern={pattern?.source}
 			on:input={(e) => passInput(e)}
 		/>
-		<div class="placeholder">
+		<div class="placeholder" style={placeholder_styles}>
 			{placeholder ?? ''}
 		</div>
 	{:else if type === 'datalist'}
@@ -59,12 +73,13 @@
 			bind:this={input}
 			bind:value
 			class:value
+			style={input_styles}
 			{required}
 			pattern={pattern?.source}
 			{list}
 			on:input={(e) => passInput(e)}
 		/>
-		<div class="placeholder">
+		<div class="placeholder" style={placeholder_styles}>
 			{placeholder ?? ''}
 		</div>
 		<datalist id={list} tabindex="-1">
@@ -75,7 +90,13 @@
 	{/if}
 	<div class="btn-container">
 		{#if show_confirm}
-			<button class="confirm-btn" tabindex={value ? 0 : -1} class:value on:click={confirm}>
+			<button
+				class="confirm-btn"
+				tabindex={value ? 0 : -1}
+				class:value
+				on:click={confirm}
+				style={button_styles}
+			>
 				<Fa icon={faCheck} color="inherit" />
 			</button>
 		{/if}
@@ -85,6 +106,7 @@
 				class:no-confirm={!show_confirm}
 				tabindex={value ? 0 : -1}
 				class:value
+				style={button_styles}
 				on:click={clearInput}
 			>
 				<Fa icon={faX} color="inherit" />
@@ -135,7 +157,7 @@
 		}
 	}
 	.placeholder {
-		// position: absolute;
+		font-size: var(--text-input-placeholder-font-size, 1em);
 		inset: 0;
 		transition: all ease-in-out 300ms;
 		pointer-events: none;
@@ -143,6 +165,7 @@
 		white-space: nowrap;
 		overflow: hidden;
 		opacity: 0.6;
+		display: grid;
 	}
 	.btn-container {
 		--text-input-button-margin: 0.15rem;
@@ -210,14 +233,14 @@
 	/* Move the placeholder div when anything in the container receives focus */
 	.text-input-container:focus-within > .placeholder,
 	input:active ~ .placeholder {
-		transform: translate3d(-3%, -1em, 0);
-		font-size: 0.55em;
+		translate: -3% -1.8em 0;
+		font-size: 0.5em;
 	}
 
 	/* When the input isn't focused, but has a value, continue to fade and translate the placeholder div */
 	input.value:not(:focus) ~ .placeholder {
-		transform: translate3d(-3%, -1em, 0);
-		font-size: 0.55em;
+		translate: -3% -1.8em 0;
+		font-size: 0.5em;
 		opacity: 0.4;
 	}
 </style>
