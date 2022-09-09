@@ -48,7 +48,6 @@
 		"@fortawesome/free-solid-svg-icons": "^6.2.0",
 		"@js-temporal/polyfill": "^0.4.2",
 		"@zerodevx/svelte-toast": "^0.7.2",
-		"barrelsby": "^2.4.0",
 		"svelte-fa": "^3.0.3"
 	}
 }
