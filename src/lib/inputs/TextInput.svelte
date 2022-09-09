@@ -157,7 +157,7 @@
 		}
 	}
 	.placeholder {
-		font-size: var(--text-input-placeholder-font-size, 1em);
+		font-size: var(--text-input-placeholder-font-size, 1rem);
 		inset: 0;
 		transition: all ease-in-out 300ms;
 		pointer-events: none;
