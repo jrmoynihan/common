@@ -168,7 +168,7 @@
 			outline: var(--button-hover-outline, -webkit-focus-ring-color auto 1px);
 		}
 		&:active {
-			transform: scale3d(1, 1, 1);
+			scale: 1, 1, 1;
 			&.low {
 				box-shadow: none;
 			}
@@ -181,15 +181,15 @@
 		}
 	}
 	.low {
-		transform: scale3d(1.005, 1.005, 1);
+		scale: 1.005, 1.005, 1;
 		box-shadow: var(--shadow-elevation-low);
 	}
 	.medium {
-		transform: scale3d(1.015, 1.015, 1);
+		scale: 1.015, 1.015, 1;
 		box-shadow: var(--shadow-elevation-medium);
 	}
 	.high {
-		transform: scale3d(1.025, 1.025, 1);
+		scale: 1.025, 1.025, 1;
 		box-shadow: var(--shadow-elevation-high);
 	}
 	.hovered,

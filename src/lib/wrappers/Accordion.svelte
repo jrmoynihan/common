@@ -125,13 +125,13 @@
 			border-radius: 1rem 1rem 0 0;
 			transition: border-radius 0s ease-in-out;
 			& svg {
-				transform: rotate(var(--icon-open-rotation));
+				rotate: var(--icon-open-rotation);
 			}
 		}
 	}
 
 	svg {
-		transition: transform 0.2s ease-in;
-		transform: rotate(var(--icon-closed-rotation));
+		transition: rotate 0.2s ease-in;
+		rotate: var(--icon-closed-rotation);
 	}
 </style>

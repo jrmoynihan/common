@@ -135,8 +135,8 @@
 					top: 0.625em;
 					width: 1.5em;
 					background: var(--line);
-					transform: scaleX(var(--scale));
-					transition: transform var(--duration) ease;
+					scale: var(--scale);
+					transition: all var(--duration) ease;
 				}
 				&:before {
 					--scale: 0;
@@ -165,7 +165,7 @@
 						height: 1.5em;
 						border-radius: 50%;
 						box-shadow: inset 0 0 0 var(--scale) var(--box-shadow-color);
-						transform: translateX(var(--translateX));
+						translate: x var(--translateX);
 						transition: box-shadow var(--duration) ease, transform var(--duration) ease;
 					}
 					&:not(:empty) {

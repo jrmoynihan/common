@@ -217,7 +217,7 @@
 		border: none;
 		transition: transform 250ms ease-in-out;
 		&:active {
-			transform: scale3d(0.98, 0.98, 1);
+			scale: 0.98, 0.98, 1;
 		}
 		&.delete,
 		&.add {

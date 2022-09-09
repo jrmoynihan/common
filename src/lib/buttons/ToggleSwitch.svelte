@@ -147,7 +147,7 @@
 		background-color: var(--toggleBgColorActive, hsl(207, 90%, 54%));
 	}
 	input:checked + .slider:before {
-		transform: translate3d(var(--slider-transform, 130%), 0, 0);
+		translate: var(--slider-transform, 130%), 0, 0;
 	}
 	input:checked + .slider:hover {
 		background-color: var(--toggleBgColorActiveHovered, hsl(207, 90%, 34%));

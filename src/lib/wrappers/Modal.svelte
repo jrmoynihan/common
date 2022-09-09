@@ -80,15 +80,15 @@
 			pointer-events: initial;
 		}
 		&.scale {
-			transform: scale3d(var(--scale, 0), var(--scale, 0), 1);
+			scale: var(--scale, 0), var(--scale, 0), 1;
 			&.open {
-				transform: scale3d(var(--scale, 1), var(--scale, 1), 1);
+				scale: var(--scale, 1), var(--scale, 1), 1;
 			}
 		}
 		&.fly {
-			transform: translate3d(var(--fly-x, 0), var(--fly-y, 5rem), 0);
+			translate: var(--fly-x, 0), var(--fly-y, 5rem), 0;
 			&.open {
-				transform: translate3d(0, 0, 0);
+				translate: 0, 0, 0;
 			}
 		}
 
