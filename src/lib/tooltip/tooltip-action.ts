@@ -117,6 +117,9 @@ export const tooltip = (
 	// Is a dialog one of the anchor element's ancestor's?
 	const dialog = ancestor_nodes?.find((ele) => ele?.tagName === 'DIALOG') as HTMLDialogElement;
 
+	// Measure anchor element's position in the DOM to check if it reflows somewhere down the line
+	let { top: anchor_top, left: anchor_left } = element.getBoundingClientRect();
+
 	let tooltip_parameters = writable<TooltipActionParameters>({
 		...default_parameters,
 		...parameters
@@ -161,7 +164,7 @@ export const tooltip = (
 	// Create a resize observer for the parent element
 	const resize_observer = new ResizeObserver(async (entries) => {
 		for (const entry of entries) {
-			if (entry.borderBoxSize) {
+			if (entry.borderBoxSize || entry.contentRect) {
 				initializeTooltipPosition();
 			}
 		}
@@ -223,6 +226,15 @@ export const tooltip = (
 	}
 
 	function mouseEnter(event?: MouseEvent) {
+		// Check if the anchor element has moved since mounting
+		const { top, left } = element.getBoundingClientRect();
+		// console.log('top:', top, 'left:', left, 'x:', tooltipComponent.x, 'y:', tooltipComponent.y);
+		if (top !== anchor_top && left !== anchor_left) {
+			anchor_top = top;
+			anchor_left = left;
+			initializeTooltipPosition();
+		}
+
 		// If not left-clicking while entering the element's box (i.e. dragging)...
 		if (event?.buttons !== 1 && get(tooltip_parameters).disabled !== true) {
 			// Remember the existing title attribute and set the title store to it can react to changes

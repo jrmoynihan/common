@@ -170,6 +170,12 @@
 		>
 	</div>
 </section>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(0,1fr));">
+	<button use:tooltip={{ title: 'tooltip' }}>Test</button>
+	{#if keep_visible}
+		<button transition:fly use:tooltip={{ title: 'hello', visible: true }}>Test</button>
+	{/if}
+</div>
 
 <style lang="scss">
 	section {
