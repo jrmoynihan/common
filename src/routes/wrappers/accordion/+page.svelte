@@ -13,10 +13,17 @@
 			custom_accordion_container_styles
 		},
 		{
+			summary_text: 'A scale transition',
+			custom_summary_styles,
+			custom_accordion_container_styles,
+			transition: scale
+		},
+		{
 			summary_text: 'A blurry transition',
 			custom_summary_styles,
 			custom_accordion_container_styles,
 			transition: blur,
+			transition_parameters: { duration: 600 },
 			content_tooltip_parameters: { title: 'A content tooltip', position: 'bottom' }
 		},
 		{
@@ -46,8 +53,9 @@
 <style lang="scss">
 	.accordions {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 1rem;
-		justify-content: space-evenly;
+		justify-self: center;
 		margin-top: 1rem;
 	}
 	.content {
