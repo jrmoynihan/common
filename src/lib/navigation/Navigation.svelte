@@ -3,7 +3,7 @@
 	import NavLink from '$lib/navigation/NavLink.svelte';
 	import { beforeNavigate } from '$app/navigation';
 	import { browser } from '$app/environment';
-	import type { NavigationLink } from './navLink';
+	import type { NavigationLink } from './nav-functions';
 
 	/** An array of items to display within the nav wrapper element */
 	export let nav_links: NavigationLink[] = [];
