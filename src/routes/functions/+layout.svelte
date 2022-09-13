@@ -1,0 +1,15 @@
+<script lang="ts">
+</script>
+
+<section class="functions-page-layout">
+	<slot />
+</section>
+
+<style lang="scss">
+	.functions-page-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		margin: 1rem;
+		gap: 1rem;
+	}
+</style>
