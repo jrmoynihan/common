@@ -9,6 +9,9 @@ const config = {
 		alias: {
 			$routes: path.resolve('./src/routes')
 		}
+	},
+	ssr: {
+		noExternal: ['@fortawesome/free-solid-svg-icons', '@fortawesome/free-brands-svg-icons']
 	}
 };
 
