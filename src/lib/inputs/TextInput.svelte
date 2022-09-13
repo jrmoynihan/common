@@ -230,17 +230,16 @@
 		margin-top: var(--text-input-button-margin-top, var(--text-input-button-margin));
 	}
 
-	/* Move the placeholder div when anything in the container receives focus */
+	/* Move the placeholder div when anything in the container receives focus or the input has a value */
 	.text-input-container:focus-within > .placeholder,
-	input:active ~ .placeholder {
-		translate: -3% -1.8em 0;
-		font-size: 0.5em;
+	input:active ~ .placeholder,
+	input.value:not(:focus) ~ .placeholder {
+		translate: -3% -0.8rem 0;
+		font-size: 0.75rem;
 	}
 
 	/* When the input isn't focused, but has a value, continue to fade and translate the placeholder div */
 	input.value:not(:focus) ~ .placeholder {
-		translate: -3% -1.8em 0;
-		font-size: 0.5em;
 		opacity: 0.4;
 	}
 </style>
