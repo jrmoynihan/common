@@ -45,7 +45,7 @@
 	const dispatch = createEventDispatcher();
 
 	// A function when the input is clicked; dispatches/triggers the event named "toggle" to the parent component
-	function toggleClicked() {
+	function toggled() {
 		dispatch('toggle');
 	}
 </script>
@@ -53,7 +53,7 @@
 <Button
 	on:click={() => {
 		checked = !checked;
-		toggleClicked();
+		toggled();
 	}}
 	{transition}
 	{transition_config}
@@ -75,7 +75,7 @@
 		style:--inactiveBgColorDarken={inactiveBgColorDarken ?? null}
 	>
 		<!-- NOTE: Subtle fix made by changing this to on:change event instead of on:click -->
-		<input type="checkbox" {disabled} bind:checked on:change|stopPropagation={toggleClicked} />
+		<input type="checkbox" {disabled} bind:checked on:change|stopPropagation={toggled} />
 		<span class="slider round" style={slider_styles} data-slider-text={slider_text} />
 	</span>
 	{#if icon}
@@ -147,7 +147,7 @@
 		background-color: var(--toggleBgColorActive, hsl(207, 90%, 54%));
 	}
 	input:checked + .slider:before {
-		translate: var(--slider-transform, 130%), 0, 0;
+		translate: var(--slider-transform, 130%) 0 0;
 	}
 	input:checked + .slider:hover {
 		background-color: var(--toggleBgColorActiveHovered, hsl(207, 90%, 34%));
