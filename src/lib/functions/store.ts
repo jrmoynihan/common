@@ -7,7 +7,6 @@ import {
 	type Writable,
 	type Stores,
 	type StoresValues,
-	get,
 	type StartStopNotifier,
 	type Unsubscriber
 } from 'svelte/store';
