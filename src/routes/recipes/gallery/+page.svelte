@@ -1,17 +1,23 @@
 <script lang="ts">
-	import { imageCrossfade } from './image-crossfade';
 	import { flip } from 'svelte/animate';
 	import type { PageData } from './$types';
+	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
+	import { crossfade } from 'svelte/transition';
 
 	export let data: PageData;
 	const { images } = data;
-	const [send, receive] = imageCrossfade;
+	const [send, receive] = crossfade({ duration: 500 });
 	let image_id: string | null = null;
 	let dialog: HTMLDialogElement;
+	let use_full_size = false;
 </script>
 
 <section>
 	<h2>Gallery</h2>
+	<label for="full-size-toggle">
+		{use_full_size ? 'Full-Size Preview' : 'Scaled to Fit Preview'}
+		<ToggleSwitch bind:checked={use_full_size} />
+	</label>
 	<div class="gallery">
 		{#each images?.filter((image) => image.uuid !== image_id) as { path, text, href, uuid } (uuid)}
 			<img
@@ -26,8 +32,8 @@
 				height="auto"
 				in:receive={{ key: uuid }}
 				out:send={{ key: uuid }}
+				animate:flip={{ duration: 500 }}
 			/>
-			<!-- animate:flip={{ duration: 500 }} -->
 		{/each}
 	</div>
 
@@ -45,6 +51,7 @@
 			<img
 				on:click
 				class="selected-image"
+				class:full-size={use_full_size}
 				alt={text}
 				src={href}
 				width="100%"
@@ -97,7 +104,11 @@
 	}
 	.selected-image {
 		box-sizing: border-box;
-		width: 100%;
-		height: auto;
+		width: auto;
+		height: 100%;
+		&.full-size {
+			width: 100%;
+			height: auto;
+		}
 	}
 </style>
