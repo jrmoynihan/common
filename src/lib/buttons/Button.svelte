@@ -170,7 +170,7 @@
 			outline: var(--button-hover-outline, -webkit-focus-ring-color auto 1px);
 		}
 		&:active {
-			scale: var(--button-active-scale,1, 1, 1;
+			scale: var(--button-active-scale, 1, 1, 1);
 			&.low {
 				box-shadow: none;
 			}
