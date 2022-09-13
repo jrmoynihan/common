@@ -106,7 +106,7 @@ export const tooltip = (
 	parameters: TooltipParameters = default_parameters
 ) => {
 	const { used_on_top_layer } = parameters;
-	// Get animations running on the document's body
+	// Get animations running within the document's body
 	const animations = document.body.getAnimations({ subtree: true });
 
 	// Find max transition/animation time on ancestor nodes
@@ -171,7 +171,6 @@ export const tooltip = (
 	});
 
 	async function waitForAnimations() {
-		await delayFor(max_ancestor_transition_duration);
 		// Make sure all animations have settled (resolved or rejected); Rejection can happen when the element unmounts before the animation finishes
 		if (animations?.length > 0) {
 			const finishes = animations.map((a) => a.finished);
@@ -228,8 +227,7 @@ export const tooltip = (
 	function mouseEnter(event?: MouseEvent) {
 		// Check if the anchor element has moved since mounting
 		const { top, left } = element.getBoundingClientRect();
-		// console.log('top:', top, 'left:', left, 'x:', tooltipComponent.x, 'y:', tooltipComponent.y);
-		if (top !== anchor_top && left !== anchor_left) {
+		if (top !== anchor_top || left !== anchor_left) {
 			anchor_top = top;
 			anchor_left = left;
 			initializeTooltipPosition();
@@ -240,8 +238,9 @@ export const tooltip = (
 			// Remember the existing title attribute and set the title store to it can react to changes
 			storeTitle();
 
-			setTimeout(() => {
+			setTimeout(async () => {
 				tooltipComponent.$set({ visible: true });
+				// }
 			}, get(tooltip_parameters).in_delay);
 		}
 	}
@@ -276,10 +275,7 @@ export const tooltip = (
 		const { horizontal_offset, vertical_offset } = get(tooltip_parameters);
 		const { visible, ...parameters_without_visible } = new_tooltip_parameters;
 
-		if (wait_for_animations) {
-			await waitForAnimations();
-		}
-
+		await waitForAnimations();
 		// Create a non-interactive copy of the tooltip that appears instantly so we can measure the full width of the new tooltip before positioning it
 		const invisible_tooltip = makeInvisibleTooltip(new_tooltip_parameters);
 
