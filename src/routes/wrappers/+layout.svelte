@@ -4,22 +4,21 @@
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { beforeNavigate } from '$app/navigation';
 	import type { NavigationLink } from '$lib';
-	import { makeNavLinks } from '$lib/navigation/navLink';
+	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$lib/navigation/nav-functions';
 
 	let refresh: boolean = false;
-	const paths: string[] = ['transition', 'accordion', 'modal', 'tabs'];
 	const parent_path: string = 'wrappers';
-	const nav_links: NavigationLink[] = makeNavLinks(paths, parent_path);
+	const paths: string[] = ['transition', 'accordion', 'modal', 'tabs'];
+	const nav_links: NavigationLink[] = makeNavLinks({ paths, parent_path });
 
 	beforeNavigate((nav) => {
 		const { from, to } = nav;
-		if (from?.routeId === to?.routeId) return;
-		refresh = !refresh;
+		if (from && to && shouldLayoutTransitionOnNavigation(from, to, parent_path)) refresh = !refresh;
 	});
 </script>
 
 <section>
-	<Navigation {nav_links} />
+	<Navigation {nav_links} nav_link_static_styles={`color: white`} />
 
 	<Transition
 		bind:refresh
