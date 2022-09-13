@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { makeNavLinks, NavigationLink } from '$lib/navigation/navLink';
+	import {
+		makeNavLinks,
+		NavigationLink,
+		shouldLayoutTransitionOnNavigation
+	} from '$lib/navigation/nav-functions';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { beforeNavigate } from '$app/navigation';
 	import Transition from '$lib/wrappers/Transition.svelte';
@@ -8,16 +12,14 @@
 	let refresh: boolean = false;
 	const parent_path: string = 'recipes';
 	const paths: string[] = ['navigation', 'gallery'];
-	const nav_links: NavigationLink[] = makeNavLinks(paths, parent_path);
+	const nav_links: NavigationLink[] = makeNavLinks({ paths, parent_path });
 
-	beforeNavigate((nav) => {
-		const { from, to } = nav;
-		if (from?.routeId === to?.routeId) return;
-		refresh = !refresh;
+	beforeNavigate(({ from, to }) => {
+		if (from && to && shouldLayoutTransitionOnNavigation(from, to, parent_path)) refresh = !refresh;
 	});
 </script>
 
-<Navigation {nav_links} />
+<Navigation {nav_links} nav_link_static_styles={`color: white`} />
 
 <Transition
 	bind:refresh
