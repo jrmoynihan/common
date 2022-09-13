@@ -10,7 +10,7 @@
 	export let transition: SvelteTransition = fade;
 	export let in_transition: SvelteTransition = transition;
 	export let out_transition: SvelteTransition = transition;
-	export let transition_parameters: SvelteTransitionParams = undefined; 
+	export let transition_parameters: SvelteTransitionParams = undefined;
 	export let in_transition_parameters: SvelteTransitionParams = undefined;
 	export let out_transition_parameters: SvelteTransitionParams = undefined;
 	export let tab_container_styles = '';
@@ -66,48 +66,52 @@
 	.tabs-container {
 		grid-template-rows: max-content max-content;
 		margin: 1rem 0;
-	}
-	label {
-		box-sizing: border-box;
-		align-items: center;
-		box-shadow: 0 0 2px 2px hsla(0, 0%, 0%, 0.3);
-		cursor: pointer;
-		display: grid;
-		font-weight: bold;
-		padding: 1rem;
-		height: 100%;
-		// &.active.light {
-		// 	@include active($color: var(--background));
-		// }
-		// &.active.dark {
-		// 	@include active($backgroundAlpha: 0.4);
-		// }
-	}
-	.tab-headers {
-		// @include rounded;
-		align-items: center;
-		display: grid;
-		gap: 0.2em;
-		grid-template-columns: repeat(auto-fit, minmax(15ch, auto));
-		& > label:first-of-type {
-			border-radius: 1rem 0 0 1rem;
+		& > .tab-headers {
+			--tab-active-background: hsla(var(--accent-value), 75%);
+			--tab-active-color: white;
+			align-items: center;
+			display: grid;
+			gap: 0.2em;
+			grid-template-columns: repeat(auto-fit, minmax(15ch, auto));
+
+			& > label {
+				box-sizing: border-box;
+				align-items: center;
+				box-shadow: 0 0 2px 2px hsla(0, 0%, 0%, 0.3);
+				cursor: pointer;
+				display: grid;
+				font-weight: bold;
+				padding: 1rem;
+				height: 100%;
+				transition: var(--tab-header-label-transition, all 300ms ease-in-out);
+
+				&:first-of-type {
+					border-radius: 1rem 0 0 1rem;
+				}
+				&:last-of-type {
+					border-radius: 0 1rem 1rem 0;
+				}
+				&:hover,
+				&:focus-within {
+					background: var(--link-hover-background);
+				}
+				&.active {
+					background: var(--tab-active-background);
+					color: var(--tab-active-color);
+				}
+				&:hover:not(.active),
+				&:focus-within:not(.active) {
+					background: var(
+						--tab-not-active-hovered-background,
+						var(--tab-not-active-focused-background, inherit)
+					);
+					color: var(--tab-not-active-hovered-color, var(--tab-not-active-focused-color, inherit));
+				}
+			}
+			// & > label.mobile {
+			// 	border-radius: 1rem;
+			// }
 		}
-		& > label:last-of-type {
-			border-radius: 0 1rem 1rem 0;
-		}
-		// & > label.mobile {
-		// 	border-radius: 1rem;
-		// }
-		// & > label:hover:not(.active),
-		// & > label:focus-within:not(.active) {
-		// 	&.dark {
-		// 		background-color: hsla(var(--accent-value, hsl(37, 75%, 65%)), 20%);
-		// 	}
-		// 	&.light {
-		// 		background-color: hsla(var(--accent-value, forestgreen), 60%);
-		// 		color: var(--background);
-		// 	}
-		// }
 	}
 
 	input[type='radio'] {
