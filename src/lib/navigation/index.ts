@@ -1,5 +1,5 @@
 import Navigation from './Navigation.svelte';
-import NavItem from './NavLink.svelte';
+import NavLink from './NavLink.svelte';
 import AnchorHeading from './AnchorHeading.svelte';
 import LinkableAnchorHeading from './LinkableAnchorHeading.svelte';
 export {
@@ -11,4 +11,4 @@ export {
 	shouldLayoutTransitionOnNavigation
 } from './nav-functions';
 
-export { Navigation, NavItem, AnchorHeading, LinkableAnchorHeading };
+export { Navigation, NavLink, AnchorHeading, LinkableAnchorHeading };
