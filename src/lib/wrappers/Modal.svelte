@@ -74,21 +74,24 @@
 		font-size: initial;
 		margin: auto; // centers the dialog for bad browser user-agent stylesheets that default to top-left
 		width: max-content;
-		transition: transform var(--transition-duration) cubic-bezier(0.64, 0.31, 0.14, 1.57);
+		transition: var(
+			--modal-transition,
+			all var(--transition-duration) cubic-bezier(0.64, 0.31, 0.14, 1.57)
+		);
 		pointer-events: none;
 		&.open {
 			pointer-events: initial;
 		}
 		&.scale {
-			scale: var(--scale, 0), var(--scale, 0), 1;
+			scale: var(--modal-scale, 0) var(--modal-scale, 0) 1;
 			&.open {
-				scale: var(--scale, 1), var(--scale, 1), 1;
+				scale: var(--modal-scale, 1) var(--modal-scale, 1) 1;
 			}
 		}
 		&.fly {
-			translate: var(--fly-x, 0), var(--fly-y, 5rem), 0;
+			translate: var(--modal-fly-x, 0) var(--modal-fly-y, 5rem) var(--modal-fly-z, 0);
 			&.open {
-				translate: 0, 0, 0;
+				translate: 0 0 0;
 			}
 		}
 
