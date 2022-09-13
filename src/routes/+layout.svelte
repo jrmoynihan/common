@@ -1,21 +1,42 @@
 <script lang="ts">
-	import { dev } from '$app/environment';
 	import { beforeNavigate } from '$app/navigation';
 	import type { TooltipParameters } from '$lib';
 	import LightDarkToggle from '$lib/buttons/LightDarkToggle.svelte';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import Transition from '$lib/wrappers/Transition.svelte';
-	import { writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
 	import { onDestroy } from 'svelte';
-	import { use_dark_theme } from './stores';
+	import { use_dark_theme, aside_visible } from './stores';
 	import '../../src/mdsvex.css';
-	import { makeNavLinks, NavigationLink } from '$lib/navigation/navLink';
+	import {
+		makeNavLinks,
+		NavigationLink,
+		type IconLayer,
+		shouldLayoutTransitionOnNavigation
+	} from '$lib/navigation/nav-functions';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
+	import {
+		faCalculator,
+		faGifts,
+		faKeyboard,
+		faReceipt,
+		faTools,
+		faComputerMouse
+	} from '@fortawesome/free-solid-svg-icons/index';
+	import { page } from '$app/stores';
+	import FunctionsAside from './functions/FunctionsAside.svelte';
 
-	const coords = writable({ x: 0, y: 0 });
+	const parent_path = '/';
 	const paths: string[] = ['tooltips', 'inputs', 'buttons', 'wrappers', 'recipes', 'functions'];
-	const nav_links: NavigationLink[] = makeNavLinks(paths);
+	const link_icons: IconLayer[][] = [
+		[{ icon: faTools }],
+		[{ icon: faKeyboard }],
+		[{ icon: faComputerMouse }],
+		[{ icon: faGifts }],
+		[{ icon: faReceipt }],
+		[{ icon: faCalculator }]
+	];
+	const nav_links: NavigationLink[] = makeNavLinks({ paths, link_icons });
 	let refresh: boolean = false;
 	let tooltips_visible = true;
 	let tooltips_disabled = false;
@@ -51,10 +72,10 @@
 
 	beforeNavigate((nav) => {
 		const { from, to } = nav;
-		if (from?.routeId === to?.routeId) return;
-		refresh = !refresh;
+		if (from && to && shouldLayoutTransitionOnNavigation(from, to, parent_path)) refresh = !refresh;
 		disableTooltips();
 	});
+
 	const countdown = setTimeout(() => {
 		disableTooltips();
 	}, 5_000);
@@ -62,35 +83,33 @@
 	onDestroy(() => clearTimeout(countdown));
 </script>
 
-<svelte:window on:mousemove={(e) => coords.set({ x: e.clientX, y: e.clientY })} />
-{#if dev}
-	<div class="top left" class:dark={$use_dark_theme} style="color:var(--accent,orange)">
-		<p>X: {$coords.x}</p>
-		<p>Y: {$coords.y}</p>
+<div class="app-container" class:padded-left={$aside_visible}>
+	<div class="top right">
+		<LightDarkToggle bind:use_dark_theme={$use_dark_theme} />
 	</div>
-{/if}
-<div class="top right">
-	<LightDarkToggle bind:use_dark_theme={$use_dark_theme} />
+	<h1>
+		<a href="/" class="cool-text">The Commons</a>
+	</h1>
+	<Navigation
+		{nav_links}
+		bind:tooltip_options={link_tooltip_options}
+		nav_link_static_styles={`color: white`}
+		nav_link_hover_styles={[['background', 'darkorange']]}
+	/>
+	<main>
+		<Transition
+			bind:refresh
+			transition={fly}
+			in_transition_parameters={{ duration: 350, x: -100, delay: 300 }}
+			out_transition_parameters={{ duration: 350, x: 100 }}
+		>
+			<slot />
+		</Transition>
+	</main>
+	{#if $page.url.pathname.includes('/functions')}
+		<FunctionsAside />
+	{/if}
 </div>
-<h1>
-	<a href="/" class="cool-text">The Commons</a>
-</h1>
-<Navigation
-	{nav_links}
-	bind:tooltip_options={link_tooltip_options}
-	nav_link_static_styles={`color: white`}
-	nav_link_hover_styles={[['background', 'darkorange']]}
-/>
-<main>
-	<Transition
-		bind:refresh
-		transition={fly}
-		in_transition_parameters={{ duration: 350, x: -100, delay: 300 }}
-		out_transition_parameters={{ duration: 350, x: 100 }}
-	>
-		<slot />
-	</Transition>
-</main>
 
 <SvelteToast />
 
@@ -106,19 +125,25 @@
 		--link-font-size: 1.5rem;
 		--link-border-radius: 2rem;
 		--link-background-color: hsl(195, 61%, 34%);
+		--link-background-value: 195, 61%, 34%;
 		--link-hover-box-shadow: 0 0 4px 1px orange;
 		--link-hover-background-color: hsl(195, 61%, 44%);
 		--current-nav-page-box-shadow: 0 0 14px 4px orange;
 		--current-nav-page-background-color: hsl(195, 61%, 44%);
+	}
+	.app-container {
+		display: grid;
+		transition: padding-left 400ms ease-out;
+		will-change: padding-left;
+	}
+	.padded-left {
+		padding-left: 20dvw;
 	}
 	.top {
 		position: fixed;
 		top: 0;
 		padding: 1rem;
 		z-index: 1;
-	}
-	.left {
-		left: 0;
 	}
 	.right {
 		right: 0;
