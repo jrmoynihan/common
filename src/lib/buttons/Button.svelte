@@ -45,8 +45,8 @@
 	let hovered: boolean = false;
 	let focused: boolean = false;
 
-	$: {
-		if (dynamic_styles.length > 0) styles = static_styles;
+	$: if (dynamic_styles.length > 0) {
+		styles = static_styles;
 		dynamic_styles?.forEach(([key, value]) => {
 			styles = styles.concat(`${key}: ${value};`);
 		});
@@ -148,12 +148,14 @@
 		padding: var(--button-padding, 1rem);
 		color: var(--button-color, inherit);
 		background: var(--button-background, inherit);
+		opacity: var(--button-opacity, 1);
 		transition: var(--button-transition, all 250ms);
 		&:hover,
 		&:focus-visible {
 			cursor: pointer;
 			background: var(--button-hover-background, initial);
 			box-shadow: var(--button-hover-box-shadow, initial);
+			opacity: var(--button-hover-opacity, 1);
 			&.low {
 				box-shadow: var(--button-hover-box-shadow, var(--shadow-elevation-low));
 			}
@@ -168,7 +170,7 @@
 			outline: var(--button-hover-outline, -webkit-focus-ring-color auto 1px);
 		}
 		&:active {
-			scale: 1, 1, 1;
+			scale: var(--button-active-scale,1, 1, 1;
 			&.low {
 				box-shadow: none;
 			}

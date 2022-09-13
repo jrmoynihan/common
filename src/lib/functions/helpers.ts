@@ -161,7 +161,8 @@ export const getAncestors = (element: HTMLElement) => {
 export function getTransitionDurations(elements: HTMLElement[]): number[] {
 	const durations: number[] = [];
 	elements.forEach((ele) => {
-		const duration = window.getComputedStyle(ele).transitionDuration;
+		const computed_style = window.getComputedStyle(ele);
+		const duration = computed_style.transitionDuration;
 		if (duration) {
 			durations.push(parseFloat(duration.replace('s', '')) as number);
 		}
