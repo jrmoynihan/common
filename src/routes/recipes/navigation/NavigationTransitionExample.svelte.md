@@ -1,22 +1,22 @@
 ```svelte
 <!-- +layout.svelte -->
 <script lang="ts">
-	import Transition from '$lib/wrappers/Transition.svelte';
-	import { fly } from 'svelte/transition';
-	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { beforeNavigate } from '$app/navigation';
 	import type { NavigationLink } from '$lib';
-	import { makeNavLinks } from '$lib/navigation/navLink';
+	import Transition from '$lib/wrappers/Transition.svelte';
+	import Navigation from '$lib/navigation/Navigation.svelte';
+	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$lib/navigation/nav-functions';
+	import { fly } from 'svelte/transition';
 
 	let refresh: boolean = false;
-	const paths: string[] = ['transition', 'accordion', 'modal', 'tabs'];
-	const parent_path: string = 'wrappers';
-	const nav_links: NavigationLink[] = makeNavLinks(paths, parent_path);
+	const parent_path: string = 'recipes'
+	const paths: string[] = ['navigation', 'gallery'];
+	const nav_links: NavigationLink[] = makeNavLinks({ paths, parent_path });
 
-	beforeNavigate((nav) => {
-		const { from, to } = nav;
-		if (from?.routeId === to?.routeId) return;
+	beforeNavigate(({from, to}) => {
+		if (from && to && shouldLayoutTransitionOnNavigation(from, to, parent_path)){
 			refresh = !refresh;
+		}
 	});
 </script>
 
