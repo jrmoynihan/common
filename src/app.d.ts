@@ -9,7 +9,7 @@ declare namespace App {
 	// interface Session {}
 	// interface Stuff {}
 }
-declare module '@fortawesome/free-solid-svg-icons/index.es' {
+declare module '@fortawesome/free-solid-svg-icons/index' {
 	export * from '@fortawesome/free-solid-svg-icons';
 }
 declare module '*.md';

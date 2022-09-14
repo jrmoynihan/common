@@ -1,7 +1,7 @@
 import { page } from '$app/stores';
 import { capitalize } from '$lib/functions';
 import type { IconSize } from '$lib/lib_types';
-import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index.es';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index';
 import type { NavigationTarget } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 
