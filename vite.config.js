@@ -12,7 +12,8 @@ const config = {
 	},
 	ssr: {
 		noExternal: ['@fortawesome/free-solid-svg-icons', '@fortawesome/free-brands-svg-icons']
-	}
+	},
+	optimizeDeps: ['@fortawesome/free-solid-svg-icons', '@fortawesome/free-brands-svg-icons']
 };
 
 export default config;
