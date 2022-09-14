@@ -2,6 +2,7 @@ export {
 	capitalize,
 	arrayFromNumber,
 	delay,
+	deKebab,
 	clamp,
 	splitCamelCase,
 	splitSnakeCase,
