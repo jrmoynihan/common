@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { TooltipDirections } from '$lib';
+	import type { TooltipDirections } from '$lib/tooltip';
 	import { realShadow } from '$lib/styles/shadow';
 	import Button from '$lib/buttons/Button.svelte';
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';

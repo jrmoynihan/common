@@ -3,7 +3,7 @@
 	import { fly } from 'svelte/transition';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { beforeNavigate } from '$app/navigation';
-	import type { NavigationLink } from '$lib';
+	import type { NavigationLink } from '$lib/navigation';
 	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$lib/navigation/nav-functions';
 
 	let refresh: boolean = false;

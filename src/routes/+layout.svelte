@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
-	import type { TooltipParameters } from '$lib';
+	import type { TooltipParameters } from '$lib/tooltip';
 	import LightDarkToggle from '$lib/buttons/LightDarkToggle.svelte';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import Transition from '$lib/wrappers/Transition.svelte';

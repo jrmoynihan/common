@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { makeNavLinks } from '$lib';
+	import { makeNavLinks } from '$lib/navigation';
 	import { makeAnchorLinks } from '$lib/navigation/nav-functions';
 	import { slide, fly, scale } from 'svelte/transition';
 	import NavLink from '$lib/navigation/NavLink.svelte';
