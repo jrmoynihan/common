@@ -32,6 +32,15 @@ export const splitSnakeCase = (str: string): string[] => {
 export function removeSpecialCharacters(str: string): string {
 	return str.replace(/[^a-zA-Z0-9 ]/g, '');
 }
+/** Replaces kebab case (e.g. "hello-world") with a space between words and capitalized words ("Hello World") */
+export function deKebab(str: string): string {
+	return str
+		.replace(/-/g, ' ')
+		.split(' ')
+		.map((s) => capitalize(s))
+		.join(' ');
+}
+
 // A function to make an array of length equal to the provided number
 export function arrayFromNumber(n: number, map_function?: (a: any, i: number) => any) {
 	if (!map_function) map_function = (_: any, i?: number) => i;
