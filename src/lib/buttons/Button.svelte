@@ -2,7 +2,6 @@
 	import Fa from 'svelte-fa';
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
-	import type { SvelteComponentTyped } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import type { IconSize, SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
 	import { browser } from '$app/environment';
@@ -34,8 +33,6 @@
 	export let disabled = false;
 	/** Plain text to display within the button */
 	export let text: string = '';
-	/** Custom component to display within the button. Best for dynamic components within the button.  Static components can just drop in the button's slot. */
-	export let component: SvelteComponentTyped | null = null;
 	/** Whether to use box-shadows */
 	export let box_shadow: 'low' | 'medium' | 'high' | 'none' = 'low';
 	/** A Svelte transition to use on the button */
@@ -99,9 +96,6 @@
 	on:click
 >
 	<slot />
-	{#if component}
-		<svelte:component this={component} />
-	{/if}
 	{text}
 	{#if icon}
 		<Fa {icon} size={icon_size} rotate={icon_rotation} />
