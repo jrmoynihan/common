@@ -91,7 +91,7 @@
 		top: 0;
 		bottom: 0;
 		left: 0;
-		width: 18dvw;
+		width: 18vw;
 		z-index: 2;
 		backdrop-filter: blur(5px);
 	}

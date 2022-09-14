@@ -137,7 +137,7 @@
 		will-change: padding-left;
 	}
 	.padded-left {
-		padding-left: 20dvw;
+		padding-left: 15vw;
 	}
 	.top {
 		position: fixed;
