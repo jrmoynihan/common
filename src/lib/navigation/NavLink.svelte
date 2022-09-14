@@ -4,7 +4,7 @@
 	import { capitalize } from '$lib/functions';
 	import { Fa, FaLayers, FaLayersText } from 'svelte-fa/src';
 	import type { IconLayer } from './nav-functions';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 
 	/** The URL object describing the link */
 	export let url: URL;
@@ -31,25 +31,46 @@
 	let styles = static_styles;
 	let hovered = false;
 	let focused = false;
+	let anchor_path_to_scroll_to: string;
 
 	// Determine if the current path matches a given path string
 	function doesPathMatchCurrentURL(path: string, currentURL: string) {
 		return currentURL.includes(`${path}`);
 	}
 
-	function scrollIntoView(e: MouseEvent & { currentTarget: EventTarget & HTMLElement }): void {
-		//@ts-ignore
-		const href: string = e.target?.getAttribute('href');
+	beforeNavigate(({ from, to, cancel }) => {
+		const href = to?.url?.href;
+		if (href !== url.href) return;
 		if (href) {
-			const el = document?.getElementById(href.split('#')[1]);
-			if (el) {
-				el?.scrollIntoView({
-					behavior: 'smooth'
-				});
-			} else {
-				goto(href);
+			const is_anchor = href.includes('#');
+			const path_segments = href.split('#');
+			const base_path = path_segments[0];
+			anchor_path_to_scroll_to = path_segments[1];
+			const is_same_base_path = to?.routeId === from?.routeId;
+			if (is_same_base_path && is_anchor) {
+				cancel();
+				scrollToElement();
+			} else if (is_anchor) {
+				cancel();
+				// Navigate to the base path, then allow the afterNavigate hook to move to the anchor smoothly
+				goto(base_path);
 			}
 		}
+	});
+	afterNavigate(({ to }) => {
+		if (to && !url.href.includes(to.url.href)) return;
+		if (anchor_path_to_scroll_to) {
+			scrollToElement();
+		}
+	});
+	function scrollToElement() {
+		const el = document?.getElementById(anchor_path_to_scroll_to);
+		if (el) {
+			el?.scrollIntoView({
+				behavior: 'smooth'
+			});
+		}
+		anchor_path_to_scroll_to = '';
 	}
 
 	$: is_current_page = doesPathMatchCurrentURL(url.href, $page?.url?.href);
@@ -106,7 +127,7 @@
 	on:mouseleave={() => (hovered = false)}
 	on:focus={() => (focused = true)}
 	on:blur={() => (focused = false)}
-	on:click|preventDefault={scrollIntoView}
+	on:click
 >
 	{#if Array.isArray(icons) && icons.length > 0}
 		<FaLayers>
