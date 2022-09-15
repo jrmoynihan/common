@@ -17,7 +17,7 @@
 	export let dark_theme_colors = {
 		text: 'hsla(0, 0%, 100%, 1)', // main/text color
 		background: 'hsl(195, 61%, 14%)', // background/alternate color
-		accent: 'hsla(39, 100%, 50%, 1)'
+		accent: 'var(--orange)'
 	};
 	/** The default colors to start with (currently set to dark theme) */
 	export let default_colors = { ...dark_theme_colors };
@@ -49,23 +49,33 @@
 				} else if (fade) {
 					root.style.setProperty(`--${key.split('Fade')[0]}-fade`, color);
 				}
-				// // A regular expression to find elements within parentheses
+				// A regular expression to find elements within parentheses
 				const regExp = /\(([^)]+)\)/;
-				// RegExp search returns an arrau of 3 elements:
+				// RegExp search returns an array of 3 elements:
 				// 0) everything to the left parentheses (including the parentheses), 1) everything in between parentheses, 2) everything to the right of the parentheses (including the parentheses)
-				const matches = regExp.exec(color);
-				if (matches && matches?.length > 0) {
-					const [h, s, l, a] = matches[1].split(',');
-					const hsl = `${h}, ${s}, ${l}`;
-					root.style.setProperty(`--${key}-value`, hsl);
-					root.style.setProperty(`--${key}-hue`, `${h}`);
-					root.style.setProperty(`--${key}-saturation`, `${s}`);
-					root.style.setProperty(`--${key}-lightness`, `${l}`);
-					root.style.setProperty(`--${key}-alpha`, `${a}`);
+				let matches = regExp.exec(color);
+				if (matches && matches[1]?.includes('--')) {
+					const CSS_value = regExp.exec(window.getComputedStyle(root).getPropertyValue(matches[1]));
+					if (CSS_value) {
+						splitColorToVariables(CSS_value[1], key);
+					}
+				} else if (matches && matches?.length > 0) {
+					splitColorToVariables(matches[1], key);
 				}
 			}
 		}
 	};
+	function splitColorToVariables(color: string, key: string) {
+		const [h, s, l, a] = color.split(',');
+		const hsl = `${h}, ${s}, ${l}`;
+		if (browser && root) {
+			root.style.setProperty(`--${key}-value`, hsl);
+			root.style.setProperty(`--${key}-hue`, `${h}`);
+			root.style.setProperty(`--${key}-saturation`, `${s}`);
+			root.style.setProperty(`--${key}-lightness`, `${l}`);
+			root.style.setProperty(`--${key}-alpha`, `${a}`);
+		}
+	}
 
 	// Resets both the CSS custom properties and the internal state of these theme objects to their defaults
 	// const resetCSSvariable = (colorName: string) => {
