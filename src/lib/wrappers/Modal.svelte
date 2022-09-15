@@ -70,7 +70,7 @@
 		border-radius: 25px;
 		box-shadow: 0 0 10px var(--modal-box-shadow, var(--text, white));
 		background: var(--modal-background, var(--background, inherit));
-		color: var(--text, white);
+		color: var(--modal-color, var(--text, inherit));
 		font-size: initial;
 		margin: auto; // centers the dialog for bad browser user-agent stylesheets that default to top-left
 		width: max-content;
