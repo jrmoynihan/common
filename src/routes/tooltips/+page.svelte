@@ -47,12 +47,10 @@
 		{/each}
 		<label for="disabled-toggle">
 			Disable Tooltip:
-			<!-- <input type="checkbox" bind:checked={disabled} /> -->
 			<ToggleSwitch bind:checked={disabled} />
 		</label>
 		<label for="keep-visible-toggle">
 			Keep Tooltip Visible:
-			<!-- <input type="checkbox" bind:checked={keep_visible} /> -->
 			<ToggleSwitch bind:checked={keep_visible} />
 		</label>
 		{#if keep_visible}
