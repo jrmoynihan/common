@@ -11,7 +11,7 @@
 
 	let refresh: boolean = false;
 	const parent_path: string = 'recipes';
-	const paths: string[] = ['navigation', 'gallery'];
+	const paths: string[] = ['navigation', 'gallery', 'orderable-list'];
 	const nav_links: NavigationLink[] = makeNavLinks({ paths, parent_path });
 
 	beforeNavigate(({ from, to }) => {
