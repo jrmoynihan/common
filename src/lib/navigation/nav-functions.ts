@@ -1,5 +1,5 @@
 import { page } from '$app/stores';
-import { capitalize } from '$lib/functions';
+import { deKebab } from '$lib/functions';
 import type { IconSize } from '$lib/lib_types';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index';
 import type { NavigationTarget } from '@sveltejs/kit';
@@ -29,7 +29,7 @@ export class NavigationLink {
 
 	constructor(args: INavigationLink) {
 		this.url = args?.url;
-		this.link_text = args?.link_text ?? capitalize(this.getLastSegment(args?.url.pathname)) ?? null;
+		this.link_text = args?.link_text ?? deKebab(this.getLastSegment(args?.url.pathname)) ?? null;
 		this.icons = args?.icons ?? null;
 		this.anchors = args?.anchors ?? null;
 	}
