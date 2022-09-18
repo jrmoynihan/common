@@ -127,6 +127,8 @@ export const tooltip = (
 	let { log_functions } = get(tooltip_parameters);
 	let title_attribute: string | null;
 	let tooltipComponent: Tooltip;
+	let ticking = false;
+	let is_intersecting_viewport = false;
 
 	// Find offsets if none were provided
 	tooltip_parameters.update((current_parameters) => {
@@ -139,10 +141,63 @@ export const tooltip = (
 		return current_parameters;
 	});
 
-	// Add event listeners to the parent element
-	element.addEventListener('mouseenter', mouseEnter);
-	element.addEventListener('mouseleave', mouseLeave);
-	element.addEventListener('mousemove', mouseMove);
+	// Create an intersection observer for the parent element
+	const intersection_observer = new IntersectionObserver(async (entries) => {
+		for (const entry of entries) {
+			if (entry.isIntersecting) {
+				is_intersecting_viewport = true;
+				initializeTooltipPosition();
+			} else {
+				is_intersecting_viewport = false;
+			}
+		}
+	});
+
+	// Create a resize observer for the parent element if it's box size changes
+	const resize_observer = new ResizeObserver(async (entries) => {
+		for (const entry of entries) {
+			if (is_intersecting_viewport && (entry.borderBoxSize || entry.contentRect)) {
+				initializeTooltipPosition();
+			}
+		}
+	});
+
+	// Add a resize event to the window that triggers repositioning/resizing of the tooltip
+	async function resize() {
+		if (!ticking && is_intersecting_viewport) {
+			window.requestAnimationFrame(() => {
+				initializeTooltipPosition();
+				ticking = false;
+			});
+			ticking = true;
+		}
+	}
+
+	async function scroll() {
+		if (!ticking && is_intersecting_viewport) {
+			window.requestAnimationFrame(() => {
+				initializeTooltipPosition({ allow_offscreen: true });
+				ticking = false;
+			});
+			ticking = true;
+		}
+	}
+
+	// Add event listeners and observers to the parent element, window, or document
+	function addEventListeners() {
+		if (browser) {
+			intersection_observer.observe(element);
+			resize_observer.observe(element);
+			element.addEventListener('mouseenter', mouseEnter);
+			element.addEventListener('mouseleave', mouseLeave);
+			element.addEventListener('mousemove', mouseMove);
+			window.addEventListener('resize', resize);
+			element.addEventListener('resize', resize);
+			document.addEventListener('scroll', scroll);
+		}
+	}
+
+	addEventListeners();
 
 	// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
 	const new_tooltip_parameters = getParametersForNewTooltip();
@@ -161,21 +216,14 @@ export const tooltip = (
 	});
 	// TODO: See if Pop-Up API (top-layer promotion) is available yet https://chromestatus.com/feature/5463833265045504
 
-	// Create a resize observer for the parent element
-	const resize_observer = new ResizeObserver(async (entries) => {
-		for (const entry of entries) {
-			if (entry.borderBoxSize || entry.contentRect) {
-				initializeTooltipPosition();
-			}
-		}
-	});
-
 	async function waitForAnimations() {
-		// Make sure all animations have settled (resolved or rejected); Rejection can happen when the element unmounts before the animation finishes
-		if (animations?.length > 0) {
-			const finishes = animations.map((a) => a.finished);
-			const finished = await Promise.allSettled(finishes);
-		}
+		window.requestAnimationFrame(async () => {
+			// Make sure all animations have settled (resolved or rejected); Rejection can happen when the element unmounts before the animation finishes
+			if (animations?.length > 0) {
+				const finishes = animations.map((a) => a.finished);
+				await Promise.allSettled(finishes);
+			}
+		});
 	}
 
 	// NOTE: need to call get(tooltip_parameters) here to ensure accurate loading of the delay params, likely due to hoisting behaviour
@@ -190,38 +238,9 @@ export const tooltip = (
 	if (i_delay) delays.push(i_delay);
 	const max_delay = getMax([...delays, 0]);
 
-	function makeVisibleAfterDelay() {
-		setTimeout(() => {
-			tooltipComponent.$set({ visible: true });
-		}, max_delay);
-	}
-
 	// If the tooltip is made visibile immediately upon mounting, allow a delay before triggering that visibility.
-	if (visible) {
-		makeVisibleAfterDelay();
-	}
-
-	// Add a resize observer to the window that triggers repositioning/resizing of the tooltip, and a scroll event listener to the document
-	if (browser) {
-		window.addEventListener('resize', resize);
-		document.addEventListener('scroll', scroll);
-		resize_observer.observe(element);
-	}
-
-	async function resize() {
-		initializeTooltipPosition();
-	}
-
-	let ticking = false;
-	async function scroll() {
-		// FIXME: should only run if intersecting the viewport?
-		if (!ticking) {
-			window.requestAnimationFrame(() => {
-				initializeTooltipPosition({ allow_offscreen: true });
-				ticking = false;
-			});
-			ticking = true;
-		}
+	if (visible && is_intersecting_viewport) {
+		makeVisibleAfterDelay(tooltipComponent, max_delay);
 	}
 
 	function mouseEnter(event?: MouseEvent) {
@@ -276,6 +295,7 @@ export const tooltip = (
 		const { visible, ...parameters_without_visible } = new_tooltip_parameters;
 
 		await waitForAnimations();
+
 		// Create a non-interactive copy of the tooltip that appears instantly so we can measure the full width of the new tooltip before positioning it
 		const invisible_tooltip = makeInvisibleTooltip(new_tooltip_parameters);
 
@@ -755,4 +775,10 @@ function repositionY(input: positionY_params) {
 	if (y < 0) y = 0 + min_margin;
 	if (y + tip_offset_height > screen_height) y = screen_height - tip_offset_height - min_margin;
 	return y;
+}
+
+function makeVisibleAfterDelay(tooltip: Tooltip, max_delay: number) {
+	setTimeout(() => {
+		tooltip.$set({ visible: true });
+	}, max_delay);
 }
