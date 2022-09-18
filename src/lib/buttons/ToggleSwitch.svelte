@@ -59,7 +59,7 @@
 	{transition_config}
 	{disabled}
 	{title}
-	static_styles={`border: 0; --scale: ${scale}; display: grid; gap: 0.5rem; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-backgrond, inherit); --button-color: var(--toggle-button-color, inherit); ${button_styles}`}
+	static_styles={`border: 0; --scale: ${scale}; display: grid; gap: 0.5rem; --button-padding: 0.2rem; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-backgrond, inherit); --button-color: var(--toggle-button-color, inherit); ${button_styles}`}
 	classes={`toggle ${button_classes}`}
 >
 	{#if label_text !== ''}
