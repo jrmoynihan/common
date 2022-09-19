@@ -3,13 +3,11 @@
 	import { fly } from 'svelte/transition';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { beforeNavigate } from '$app/navigation';
-	import type { NavigationLink } from '$lib/navigation';
 	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$lib/navigation/nav-functions';
 
 	let refresh: boolean = false;
 	const parent_path: string = 'wrappers';
 	const paths: string[] = ['transition', 'accordion', 'modal', 'tabs'];
-	const nav_links: NavigationLink[] = makeNavLinks({ paths, parent_path });
 
 	beforeNavigate((nav) => {
 		const { from, to } = nav;
@@ -18,7 +16,9 @@
 </script>
 
 <section>
-	<Navigation {nav_links} nav_link_static_styles={`color: white`} />
+	{#await makeNavLinks({ paths, parent_path }) then nav_links}
+		<Navigation {nav_links} nav_link_static_styles={`color: white`} />
+	{/await}
 
 	<Transition
 		bind:refresh

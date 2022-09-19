@@ -12,14 +12,15 @@
 	let refresh: boolean = false;
 	const parent_path: string = 'recipes';
 	const paths: string[] = ['navigation', 'gallery', 'orderable-list'];
-	const nav_links: NavigationLink[] = makeNavLinks({ paths, parent_path });
 
 	beforeNavigate(({ from, to }) => {
 		if (from && to && shouldLayoutTransitionOnNavigation(from, to, parent_path)) refresh = !refresh;
 	});
 </script>
 
-<Navigation {nav_links} nav_link_static_styles={`color: white`} />
+{#await makeNavLinks({ paths, parent_path }) then nav_links}
+	<Navigation {nav_links} nav_link_static_styles={`color: white`} />
+{/await}
 
 <Transition
 	bind:refresh

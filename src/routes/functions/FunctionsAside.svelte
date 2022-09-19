@@ -19,16 +19,6 @@
 		'setWritableContext / getWritableContext',
 		'setDerivedContext / getDerivedContext'
 	];
-	const context_nav_anchors = makeAnchorLinks({
-		parent_path: `${parent_path}/${paths[0]}`,
-		paths: context_nav_anchor_paths,
-		link_texts: context_nav_anchor_link_texts
-	});
-	const topics = makeNavLinks({
-		paths: ['contexts#contexts'],
-		parent_path,
-		anchors: context_nav_anchors
-	});
 	onMount(() => {
 		$aside_visible = true;
 	});
@@ -47,26 +37,30 @@
 				'position: absolute; top:0; right: 0; font-size: 0.6rem; padding: 0.5rem 1rem; border: 1px solid hsla(var(--accent-value), 50%); border-radius: 0 0 0 1rem; display: flex; max-width: 40%;'
 		}}
 	/>
-	{#each topics as { url, link_text, anchors }, i}
-		<NavLink
-			{url}
-			{link_text}
-			static_styles={'padding: 0.5rem; background: none; font-weight: bold; font-size: 1rem; --current-nav-page-box-shadow: 0 0 8px 2px var(--accent);'}
-		/>
-		{#if anchors}
-			<ul>
-				{#each anchors as { url, link_text }, n}
-					<li>
-						<NavLink
-							{url}
-							{link_text}
-							static_styles={'padding: 0rem 0.5rem; background: none; font-size: 0.75rem; --current-nav-page-box-shadow: 0 0 10px 2px var(--accent); text-align: center;'}
-						/>
-					</li>
-				{/each}
-			</ul>
-		{/if}
-	{/each}
+	{#await makeAnchorLinks( { parent_path: `${parent_path}/${paths[0]}`, paths: context_nav_anchor_paths, link_texts: context_nav_anchor_link_texts } ) then context_nav_anchors}
+		{#await makeNavLinks( { paths: ['contexts#contexts'], parent_path, anchors: context_nav_anchors } ) then topics}
+			{#each topics as { url, link_text, anchors }, i}
+				<NavLink
+					{url}
+					{link_text}
+					static_styles={'padding: 0.5rem; background: none; font-weight: bold; font-size: 1rem; --current-nav-page-box-shadow: 0 0 8px 2px var(--accent);'}
+				/>
+				{#if anchors}
+					<ul>
+						{#each anchors as { url, link_text }, n}
+							<li>
+								<NavLink
+									{url}
+									{link_text}
+									static_styles={'padding: 0rem 0.5rem; background: none; font-size: 0.75rem; --current-nav-page-box-shadow: 0 0 10px 2px var(--accent); text-align: center;'}
+								/>
+							</li>
+						{/each}
+					</ul>
+				{/if}
+			{/each}
+		{/await}
+	{/await}
 </aside>
 
 <style lang="scss">

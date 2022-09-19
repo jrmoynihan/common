@@ -47,13 +47,13 @@ export interface makeNavLinksOptions {
 	link_icons?: IconLayer[][];
 	anchors?: NavigationLink[];
 }
-export function makeAnchorLinks(input: makeNavLinksOptions) {
+export async function makeAnchorLinks(input: makeNavLinksOptions) {
 	return makeLinks({ ...input, make_anchors: true });
 }
-export function makeNavLinks(input: makeNavLinksOptions) {
+export async function makeNavLinks(input: makeNavLinksOptions) {
 	return makeLinks({ ...input, make_anchors: false });
 }
-export function makeLinks(input: makeNavLinksOptions): NavigationLink[] {
+export async function makeLinks(input: makeNavLinksOptions): Promise<NavigationLink[]> {
 	const { paths, parent_path, anchors, link_texts, link_icons, make_anchors } = input;
 	const origin = get(page)?.url?.origin;
 	let full_paths: string[] = [];

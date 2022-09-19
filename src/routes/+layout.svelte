@@ -10,7 +10,6 @@
 	import '../../src/mdsvex.css';
 	import {
 		makeNavLinks,
-		NavigationLink,
 		type IconLayer,
 		shouldLayoutTransitionOnNavigation
 	} from '$lib/navigation/nav-functions';
@@ -36,7 +35,6 @@
 		[{ icon: faReceipt }],
 		[{ icon: faCalculator }]
 	];
-	const nav_links: NavigationLink[] = makeNavLinks({ paths, link_icons });
 	let refresh: boolean = false;
 	let tooltips_visible = true;
 	let tooltips_disabled = false;
@@ -90,12 +88,14 @@
 	<h1>
 		<a href="/" class="cool-text">The Commons</a>
 	</h1>
-	<Navigation
-		{nav_links}
-		bind:tooltip_options={link_tooltip_options}
-		nav_link_static_styles={`color: white`}
-		nav_link_hover_styles={[['background', 'darkorange']]}
-	/>
+	{#await makeNavLinks({ paths, link_icons }) then nav_links}
+		<Navigation
+			{nav_links}
+			bind:tooltip_options={link_tooltip_options}
+			nav_link_static_styles={`color: white`}
+			nav_link_hover_styles={[['background', 'darkorange']]}
+		/>
+	{/await}
 	<main>
 		<Transition
 			bind:refresh
