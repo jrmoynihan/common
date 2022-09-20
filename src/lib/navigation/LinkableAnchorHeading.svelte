@@ -16,7 +16,7 @@
 	export let heading_props: ComponentProps<AnchorHeading>;
 	export let button_props: ComponentProps<Button> = {
 		static_styles,
-		hover_styles: [['--button-hover-opacity', '1']]
+		hover_styles: '--button-hover-opacity: 1'
 	};
 
 	function copyLinkAddress() {
