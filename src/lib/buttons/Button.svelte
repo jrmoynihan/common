@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
+	import { dynamicStyle } from '../actions';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { fade } from 'svelte/transition';
 	import type { IconSize, SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
-	import { browser } from '$app/environment';
 
 	/** Options to style the tooltip or modify its visible/disabled state */
 	export let tooltip_options: TooltipParameters = {
@@ -15,18 +15,18 @@
 	let styles = static_styles;
 	/** External classes to add to the button (typically, these are best done by wrapping a Button and passing in specific styles, making a styled component) */
 	export let classes = '';
-	/** An array of dynamic CSS style rules and values  to apply to the button.  They will change when these variables change */
-	export let dynamic_styles: [string, string][] = [];
 	/** An array of hover CSS styles rules and values to apply to the button */
-	export let hover_styles: [string, string][] = [];
+	export let hover_styles: string = '';
 	/** An array of focus CSS styles rules and values to apply to the button.  (default: uses the same styles as hover state). */
-	export let focus_styles: [string, string][] = hover_styles;
+	export let focus_styles: string = hover_styles;
 	/** A font-awwesome icon to use inside the button */
 	export let icon: IconDefinition | null = null;
 	/** The size of the icon */
 	export let icon_size: IconSize = 'lg';
 	/** The rotation of the icon */
 	export let icon_rotation: string | number | undefined = undefined;
+	/** Should the icon be positioned before or after the text and slot of the button (default: 'after')*/
+	export let icon_position: 'before' | 'after' = 'after';
 	/** The title of the button */
 	export let title = '';
 	/** Whether the button is disabled */
@@ -38,47 +38,13 @@
 	/** A Svelte transition to use on the button */
 	export let transition: SvelteTransition = fade;
 	export let transition_config: SvelteTransitionParams = { duration: 0 };
-	let button: HTMLButtonElement;
 	let hovered: boolean = false;
 	let focused: boolean = false;
-
-	$: if (dynamic_styles.length > 0) {
-		styles = static_styles;
-		dynamic_styles?.forEach(([key, value]) => {
-			styles = styles.concat(`${key}: ${value};`);
-		});
-	}
-	$: {
-		if (hover_styles.length > 0 && hovered && button && browser) {
-			hover_styles?.forEach(([key, value]) => {
-				button.style.setProperty(key, value);
-			});
-		} else if (!hovered && button && browser) {
-			hover_styles?.forEach(([key, value]) => {
-				button.style.removeProperty(key);
-			});
-			// Re-apply styles that should stay
-			styles = static_styles;
-		}
-	}
-	// $: {
-	// 	if (focus_styles.length > 0 && focused && button && browser) {
-	// 		focus_styles?.forEach(([key, value]) => {
-	// button.style.setProperty(key, value);
-	// 		});
-	// 	} else if (!focused && button && browser) {
-	// 		focus_styles?.forEach(([key, value]) => {
-	// button.style.removeProperty(key)
-	// 		});
-	// 		// Re-apply styles that should stay
-	// 		styles = static_styles;
-	// 	}
-	// }
 </script>
 
 <button
-	bind:this={button}
 	transition:transition={transition_config}
+	use:dynamicStyle={{ static_styles, hover_styles, focus_styles }}
 	use:tooltip={{ ...tooltip_options }}
 	title={title ?? tooltip_options.title}
 	class="btn {classes}"
@@ -95,9 +61,12 @@
 	on:blur={() => (focused = false)}
 	on:click
 >
+	{#if icon && icon_position === 'before'}
+		<Fa {icon} size={icon_size} rotate={icon_rotation} />
+	{/if}
 	<slot />
 	{text}
-	{#if icon}
+	{#if icon && icon_position === 'after'}
 		<Fa {icon} size={icon_size} rotate={icon_rotation} />
 	{/if}
 </button>

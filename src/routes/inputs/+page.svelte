@@ -31,7 +31,7 @@
 	<section class="text-inputs">
 		<h2>Text Inputs</h2>
 		<TextInput
-			placeholder="I'm a placeholder"
+			placeholder_props={{ placeholder: "I'm a placeholder" }}
 			show_confirm={false}
 			tooltip_options={{ title: `I'm a plain text input with a cancel button!` }}
 		/>
@@ -42,7 +42,7 @@
 			}}
 			type="datalist"
 			options={datalist}
-			placeholder="Pick a fruit"
+			placeholder_props={{ placeholder: 'Pick a fruit' }}
 			tooltip_options={{
 				title: `I'm a datalist input with a cancel AND a confirmation button!`,
 				position: 'bottom'

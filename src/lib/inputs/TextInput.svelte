@@ -1,14 +1,15 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, type ComponentProps } from 'svelte';
 	import Fa from 'svelte-fa';
 	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
+	import { dynamicStyle } from '../actions';
 	import type { DatalistOption } from '$lib/inputs';
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
 	import { fade } from 'svelte/transition';
+	import Placeholder from './Placeholder.svelte';
 
 	export let value = '';
-	export let placeholder = '';
 	export let type: 'text' | 'datalist' = 'text';
 	export let title = '';
 	export let required = false;
@@ -16,10 +17,12 @@
 	export let list = crypto?.randomUUID();
 	export let show_confirm = true;
 	export let options: DatalistOption[] = [];
-	export let input_container_styles = '';
-	export let input_styles = '';
-	export let button_styles = '';
-	export let placeholder_styles = '';
+	export let input_container_static_styles = '';
+	export let input_container_hover_styles = '';
+	export let input_container_focus_styles = '';
+	export let input_static_styles = '';
+	export let button_static_styles = '';
+	export let placeholder_props: ComponentProps<Placeholder> = {};
 	export let transition: SvelteTransition = fade;
 	export let transition_parameters: SvelteTransitionParams = { duration: 0 };
 	export let use_tooltip = false;
@@ -49,13 +52,18 @@
 
 <div
 	class="text-input-container"
+	use:dynamicStyle={{
+		static_styles: input_container_static_styles,
+		hover_styles: input_container_hover_styles,
+		focus_styles: input_container_focus_styles
+	}}
 	use:tooltip={{ ...tooltip_options }}
 	{title}
-	style={input_container_styles}
 	transition:transition={transition_parameters}
 >
 	{#if type === 'text'}
 		<input
+			use:dynamicStyle={{ static_styles: input_static_styles }}
 			type="text"
 			bind:this={input}
 			bind:value
@@ -64,24 +72,24 @@
 			pattern={pattern?.source}
 			on:input={(e) => passInput(e)}
 		/>
-		<div class="placeholder" style={placeholder_styles}>
-			{placeholder ?? ''}
-		</div>
+		{#key placeholder_props}
+			<Placeholder {...placeholder_props} />
+		{/key}
 	{:else if type === 'datalist'}
 		<input
+			use:dynamicStyle={{ static_styles: input_static_styles }}
 			type="text"
 			bind:this={input}
 			bind:value
 			class:value
-			style={input_styles}
 			{required}
 			pattern={pattern?.source}
 			{list}
 			on:input={(e) => passInput(e)}
 		/>
-		<div class="placeholder" style={placeholder_styles}>
-			{placeholder ?? ''}
-		</div>
+		{#key placeholder_props}
+			<Placeholder {...placeholder_props} />
+		{/key}
 		<datalist id={list} tabindex="-1">
 			{#each options as { value, label }}
 				<option {value}>{label}</option>
@@ -91,22 +99,23 @@
 	<div class="btn-container">
 		{#if show_confirm}
 			<button
+				use:dynamicStyle={{ static_styles: button_static_styles }}
 				class="confirm-btn"
 				tabindex={value ? 0 : -1}
 				class:value
 				on:click={confirm}
-				style={button_styles}
 			>
 				<Fa icon={faCheck} color="inherit" />
 			</button>
 		{/if}
 		{#if value}
 			<button
+				use:dynamicStyle={{ static_styles: button_static_styles }}
 				class="cancel-btn"
 				class:no-confirm={!show_confirm}
 				tabindex={value ? 0 : -1}
 				class:value
-				style={button_styles}
+				style={button_static_styles}
 				on:click={clearInput}
 			>
 				<Fa icon={faX} color="inherit" />
@@ -127,7 +136,6 @@
 		max-width: max-content;
 		grid-auto-rows: minmax(7ch, max-content);
 	}
-	.placeholder,
 	input[type='text'] {
 		box-sizing: border-box;
 		grid-row: 1;
@@ -152,20 +160,9 @@
 		/* to make room for the cancel button */
 		padding-right: var(--text-input-button-padding-space, 2.5rem);
 
-		&:not(:focus):hover ~ .placeholder {
+		&:not(:focus):hover ~ :global(.placeholder) {
 			opacity: 0.2;
 		}
-	}
-	.placeholder {
-		font-size: var(--text-input-placeholder-font-size, 1rem);
-		inset: 0;
-		transition: all ease-in-out 300ms;
-		pointer-events: none;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		overflow: hidden;
-		opacity: 0.6;
-		display: grid;
 	}
 	.btn-container {
 		--text-input-button-margin: 0.15rem;
@@ -231,15 +228,15 @@
 	}
 
 	/* Move the placeholder div when anything in the container receives focus or the input has a value */
-	.text-input-container:focus-within > .placeholder,
-	input:active ~ .placeholder,
-	input.value:not(:focus) ~ .placeholder {
+	.text-input-container:focus-within > :global(.placeholder),
+	input:active ~ :global(.placeholder),
+	input.value:not(:focus) ~ :global(.placeholder) {
 		translate: -3% -0.8rem 0;
 		font-size: 0.75rem;
 	}
 
 	/* When the input isn't focused, but has a value, continue to fade and translate the placeholder div */
-	input.value:not(:focus) ~ .placeholder {
+	input.value:not(:focus) ~ :global(.placeholder) {
 		opacity: 0.4;
 	}
 </style>
