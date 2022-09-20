@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { dynamicStyle } from '../actions';
 	export let placeholder = '';
-	export let static_styles = '';
+	export let styles = '';
 	export let focus_styles = '';
 	export let hover_styles = '';
 </script>
 
-<div class="placeholder" use:dynamicStyle={{ static_styles, focus_styles, hover_styles }}>
+<div class="placeholder" use:dynamicStyle={{ styles, focus_styles, hover_styles }}>
 	{placeholder ?? ''}
 </div>
 

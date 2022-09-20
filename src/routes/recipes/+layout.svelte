@@ -19,7 +19,7 @@
 </script>
 
 {#await makeNavLinks({ paths, parent_path }) then nav_links}
-	<Navigation {nav_links} nav_link_static_styles={`color: white`} />
+	<Navigation {nav_links} nav_link_styles={`color: white`} />
 {/await}
 
 <Transition

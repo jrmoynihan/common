@@ -10,9 +10,8 @@
 	export let tooltip_options: TooltipParameters = {
 		disabled: true
 	};
-	/** Styles that won't change/update on the button */
-	export let static_styles = '';
-	let styles = static_styles;
+	/** Style the button, allowing dynamic updates */
+	export let styles = '';
 	/** External classes to add to the button (typically, these are best done by wrapping a Button and passing in specific styles, making a styled component) */
 	export let classes = '';
 	/** An array of hover CSS styles rules and values to apply to the button */
@@ -44,7 +43,7 @@
 
 <button
 	transition:transition={transition_config}
-	use:dynamicStyle={{ static_styles, hover_styles, focus_styles }}
+	use:dynamicStyle={{ styles, hover_styles, focus_styles }}
 	use:tooltip={{ ...tooltip_options }}
 	title={title ?? tooltip_options.title}
 	class="btn {classes}"

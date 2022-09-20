@@ -12,6 +12,23 @@
 		horizontal_distance: -1,
 		vertical_distance: 0
 	});
+	let gradient_direction: TooltipDirections = 'bottom';
+	$: {
+		switch (position) {
+			case 'top':
+				gradient_direction = 'bottom';
+				break;
+			case 'bottom':
+				gradient_direction = 'top';
+				break;
+			case 'left':
+				gradient_direction = 'right';
+				break;
+			case 'right':
+				gradient_direction = 'left';
+				break;
+		}
+	}
 </script>
 
 <section class="buttons">
@@ -26,13 +43,15 @@
 	</div>
 	<Button
 		text="I'm a button with low elevation"
-		static_styles={'--shadow-color: 350deg 50% 70%; background-color: hsla(195, 10%, 60%, 20%);'}
+		styles={`--shadow-color: 350deg 50% 70%;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}
 		box_shadow="low"
 		tooltip_options={{ position, title: 'Click me!', log_functions: true, keep_visible }}
 	/>
 	<Button
 		text="I'm a button with medium elevation"
-		static_styles={'--shadow-color: 350deg 50% 70%; background-color: hsla(195, 10%, 60%, 20%);'}
+		styles={`--shadow-color: 350deg 50% 70%;background-color: ${
+			position === 'top' ? 'hsla(195, 10%, 60%, 20%)' : `green`
+		};`}
 		box_shadow="medium"
 		tooltip_options={{ position, title: 'Click me!', log_functions: true, keep_visible }}
 	/>
@@ -40,7 +59,7 @@
 		on:click={() => (keep_visible = !keep_visible)}
 		text="I'm a button with high elevation"
 		box_shadow="high"
-		static_styles={'--button-hover-background: linear-gradient(to bottom left, hsla(350, 100%, 50%, 80%), hsl(33, 100%, 55%),  hsla(350, 100%, 50%, 80%)); --shadow-color: 350deg 50% 70%; '}
+		styles={'--button-hover-background: linear-gradient(to bottom left, hsla(350, 100%, 50%, 80%), hsl(33, 100%, 55%),  hsla(350, 100%, 50%, 80%)); --shadow-color: 350deg 50% 70%; '}
 		tooltip_options={{
 			position,
 			title: 'Click me!',

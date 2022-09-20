@@ -8,9 +8,9 @@
 	/** An array of items to display within the nav wrapper element */
 	export let nav_links: NavigationLink[] = [];
 	/** Styles for the <nav> parent element */
-	export let static_styles = '';
+	export let styles = '';
 	/** Styles to pass to the individual nav links */
-	export let nav_link_static_styles = '';
+	export let nav_link_styles = '';
 	/** Hover styles to pass to the individual nav links */
 	export let nav_link_hover_styles: [string, string][] = [];
 	/** Focus syles to pass to the individual nav links */
@@ -31,13 +31,13 @@
 	});
 </script>
 
-<nav style={static_styles}>
+<nav style={styles}>
 	{#each nav_links as nav_link, i}
 		<NavLink
 			bind:tooltip_options
 			{...nav_link}
 			{i}
-			static_styles={nav_link_static_styles}
+			styles={nav_link_styles}
 			hover_styles={nav_link_hover_styles}
 			focus_styles={nav_link_focus_styles}
 		/>

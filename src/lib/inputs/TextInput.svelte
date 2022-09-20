@@ -17,11 +17,11 @@
 	export let list = crypto?.randomUUID();
 	export let show_confirm = true;
 	export let options: DatalistOption[] = [];
-	export let input_container_static_styles = '';
+	export let input_container_styles = '';
 	export let input_container_hover_styles = '';
 	export let input_container_focus_styles = '';
-	export let input_static_styles = '';
-	export let button_static_styles = '';
+	export let input_styles = '';
+	export let button_styles = '';
 	export let placeholder_props: ComponentProps<Placeholder> = {};
 	export let transition: SvelteTransition = fade;
 	export let transition_parameters: SvelteTransitionParams = { duration: 0 };
@@ -53,7 +53,7 @@
 <div
 	class="text-input-container"
 	use:dynamicStyle={{
-		static_styles: input_container_static_styles,
+		styles: input_container_styles,
 		hover_styles: input_container_hover_styles,
 		focus_styles: input_container_focus_styles
 	}}
@@ -63,7 +63,7 @@
 >
 	{#if type === 'text'}
 		<input
-			use:dynamicStyle={{ static_styles: input_static_styles }}
+			use:dynamicStyle={{ styles: input_styles }}
 			type="text"
 			bind:this={input}
 			bind:value
@@ -77,7 +77,7 @@
 		{/key}
 	{:else if type === 'datalist'}
 		<input
-			use:dynamicStyle={{ static_styles: input_static_styles }}
+			use:dynamicStyle={{ styles: input_styles }}
 			type="text"
 			bind:this={input}
 			bind:value
@@ -99,7 +99,7 @@
 	<div class="btn-container">
 		{#if show_confirm}
 			<button
-				use:dynamicStyle={{ static_styles: button_static_styles }}
+				use:dynamicStyle={{ styles: button_styles }}
 				class="confirm-btn"
 				tabindex={value ? 0 : -1}
 				class:value
@@ -110,12 +110,12 @@
 		{/if}
 		{#if value}
 			<button
-				use:dynamicStyle={{ static_styles: button_static_styles }}
+				use:dynamicStyle={{ styles: button_styles }}
 				class="cancel-btn"
 				class:no-confirm={!show_confirm}
 				tabindex={value ? 0 : -1}
 				class:value
-				style={button_static_styles}
+				style={button_styles}
 				on:click={clearInput}
 			>
 				<Fa icon={faX} color="inherit" />

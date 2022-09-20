@@ -1,11 +1,13 @@
-export interface dynamicStyleParameters {
-	static_styles?: string;
+import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
+
+export interface DynamicStyleParameters {
+	styles?: string;
 	hover_styles?: string;
 	focus_styles?: string;
 	dynamic_styles?: string;
 }
-const default_parameters: dynamicStyleParameters = {
-	static_styles: '',
+const default_parameters: DynamicStyleParameters = {
+	styles: '',
 	hover_styles: '',
 	focus_styles: '',
 	dynamic_styles: ''
@@ -13,61 +15,77 @@ const default_parameters: dynamicStyleParameters = {
 
 export function dynamicStyle(
 	element: HTMLElement,
-	parameters: dynamicStyleParameters = default_parameters
+	parameters: DynamicStyleParameters = default_parameters
 ) {
-	// Cache the existing styles on the element (NOTE: may need to have these to be passed by param?)
-	let { static_styles, hover_styles, focus_styles, dynamic_styles } = parameters;
-	let split_static_rules: string[];
-	let split_hover_rules: string[];
-	let split_focus_rules: string[];
+	// Cache the existing styles on the element in a store
+	const store: Writable<DynamicStyleParameters> = writable(parameters);
+	const split_static_rules: Readable<string[]> = derived(store, ($store, set) => {
+		if ($store.styles) {
+			const rules = splitStyleRules($store.styles);
+			set(rules);
+		}
+	});
+	const split_hover_rules: Readable<string[]> = derived(store, ($store, set) => {
+		if ($store.hover_styles) {
+			const rules = splitStyleRules($store.hover_styles);
+			set(rules);
+		}
+	});
+	const split_focus_rules: Readable<string[]> = derived(store, ($store, set) => {
+		// For accessibility, if no focus styles are explicitly given, they should instead use the hover styles
+		if (!$store.focus_styles && $store.hover_styles) {
+			$store.focus_styles = $store.hover_styles;
+		}
+		if ($store.focus_styles) {
+			const rules = splitStyleRules($store.focus_styles);
+			set(rules);
+		}
+	});
 
-	// For accessibility, if no focus styles are explicitly given, they should instead use the hover styles
-	if (!focus_styles && hover_styles) focus_styles = hover_styles;
-	if (static_styles) split_static_rules = splitStyleRules(static_styles);
-	if (hover_styles) split_hover_rules = splitStyleRules(hover_styles);
-	if (focus_styles) split_hover_rules = splitStyleRules(focus_styles);
-
-	addExistingStaticStyles();
+	addStaticStyles();
 
 	function mouseEnter() {
-		if (split_hover_rules) {
-			applyStyles(element, split_hover_rules);
+		if (get(split_hover_rules)) {
+			applyStyles(element, get(split_hover_rules));
 		}
 	}
 	function mouseLeave() {
-		if (split_hover_rules) {
-			removeStyles(element, split_hover_rules);
+		if (get(split_hover_rules)) {
+			removeStyles(element, get(split_hover_rules));
 		}
 	}
 	function focused() {
-		if (split_focus_rules) {
-			applyStyles(element, split_focus_rules);
+		if (get(split_focus_rules)) {
+			applyStyles(element, get(split_focus_rules));
 		}
 	}
 	function blurred() {
-		if (split_focus_rules) {
-			removeStyles(element, split_focus_rules);
+		if (get(split_focus_rules)) {
+			removeStyles(element, get(split_focus_rules));
 		}
 	}
 
-	function addExistingStaticStyles() {
-		if (split_static_rules) {
-			applyStyles(element, split_static_rules);
+	function addStaticStyles() {
+		if (get(split_static_rules)) {
+			applyStyles(element, get(split_static_rules));
 		}
 	}
 
 	// Event listeners for mouseenter/mouseleave (hover) and focus/blur (focus)
-	if (hover_styles) {
+	if (get(store).hover_styles) {
 		element.addEventListener('mouseenter', mouseEnter);
 		element.addEventListener('mouseleave', mouseLeave);
 	}
-	if (focus_styles) {
+	if (get(store).focus_styles) {
 		element.addEventListener('focus', focused);
 		element.addEventListener('blur', blurred);
 	}
 
 	return {
-		update() {},
+		update(new_parameters: DynamicStyleParameters) {
+			store.set(new_parameters);
+			addStaticStyles();
+		},
 		destroy() {
 			element.removeEventListener('mouseenter', mouseEnter);
 			element.removeEventListener('mouseleave', mouseLeave);
@@ -81,7 +99,8 @@ function splitStyleRules(styles: string): string[] {
 	return styles.split(';');
 }
 function splitRuletoKeyValuePair(rule: string) {
-	const [key, value] = rule.split(':');
+	const trimmed_rule = rule.trim();
+	const [key, value] = trimmed_rule.split(':');
 	return [key, value];
 }
 function applyStyles(element: HTMLElement, split_rules: string[]) {

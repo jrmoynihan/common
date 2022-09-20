@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { tooltip, type TooltipParameters } from '$lib/tooltip';
+	import { dynamicStyle } from '$lib/actions';
 	import { capitalize } from '$lib/functions';
 	import { Fa, FaLayers, FaLayersText } from 'svelte-fa/src';
 	import type { IconLayer } from './nav-functions';
@@ -17,20 +18,20 @@
 	/** Index used to access tooltip options from an array */
 	export let i: number = 0;
 	/** Static styles to apply to the links. Will be re-applied when hover, focus, current-page status is lost*/
-	export let static_styles: string = '';
+	export let styles: string = '';
 	/** Styles to apply to a link when it is the active page URL. */
-	export let current_page_styles: [string, string][] = [];
+	export let current_page_styles: string = '';
 	/** Hover styles to apply to the links. */
-	export let hover_styles: [string, string][] = [];
+	export let hover_styles: string = '';
 	/** Focus styles to apply to the links. */
-	export let focus_styles: [string, string][] = [];
+	export let focus_styles: string = '';
 	/** Pass in an array of icons to use in a FaLayer component. */
 	export let icons: IconLayer[] | null = null;
+	/** Is the link hovered? */
+	export let hovered = false;
+	/** Is the link focused? */
+	export let focused = false;
 
-	let anchor: HTMLAnchorElement;
-	let styles = static_styles;
-	let hovered = false;
-	let focused = false;
 	let anchor_path_to_scroll_to: string;
 
 	// Determine if the current path matches a given path string
@@ -74,49 +75,14 @@
 	}
 
 	$: is_current_page = doesPathMatchCurrentURL(url.href, $page?.url?.href);
-	$: {
-		if (anchor && current_page_styles?.length > 0 && is_current_page) {
-			current_page_styles.forEach(([key, value]) => {
-				anchor?.style.setProperty(key, value);
-			});
-		} else {
-			current_page_styles?.forEach(([key, value]) => {
-				anchor?.style.removeProperty(key);
-			});
-			// Re-apply styles that should stay
-			styles = static_styles;
-		}
-	}
-	$: {
-		if (anchor && hover_styles?.length > 0 && hovered) {
-			hover_styles.forEach(([key, value]) => {
-				anchor?.style.setProperty(key, value);
-			});
-		} else {
-			hover_styles?.forEach(([key, value]) => {
-				anchor?.style.removeProperty(key);
-			});
-			// Re-apply styles that should stay
-			styles = static_styles;
-		}
-	}
-	$: {
-		if (anchor && focus_styles?.length > 0 && focused) {
-			focus_styles.forEach(([key, value]) => {
-				anchor?.style.setProperty(key, value);
-			});
-		} else {
-			focus_styles?.forEach(([key, value]) => {
-				anchor?.style.removeProperty(key);
-			});
-			// Re-apply styles that should stay
-			styles = static_styles;
-		}
-	}
 </script>
 
 <a
-	bind:this={anchor}
+	use:dynamicStyle={{
+		styles: is_current_page ? current_page_styles : styles,
+		hover_styles,
+		focus_styles
+	}}
 	use:tooltip={Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
 	href={url.href}
 	data-sveltekit-prefetch
