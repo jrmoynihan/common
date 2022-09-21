@@ -21,7 +21,11 @@
 	export let input_container_hover_styles = '';
 	export let input_container_focus_styles = '';
 	export let input_styles = '';
+	export let input_hover_styles = '';
+	export let input_focus_styles = '';
 	export let button_styles = '';
+	export let button_hover_styles = '';
+	export let button_focus_styles = '';
 	export let placeholder_props: ComponentProps<Placeholder> = {};
 	export let transition: SvelteTransition = fade;
 	export let transition_parameters: SvelteTransitionParams = { duration: 0 };
@@ -63,7 +67,11 @@
 >
 	{#if type === 'text'}
 		<input
-			use:dynamicStyle={{ styles: input_styles }}
+			use:dynamicStyle={{
+				styles: input_styles,
+				hover_styles: input_hover_styles,
+				focus_styles: input_focus_styles
+			}}
 			type="text"
 			bind:this={input}
 			bind:value
@@ -77,7 +85,11 @@
 		{/key}
 	{:else if type === 'datalist'}
 		<input
-			use:dynamicStyle={{ styles: input_styles }}
+			use:dynamicStyle={{
+				styles: input_styles,
+				hover_styles: input_hover_styles,
+				focus_styles: input_focus_styles
+			}}
 			type="text"
 			bind:this={input}
 			bind:value
@@ -99,7 +111,11 @@
 	<div class="btn-container">
 		{#if show_confirm}
 			<button
-				use:dynamicStyle={{ styles: button_styles }}
+				use:dynamicStyle={{
+					styles: button_styles,
+					hover_styles: button_hover_styles,
+					focus_styles: button_focus_styles
+				}}
 				class="confirm-btn"
 				tabindex={value ? 0 : -1}
 				class:value
@@ -110,7 +126,11 @@
 		{/if}
 		{#if value}
 			<button
-				use:dynamicStyle={{ styles: button_styles }}
+				use:dynamicStyle={{
+					styles: button_styles,
+					hover_styles: button_hover_styles,
+					focus_styles: button_focus_styles
+				}}
 				class="cancel-btn"
 				class:no-confirm={!show_confirm}
 				tabindex={value ? 0 : -1}
