@@ -88,7 +88,7 @@
 		--shadow-elevation-low: 0.3px 0.5px 0.7px
 				hsl(var(--shadow-color) / var(--low-elevation-opacity)),
 			var(--base) calc(var(--base) * var(--offset-ratio)) calc(var(--base) * var(--spread-ratio))
-				calc(var(--base) -) hsl(var(--shadow-color) / var(--low-elevation-opacity)),
+				calc(var(--base)) hsl(var(--shadow-color) / var(--low-elevation-opacity)),
 			1px 2px 2.5px -2.5px hsl(var(--shadow-color) / var(--low-elevation-opacity));
 		--shadow-elevation-medium: 0.3px 0.5px 0.7px
 				hsl(var(--shadow-color) / var(--medium-elevation-opacity)),
