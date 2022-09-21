@@ -25,9 +25,9 @@ export function dynamicStyle(
 			set(rules);
 		}
 	});
-	const split_hover_rules: Readable<string[]> = derived(store, ($store, set) => {
-		if ($store.hover_styles) {
-			const rules = splitStyleRules($store.hover_styles);
+	const split_hover_rules: Readable<string[]> = derived(store, (store_value, set) => {
+		if (store_value.hover_styles) {
+			const rules = splitStyleRules(store_value.hover_styles);
 			set(rules);
 		}
 	});
@@ -96,7 +96,11 @@ export function dynamicStyle(
 }
 
 function splitStyleRules(styles: string): string[] {
-	return styles.split(';');
+	try {
+		return styles.split(';');
+	} catch (error) {
+		return [];
+	}
 }
 function splitRuletoKeyValuePair(rule: string) {
 	const trimmed_rule = rule.trim();
