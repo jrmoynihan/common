@@ -12,9 +12,9 @@
 	/** Styles to pass to the individual nav links */
 	export let nav_link_styles = '';
 	/** Hover styles to pass to the individual nav links */
-	export let nav_link_hover_styles: [string, string][] = [];
+	export let nav_link_hover_styles: string = '';
 	/** Focus syles to pass to the individual nav links */
-	export let nav_link_focus_styles: [string, string][] = [];
+	export let nav_link_focus_styles: string = '';
 	/** The tooltip options for all parameters, or an array of tooltip options.  Each item of the options array will be passed into each respective nav item.*/
 	export let tooltip_options: TooltipParameters | TooltipParameters[] = { disabled: true };
 

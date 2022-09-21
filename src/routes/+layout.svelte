@@ -93,7 +93,7 @@
 			{nav_links}
 			bind:tooltip_options={link_tooltip_options}
 			nav_link_styles={`color: white`}
-			nav_link_hover_styles={[['background', 'darkorange']]}
+			nav_link_hover_styles={'background: darkorange'}
 		/>
 	{/await}
 	<main>
