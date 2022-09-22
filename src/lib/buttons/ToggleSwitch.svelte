@@ -1,14 +1,12 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { createEventDispatcher } from 'svelte';
-	import { slide, type TransitionConfig } from 'svelte/transition';
+	import { createEventDispatcher, type ComponentProps } from 'svelte';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import Button from './Button.svelte';
 	import { dynamicStyle } from '../actions';
 
 	export let checked = false;
 	export let disabled = false;
-	export let title = '';
 	export let icon: IconDefinition | null = null;
 	export let label_text = '';
 	export let slider_text = '';
@@ -18,14 +16,7 @@
 	export let label_styles = '';
 	export let label_hover_styles = '';
 	export let label_focus_styles = '';
-	export let button_styles = '';
-	export let button_hover_styles = '';
-	export let button_focus_styles = '';
-	export let button_classes = '';
-	export let transition = slide;
-	export let transition_config: TransitionConfig = {
-		duration: 0
-	};
+	export let button_props: ComponentProps<Button> = {};
 	export let bgColorHue: number | null = null; // = 246; // 207;
 	export let bgColorSaturation: number | null = null; // = 46; // 90;
 	export let bgColorLuminosity: number | null = null; // = 37; // 54;
@@ -60,14 +51,9 @@
 		checked = !checked;
 		toggled();
 	}}
-	{transition}
-	{transition_config}
-	{disabled}
-	{title}
-	styles={`border: 0; --scale: ${scale}; display: grid; gap: 0.5rem; --button-padding: 0.2rem; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-backgrond, inherit); --button-color: var(--toggle-button-color, inherit); ${button_styles}`}
-	hover_styles={button_hover_styles}
-	focus_styles={button_focus_styles}
-	classes={`toggle ${button_classes}`}
+	{...button_props}
+	styles={`border: 0; --scale: ${scale}; display: grid; gap: 0.5rem; --button-padding: 0.2rem; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-backgrond, inherit); --button-color: var(--toggle-button-color, inherit); ${button_props.styles}`}
+	classes={`toggle ${button_props.classes}`}
 >
 	{#if label_text !== ''}
 		<label
