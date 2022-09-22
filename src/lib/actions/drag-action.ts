@@ -1,7 +1,5 @@
 export interface DragNDropOptions {
-    items: []
+	items: [];
 }
 
-export function dragndrop(node : HTMLElement | Node, parameters : DragNDropOptions){
-    
-}
+export function dragndrop(node: HTMLElement | Node, parameters: DragNDropOptions) {}
