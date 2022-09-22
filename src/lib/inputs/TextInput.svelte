@@ -163,9 +163,6 @@
 		height: 100%;
 		padding: var(--text-input-padding, 1.25rem);
 		color: var(--text-input-color, black);
-	}
-	input[type='text'] {
-		box-sizing: border-box;
 		background-color: var(--text-input-background, white);
 		width: 100%;
 		margin: 0;
@@ -179,6 +176,12 @@
 		white-space: nowrap;
 		/* to make room for the cancel button */
 		padding-right: var(--text-input-button-padding-space, 2.5rem);
+		&:invalid {
+			outline: var(--input-invalid-outline, intitial);
+		}
+		&:valid {
+			outline: var(--input-valid-outline, initial);
+		}
 
 		&:not(:focus):hover ~ :global(.placeholder) {
 			opacity: 0.2;
