@@ -72,9 +72,12 @@
 	<ToggleSwitch
 		bind:checked={keep_visible}
 		label_text={`I'm a toggle switch!`}
-		button_hover_styles={'background-color: green;'}
+		button_props={{
+			styles:
+				'display: grid; transition: color 400ms ease; gap: 1rem; grid-auto-flow: column; --toggle-button-background: hsla(0,70%, 50%, 30%); padding: 1rem;',
+			hover_styles: 'background-color: green;'
+		}}
 		label_hover_styles={'color: yellow;'}
-		button_styles={'display: grid; transition: color 400ms ease; gap: 1rem; grid-auto-flow: column; --toggle-button-background: hsla(0,70%, 50%, 30%); padding: 1rem;'}
 	/>
 	<Button hover_styles={'box-shadow: 0 0 10px yellow'} />
 </section>
