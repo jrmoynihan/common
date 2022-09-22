@@ -5,8 +5,8 @@
 	import { beforeNavigate } from '$app/navigation';
 	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$lib/navigation/nav-functions';
 
-	let refresh: boolean = false;
-	const parent_path: string = 'wrappers';
+	let refresh = false;
+	const parent_path = 'wrappers';
 	const paths: string[] = ['transition', 'accordion', 'modal', 'tabs'];
 
 	beforeNavigate((nav) => {

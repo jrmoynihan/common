@@ -12,8 +12,8 @@
 	];
 	let dragTo: number;
 	let dragFrom: number;
-	let dragContent: any;
-	let grabbed: boolean = false;
+	let dragContent: typeof items[0];
+	let grabbed = false;
 
 	function draggingOver(i: number) {
 		dragTo = i;
@@ -53,10 +53,9 @@
 			draggable={grabbed}
 			on:mouseover={() => draggingStart(i)}
 			on:focus={() => draggingStart(i)}
-			on:dragover|preventDefault={(e) => draggingOver(i)}
-			on:drop|preventDefault={(e) => dropped(dragContent, dragTo, dragFrom)}
+			on:dragover|preventDefault={() => draggingOver(i)}
+			on:drop|preventDefault={() => dropped(dragContent, dragTo, dragFrom)}
 		>
-			<!-- on:mouseup={() => (dragTo = null)} -->
 			{item.name}
 			<span class="drag-anchor">
 				<DragAnchor bind:grabbed />
@@ -72,9 +71,9 @@
 		gap: 1rem;
 		transition: gap 300ms ease-in-out;
 		transition-delay: 200ms;
-		// &.grabbed {
-		// 	gap: 1.5rem;
-		// }
+		&.grabbed {
+			gap: 1.5rem;
+		}
 	}
 	.item-container {
 		position: relative;

@@ -6,7 +6,7 @@
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
 	let selected_position: TooltipDirections = 'top';
 	let positions = ['top', 'bottom', 'left', 'right'];
-	let max_width: number = 150;
+	let max_width = 150;
 	let keep_visible = false;
 	let disabled = false;
 	let visible = false;

@@ -9,12 +9,12 @@
 	import { fly } from 'svelte/transition';
 
 	let refresh: boolean = false;
-	const parent_path: string = 'recipes'
+	const parent_path: string = 'recipes';
 	const paths: string[] = ['navigation', 'gallery'];
 	const nav_links: NavigationLink[] = makeNavLinks({ paths, parent_path });
 
-	beforeNavigate(({from, to}) => {
-		if (from && to && shouldLayoutTransitionOnNavigation(from, to, parent_path)){
+	beforeNavigate(({ from, to }) => {
+		if (from && to && shouldLayoutTransitionOnNavigation(from, to, parent_path)) {
 			refresh = !refresh;
 		}
 	});
