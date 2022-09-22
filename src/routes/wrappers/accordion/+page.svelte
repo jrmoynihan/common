@@ -3,10 +3,9 @@
 	import type { ComponentProps } from 'svelte';
 	import { blur, fly, scale } from 'svelte/transition';
 
-	interface IAccordion extends ComponentProps<Accordion> {}
 	const custom_accordion_container_styles = 'max-width: 30%';
 	const custom_summary_styles = 'min-width: min(20rem, 30vw)';
-	const accordion_configs: IAccordion[] = [
+	const accordion_configs: ComponentProps<Accordion>[] = [
 		{
 			summary_text: 'Classic slide transition',
 			custom_summary_styles,
