@@ -117,7 +117,6 @@
 		position: relative;
 		grid-row: 1 / span 2;
 		grid-column: 1 / span 2;
-		padding-right: 1.5rem;
 		&::-webkit-inner-spin-button,
 		&::-webkit-outer-spin-button {
 			-webkit-appearance: none;
@@ -126,6 +125,7 @@
 		-moz-appearance: textfield;
 		text-align: center;
 		padding: 1rem;
+		padding-right: 1.75rem;
 		border-radius: var(--input-border-radius, 1rem);
 	}
 	.spinner {
