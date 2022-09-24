@@ -28,6 +28,6 @@ export type SvelteTransition = (
 	node: Element,
 	{}: SvelteTransitionParams | undefined
 ) => TransitionConfig;
-declare module '@fortawesome/free-solid-svg-icons/index.es' {
+declare module '@fortawesome/free-solid-svg-icons/index' {
 	export * from '@fortawesome/free-solid-svg-icons';
 }

@@ -1,3 +1,7 @@
-export { tooltip, type TooltipDirections, type TooltipParameters } from './tooltip-action.js';
-import ActionTooltip from './ActionTooltip.svelte';
+import ActionTooltip from '$lib/tooltip/ActionTooltip.svelte';
+export {
+	tooltip,
+	type TooltipDirections,
+	type TooltipParameters
+} from '$lib/tooltip/tooltip-action.js';
 export { ActionTooltip };

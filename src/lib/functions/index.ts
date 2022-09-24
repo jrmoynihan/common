@@ -15,12 +15,12 @@ export {
 	flattenObjectRecursively,
 	getAncestors,
 	getTransitionDurations
-} from './helpers.js';
+} from '$lib/functions/helpers.js';
 export {
 	getLocalStorageItem,
 	setLocalStorageItem,
 	deleteLocalStorageItem
-} from './local-storage.js';
+} from '$lib/functions/local-storage.js';
 export {
 	Log,
 	WarningLog,
@@ -33,7 +33,7 @@ export {
 	type ErrorLogOptions,
 	type LogAndToastOptions,
 	type ErrorAndToastOptions
-} from './logging.js';
+} from '$lib/functions/logging.js';
 export {
 	setWritableContext,
 	getWritableContext,
@@ -41,4 +41,4 @@ export {
 	getReadableContext,
 	setDerivedContext,
 	getDerivedContext
-} from './store.js';
+} from '$lib/functions/store.js';

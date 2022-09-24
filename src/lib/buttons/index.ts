@@ -1,5 +1,5 @@
-import Button from './Button.svelte';
-import LightDarkToggle from './LightDarkToggle.svelte';
-import ToggleSwitch from './ToggleSwitch.svelte';
+import Button from '$lib/buttons/Button.svelte';
+import LightDarkToggle from '$lib/buttons/LightDarkToggle.svelte';
+import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
 
 export { Button, LightDarkToggle, ToggleSwitch };
