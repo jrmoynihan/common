@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { IconSize } from '$lib/lib_types.js';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
-	import Fa from 'svelte-fa';
+	import Fa from 'svelte-fa/src/fa.svelte';
 
 	export let title: string = '';
 	export let msg: string =
