@@ -2,6 +2,7 @@ import Navigation from './Navigation.svelte';
 import NavLink from './NavLink.svelte';
 import AnchorHeading from './AnchorHeading.svelte';
 import LinkableAnchorHeading from './LinkableAnchorHeading.svelte';
+import ScrollProgress from './ScrollProgress.svelte';
 export {
 	type NavigationLink,
 	type makeNavLinksOptions,
@@ -11,4 +12,4 @@ export {
 	shouldLayoutTransitionOnNavigation
 } from './nav-functions.js';
 
-export { Navigation, NavLink, AnchorHeading, LinkableAnchorHeading };
+export { Navigation, NavLink, AnchorHeading, LinkableAnchorHeading, ScrollProgress };
