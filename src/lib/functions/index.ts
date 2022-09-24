@@ -41,4 +41,4 @@ export {
 	getReadableContext,
 	setDerivedContext,
 	getDerivedContext
-} from './store';
+} from './store.js';

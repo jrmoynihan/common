@@ -1,8 +1,8 @@
 import SeenToast from '$lib/toasts/SeenToast.svelte';
 import { toast, type SvelteToastOptions } from '@zerodevx/svelte-toast';
-import { all_icons, policeCarLight } from '$lib/functions/logging';
+import { all_icons, policeCarLight } from '$lib/functions/logging.js';
 import DefaultToast from './DefaultToast.svelte';
-import type { IconSize } from '$lib/lib_types';
+import type { IconSize } from '$lib/lib_types.js';
 
 export interface ToastTheme {
 	[key: string]: string;

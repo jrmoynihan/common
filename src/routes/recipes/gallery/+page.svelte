@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { flip } from 'svelte/animate';
-	import type { PageData } from './$types';
+	import type { PageData } from './$types.js';
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
 	import { crossfade } from 'svelte/transition';
 

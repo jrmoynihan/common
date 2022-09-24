@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tooltip, type TooltipDirections } from '$lib/tooltip/tooltip-action';
+	import { tooltip, type TooltipDirections } from '$lib/tooltip/tooltip-action.js';
 	import Fa from 'svelte-fa';
 	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons/index';
 	import { fly } from 'svelte/transition';

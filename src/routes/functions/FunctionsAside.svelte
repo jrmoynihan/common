@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { makeNavLinks } from '$lib/navigation';
-	import { makeAnchorLinks } from '$lib/navigation/nav-functions';
+	import { makeNavLinks, makeAnchorLinks } from '$lib/navigation/nav-functions.js';
 	import { slide, fly, scale } from 'svelte/transition';
 	import NavLink from '$lib/navigation/NavLink.svelte';
 	import { onDestroy, onMount } from 'svelte';
-	import { aside_visible } from '$routes/stores';
-	import ScrollToTopButton from '$lib/navigation/ScrollToTopButton.svelte';
+	import { aside_visible } from '$routes/stores.js';
+	import ScrollToTopButton from '$lib/navigation/ScrollProgress.svelte';
 
 	const parent_path = 'functions';
 	const paths = ['contexts'];

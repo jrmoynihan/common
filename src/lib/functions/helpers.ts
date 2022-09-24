@@ -1,4 +1,4 @@
-import { ErrorLog } from './logging';
+import { ErrorLog } from './logging.js';
 
 /**
  * Capitalize the first letter of a string

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { TooltipDirections } from '$lib/tooltip';
-	import { realShadow } from '$lib/styles/shadow';
+	import type { TooltipDirections } from '$lib/tooltip/tooltip-action.js';
+	import { realShadow } from '$lib/styles/shadow.js';
 	import Button from '$lib/buttons/Button.svelte';
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
 

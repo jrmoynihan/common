@@ -2,10 +2,10 @@
 	import { createEventDispatcher, type ComponentProps } from 'svelte';
 	import Fa from 'svelte-fa';
 	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
-	import { tooltip, type TooltipParameters } from '$lib/tooltip';
-	import { dynamicStyle } from '../actions';
-	import type { DatalistOption } from '$lib/inputs';
-	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
+	import { tooltip, type TooltipParameters } from '$lib/tooltip/tooltip-action.js';
+	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
+	import type { DatalistOption } from '$lib/inputs/types.js';
+	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
 	import { fade } from 'svelte/transition';
 	import Placeholder from './Placeholder.svelte';
 

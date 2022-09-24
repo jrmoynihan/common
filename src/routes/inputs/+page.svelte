@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TextInput from '$lib/inputs/TextInput.svelte';
-	import type { DatalistOption } from '$lib/inputs';
+	import type { DatalistOption } from '$lib/inputs/types.js';
 	import { Temporal } from '@js-temporal/polyfill';
 	import TemporalDateInput from '$lib/inputs/TemporalDateInput.svelte';
 	import NumericInput from '$lib/inputs/NumericInput.svelte';

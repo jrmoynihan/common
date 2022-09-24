@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setLocalStorageItem } from '$lib/functions/local-storage';
+	import { setLocalStorageItem } from '$lib/functions/local-storage.js';
 	import { browser } from '$app/environment';
 
 	/** Bind this with your store that holds the state for light/dark theme selection */

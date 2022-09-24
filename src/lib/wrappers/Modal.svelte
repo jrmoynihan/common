@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
+	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
 	import { fly, scale } from 'svelte/transition';
 	import { onMount } from 'svelte';
 

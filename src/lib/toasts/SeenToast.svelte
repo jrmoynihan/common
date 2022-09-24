@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
-	import { setLocalStorageItem } from '$lib/functions';
+	import { setLocalStorageItem } from '$lib/functions/local-storage.js';
 	import DefaultToast from './DefaultToast.svelte';
 
 	export let title: string = '';

@@ -1,8 +1,7 @@
 <script lang="ts">
-	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
+	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
 	import { fade, fly } from 'svelte/transition';
-
-	import type { Tab } from './tab';
+	import type { Tab } from './tab.js';
 	import Transition from './Transition.svelte';
 
 	export let tabs: Tab[];

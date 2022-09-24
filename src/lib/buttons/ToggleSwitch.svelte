@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Fa from 'svelte-fa';
+	import Fa from 'svelte-fa/src/fa.svelte';
 	import { createEventDispatcher, type ComponentProps } from 'svelte';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import Button from './Button.svelte';
-	import { dynamicStyle } from '../actions';
+	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
 
 	export let checked = false;
 	export let disabled = false;

@@ -3,7 +3,10 @@
 	import { fly } from 'svelte/transition';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { beforeNavigate } from '$app/navigation';
-	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$lib/navigation/nav-functions';
+	import {
+		makeNavLinks,
+		shouldLayoutTransitionOnNavigation
+	} from '$lib/navigation/nav-functions.js';
 
 	let refresh = false;
 	const parent_path = 'wrappers';

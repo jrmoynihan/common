@@ -5,5 +5,5 @@ import ModalWithButton from './ModalWithButton.svelte';
 import Tabs from './Tabs.svelte';
 import Transition from './Transition.svelte';
 
-export { Tab } from './tab';
+export { Tab } from './tab.js';
 export { Accordion, Modal, ErrorModal, ModalWithButton, Tabs, Transition };

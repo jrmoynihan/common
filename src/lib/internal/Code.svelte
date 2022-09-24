@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { use_dark_theme } from '../../routes/stores';
+	import { use_dark_theme } from '$routes/stores.js';
 </script>
 
 <code class="my-code" class:dark={$use_dark_theme}>

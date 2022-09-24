@@ -1,6 +1,5 @@
 <script lang="ts">
-	import type { IconSize } from '$lib/lib_types';
-
+	import type { IconSize } from '$lib/lib_types.js';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 	import Fa from 'svelte-fa';
 

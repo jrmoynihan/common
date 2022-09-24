@@ -9,6 +9,6 @@ export {
 	makeAnchorLinks,
 	makeLinks,
 	shouldLayoutTransitionOnNavigation
-} from './nav-functions';
+} from './nav-functions.js';
 
 export { Navigation, NavLink, AnchorHeading, LinkableAnchorHeading };

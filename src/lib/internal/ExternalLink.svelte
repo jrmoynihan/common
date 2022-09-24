@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { use_dark_theme } from '../../routes/stores';
+	import { use_dark_theme } from '$routes/stores.js';
 	export let url: URL;
 </script>
 

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Fa from 'svelte-fa';
-	import { tooltip, type TooltipParameters } from '$lib/tooltip';
-	import { dynamicStyle } from '../actions';
+	import { tooltip, type TooltipParameters } from '$lib/tooltip/tooltip-action.js';
+	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { fade } from 'svelte/transition';
-	import type { IconSize, SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
+	import type { IconSize, SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
 
 	/** Options to style the tooltip or modify its visible/disabled state */
 	export let tooltip_options: TooltipParameters = {

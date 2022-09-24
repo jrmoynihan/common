@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tooltip, type TooltipParameters } from '$lib/tooltip';
+	import { tooltip, type TooltipParameters } from '$lib/tooltip/tooltip-action.js';
 	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 	import { createEventDispatcher } from 'svelte';
 	import Fa from 'svelte-fa';

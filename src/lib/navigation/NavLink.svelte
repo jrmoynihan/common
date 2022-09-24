@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { tooltip, type TooltipParameters } from '$lib/tooltip';
-	import { dynamicStyle } from '$lib/actions';
-	import { capitalize } from '$lib/functions';
+	import { tooltip, type TooltipParameters } from '$lib/tooltip/tooltip-action.js';
+	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
+	import { capitalize } from '$lib/functions/helpers.js';
 	import { Fa, FaLayers, FaLayersText } from 'svelte-fa/src';
-	import type { IconLayer } from './nav-functions';
+	import type { IconLayer } from './nav-functions.js';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 
 	/** The URL object describing the link */

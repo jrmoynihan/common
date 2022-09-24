@@ -1,5 +1,5 @@
 // //@ts-nocheck
-import { clamp } from '$lib/functions';
+import { clamp } from '$lib/functions/helpers.js';
 export interface RealShadowParameters {
 	resolution?: number;
 	oomph?: number;

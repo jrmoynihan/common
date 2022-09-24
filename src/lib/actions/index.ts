@@ -1,2 +1,2 @@
-export { dynamicStyle } from './dynamic-styles';
-export { dragndrop } from './drag-action';
+export { dynamicStyle } from './dynamic-styles.js';
+export { dragndrop } from './drag-action.js';

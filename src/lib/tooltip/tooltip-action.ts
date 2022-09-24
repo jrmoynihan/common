@@ -1,11 +1,6 @@
 import { browser } from '$app/environment';
-import { ErrorLog } from '$lib/functions';
-import {
-	getAncestors,
-	delay as delayFor,
-	getMax,
-	getTransitionDurations
-} from '$lib/functions/helpers';
+import { ErrorLog } from '$lib/functions/logging.js';
+import { getAncestors, getMax, getTransitionDurations } from '$lib/functions/helpers.js';
 import Tooltip from '$lib/tooltip/ActionTooltip.svelte';
 import { writable, get } from 'svelte/store';
 import type {

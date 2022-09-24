@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { LoadEvent } from '@sveltejs/kit';
-import { arrayFromNumber } from '$lib/functions/helpers';
+import { arrayFromNumber } from '$lib/functions/helpers.js';
 
 export function load(event: LoadEvent) {
 	const seeds = [
@@ -21,7 +21,7 @@ export function load(event: LoadEvent) {
 	const number_of_links = double_seeds.length;
 	const images: { path: string; text: string; href: string; uuid: string }[] = arrayFromNumber(
 		number_of_links,
-		(_, i: number) => {
+		(_: unknown, i: number) => {
 			return {
 				path: `route-${i}`,
 				text: 'random',

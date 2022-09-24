@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
-	import type { TooltipParameters } from '$lib/tooltip';
+	import type { TooltipParameters } from '$lib/tooltip/tooltip-action.js';
 	import LightDarkToggle from '$lib/buttons/LightDarkToggle.svelte';
 	import Navigation from '$lib/navigation/Navigation.svelte';
 	import Transition from '$lib/wrappers/Transition.svelte';
 	import { fly } from 'svelte/transition';
 	import { onDestroy } from 'svelte';
-	import { use_dark_theme, aside_visible } from './stores';
+	import { use_dark_theme, aside_visible } from './stores.js';
 	import '../../src/mdsvex.css';
 	import {
 		makeNavLinks,
 		type IconLayer,
 		shouldLayoutTransitionOnNavigation
-	} from '$lib/navigation/nav-functions';
+	} from '$lib/navigation/nav-functions.js';
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import {
 		faCalculator,

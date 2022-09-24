@@ -1,6 +1,6 @@
 import { page } from '$app/stores';
-import { deKebab } from '$lib/functions';
-import type { IconSize } from '$lib/lib_types';
+import { deKebab } from '$lib/functions/helpers.js';
+import type { IconSize } from '$lib/lib_types.js';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index';
 import type { NavigationTarget } from '@sveltejs/kit';
 import { get } from 'svelte/store';
