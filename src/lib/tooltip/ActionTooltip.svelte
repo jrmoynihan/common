@@ -99,9 +99,8 @@
 			{#if custom_component}
 				<svelte:component this={custom_component} />
 			{/if}
-			{#if !title && !custom_component}
-				No tooltip or component provided
-			{/if}
+			<!-- {#if !title && !custom_component}
+			{/if} -->
 			{#if show_arrow}
 				<span
 					class="arrow"
