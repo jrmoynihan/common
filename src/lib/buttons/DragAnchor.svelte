@@ -39,8 +39,7 @@
 			opacity: var(--drag-anchor-faded-opacity, 0.2);
 		}
 		&:hover,
-		&:focus-visible,
-		&.hovered {
+		&:focus-visible {
 			color: var(--drag-anchor-hover-color, var(--drag-anchor-color));
 			background: var(--drag-anchor-hover-background, var(--drag-anchor-background));
 			opacity: var(--drag-anchor-hovered-opacity, 1);
