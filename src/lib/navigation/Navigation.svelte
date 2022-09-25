@@ -4,11 +4,16 @@
 	import { beforeNavigate } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import type { NavigationLink } from './nav-functions.js';
+	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
 
 	/** An array of items to display within the nav wrapper element */
 	export let nav_links: NavigationLink[] = [];
 	/** Styles for the <nav> parent element */
 	export let styles = '';
+	/** Hover styles for the <nav> parent element */
+	export let hover_styles = '';
+	/** Focus styles for the <nav> parent element */
+	export let focus_styles = hover_styles;
 	/** Styles to pass to the individual nav links */
 	export let nav_link_styles = '';
 	/** Hover styles to pass to the individual nav links */
@@ -31,7 +36,7 @@
 	});
 </script>
 
-<nav style={styles}>
+<nav use:dynamicStyle={{ styles, hover_styles, focus_styles }}>
 	{#each nav_links as nav_link, i}
 		<NavLink
 			bind:tooltip_options
