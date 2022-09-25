@@ -21,7 +21,7 @@
 		</h3>
 	{/if}
 	{#if msg}
-		<div class="toast-msg" style={text_styles}>{msg}</div>
+		<div class="toast-msg" style={text_styles}>{@html msg}</div>
 	{/if}
 </div>
 
