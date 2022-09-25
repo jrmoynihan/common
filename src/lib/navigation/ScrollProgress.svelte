@@ -4,7 +4,8 @@
 	import type { ComponentProps } from 'svelte';
 	import { spring } from 'svelte/motion';
 
-	export let button_props: ComponentProps<Button>;
+	/** Style or modify the Return To Top button */
+	export let button_props: ComponentProps<Button> = {};
 	/** The percent at which the scroll-to-top button becomes visible.  E.g., 10% would be 10*/
 	export let threshold: number = 10;
 	/** The scroll progess up and down the page, expressed as a percent. */
