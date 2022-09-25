@@ -61,9 +61,17 @@ export {
 	makeNavLinks,
 	makeAnchorLinks,
 	makeLinks,
-	shouldLayoutTransitionOnNavigation
+	shouldLayoutTransitionOnNavigation,
+	NavigationLink
 } from './lib/navigation/nav-functions.js';
-export { Navigation, NavLink, AnchorHeading, LinkableAnchorHeading, ScrollProgress };
+export {
+	Navigation,
+	NavLink,
+	NavigationLink,
+	AnchorHeading,
+	LinkableAnchorHeading,
+	ScrollProgress
+};
 // Toasts
 import SeenToast from './lib/toasts/SeenToast.svelte';
 export { SeenToast };

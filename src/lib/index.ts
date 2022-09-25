@@ -64,7 +64,7 @@ import AnchorHeading from '$lib/navigation/AnchorHeading.svelte';
 import LinkableAnchorHeading from '$lib/navigation/LinkableAnchorHeading.svelte';
 import ScrollProgress from '$lib/navigation/ScrollProgress.svelte';
 export {
-	type NavigationLink,
+	NavigationLink,
 	type makeNavLinksOptions,
 	makeNavLinks,
 	makeAnchorLinks,
