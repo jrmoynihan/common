@@ -106,6 +106,7 @@
 		border-radius: 1rem;
 		position: relative;
 		width: var(--numeric-input-container-width, 100%);
+		isolation: isolate; // Contain the z-index stacking context for the buttons to this container.
 		&.show-spinner-buttons {
 			grid-template-columns: minmax(0, 1fr) minmax(0, 1.75rem);
 			grid-template-areas:
