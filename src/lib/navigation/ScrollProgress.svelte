@@ -36,7 +36,7 @@
 <svelte:window bind:scrollY on:scroll={checkScrollProgress} />
 {#if meets_visibility_threshold}
 	{#if show_return_to_top_button}
-		<Button {...button_props} on:click={() => scrollTo({ top: 0, behavior: 'smooth' })}>
+		<Button {...button_props} on:click={() => window?.scrollTo({ top: 0, behavior: 'smooth' })}>
 			<slot />
 		</Button>
 	{/if}
