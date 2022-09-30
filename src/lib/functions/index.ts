@@ -14,7 +14,8 @@ export {
 	getMaxDate,
 	flattenObjectRecursively,
 	getAncestors,
-	getTransitionDurations
+	getTransitionDurations,
+	modulo
 } from '$lib/functions/helpers.js';
 export {
 	getLocalStorageItem,
@@ -25,6 +26,7 @@ export {
 	Log,
 	WarningLog,
 	ErrorLog,
+	SuccessLog,
 	LogAndToast,
 	ErrorAndToast,
 	all_icons,
