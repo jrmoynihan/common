@@ -2,6 +2,7 @@ import { defaultToast, errorToast, type ToastOptions } from '$lib/toasts/toasts.
 
 export interface LogOptions {
 	msg: string;
+	title?: string;
 	icon?: string | null;
 	additional_params?: any;
 	traceLocation?: boolean;
@@ -10,6 +11,7 @@ export interface LogOptions {
 export interface ErrorLogOptions {
 	error: Error;
 	msg?: string;
+	title?: string;
 	icon?: string | null;
 	additional_params?: any;
 }
@@ -27,8 +29,15 @@ export const ErrorLog = (input: ErrorLogOptions): void => {
 	console.error(...args);
 };
 export const Log = (input: LogOptions): void => {
-	const { msg, icon, traceLocation, additional_params, use_warning } = input;
-	let str = icon ? `%c${icon} ` : '%c';
+	const { msg, icon, title, traceLocation, additional_params, use_warning } = input;
+	let str: string = '';
+	if (icon && title) {
+		str = `%c${icon} ${title} `;
+	} else if (icon) {
+		str = `%c${icon} `;
+	} else if (title) {
+		str = `%c${title} `;
+	}
 	str += `\n ${msg}\ `;
 	let args = [str, defaultConsoleLogStyle];
 
@@ -49,6 +58,11 @@ export const Log = (input: LogOptions): void => {
 export const WarningLog = (input: LogOptions): void => {
 	input.use_warning = true;
 	Log(input);
+};
+
+export const SuccessLog = (input?: LogOptions): void => {
+	let success_input: LogOptions = { ...defaultSuccessLogParams, ...input };
+	Log(success_input);
 };
 
 export const LogAndToast = (options: LogAndToastOptions): number => {
@@ -105,6 +119,11 @@ export const all_icons = {
 	detective: detective,
 	necktie: necktie,
 	butter: butter
+};
+const defaultSuccessLogParams: LogOptions = {
+	icon: checkmark,
+	title: 'Success!',
+	msg: ''
 };
 
 export const defaultConsoleLogStyle = [
