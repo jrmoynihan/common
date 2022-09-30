@@ -178,3 +178,7 @@ export function getTransitionDurations(elements: HTMLElement[]): number[] {
 	});
 	return durations;
 }
+export function modulo(dividend: number, divisor: number): number {
+	// handle negative numbers to behave like a true modulo operation instead of a remainder operation
+	return ((dividend % divisor) + divisor) % divisor;
+}
