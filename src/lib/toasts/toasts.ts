@@ -20,7 +20,7 @@ export interface ToastOptions {
 	toastBorderRadius?: string;
 	toastMsgPadding?: string;
 	useSeenToastComponent?: boolean;
-	localStorageKey?: string;
+	local_storage_key?: string;
 	text_styles?: string;
 	header_styles?: string;
 	toastBarLeft?: string;
@@ -47,7 +47,7 @@ export const defaultToast = (input: ToastOptions) => {
 		toastBorderRadius = '5vh',
 		toastMsgPadding = '0.75rem',
 		useSeenToastComponent = false,
-		localStorageKey = 'toast',
+		local_storage_key = 'toast',
 		text_styles = '',
 		header_styles = '',
 		toastBarWidth = '90%',
@@ -75,7 +75,7 @@ export const defaultToast = (input: ToastOptions) => {
 	let { id } = input;
 	const toastProps: SvelteToastOptions = {
 		component: {
-			src: DefaultToast,
+			src: useSeenToastComponent ? SeenToast : DefaultToast,
 			props: {
 				msg,
 				title,
@@ -84,18 +84,13 @@ export const defaultToast = (input: ToastOptions) => {
 				icon_color,
 				text_styles,
 				header_styles,
-				localStorageKey
+				local_storage_key
 			}
 		},
 		duration,
 		pausable,
 		theme
 	};
-
-	if (useSeenToastComponent && toastProps.component) {
-		// Change the rendered component
-		toastProps.component.src = SeenToast;
-	}
 
 	if (id) {
 		toast.set(id, toastProps);

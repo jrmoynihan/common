@@ -24,6 +24,7 @@
 	} from '@fortawesome/free-solid-svg-icons/index';
 	import { page } from '$app/stores';
 	import FunctionsAside from './functions/FunctionsAside.svelte';
+	import { reminderToast } from '$lib/index.js';
 
 	const parent_path = '/';
 	const paths: string[] = ['tooltips', 'inputs', 'buttons', 'wrappers', 'recipes', 'functions'];
@@ -78,6 +79,15 @@
 		disableTooltips();
 	}, 5_000);
 
+	setTimeout(
+		() =>
+			reminderToast({
+				msg: 'this is a reminder',
+				useSeenToastComponent: true,
+				local_storage_key: 'toast-reminder-key'
+			}),
+		2000
+	);
 	onDestroy(() => clearTimeout(countdown));
 </script>
 
