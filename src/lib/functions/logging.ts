@@ -76,49 +76,51 @@ export const ErrorAndToast = (options: ErrorAndToastOptions): number => {
 	return toastId;
 };
 // CSS emoji for console logging (https://unicode.org/emoji/charts/full-emoji-list.html)
-export const okHand = String.fromCodePoint(0x1f44c);
-export const policeCarLight = String.fromCodePoint(0x1f6a8);
-export const pencil = String.fromCodePoint(0x270f);
-export const key = String.fromCodePoint(0x1f511);
-export const lock = String.fromCodePoint(0x1f512);
-export const unlock = String.fromCodePoint(0x1f513);
-export const pick = String.fromCodePoint(0x26cf);
-export const football = String.fromCodePoint(0x1f3c8);
+export const airplaneDeparture = String.fromCodePoint(0x1f6eb);
+export const bomb = String.fromCodePoint(0x1f4a3);
+export const butter = String.fromCodePoint(0x1f9c8);
+export const bread = String.fromCodePoint(0x1f35e);
 export const checkmark = String.fromCodePoint(0x2705);
+export const checkeredFlag = String.fromCodePoint(0x1f3c1);
+export const detective = String.fromCodePoint(0x1f575);
 export const dog = String.fromCodePoint(0x1f415);
 export const dogFace = String.fromCodePoint(0x1f436);
-export const airplaneDeparture = String.fromCodePoint(0x1f6eb);
+export const football = String.fromCodePoint(0x1f3c8);
 export const home = String.fromCodePoint(0x1f3e0);
-export const stopSign = String.fromCodePoint(0x1f6d1);
-export const bread = String.fromCodePoint(0x1f35e);
-export const bomb = String.fromCodePoint(0x1f4a3);
-export const detective = String.fromCodePoint(0x1f575);
-export const necktie = String.fromCodePoint(0x1f454);
-export const checkeredFlag = String.fromCodePoint(0x1f3c1);
 export const hourglass = String.fromCodePoint(0x231b);
-export const butter = String.fromCodePoint(0x1f9c8);
+export const key = String.fromCodePoint(0x1f511);
+export const lock = String.fromCodePoint(0x1f512);
+export const wood_log = String.fromCodePoint(0x1fab5);
+export const necktie = String.fromCodePoint(0x1f454);
+export const okHand = String.fromCodePoint(0x1f44c);
+export const pencil = String.fromCodePoint(0x270f);
+export const pick = String.fromCodePoint(0x26cf);
+export const policeCarLight = String.fromCodePoint(0x1f6a8);
+export const stopSign = String.fromCodePoint(0x1f6d1);
+export const unlock = String.fromCodePoint(0x1f513);
 export const all_icons = {
-	okHand: okHand,
-	policeCarLight: policeCarLight,
-	pencil: pencil,
-	key: key,
-	lock: lock,
-	unlock: unlock,
-	pick: pick,
-	football: football,
-	checkmark: checkmark,
-	checkeredFlag: checkeredFlag,
-	dog: dog,
-	dogFace: dogFace,
-	airplaneDeparture: airplaneDeparture,
-	home: home,
-	hourglass: hourglass,
-	stopSign: stopSign,
-	bread: bread,
-	bomb: bomb,
-	detective: detective,
-	necktie: necktie,
-	butter: butter
+	okHand,
+	policeCarLight,
+	pencil,
+	key,
+	lock,
+	unlock,
+	pick,
+	football,
+	checkmark,
+	checkeredFlag,
+	dog,
+	dogFace,
+	airplaneDeparture,
+	home,
+	hourglass,
+	stopSign,
+	bread,
+	bomb,
+	detective,
+	necktie,
+	butter,
+	wood_log
 };
 const defaultSuccessLogParams: LogOptions = {
 	icon: checkmark,

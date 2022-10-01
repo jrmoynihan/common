@@ -20,6 +20,7 @@ export {
 	getMin,
 	getMinDate,
 	getMaxDate,
+	modulo,
 	flattenObjectRecursively,
 	getAncestors,
 	getTransitionDurations
@@ -33,6 +34,7 @@ export {
 	Log,
 	WarningLog,
 	ErrorLog,
+	SuccessLog,
 	LogAndToast,
 	ErrorAndToast,
 	all_icons,

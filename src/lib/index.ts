@@ -6,22 +6,23 @@ export { Button, LightDarkToggle, ToggleSwitch };
 
 // Functions
 export {
-	capitalize,
 	arrayFromNumber,
+	capitalize,
+	clamp,
 	delay,
 	deKebab,
-	clamp,
-	splitCamelCase,
-	splitSnakeCase,
-	removeSpecialCharacters,
-	getRandomBetween,
+	flattenObjectRecursively,
+	getAncestors,
+	getMaxDate,
 	getMax,
 	getMin,
 	getMinDate,
-	getMaxDate,
-	flattenObjectRecursively,
-	getAncestors,
-	getTransitionDurations
+	getRandomBetween,
+	getTransitionDurations,
+	modulo,
+	removeSpecialCharacters,
+	splitCamelCase,
+	splitSnakeCase
 } from '$lib/functions/helpers.js';
 export {
 	getLocalStorageItem,
@@ -32,6 +33,7 @@ export {
 	Log,
 	WarningLog,
 	ErrorLog,
+	SuccessLog,
 	LogAndToast,
 	ErrorAndToast,
 	all_icons,
