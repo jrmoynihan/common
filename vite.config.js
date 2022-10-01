@@ -12,11 +12,6 @@ const config = {
 	},
 	ssr: {
 		noExternal: ['@fortawesome/free-solid-svg-icons', '@fortawesome/free-brands-svg-icons']
-	},
-	build: {
-		rollupOptions: {
-			external: ['$app/external']
-		}
 	}
 };
 
