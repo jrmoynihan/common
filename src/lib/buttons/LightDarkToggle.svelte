@@ -99,7 +99,10 @@
 	style={button_switch_styles}
 	tabindex="0"
 	for="light-dark-toggle"
-	on:click={() => (use_dark_theme = !use_dark_theme)}
+	on:click={() => {
+		use_dark_theme = !use_dark_theme;
+		storeDarkThemePreference();
+	}}
 >
 	<input
 		type="checkbox"
