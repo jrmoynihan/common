@@ -66,7 +66,6 @@ export const Log = (input: LogOptions): void => {
 	if (title) args.push(title_style);
 	args.push(log_style);
 	if (additional_params) args.push(additional_params);
-	console.log(args);
 
 	if (traceLocation) {
 		console.trace(...args);
