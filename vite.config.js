@@ -12,6 +12,9 @@ const config = {
 	},
 	ssr: {
 		noExternal: ['@fortawesome/free-solid-svg-icons', '@fortawesome/free-brands-svg-icons']
+	},
+	optimizeDeps: {
+		exclude: ['$app/environment']
 	}
 };
 
