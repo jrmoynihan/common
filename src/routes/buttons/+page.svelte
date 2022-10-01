@@ -3,6 +3,8 @@
 	import { realShadow } from '$lib/styles/shadow.js';
 	import Button from '$lib/buttons/Button.svelte';
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
+	import { Log } from '$lib/index.js';
+	import { checkeredFlag } from '$lib/functions/logging.js';
 
 	let position: TooltipDirections = 'top';
 	let keep_visible: boolean = false;
@@ -42,6 +44,12 @@
 		{/each}
 	</div>
 	<Button
+		on:click={() =>
+			Log({
+				msg: 'hey there',
+				title: 'HEY',
+				icon: checkeredFlag
+			})}
 		text="I'm a button with low elevation"
 		styles={`--shadow-color: 350deg 50% 70%;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}
 		box_shadow="low"

@@ -4,6 +4,9 @@ export interface LogOptions {
 	msg: string;
 	title?: string;
 	icon?: string | null;
+	title_styles?: string;
+	msg_styles?: string;
+	icon_styles?: string;
 	additional_params?: any;
 	traceLocation?: boolean;
 	use_warning?: boolean;
@@ -13,6 +16,9 @@ export interface ErrorLogOptions {
 	msg?: string;
 	title?: string;
 	icon?: string | null;
+	title_styles?: string;
+	msg_styles?: string;
+	icon_styles?: string;
 	additional_params?: any;
 }
 
@@ -24,24 +30,43 @@ export const ErrorLog = (input: ErrorLogOptions): void => {
 	const { error, msg, icon = all_icons.policeCarLight, additional_params } = input;
 	let str = icon ? `%c${icon} ` : '%c';
 	str += `\n ${msg}\ `;
-	let args = [str, defaultConsoleLogStyle, error];
+	let args = [str, default_log_style, error];
 	if (additional_params) args = args.concat(additional_params);
 	console.error(...args);
 };
 export const Log = (input: LogOptions): void => {
-	const { msg, icon, title, traceLocation, additional_params, use_warning } = input;
+	const {
+		msg,
+		icon,
+		title,
+		traceLocation,
+		additional_params,
+		use_warning,
+		title_styles,
+		msg_styles,
+		icon_styles
+	} = input;
 	let str: string = '';
+
 	if (icon && title) {
-		str = `%c${icon} ${title} `;
+		str = `%c${icon} %c${title} `;
 	} else if (icon) {
 		str = `%c${icon} `;
 	} else if (title) {
 		str = `%c${title} `;
 	}
-	str += `\n ${msg}\ `;
-	let args = [str, defaultConsoleLogStyle];
-
-	if (additional_params) args = args.concat(additional_params);
+	str += `\n %c${msg}\ `;
+	let args = [str];
+	// Msg styles have a default that can be overridden
+	const log_style = `${default_log_style}; ${msg_styles ?? ''}`;
+	const icon_style = `${default_icon_style}; ${icon_styles ?? ''}`;
+	const title_style = `${default_title_style}; ${title_styles ?? ''}`;
+	// Add the provided styles as additional arguments to the console.log function
+	if (icon) args.push(icon_style);
+	if (title) args.push(title_style);
+	args.push(log_style);
+	if (additional_params) args.push(additional_params);
+	console.log(args);
 
 	if (traceLocation) {
 		console.trace(...args);
@@ -128,10 +153,13 @@ const defaultSuccessLogParams: LogOptions = {
 	msg: ''
 };
 
-export const defaultConsoleLogStyle = [
+export const default_log_style = [
 	'align-items:center',
 	'display:grid',
 	'grid-template-columns:repeat(auto-fit, minmax(0,auto))',
-	'font-size: 1.5rem',
+	'font-size: 1rem',
 	'padding: 0.25rem'
 ].join(';');
+
+export const default_icon_style = ['font-size: 2rem'];
+export const default_title_style = ['font-weight: bold', 'font-size: 1.5rem'].join(';');

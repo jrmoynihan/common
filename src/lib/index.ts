@@ -37,7 +37,7 @@ export {
 	LogAndToast,
 	ErrorAndToast,
 	all_icons,
-	defaultConsoleLogStyle,
+	default_log_style,
 	type LogOptions,
 	type ErrorLogOptions,
 	type LogAndToastOptions,
