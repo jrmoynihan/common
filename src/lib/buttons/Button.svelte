@@ -36,13 +36,13 @@
 	export let box_shadow: 'low' | 'medium' | 'high' | 'none' = 'low';
 	/** A Svelte transition to use on the button */
 	export let transition: SvelteTransition = fade;
-	export let transition_config: SvelteTransitionParams = { duration: 0 };
+	export let transition_config: SvelteTransitionParams = undefined;
 	let hovered: boolean = false;
 	let focused: boolean = false;
 </script>
 
 <button
-	transition:transition={transition_config}
+	transition:transition={transition_config ?? { duration: 0 }}
 	use:dynamicStyle={{ styles, hover_styles, focus_styles }}
 	use:tooltip={{ ...tooltip_options }}
 	title={title ?? tooltip_options.title}
