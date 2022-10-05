@@ -20,6 +20,8 @@
 	export let nav_link_hover_styles: string = '';
 	/** Focus syles to pass to the individual nav links */
 	export let nav_link_focus_styles: string = '';
+	/** Styles to apply to the link if it is part of the current page path */
+	export let nav_link_current_page_styles: string = '';
 	/** The tooltip options for all parameters, or an array of tooltip options.  Each item of the options array will be passed into each respective nav item.*/
 	export let tooltip_options: TooltipParameters | TooltipParameters[] = { disabled: true };
 
@@ -45,6 +47,7 @@
 			styles={nav_link_styles}
 			hover_styles={nav_link_hover_styles}
 			focus_styles={nav_link_focus_styles}
+			current_page_styles={nav_link_current_page_styles}
 		/>
 	{/each}
 	<slot />
