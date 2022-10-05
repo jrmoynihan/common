@@ -12,6 +12,8 @@ export interface ToastOptions {
 	title?: string;
 	msg?: string | null;
 	duration?: number;
+	progress?: number;
+	next?: number;
 	toastContainerTop?: string;
 	toastColor?: string;
 	toastBackground?: string;
@@ -34,11 +36,13 @@ export interface ToastOptions {
 	pausable?: boolean | undefined;
 }
 
-export const defaultToast = (input: ToastOptions) => {
+export const defaultToast = async (input: ToastOptions) => {
 	const {
 		title = '',
 		msg = undefined,
 		duration = 5000,
+		progress = 0,
+		next = 0,
 		toastContainerTop = '21rem',
 		toastColor = 'var(--background)',
 		toastBackground = 'var(--accent)',
@@ -88,12 +92,14 @@ export const defaultToast = (input: ToastOptions) => {
 			}
 		},
 		duration,
+		progress,
+		next,
 		pausable,
 		theme
 	};
 
-	if (id) {
-		toast.set(id, toastProps);
+	if (id !== undefined && id !== null) {
+		toast.set({ id, ...toastProps });
 	} else {
 		id = toast.push(toastProps);
 	}
