@@ -3,8 +3,10 @@
 	import { realShadow } from '$lib/styles/shadow.js';
 	import Button from '$lib/buttons/Button.svelte';
 	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
-	import { Log } from '$lib/index.js';
+	import { arrayFromNumber, defaultToast, delay, Log } from '$lib/index.js';
 	import { checkeredFlag } from '$lib/functions/logging.js';
+	import { toast } from '@zerodevx/svelte-toast';
+	import { tick } from 'svelte';
 
 	let position: TooltipDirections = 'top';
 	let keep_visible: boolean = false;
@@ -15,6 +17,24 @@
 		vertical_distance: 0
 	});
 	let gradient_direction: TooltipDirections = 'bottom';
+
+	async function testToastUpdate() {
+		const id = await defaultToast({ duration: 5_000 });
+		await updateToasts(id);
+		await defaultToast({ id, msg: 'finished', progress: 0 });
+	}
+
+	async function updateToast(id: number, i: number) {
+		console.log('updating toast', id, i);
+		await defaultToast({ id, msg: `updating ${i}`, next: i / 10 });
+	}
+	async function updateToasts(id: number) {
+		for (const i of arrayFromNumber(10)) {
+			await delay(1000);
+			await updateToast(id, i);
+		}
+	}
+
 	$: {
 		switch (position) {
 			case 'top':
@@ -46,8 +66,8 @@
 	<Button
 		on:click={() =>
 			Log({
-				msg: 'hey there',
-				title: 'HEY',
+				msg: 'clicking with the low elevation button?',
+				title: 'HEY YOU CLICKED ME!',
 				icon: checkeredFlag
 			})}
 		text="I'm a button with low elevation"
@@ -56,6 +76,7 @@
 		tooltip_options={{ position, title: 'Click me!', log_functions: true, keep_visible }}
 	/>
 	<Button
+		on:click={() => testToastUpdate()}
 		text="I'm a button with medium elevation"
 		styles={`--shadow-color: 350deg 50% 70%;background-color: ${
 			position === 'top' ? 'hsla(195, 10%, 60%, 20%)' : `green`
