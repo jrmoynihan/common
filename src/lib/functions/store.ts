@@ -5,11 +5,21 @@ import {
 	writable,
 	type Readable,
 	type Writable,
-	type Stores,
-	type StoresValues,
 	type StartStopNotifier,
 	type Unsubscriber
 } from 'svelte/store';
+
+/** One or more `Readable`s. */
+export declare type Stores =
+	| Readable<any>
+	| [Readable<any>, ...Array<Readable<any>>]
+	| Array<Readable<any>>;
+/** One or more values from `Readable` stores. */
+export declare type StoresValues<T> = T extends Readable<infer U>
+	? U
+	: {
+			[K in keyof T]: T[K] extends Readable<infer U> ? U : never;
+	  };
 
 export function setWritableContext<T>(
 	key: string,
