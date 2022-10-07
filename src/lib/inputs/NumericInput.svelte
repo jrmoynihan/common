@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
+
 	import { tooltip, type TooltipParameters } from '$lib/tooltip/tooltip-action.js';
 	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 	import { createEventDispatcher } from 'svelte';
@@ -18,8 +20,6 @@
 	export let max: string | number = Infinity;
 	export let step: number = 1;
 	export let placeholder: string = '';
-	export let containerStyle: string = '';
-	export let inputStyle: string = '';
 	export let name: string = '';
 	export let id: string = '';
 	export let invalid_msg: string = '';
@@ -29,13 +29,19 @@
 	export let tooltip_options: TooltipParameters = {
 		disabled: true
 	};
-	export let invalid_tooltip_css: [string, string][] = [
-		['font-size', 'smaller'],
-		['color', 'var(--date-input-invalid-message-color, salmon)'],
-		['background', 'var(--date-input-invalid-message-background, white)'],
-		['padding', '0.5rem'],
-		['border-radius', '1rem']
-	];
+	export let container_styles: string = '';
+	export let container_hover_styles: string = '';
+	export let container_focus_styles: string = '';
+	export let container_dynamic_styles: string = '';
+	export let input_styles: string = '';
+	export let input_hover_styles: string = '';
+	export let input_focus_styles: string = '';
+	/** Dynamically reactive styles to apply.  Invalid input styles automatically get appended to this. */
+	export let input_dynamic_stles: string = '';
+	/** Styles for when the input fails its validity test */
+	export let invalid_input_styles: string = 'color: salmon;';
+	// TODO: Add prop for custom validity function?
+
 	export let svelteTransition = fly;
 	export let transitionParams: FlyParams | FadeParams | SlideParams | ScaleParams | BlurParams = {
 		duration: 0
@@ -54,21 +60,30 @@
 	use:tooltip={{
 		visible: !is_valid,
 		disabled: is_valid || !invalid_msg,
-		css: invalid_tooltip_css,
 		...tooltip_options
+	}}
+	use:dynamicStyle={{
+		styles: container_styles,
+		hover_styles: container_hover_styles,
+		focus_styles: container_focus_styles,
+		dynamic_styles: container_dynamic_styles
 	}}
 	class="numeric-input-container"
 	class:show-spinner-buttons={show_spinner_buttons}
-	style={containerStyle}
 	transition:svelteTransition={transitionParams}
 >
 	<input
+		use:dynamicStyle={{
+			styles: input_styles,
+			hover_styles: input_hover_styles,
+			focus_styles: input_focus_styles,
+			dynamic_styles: `${input_dynamic_stles}; ${is_valid ? '' : invalid_input_styles}`
+		}}
 		bind:this={numeric_input}
 		type="number"
 		{id}
 		{name}
 		{placeholder}
-		style={inputStyle}
 		{step}
 		{min}
 		{max}
