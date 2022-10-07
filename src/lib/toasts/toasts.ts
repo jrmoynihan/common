@@ -14,6 +14,7 @@ export interface ToastOptions {
 	duration?: number;
 	progress?: number;
 	next?: number;
+	initial?: number;
 	toastContainerTop?: string;
 	toastColor?: string;
 	toastBackground?: string;
@@ -43,6 +44,7 @@ export const defaultToast = async (input: ToastOptions) => {
 		duration = 5000,
 		progress = 0,
 		next = 0,
+		initial = 1,
 		toastContainerTop = '21rem',
 		toastColor = 'var(--background)',
 		toastBackground = 'var(--accent)',
@@ -95,6 +97,7 @@ export const defaultToast = async (input: ToastOptions) => {
 		duration,
 		progress,
 		next,
+		initial,
 		pausable,
 		theme
 	};
