@@ -77,19 +77,20 @@ export const defaultToast = async (input: ToastOptions) => {
 		}
 	} = input;
 	let { id } = input;
+	const toast_props = {
+		msg,
+		title,
+		icon,
+		icon_size,
+		icon_color,
+		text_styles,
+		header_styles
+	};
+	const seen_toast_props = { ...toast_props, local_storage_key };
 	const toastProps: SvelteToastOptions = {
 		component: {
 			src: useSeenToastComponent ? SeenToast : DefaultToast,
-			props: {
-				msg,
-				title,
-				icon,
-				icon_size,
-				icon_color,
-				text_styles,
-				header_styles,
-				local_storage_key
-			}
+			props: useSeenToastComponent ? seen_toast_props : toast_props
 		},
 		duration,
 		progress,
@@ -106,8 +107,8 @@ export const defaultToast = async (input: ToastOptions) => {
 	return id;
 };
 
-export const errorToast = (options: ToastOptions) => {
-	const id = defaultToast({
+export const errorToast = async (options: ToastOptions) => {
+	const id = await defaultToast({
 		title: 'Error!',
 		toastColor: 'white',
 		toastBackground: 'darkred',
@@ -117,14 +118,14 @@ export const errorToast = (options: ToastOptions) => {
 	return id;
 };
 
-export const reminderToast = (input: ToastOptions) => {
+export const reminderToast = async (input: ToastOptions) => {
 	const { title = 'Reminder', duration = 60_000 } = input;
-	const id = defaultToast({
+	const id = await defaultToast({
 		...input,
 		title,
 		duration
 	});
 	return id;
 };
-export const testErrorToast = () =>
-	errorToast({ msg: `${policeCarLight} This is a test error. Try to avoid the real thing.` });
+export const testErrorToast = async () =>
+	await errorToast({ msg: `${policeCarLight} This is a test error. Try to avoid the real thing.` });

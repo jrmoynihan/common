@@ -26,7 +26,7 @@ export interface ErrorLogOptions {
 export type LogAndToastOptions = ToastOptions & LogOptions;
 export type ErrorAndToastOptions = ToastOptions & ErrorLogOptions;
 
-export const ErrorLog = (input: ErrorLogOptions): void => {
+export const ErrorLog = async (input: ErrorLogOptions): Promise<void> => {
 	const { error, msg, icon = all_icons.policeCarLight, additional_params } = input;
 	let str = icon ? `%c${icon} ` : '%c';
 	str += `\n ${msg}\ `;
@@ -34,7 +34,7 @@ export const ErrorLog = (input: ErrorLogOptions): void => {
 	if (additional_params) args = args.concat(additional_params);
 	console.error(...args);
 };
-export const Log = (input: LogOptions): void => {
+export const Log = async (input: LogOptions): Promise<void> => {
 	const {
 		msg,
 		icon,
@@ -79,24 +79,24 @@ export const Log = (input: LogOptions): void => {
 	}
 };
 
-export const WarningLog = (input: LogOptions): void => {
+export const WarningLog = async (input: LogOptions): Promise<void> => {
 	input.use_warning = true;
-	Log(input);
+	await Log(input);
 };
 
-export const SuccessLog = (input?: LogOptions): void => {
+export const SuccessLog = async (input?: LogOptions): Promise<void> => {
 	let success_input: LogOptions = { ...defaultSuccessLogParams, ...input };
-	Log(success_input);
+	await Log(success_input);
 };
 
-export const LogAndToast = (options: LogAndToastOptions): number => {
-	Log({ ...options });
-	const toastId = defaultToast({ ...options });
+export const LogAndToast = async (options: LogAndToastOptions): Promise<number> => {
+	await Log({ ...options });
+	const toastId = await defaultToast({ ...options });
 	return toastId;
 };
-export const ErrorAndToast = (options: ErrorAndToastOptions): number => {
-	ErrorLog({ ...options });
-	const toastId = errorToast({ ...options });
+export const ErrorAndToast = async (options: ErrorAndToastOptions): Promise<number> => {
+	await ErrorLog({ ...options });
+	const toastId = await errorToast({ ...options });
 	return toastId;
 };
 // CSS emoji for console logging (https://unicode.org/emoji/charts/full-emoji-list.html)
