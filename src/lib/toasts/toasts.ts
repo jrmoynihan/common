@@ -10,7 +10,7 @@ export interface ToastTheme {
 export interface ToastOptions {
 	id?: number | null;
 	title?: string;
-	msg?: string | null;
+	msg?: string | undefined;
 	duration?: number;
 	progress?: number;
 	next?: number;
@@ -89,6 +89,7 @@ export const defaultToast = async (input: ToastOptions) => {
 		header_styles
 	};
 	const seen_toast_props = { ...toast_props, local_storage_key };
+
 	const toastProps: SvelteToastOptions = {
 		component: {
 			src: useSeenToastComponent ? SeenToast : DefaultToast,
@@ -99,12 +100,17 @@ export const defaultToast = async (input: ToastOptions) => {
 		next,
 		initial,
 		pausable,
-		theme
+		theme,
+		msg
 	};
 
-	if (id !== undefined && id !== null) {
+	if (id) {
+		console.log(`setting toast #${id}`);
+
 		toast.set({ id, ...toastProps });
 	} else {
+		console.log('pushing toast...');
+
 		id = toast.push(toastProps);
 	}
 	return id;
