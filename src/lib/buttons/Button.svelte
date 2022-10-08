@@ -83,27 +83,27 @@
 		--total-shadows: 3;
 		--shadow: 2;
 		--blur-ratio: var();
+		--color-function-low: hsla(var(--shadow-color), var(--low-elevation-opacity));
+		--color-function-medium: hsla(var(--shadow-color), var(--medium-elevation-opacity));
+		--color-function-high: hsla(var(--shadow-color), var(--high-elevation-opacity));
 
 		/* 0.4, 0.8, 1, -1.2*/
-		--shadow-elevation-low: 0.3px 0.5px 0.7px
-				hsla(var(--shadow-color), var(--low-elevation-opacity)),
+		--shadow-elevation-low: 0.3px 0.5px 0.7px var(--color-function-low),
 			var(--base) calc(var(--base) * var(--offset-ratio)) calc(var(--base) * var(--spread-ratio))
-				calc(var(--base)) hsla(var(--shadow-color), var(--low-elevation-opacity)),
-			1px 2px 2.5px -2.5px hsla(var(--shadow-color), var(--low-elevation-opacity));
-		--shadow-elevation-medium: 0.3px 0.5px 0.7px
-				hsla(var(--shadow-color), var(--medium-elevation-opacity)),
-			0.8px 1.6px 2px -0.8px hsla(var(--shadow-color), var(--medium-elevation-opacity)),
-			2.1px 4.1px 5.2px -1.7px hsla(var(--shadow-color), var(--medium-elevation-opacity)),
-			5px 10px 12.6px -2.5px hsla(var(--shadow-color), var(--medium-elevation-opacity));
-		--shadow-elevation-high: 0.3px 0.5px 0.7px
-				hsla(var(--shadow-color), var(--high-elevation-opacity)),
-			1.5px 2.9px 3.7px -0.4px hsla(var(--shadow-color), var(--high-elevation-opacity)),
-			2.7px 5.4px 6.8px -0.7px hsla(var(--shadow-color), var(--high-elevation-opacity)),
-			4.5px 8.9px 11.2px -1.1px hsla(var(--shadow-color), var(--high-elevation-opacity)),
-			7.1px 14.3px 18px -1.4px hsla(var(--shadow-color), var(--high-elevation-opacity)),
-			11.2px 22.3px 28.1px -1.8px hsla(var(--shadow-color), var(--high-elevation-opacity)),
-			17px 33.9px 42.7px -2.1px hsla(var(--shadow-color), var(--high-elevation-opacity)),
-			25px 50px 62.9px -2.5px hsla(var(--shadow-color), var(--high-elevation-opacity));
+				calc(var(--base)) var(--color-function-low),
+			1px 2px 2.5px -2.5px var(--color-function-low);
+		--shadow-elevation-medium: 0.3px 0.5px 0.7px var(--color-function-medium),
+			0.8px 1.6px 2px -0.8px var(--color-function-medium),
+			2.1px 4.1px 5.2px -1.7px var(--color-function-medium),
+			5px 10px 12.6px -2.5px var(--color-function-medium);
+		--shadow-elevation-high: 0.3px 0.5px 0.7px var(--color-function-high),
+			1.5px 2.9px 3.7px -0.4px var(--color-function-high),
+			2.7px 5.4px 6.8px -0.7px var(--color-function-high),
+			4.5px 8.9px 11.2px -1.1px var(--color-function-high),
+			7.1px 14.3px 18px -1.4px var(--color-function-high),
+			11.2px 22.3px 28.1px -1.8px var(--color-function-high),
+			17px 33.9px 42.7px -2.1px var(--color-function-high),
+			25px 50px 62.9px -2.5px var(--color-function-high);
 
 		box-sizing: border-box;
 		border-radius: var(--button-border-radius, 1rem);
