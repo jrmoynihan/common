@@ -55,11 +55,12 @@
 
 <style lang="scss">
 	nav {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		margin: 1rem auto;
-		max-width: max-content;
-		gap: 1rem;
+		display: var(--nav-display, flex);
+		flex-wrap: var(--nav-flex-wrap, wrap);
+		align-items: var(--nav-align-items, center);
+		justify-content: var(--nav-justify-content, center);
+		margin: var(--nav-margin, 1rem auto);
+		max-width: var(--nav-max-width, max-content);
+		gap: var(--nav-gap, 1rem);
 	}
 </style>
