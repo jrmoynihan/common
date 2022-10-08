@@ -144,6 +144,7 @@
 	}
 	.app-container {
 		display: grid;
+		grid-template-columns: minmax(0, 1fr); // prevent overflow;
 		transition: padding-left 400ms ease-out;
 		will-change: padding-left;
 	}
