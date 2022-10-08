@@ -26,9 +26,7 @@
 	export let required = false;
 	export let is_valid: boolean = true;
 	export let show_spinner_buttons = true;
-	export let tooltip_options: TooltipParameters = {
-		disabled: true
-	};
+	export let tooltip_options: TooltipParameters = {};
 	export let container_styles: string = '';
 	export let container_hover_styles: string = '';
 	export let container_focus_styles: string = '';
@@ -148,7 +146,8 @@
 		z-index: var(--spinner-z-index, var(--above, 1));
 		width: 1.75rem;
 		height: 100%;
-		background: var(--spinner-background, orange);
+		background: var(--spinner-background);
+		color: var(--spinner-color);
 	}
 	.plus {
 		grid-area: plus;
