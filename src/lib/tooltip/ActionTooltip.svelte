@@ -77,7 +77,10 @@
 
 {#if visible || keep_visible}
 	{#key position}
-		<div
+		<!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. a 'toggle-tip' -->
+		<tool-tip
+			inert
+			role="tooltip"
 			class="tooltip"
 			bind:this={tooltip_element}
 			bind:offsetHeight
@@ -110,7 +113,7 @@
 					class:right={position === 'right'}
 				/>
 			{/if}
-		</div>
+		</tool-tip>
 	{/key}
 {/if}
 
