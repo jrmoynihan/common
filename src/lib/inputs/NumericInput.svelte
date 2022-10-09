@@ -38,7 +38,8 @@
 	export let input_dynamic_stles: string = '';
 	/** Styles for when the input fails its validity test */
 	export let invalid_input_styles: string = 'color: salmon;';
-	// TODO: Add prop for custom validity function?
+	export let pattern: string | null | undefined = null;
+	// TODO: add a prop for a custom validity function?
 
 	export let svelteTransition = fly;
 	export let transitionParams: FlyParams | FadeParams | SlideParams | ScaleParams | BlurParams = {
@@ -85,6 +86,7 @@
 		{step}
 		{min}
 		{max}
+		{pattern}
 		{required}
 		bind:value
 		on:change={async (e) => changed(e.currentTarget.value)}
