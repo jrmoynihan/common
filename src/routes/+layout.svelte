@@ -141,6 +141,8 @@
 		--current-nav-page-box-shadow: 0 0 14px 4px orange;
 		--current-nav-page-background-color: hsl(195, 61%, 44%);
 		--orange: hsla(39, 100%, 50%, 1);
+		--spinner-background: var(--orange);
+		--spinner-color: black;
 	}
 	.app-container {
 		display: grid;
