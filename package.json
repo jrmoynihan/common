@@ -48,7 +48,7 @@
 		"@fortawesome/fontawesome-common-types": "^6.2.0",
 		"@fortawesome/free-solid-svg-icons": "^6.2.0",
 		"@js-temporal/polyfill": "^0.4.2",
-		"@zerodevx/svelte-toast": "^0.7.2",
+		"@zerodevx/svelte-toast": "0.7.3-rc.1",
 		"mdsvexamples": "^0.3.1",
 		"svelte-fa": "^3.0.3"
 	}
