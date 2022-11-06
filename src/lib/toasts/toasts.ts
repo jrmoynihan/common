@@ -105,11 +105,11 @@ export const defaultToast = async (input: ToastOptions) => {
 	};
 
 	if (id) {
-		console.log(`setting toast #${id}`);
+		// console.log(`setting toast #${id}`);
 
 		toast.set({ id, ...toastProps });
 	} else {
-		console.log('pushing toast...');
+		// console.log('pushing toast...');
 
 		id = toast.push(toastProps);
 	}
