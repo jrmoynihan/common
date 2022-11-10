@@ -42,7 +42,7 @@
 
 	// A function when the input is clicked; dispatches/triggers the event named "toggle" to the parent component
 	function toggled() {
-		dispatch('toggle');
+		dispatch('toggle', { checked });
 	}
 </script>
 
