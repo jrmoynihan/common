@@ -1,35 +1,38 @@
+// NOTE: Use fully specified relative imports to point files to their generated type definitions within the Package folder:
+// https://kit.svelte.dev/docs/packaging#caveats
+
 // Buttons
-import Button from '$lib/buttons/Button.svelte';
-import LightDarkToggle from '$lib/buttons/LightDarkToggle.svelte';
-import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
+import Button from './buttons/Button.svelte';
+import LightDarkToggle from './buttons/LightDarkToggle.svelte';
+import ToggleSwitch from './buttons/ToggleSwitch.svelte';
 
 // Tooltips
-import ActionTooltip from '$tooltip/ActionTooltip.svelte';
+import ActionTooltip from './tooltip/ActionTooltip.svelte';
 
 // Inputs
-import NumericInput from '$inputs/NumericInput.svelte';
-import TemporalDateInput from '$inputs/TemporalDateInput.svelte';
-import TextInput from '$inputs/TextInput.svelte';
-import type { DatalistOption, TextInputTypes } from '$inputs/types.js';
+import NumericInput from './inputs/NumericInput.svelte';
+import TemporalDateInput from './inputs/TemporalDateInput.svelte';
+import TextInput from './inputs/TextInput.svelte';
+import type { DatalistOption, TextInputTypes } from './inputs/types.js';
 
 // Navigation
-import AnchorHeading from '$navigation/AnchorHeading.svelte';
-import LinkableAnchorHeading from '$navigation/LinkableAnchorHeading.svelte';
-import Navigation from '$navigation/Navigation.svelte';
-import NavLink from '$navigation/NavLink.svelte';
-import ScrollProgress from '$navigation/ScrollProgress.svelte';
+import AnchorHeading from './navigation/AnchorHeading.svelte';
+import LinkableAnchorHeading from './navigation/LinkableAnchorHeading.svelte';
+import Navigation from './navigation/Navigation.svelte';
+import NavLink from './navigation/NavLink.svelte';
+import ScrollProgress from './navigation/ScrollProgress.svelte';
 
 // Toasts
-import SeenToast from '$toasts/SeenToast.svelte';
 import { SvelteToast, toast } from '@zerodevx/svelte-toast';
+import SeenToast from './toasts/SeenToast.svelte';
 
 // Wrappers
-import Accordion from '$wrappers/Accordion.svelte';
-import ErrorModal from '$wrappers/ErrorModal.svelte';
-import Modal from '$wrappers/Modal.svelte';
-import ModalWithButton from '$wrappers/ModalWithButton.svelte';
-import Tabs from '$wrappers/Tabs.svelte';
-import Transition from '$wrappers/Transition.svelte';
+import Accordion from './wrappers/Accordion.svelte';
+import ErrorModal from './wrappers/ErrorModal.svelte';
+import Modal from './wrappers/Modal.svelte';
+import ModalWithButton from './wrappers/ModalWithButton.svelte';
+import Tabs from './wrappers/Tabs.svelte';
+import Transition from './wrappers/Transition.svelte';
 
 // Exports
 // Functions
@@ -51,12 +54,12 @@ export {
 	removeSpecialCharacters,
 	splitCamelCase,
 	splitSnakeCase
-} from '$lib/functions/helpers.js';
+} from './functions/helpers.js';
 export {
 	deleteLocalStorageItem,
 	getLocalStorageItem,
 	setLocalStorageItem
-} from '$lib/functions/local-storage.js';
+} from './functions/local-storage.js';
 export {
 	all_icons,
 	default_log_style,
@@ -70,7 +73,7 @@ export {
 	type ErrorLogOptions,
 	type LogAndToastOptions,
 	type LogOptions
-} from '$lib/functions/logging.js';
+} from './functions/logging.js';
 export {
 	getDerivedContext,
 	getReadableContext,
@@ -78,8 +81,7 @@ export {
 	setDerivedContext,
 	setReadableContext,
 	setWritableContext
-} from '$lib/functions/store.js';
-export { defaultToast, errorToast, reminderToast, type ToastOptions } from '$lib/toasts/toasts.js';
+} from './functions/store.js';
 export {
 	makeAnchorLinks,
 	makeLinks,
@@ -87,13 +89,14 @@ export {
 	NavigationLink,
 	shouldLayoutTransitionOnNavigation,
 	type makeNavLinksOptions
-} from '$navigation/nav-functions.js';
+} from './navigation/nav-functions.js';
+export { defaultToast, errorToast, reminderToast, type ToastOptions } from './toasts/toasts.js';
 export {
 	tooltip,
 	type TooltipDirections,
 	type TooltipParameters
-} from '$tooltip/tooltip-action.js';
-export { Tab } from '$wrappers/tab.js';
+} from './tooltip/tooltip-action.js';
+export { Tab } from './wrappers/tab.js';
 export {
 	Button,
 	LightDarkToggle,
