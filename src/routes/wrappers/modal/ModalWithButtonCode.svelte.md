@@ -1,6 +1,6 @@
 ```svelte example Wrapper="./ModalExample.svelte"
 <script lang="ts">
-	import ModalWithButton from '$lib/wrappers/ModalWithButton.svelte';
+	import ModalWithButton from '$wrappers/ModalWithButton.svelte';
 
 	let open: () => Promise<void>;
 </script>

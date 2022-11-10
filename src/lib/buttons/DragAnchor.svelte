@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Fa from 'svelte-fa';
 	import { faGripVertical } from '@fortawesome/free-solid-svg-icons/index';
+	import { Fa } from 'svelte-fa';
 
 	export let hovered: boolean = false;
 	export let grabbed: boolean = false;

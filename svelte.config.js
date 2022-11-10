@@ -2,6 +2,13 @@ import { mdsvex } from 'mdsvex';
 import mdsvexConfig from './mdsvex.config.js';
 import adapter from '@sveltejs/adapter-auto';
 import preprocess from 'svelte-preprocess';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const $filepath = dirname(fileURLToPath(import.meta.url)).replace(/\\/g, '/');
+const $src = path.resolve($filepath, './src');
+const $lib = path.resolve($src, './lib');
+const $routes = path.resolve($src, './routes');
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -17,7 +24,19 @@ const config = {
 	],
 
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		alias: {
+			$routes,
+			$actions: path.resolve($lib, './actions'),
+			$buttons: path.resolve($lib, './buttons'),
+			$functions: path.resolve($lib, './functions'),
+			$inputs: path.resolve($lib, './inputs'),
+			$internal: path.resolve($lib, './internal'),
+			$navigation: path.resolve($lib, './navigation'),
+			$toasts: path.resolve($lib, './toasts'),
+			$tooltip: path.resolve($lib, './tooltip'),
+			$wrappers: path.resolve($lib, './wrappers')
+		}
 	},
 
 	vitePlugin: {

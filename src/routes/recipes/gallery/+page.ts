@@ -1,8 +1,10 @@
-import { error } from '@sveltejs/kit';
+import { arrayFromNumber } from '$functions/helpers.js';
 import type { LoadEvent } from '@sveltejs/kit';
-import { arrayFromNumber } from '$lib/functions/helpers.js';
+import { error } from '@sveltejs/kit';
 
-export function load(event: LoadEvent) {
+export function load(event: LoadEvent): {
+	images: { path: string; text: string; href: string; uuid: string }[];
+} {
 	const seeds = [
 		'beer',
 		'coffee',
@@ -30,6 +32,9 @@ export function load(event: LoadEvent) {
 			};
 		}
 	);
-	return { images };
-	throw error(404, 'Not found.');
+	if (images) {
+		return { images };
+	} else {
+		throw error(404, 'Not found.');
+	}
 }

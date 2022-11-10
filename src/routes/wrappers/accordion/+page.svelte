@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Accordion from '$lib/wrappers/Accordion.svelte';
+	import Accordion from '$wrappers/Accordion.svelte';
 	import type { ComponentProps } from 'svelte';
 	import { blur, fly, scale } from 'svelte/transition';
 

@@ -1,8 +1,8 @@
 <script lang="ts">
+	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
 	import { flip } from 'svelte/animate';
-	import type { PageData } from './$types.js';
-	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
 	import { crossfade } from 'svelte/transition';
+	import type { PageData } from './$types.js';
 
 	export let data: PageData;
 	const { images } = data;

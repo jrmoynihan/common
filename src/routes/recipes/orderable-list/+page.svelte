@@ -1,5 +1,5 @@
 <script lang="ts">
-	import DragAnchor from '$lib/buttons/DragAnchor.svelte';
+	import DragAnchor from '$buttons/DragAnchor.svelte';
 	import { flip } from 'svelte/animate';
 	import { fly } from 'svelte/transition';
 

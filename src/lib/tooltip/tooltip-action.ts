@@ -1,8 +1,8 @@
 import { browser } from '$app/environment';
-import { ErrorLog } from '$lib/functions/logging.js';
-import { getAncestors, getMax, getTransitionDurations } from '$lib/functions/helpers.js';
-import Tooltip from '$lib/tooltip/ActionTooltip.svelte';
-import { writable, get } from 'svelte/store';
+import { getAncestors, getMax, getTransitionDurations } from '$functions/helpers.js';
+import { ErrorLog } from '$functions/logging.js';
+import Tooltip from '$tooltip/ActionTooltip.svelte';
+import { get, writable } from 'svelte/store';
 import type {
 	EasingFunction,
 	FadeParams,

@@ -1,12 +1,9 @@
 <script lang="ts">
-	import Transition from '$lib/wrappers/Transition.svelte';
-	import { fly } from 'svelte/transition';
-	import Navigation from '$lib/navigation/Navigation.svelte';
 	import { beforeNavigate } from '$app/navigation';
-	import {
-		makeNavLinks,
-		shouldLayoutTransitionOnNavigation
-	} from '$lib/navigation/nav-functions.js';
+	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$navigation/nav-functions.js';
+	import Navigation from '$navigation/Navigation.svelte';
+	import Transition from '$wrappers/Transition.svelte';
+	import { fly } from 'svelte/transition';
 
 	let refresh = false;
 	const parent_path = 'wrappers';

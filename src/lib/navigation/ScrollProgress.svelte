@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import Button from '$lib/buttons/Button.svelte';
+	import Button from '$buttons/Button.svelte';
 	import type { ComponentProps } from 'svelte';
 	import { spring } from 'svelte/motion';
 

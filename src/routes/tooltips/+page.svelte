@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { tooltip, type TooltipDirections } from '$lib/tooltip/tooltip-action.js';
-	import Fa from 'svelte-fa';
+	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
+	import { tooltip, type TooltipDirections } from '$tooltip/tooltip-action.js';
 	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons/index';
+	import { Fa } from 'svelte-fa';
 	import { fly } from 'svelte/transition';
-	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
 	let selected_position: TooltipDirections = 'top';
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width = 150;

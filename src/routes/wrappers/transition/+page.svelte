@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageData } from '.svelte-kit/types/src/routes/wrappers/transition/$types.js';
+	import type { PageData } from './$types.js';
 
 	export let data: PageData;
 	console.log('data', data);

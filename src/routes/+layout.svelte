@@ -1,30 +1,30 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
-	import type { TooltipParameters } from '$lib/tooltip/tooltip-action.js';
-	import LightDarkToggle from '$lib/buttons/LightDarkToggle.svelte';
-	import Navigation from '$lib/navigation/Navigation.svelte';
-	import Transition from '$lib/wrappers/Transition.svelte';
-	import { fly } from 'svelte/transition';
-	import { onDestroy } from 'svelte';
-	import { use_dark_theme, aside_visible } from './stores.js';
-	import '../../src/mdsvex.css';
+	import { page } from '$app/stores';
+	import LightDarkToggle from '$buttons/LightDarkToggle.svelte';
+	import { reminderToast } from '$lib/index.js';
 	import {
 		makeNavLinks,
-		type IconLayer,
-		shouldLayoutTransitionOnNavigation
-	} from '$lib/navigation/nav-functions.js';
-	import { SvelteToast } from '@zerodevx/svelte-toast';
+		shouldLayoutTransitionOnNavigation,
+		type IconLayer
+	} from '$navigation/nav-functions.js';
+	import Navigation from '$navigation/Navigation.svelte';
+	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
+	import type { TooltipParameters } from '$tooltip/tooltip-action.js';
+	import Transition from '$wrappers/Transition.svelte';
 	import {
 		faCalculator,
+		faComputerMouse,
 		faGifts,
 		faKeyboard,
 		faReceipt,
-		faTools,
-		faComputerMouse
+		faTools
 	} from '@fortawesome/free-solid-svg-icons/index';
-	import { page } from '$app/stores';
-	import FunctionsAside from './functions/FunctionsAside.svelte';
-	import { reminderToast } from '$lib/index.js';
+	import { SvelteToast } from '@zerodevx/svelte-toast';
+	import { onDestroy } from 'svelte';
+	import { fly } from 'svelte/transition';
+	import '../../src/mdsvex.css';
+	import { aside_visible, use_dark_theme } from './stores.js';
 
 	const parent_path = '/';
 	const paths: string[] = ['tooltips', 'inputs', 'buttons', 'wrappers', 'recipes', 'functions'];

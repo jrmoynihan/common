@@ -10,12 +10,7 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"sourceMap": true,
-		"strict": true,
-		"paths": {
-			"$lib": ["src/lib"],
-			"$lib/*": ["src/lib/*"],
-			"$routes": ["src/routes"],
-			"$routes/*": ["src/routes/*"]
-		}
-	}
+		"strict": true
+	},
+	"exclude": ["node_modules", "package"]
 }

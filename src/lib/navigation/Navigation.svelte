@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { TooltipParameters } from '$lib/tooltip/tooltip-action.js';
-	import NavLink from '$lib/navigation/NavLink.svelte';
-	import { beforeNavigate } from '$app/navigation';
+	import { dynamicStyle } from '$actions/dynamic-styles.js';
 	import { browser } from '$app/environment';
+	import { beforeNavigate } from '$app/navigation';
+	import NavLink from '$navigation/NavLink.svelte';
+	import type { TooltipParameters } from '$tooltip/tooltip-action.js';
 	import type { NavigationLink } from './nav-functions.js';
-	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
 
 	/** An array of items to display within the nav wrapper element */
 	export let nav_links: NavigationLink[] = [];

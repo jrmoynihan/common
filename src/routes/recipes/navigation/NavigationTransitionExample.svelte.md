@@ -3,9 +3,9 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
 	import type { NavigationLink } from '$lib';
-	import Transition from '$lib/wrappers/Transition.svelte';
-	import Navigation from '$lib/navigation/Navigation.svelte';
-	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$lib/navigation/nav-functions';
+	import Transition from '$wrappers/Transition.svelte';
+	import Navigation from '$navigation/Navigation.svelte';
+	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$navigation/nav-functions';
 	import { fly } from 'svelte/transition';
 
 	let refresh: boolean = false;

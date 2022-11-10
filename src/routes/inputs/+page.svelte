@@ -1,9 +1,9 @@
 <script lang="ts">
-	import TextInput from '$lib/inputs/TextInput.svelte';
-	import type { DatalistOption } from '$lib/inputs/types.js';
+	import NumericInput from '$inputs/NumericInput.svelte';
+	import TemporalDateInput from '$inputs/TemporalDateInput.svelte';
+	import TextInput from '$inputs/TextInput.svelte';
+	import type { DatalistOption } from '$inputs/types.js';
 	import { Temporal } from '@js-temporal/polyfill';
-	import TemporalDateInput from '$lib/inputs/TemporalDateInput.svelte';
-	import NumericInput from '$lib/inputs/NumericInput.svelte';
 
 	const unicode_apple = '\u{1F34E}';
 	const unicode_orange = '\u{1F34A}';

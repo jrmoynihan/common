@@ -1,10 +1,10 @@
 <script lang="ts">
-	import WritableContextExample from './WritableContextExample.svelte.md';
-	import ReadableContextExample from './ReadableContextExample.svelte.md';
-	import DerivedContextExample from './DerivedContextExample.svelte.md';
 	import Code from '$lib/internal/Code.svelte';
 	import ExternalLink from '$lib/internal/ExternalLink.svelte';
-	import LinkableAnchorHeading from '$lib/navigation/LinkableAnchorHeading.svelte';
+	import LinkableAnchorHeading from '$navigation/LinkableAnchorHeading.svelte';
+	import DerivedContextExample from './DerivedContextExample.svelte.md';
+	import ReadableContextExample from './ReadableContextExample.svelte.md';
+	import WritableContextExample from './WritableContextExample.svelte.md';
 </script>
 
 <a id="contexts"><h2>Contexts</h2></a>

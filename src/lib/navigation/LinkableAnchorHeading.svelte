@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Button from '$lib/buttons/Button.svelte';
-	import { defaultToast } from '$lib/toasts/toasts.js';
+	import Button from '$buttons/Button.svelte';
+	import { defaultToast } from '$toasts/toasts.js';
 	import { faLink } from '@fortawesome/free-solid-svg-icons/index';
 	import { onDestroy, type ComponentProps } from 'svelte';
 

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { tooltip, type TooltipParameters } from '$lib/tooltip/tooltip-action.js';
-	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
-	import { capitalize } from '$lib/functions/helpers.js';
-	import { Fa, FaLayers, FaLayersText } from 'svelte-fa/src';
-	import type { IconLayer } from './nav-functions.js';
+	import { dynamicStyle } from '$actions/dynamic-styles.js';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { capitalize } from '$functions/helpers.js';
+	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
+	import { Fa, FaLayers, FaLayersText } from 'svelte-fa';
+	import type { IconLayer } from './nav-functions.js';
 
 	/** The URL object describing the link */
 	export let url: URL;

@@ -4,7 +4,7 @@
 </script>
 
 <script lang="ts">
-	import Button from '$lib/buttons/Button.svelte';
+	import Button from '$buttons/Button.svelte';
 	import type { ComponentProps } from 'svelte/internal';
 	import Modal from './Modal.svelte';
 

@@ -1,12 +1,10 @@
 <script lang="ts">
-	import type { TooltipDirections } from '$lib/tooltip/tooltip-action.js';
-	import { realShadow } from '$lib/styles/shadow.js';
-	import Button from '$lib/buttons/Button.svelte';
-	import ToggleSwitch from '$lib/buttons/ToggleSwitch.svelte';
+	import Button from '$buttons/Button.svelte';
+	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
+	import { checkeredFlag } from '$functions/logging.js';
 	import { arrayFromNumber, defaultToast, delay, Log } from '$lib/index.js';
-	import { checkeredFlag } from '$lib/functions/logging.js';
-	import { toast } from '@zerodevx/svelte-toast';
-	import { tick } from 'svelte';
+	import { realShadow } from '$lib/styles/shadow.js';
+	import type { TooltipDirections } from '$tooltip/tooltip-action.js';
 
 	let position: TooltipDirections = 'top';
 	let keep_visible: boolean = false;
@@ -100,6 +98,7 @@
 	>
 	<ToggleSwitch
 		bind:checked={keep_visible}
+		on:toggle={(e) => console.log(e.detail.checked)}
 		label_text={`I'm a toggle switch!`}
 		button_props={{
 			styles:

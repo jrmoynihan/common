@@ -1,7 +1,7 @@
 import { error, type LoadEvent } from '@sveltejs/kit';
-import { arrayFromNumber } from '$lib/functions/helpers.js';
+import { arrayFromNumber } from '$functions/helpers.js';
 
-export function load(event: LoadEvent) {
+export function load(event: LoadEvent): { links: { path: string; text: string; href: string }[] } {
 	const seeds = [
 		'?anime,cosplay',
 		'coffee',
@@ -25,8 +25,9 @@ export function load(event: LoadEvent) {
 			};
 		}
 	);
-	return {
-		links
-	};
-	throw error(404, 'Not found.');
+	if (links) {
+		return { links };
+	} else {
+		throw error(404, 'Not found.');
+	}
 }

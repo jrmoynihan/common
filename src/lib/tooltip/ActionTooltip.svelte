@@ -1,6 +1,8 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
+	import type { TooltipDirections } from '$tooltip/tooltip-action.js';
+	import { cubicInOut } from 'svelte/easing';
 	import {
 		scale,
 		type EasingFunction,
@@ -10,8 +12,6 @@
 		type SlideParams,
 		type TransitionConfig
 	} from 'svelte/transition';
-	import { cubicInOut } from 'svelte/easing';
-	import type { TooltipDirections } from '$lib/tooltip/tooltip-action.js';
 
 	export let title: string = '';
 	export let position: TooltipDirections;

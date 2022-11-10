@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
-	import { tooltip, type TooltipParameters } from '$lib/tooltip/tooltip-action.js';
+	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
+	import Transition from '$wrappers/Transition.svelte';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
-	import Fa from 'svelte-fa';
+	import { Fa } from 'svelte-fa';
 	import { cubicInOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
-	import Transition from '$lib/wrappers/Transition.svelte';
 
 	export let summary_text: string = '';
 	export let expand_icon_position: 'left' | 'right' | 'none' = 'right';

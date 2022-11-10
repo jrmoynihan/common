@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
+	import { dynamicStyle } from '$actions/dynamic-styles.js';
 	export let placeholder = '';
 	export let styles = '';
 	export let focus_styles = '';

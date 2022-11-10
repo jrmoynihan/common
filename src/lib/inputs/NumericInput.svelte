@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { dynamicStyle } from '$lib/actions/dynamic-styles.js';
-
-	import { tooltip, type TooltipParameters } from '$lib/tooltip/tooltip-action.js';
+	import { dynamicStyle } from '$actions/dynamic-styles.js';
+	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 	import { createEventDispatcher } from 'svelte';
-	import Fa from 'svelte-fa';
+	import { Fa } from 'svelte-fa';
 	import {
 		fly,
 		type BlurParams,
