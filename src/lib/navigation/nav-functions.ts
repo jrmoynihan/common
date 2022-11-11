@@ -4,6 +4,7 @@ import type { IconSize } from '../lib_types.js';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index';
 import type { NavigationTarget } from '@sveltejs/kit';
 import { get } from 'svelte/store';
+import { ErrorLog } from '$functions/logging.js';
 
 interface INavigationLink {
 	url: URL;
@@ -78,19 +79,23 @@ export async function makeLinks(input: makeNavLinksOptions): Promise<NavigationL
 	return links;
 }
 /** Compares the navigation targets (from and to) and returns true if layout should transition, and false if it should not */
-export function shouldLayoutTransitionOnNavigation(
+export async function shouldLayoutTransitionOnNavigation(
 	from: NavigationTarget,
 	to: NavigationTarget,
 	layout_parent: string
-): boolean {
-	if (from?.url.pathname === to?.url.pathname) return false;
-	const from_routeID = from.route.id?.split('/');
-	const to_routeID = to.route.id?.split('/');
-	if (from_routeID && to_routeID) {
-		// If the two paths belong to the same layout (i.e. have the same starting route ID), that layout's transition component should trigger a transition.
-		if (from_routeID[0] === layout_parent && to_routeID[0] === layout_parent) return true;
-		// If the beginning of the path is different, it should always transition.  You're moving to a new part of the route hierarchy.
-		if (from_routeID[0] !== to_routeID[0] && to_routeID[0]) return true;
+) {
+	try {
+		if (from?.url.pathname === to?.url.pathname) return false;
+		const from_routeID = from?.route?.id?.split('/');
+		const to_routeID = to?.route?.id?.split('/');
+		if (from_routeID && to_routeID) {
+			// If the two paths belong to the same layout (i.e. have the same starting route ID), that layout's transition component should trigger a transition.
+			if (from_routeID[0] === layout_parent && to_routeID[0] === layout_parent) return true;
+			// If the beginning of the path is different, it should always transition.  You're moving to a new part of the route hierarchy.
+			if (from_routeID[0] !== to_routeID[0] && to_routeID[0]) return true;
+		}
+		return false;
+	} catch (error) {
+		if (error instanceof Error) ErrorLog({ error });
 	}
-	return false;
 }

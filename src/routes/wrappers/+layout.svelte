@@ -9,9 +9,10 @@
 	const parent_path = 'wrappers';
 	const paths: string[] = ['transition', 'accordion', 'modal', 'tabs'];
 
-	beforeNavigate((nav) => {
+	beforeNavigate(async (nav) => {
 		const { from, to } = nav;
-		if (from && to && shouldLayoutTransitionOnNavigation(from, to, parent_path)) refresh = !refresh;
+		if (from && to && (await shouldLayoutTransitionOnNavigation(from, to, parent_path)))
+			refresh = !refresh;
 	});
 </script>
 
