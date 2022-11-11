@@ -7,7 +7,7 @@
 
 	export let checked = false;
 	export let disabled = false;
-	export let icon: IconDefinition | null = null;
+	export let label_position: 'before' | 'after' = 'before';
 	export let label_text = '';
 	export let slider_text = '';
 	// Add override styles
@@ -16,6 +16,7 @@
 	export let label_styles = '';
 	export let label_hover_styles = '';
 	export let label_focus_styles = '';
+	/** Properties of the {@link Button} container.  This is also where you can add an icon. */
 	export let button_props: ComponentProps<Button> = {};
 	export let bgColorHue: number | null = null; // = 246; // 207;
 	export let bgColorSaturation: number | null = null; // = 46; // 90;
@@ -56,7 +57,7 @@
 	styles={`border: 0; --scale: ${scale}; display: grid; gap: 0.5rem; --button-padding: 0.2rem; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-backgrond, inherit); --button-color: var(--toggle-button-color, inherit); ${button_props.styles}`}
 	classes={`toggle ${button_props.classes}`}
 >
-	{#if label_text !== ''}
+	{#if label_position === 'before' && label_text !== ''}
 		<label
 			use:dynamicStyle={{
 				styles: label_styles,
@@ -80,10 +81,18 @@
 		<input type="checkbox" {disabled} bind:checked on:change|stopPropagation={toggled} />
 		<span class="slider round" style={slider_styles} data-slider-text={slider_text} />
 	</span>
-	{#if icon}
-		<span class="icon">
-			<Fa {icon} />
-		</span>
+	{#if label_position === 'after' && label_text !== ''}
+		<label
+			use:dynamicStyle={{
+				styles: label_styles,
+				hover_styles: label_hover_styles,
+				focus_styles: label_focus_styles
+			}}
+			class="label-text pointer"
+			for={'toggle'}
+		>
+			{label_text}
+		</label>
 	{/if}
 </Button>
 
