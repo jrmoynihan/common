@@ -2,7 +2,7 @@
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { createEventDispatcher, type ComponentProps } from 'svelte';
-	import { Fa } from 'svelte-fa';
+	import { Fa } from '@jrmoynihan/svelte-fa';
 	import Button from './Button.svelte';
 
 	export let checked = false;

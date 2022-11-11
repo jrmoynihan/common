@@ -3,7 +3,7 @@
 	import type { IconSize, SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
 	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
-	import { Fa } from 'svelte-fa';
+	import { Fa } from '@jrmoynihan/svelte-fa';
 	import { fade } from 'svelte/transition';
 
 	/** Options to style the tooltip or modify its visible/disabled state */

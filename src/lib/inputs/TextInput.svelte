@@ -5,7 +5,7 @@
 	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
 	import { createEventDispatcher, type ComponentProps } from 'svelte';
-	import { Fa } from 'svelte-fa';
+	import { Fa } from '@jrmoynihan/svelte-fa';
 	import { fade } from 'svelte/transition';
 	import Placeholder from './Placeholder.svelte';
 

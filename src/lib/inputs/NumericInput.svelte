@@ -3,7 +3,7 @@
 	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 	import { createEventDispatcher } from 'svelte';
-	import { Fa } from 'svelte-fa';
+	import { Fa } from '@jrmoynihan/svelte-fa';
 	import {
 		fly,
 		type BlurParams,

@@ -3,7 +3,7 @@
 	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import Transition from '$wrappers/Transition.svelte';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
-	import { Fa } from 'svelte-fa';
+	import { Fa } from '@jrmoynihan/svelte-fa';
 	import { cubicInOut } from 'svelte/easing';
 	import { slide } from 'svelte/transition';
 

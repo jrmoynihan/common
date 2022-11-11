@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 	import { capitalize } from '$functions/helpers.js';
 	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
-	import { Fa, FaLayers, FaLayersText } from 'svelte-fa';
+	import { Fa, FaLayers, FaLayersText } from '@jrmoynihan/svelte-fa';
 	import type { IconLayer } from './nav-functions.js';
 
 	/** The URL object describing the link */
