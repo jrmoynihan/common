@@ -18,13 +18,12 @@
 
 <div class="grid">
 	<DefaultToast {msg} {title} />
-
-	<div class="grid toggle">
-		<ToggleSwitch bind:checked />
-		<p on:click={() => (checked = !checked)} style="cursor: pointer;">
-			{checked ? `Won't show this again` : `Don't show this next time?`}
-		</p>
-	</div>
+	<ToggleSwitch
+		bind:checked
+		label_position={'after'}
+		label_text={checked ? `Won't show this again` : `Don't show this next time?`}
+		button_props={{ styles: 'display: grid; grid-template-columns: auto 1fr; cursor: pointer;' }}
+	/>
 </div>
 
 <style lang="scss">
@@ -32,11 +31,7 @@
 		display: grid;
 		place-items: center;
 		place-content: center;
-		gap: 0.25rem;
+		gap: 0.5rem;
 		margin: 0 auto;
-	}
-	.toggle {
-		grid-template-columns: auto 1fr;
-		font-size: small;
 	}
 </style>
