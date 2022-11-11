@@ -190,9 +190,4 @@
 	.pointer {
 		cursor: pointer;
 	}
-	.icon {
-		grid-row: span 2;
-		align-self: center;
-		height: var(--toggle-height, calc($base-scale * 1.7));
-	}
 </style>
