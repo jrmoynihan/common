@@ -21,7 +21,7 @@
 
 	function copyLinkAddress() {
 		const { id } = heading_props;
-		const link = `${$page.url.origin}/${$page.routeId}#${id}`;
+		const link = `${$page.url.origin}/${$page.route.id}#${id}`;
 		navigator.clipboard.writeText(link);
 		copied = true;
 		defaultToast({ msg: 'Copied Link!', duration: 2_000 });

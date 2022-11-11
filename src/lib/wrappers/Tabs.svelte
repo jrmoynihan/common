@@ -9,9 +9,9 @@
 	export let transition: SvelteTransition = fade;
 	export let in_transition: SvelteTransition = transition;
 	export let out_transition: SvelteTransition = transition;
-	export let transition_parameters: SvelteTransitionParams = undefined;
-	export let in_transition_parameters: SvelteTransitionParams = undefined;
-	export let out_transition_parameters: SvelteTransitionParams = undefined;
+	export let transition_parameters: SvelteTransitionParams = {};
+	export let in_transition_parameters: SvelteTransitionParams = {};
+	export let out_transition_parameters: SvelteTransitionParams = {};
 	export let tab_container_styles = '';
 	export let tab_headers_styles = '';
 	export let header_label_styles = '';

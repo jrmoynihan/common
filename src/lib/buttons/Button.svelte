@@ -36,7 +36,7 @@
 	export let box_shadow: 'low' | 'medium' | 'high' | 'none' = 'low';
 	/** A Svelte transition to use on the button */
 	export let transition: SvelteTransition = fade;
-	export let transition_config: SvelteTransitionParams = undefined;
+	export let transition_config: SvelteTransitionParams = {};
 	let hovered: boolean = false;
 	let focused: boolean = false;
 </script>

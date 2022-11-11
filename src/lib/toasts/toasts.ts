@@ -1,5 +1,5 @@
 import { all_icons, policeCarLight } from '$functions/logging.js';
-import type { IconSize } from '$lib/lib_types.js';
+import type { IconSize } from '../lib_types.js';
 import SeenToast from '$toasts/SeenToast.svelte';
 import { toast, type SvelteToastOptions } from '@zerodevx/svelte-toast';
 import DefaultToast from './DefaultToast.svelte';

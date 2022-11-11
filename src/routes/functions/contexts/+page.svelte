@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Code from '$lib/internal/Code.svelte';
-	import ExternalLink from '$lib/internal/ExternalLink.svelte';
+	import Code from '$routes/internal/Code.svelte';
+	import ExternalLink from '$routes/internal/ExternalLink.svelte';
 	import LinkableAnchorHeading from '$navigation/LinkableAnchorHeading.svelte';
 	import DerivedContextExample from './DerivedContextExample.svelte.md';
 	import ReadableContextExample from './ReadableContextExample.svelte.md';

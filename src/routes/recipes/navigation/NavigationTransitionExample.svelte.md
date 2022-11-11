@@ -2,7 +2,7 @@
 <!-- +layout.svelte -->
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
-	import type { NavigationLink } from '$lib';
+	import type { NavigationLink } from 'src/lib/navigation/nav-functions.ts';
 	import Transition from '$wrappers/Transition.svelte';
 	import Navigation from '$navigation/Navigation.svelte';
 	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$navigation/nav-functions';

@@ -47,7 +47,7 @@
 			const path_segments = href.split('#');
 			const base_path = path_segments[0];
 			anchor_path_to_scroll_to = path_segments[1];
-			const is_same_base_path = to?.routeId === from?.routeId;
+			const is_same_base_path = to?.route.id === from?.route.id;
 			if (is_same_base_path && is_anchor) {
 				cancel();
 				scrollToElement();

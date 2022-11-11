@@ -1,5 +1,5 @@
-import { error, type LoadEvent } from '@sveltejs/kit';
 import { arrayFromNumber } from '$functions/helpers.js';
+import { error, type LoadEvent } from '@sveltejs/kit';
 
 export function load(event: LoadEvent): { links: { path: string; text: string; href: string }[] } {
 	const seeds = [

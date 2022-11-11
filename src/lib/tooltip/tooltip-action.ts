@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import { getAncestors, getMax, getTransitionDurations } from '$functions/helpers.js';
 import { ErrorLog } from '$functions/logging.js';
-import Tooltip from '$tooltip/ActionTooltip.svelte';
+import ActionTooltip from './ActionTooltip.svelte';
 import { get, writable } from 'svelte/store';
 import type {
 	EasingFunction,
@@ -123,7 +123,7 @@ export const tooltip = (
 		});
 		let { log_functions } = get(tooltip_parameters);
 		let title_attribute: string | null;
-		let tooltipComponent: Tooltip;
+		let tooltipComponent: ActionTooltip;
 		let ticking = false;
 		let is_intersecting_viewport = false;
 
@@ -203,7 +203,7 @@ export const tooltip = (
 		const { delay } = new_tooltip_parameters;
 
 		// Make the tooltip instance.
-		tooltipComponent = new Tooltip({
+		tooltipComponent = new ActionTooltip({
 			//@ts-ignore
 			props: {
 				...all_other_new_tooltip_parameters
@@ -276,7 +276,7 @@ export const tooltip = (
 			return passing_parameters;
 		}
 		function makeInvisibleTooltip(parameters: TooltipActionParameters) {
-			return new Tooltip({
+			return new ActionTooltip({
 				//@ts-ignore
 				props: { ...parameters, visible: true, only_for_measuring: true },
 				target: document.body
@@ -417,7 +417,7 @@ export const tooltip = (
 		}
 		async function positionTooltip(
 			anchor_element: HTMLElement,
-			tooltipComponent: Tooltip,
+			tooltipComponent: ActionTooltip,
 			new_position: TooltipDirections,
 			allow_dynamic_position: boolean | undefined,
 			horizontal_offset?: number,
@@ -782,7 +782,7 @@ function repositionY(input: positionY_params) {
 	return y;
 }
 
-function makeVisibleAfterDelay(tooltip: Tooltip, max_delay: number) {
+function makeVisibleAfterDelay(tooltip: ActionTooltip, max_delay: number) {
 	setTimeout(() => {
 		tooltip.$set({ visible: true });
 	}, max_delay);

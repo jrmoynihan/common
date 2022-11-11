@@ -3,7 +3,6 @@
 	"compilerOptions": {
 		// https://kit.svelte.dev/docs/packaging#caveats
 		"moduleResolution": "NodeNext",
-		"allowJs": true,
 		"checkJs": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
@@ -12,5 +11,5 @@
 		"sourceMap": true,
 		"strict": true
 	},
-	"exclude": ["node_modules", "package"]
+	"exclude": ["./node_modules/**", "./[!ambient.d.ts]**", "package"]
 }

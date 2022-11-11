@@ -1,6 +1,6 @@
 import { page } from '$app/stores';
 import { deKebab } from '$functions/helpers.js';
-import type { IconSize } from '$lib/lib_types.js';
+import type { IconSize } from '../lib_types.js';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index';
 import type { NavigationTarget } from '@sveltejs/kit';
 import { get } from 'svelte/store';
@@ -84,8 +84,8 @@ export function shouldLayoutTransitionOnNavigation(
 	layout_parent: string
 ): boolean {
 	if (from?.url.pathname === to?.url.pathname) return false;
-	const from_routeID = from.routeId?.split('/');
-	const to_routeID = to.routeId?.split('/');
+	const from_routeID = from.route.id?.split('/');
+	const to_routeID = to.route.id?.split('/');
 	if (from_routeID && to_routeID) {
 		// If the two paths belong to the same layout (i.e. have the same starting route ID), that layout's transition component should trigger a transition.
 		if (from_routeID[0] === layout_parent && to_routeID[0] === layout_parent) return true;

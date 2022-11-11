@@ -1,19 +1,20 @@
 <script lang="ts">
 	import Button from '$buttons/Button.svelte';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import { checkeredFlag } from '$functions/logging.js';
-	import { arrayFromNumber, defaultToast, delay, Log } from '$lib/index.js';
-	import { realShadow } from '$lib/styles/shadow.js';
+	import { arrayFromNumber, delay } from '$functions/helpers.js';
+	import { checkeredFlag, Log } from '$functions/logging.js';
+	// import { realShadow } from '../styles/shadow.js';
+	import { defaultToast } from '$toasts/toasts.js';
 	import type { TooltipDirections } from '$tooltip/tooltip-action.js';
 
 	let position: TooltipDirections = 'top';
 	let keep_visible: boolean = false;
-	let shadows = realShadow({
-		hsl: '0deg 100% 100%',
-		elevation: 'high',
-		horizontal_distance: -1,
-		vertical_distance: 0
-	});
+	// let shadows = realShadow({
+	// 	hsl: '0deg 100% 100%',
+	// 	elevation: 'high',
+	// 	horizontal_distance: -1,
+	// 	vertical_distance: 0
+	// });
 	let gradient_direction: TooltipDirections = 'bottom';
 
 	async function testToastUpdate() {
@@ -93,9 +94,9 @@
 			keep_visible
 		}}
 	/>
-	<button style={`${shadows} padding: 1rem; background: inherit; color: var(--text);`}
+	<!-- <button style={`${shadows} padding: 1rem; background: inherit; color: var(--text);`}
 		>[WIP] Shadow Generation</button
-	>
+	> -->
 	<ToggleSwitch
 		bind:checked={keep_visible}
 		on:toggle={(e) => console.log(e.detail.checked)}

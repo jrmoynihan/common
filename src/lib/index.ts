@@ -1,6 +1,8 @@
 // NOTE: Use fully specified relative imports to point files to their generated type definitions within the Package folder:
 // https://kit.svelte.dev/docs/packaging#caveats
 
+// Reexport your entry components here
+
 // Buttons
 import Button from './buttons/Button.svelte';
 import LightDarkToggle from './buttons/LightDarkToggle.svelte';
