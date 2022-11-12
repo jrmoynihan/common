@@ -85,14 +85,23 @@ export async function shouldLayoutTransitionOnNavigation(
 	layout_parent: string
 ) {
 	try {
-		if (from?.url.pathname === to?.url.pathname) return false;
+		if (from?.url.pathname === to?.url.pathname) {
+			return false;
+		}
 		const from_routeID = from?.route?.id?.split('/');
 		const to_routeID = to?.route?.id?.split('/');
+		// Shift off the empty string to the left of the first slash in the route id
+		from_routeID?.shift();
+		to_routeID?.shift();
 		if (from_routeID && to_routeID) {
 			// If the two paths belong to the same layout (i.e. have the same starting route ID), that layout's transition component should trigger a transition.
-			if (from_routeID[0] === layout_parent && to_routeID[0] === layout_parent) return true;
+			if (from_routeID[0] === layout_parent && to_routeID[0] === layout_parent) {
+				return true;
+			}
 			// If the beginning of the path is different, it should always transition.  You're moving to a new part of the route hierarchy.
-			if (from_routeID[0] !== to_routeID[0] && to_routeID[0]) return true;
+			if (from_routeID[0] !== to_routeID[0] && to_routeID[0]) {
+				return true;
+			}
 		}
 		return false;
 	} catch (error) {

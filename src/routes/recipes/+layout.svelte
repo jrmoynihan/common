@@ -10,8 +10,9 @@
 	const paths: string[] = ['navigation', 'gallery', 'orderable-list'];
 
 	beforeNavigate(async ({ from, to }) => {
-		if (from && to && (await shouldLayoutTransitionOnNavigation(from, to, parent_path)))
+		if (from && to && (await shouldLayoutTransitionOnNavigation(from, to, parent_path))) {
 			refresh = !refresh;
+		}
 	});
 </script>
 
