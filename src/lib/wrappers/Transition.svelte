@@ -7,7 +7,7 @@
 	export let inner_container_styles = '';
 	export let inner_container_classes = '';
 	export let transition: SvelteTransition = fly;
-	export let transition_parameters: SvelteTransitionParams = {};
+	export let transition_parameters: SvelteTransitionParams | null = null;
 	export let in_transition: SvelteTransition = transition;
 	export let in_transition_parameters: SvelteTransitionParams = {
 		duration: 200,
