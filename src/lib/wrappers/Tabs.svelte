@@ -6,12 +6,12 @@
 
 	export let tabs: Tab[];
 	export let selected_tab: Tab;
-	export let transition: SvelteTransition = fade;
-	export let in_transition: SvelteTransition = transition;
-	export let out_transition: SvelteTransition = transition;
-	export let transition_parameters: SvelteTransitionParams = {};
-	export let in_transition_parameters: SvelteTransitionParams = {};
-	export let out_transition_parameters: SvelteTransitionParams = {};
+	export let transition: SvelteTransition | undefined = undefined;
+	export let in_transition: SvelteTransition = fade;
+	export let out_transition: SvelteTransition = fade;
+	export let transition_parameters: SvelteTransitionParams | undefined = undefined;
+	export let in_transition_parameters: SvelteTransitionParams | undefined = undefined;
+	export let out_transition_parameters: SvelteTransitionParams | undefined = undefined;
 	export let tab_container_styles = '';
 	export let tab_headers_styles = '';
 	export let header_label_styles = '';
@@ -36,6 +36,7 @@
 					class:active={tab === selected_tab}
 					for={tab.name}
 					tabindex="0"
+					role="button"
 					on:keypress={(e) => checkForEnterOrSpace(e, i)}
 				>
 					<input type="radio" bind:group={selected_tab} value={tab} id={tab.name} />
@@ -47,12 +48,12 @@
 	{#if selected_tab}
 		<Transition
 			refresh={selected_tab}
-			{transition}
-			{transition_parameters}
-			{in_transition}
-			{in_transition_parameters}
-			{out_transition}
-			{out_transition_parameters}
+			bind:transition
+			bind:transition_parameters
+			bind:in_transition
+			bind:in_transition_parameters
+			bind:out_transition
+			bind:out_transition_parameters
 			inner_container_styles={'margin: 1rem'}
 		>
 			<svelte:component this={selected_tab?.component} {selected_tab} />

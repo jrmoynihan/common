@@ -1,20 +1,21 @@
 <script lang="ts">
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
 	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
+	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 
 	export let refresh: unknown;
 	export let inner_container_styles = '';
 	export let inner_container_classes = '';
-	export let transition: SvelteTransition = fly;
-	export let transition_parameters: SvelteTransitionParams | null = null;
-	export let in_transition: SvelteTransition = transition;
+	export let transition: SvelteTransition | undefined = undefined;
+	export let transition_parameters: SvelteTransitionParams | undefined = undefined;
+	export let in_transition: SvelteTransition = fly;
 	export let in_transition_parameters: SvelteTransitionParams = {
 		duration: 200,
-		x: -50,
-		delay: 300
+		delay: 300,
+		easing: cubicOut
 	};
-	export let out_transition: SvelteTransition = in_transition;
+	export let out_transition: SvelteTransition = fly;
 	export let out_transition_parameters: SvelteTransitionParams =
 		{
 			...in_transition_parameters,
@@ -26,6 +27,10 @@
 	$: internal_out_transition = transition ?? out_transition;
 	$: internal_in_transition_parameters = transition_parameters ?? in_transition_parameters;
 	$: internal_out_transition_parameters = transition_parameters ?? out_transition_parameters;
+	// $: console.log({ internal_in_transition_parameters });
+	// $: console.log({ internal_out_transition_parameters });
+	// $: console.log({ internal_in_transition });
+	// $: console.log({ internal_out_transition });
 
 	// https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
 </script>
