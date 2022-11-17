@@ -1,3 +1,4 @@
+import { Temporal } from '@js-temporal/polyfill';
 import { ErrorLog } from './logging.js';
 
 /**
@@ -103,6 +104,50 @@ export const getMinDate = (array: Date[]): Date => {
 		min = array[len].getTime() < min.getTime() ? array[len] : min;
 	}
 	return min;
+};
+/**
+ * A faster way to find the min of an array of Temporal.ZonedDateTime items
+ * @param array An array of datetimes to search
+ * @returns The minimum datetime in the array
+ */
+export const getMinTemporalZonedDateTime = (
+	array: Temporal.ZonedDateTime[]
+): Temporal.ZonedDateTime => {
+	let len = array.length;
+	let max_date = new Date(8640000000000000);
+	let min = Temporal.ZonedDateTime.from(max_date.toLocaleDateString());
+	while (len--) {
+		// https://tc39.es/proposal-temporal/docs/zoneddatetime.html#compare
+		// Returns: an integer indicating whether one comes before or after or is equal to two.
+		// −1 if one is less than two
+		// Zero if the two instances describe the same exact instant, ignoring the time zone and calendar
+		// 1 if one is greater than two
+		const compared = Temporal.ZonedDateTime.compare(min, array[len]);
+		min = compared === -1 ? array[len] : min;
+	}
+	return min;
+};
+/**
+ * A faster way to find the min of an array of Temporal.ZonedDateTime items
+ * @param array An array of datetimes to search
+ * @returns The minimum datetime in the array
+ */
+export const getMaxTemporalZonedDateTime = (
+	array: Temporal.ZonedDateTime[]
+): Temporal.ZonedDateTime => {
+	let len = array.length;
+	let min_date = new Date(-8640000000000000);
+	let max = Temporal.ZonedDateTime.from(min_date.toLocaleDateString());
+	while (len--) {
+		// https://tc39.es/proposal-temporal/docs/zoneddatetime.html#compare
+		// Returns: an integer indicating whether one comes before or after or is equal to two.
+		// −1 if one is less than two
+		// Zero if the two instances describe the same exact instant, ignoring the time zone and calendar
+		// 1 if one is greater than two
+		const compared = Temporal.ZonedDateTime.compare(max, array[len]);
+		max = compared === 1 ? array[len] : max;
+	}
+	return max;
 };
 /**
  * A faster way to find the max of an array of dates
