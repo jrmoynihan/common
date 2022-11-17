@@ -91,6 +91,7 @@ export {
 	makeNavLinks,
 	NavigationLink,
 	shouldLayoutTransitionOnNavigation,
+	type IconLayer,
 	type makeNavLinksOptions
 } from './navigation/nav-functions.js';
 export { defaultToast, errorToast, reminderToast, type ToastOptions } from './toasts/toasts.js';
