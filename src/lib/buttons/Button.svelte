@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
-	import type { IconSize, SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
+	import type {
+		BoxShadowElevation,
+		IconSize,
+		SvelteTransition,
+		SvelteTransitionParams
+	} from '$lib/lib_types.js';
 	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from '@jrmoynihan/svelte-fa';
@@ -32,8 +37,8 @@
 	export let disabled = false;
 	/** Plain text to display within the button */
 	export let text: string = '';
-	/** Whether to use box-shadows */
-	export let box_shadow: 'low' | 'medium' | 'high' | 'none' = 'low';
+	/** What height the box-shadows should convey to the element */
+	export let box_shadow_elevation: BoxShadowElevation = 'low';
 	/** A Svelte transition to use on the button */
 	export let transition: SvelteTransition = fade;
 	export let transition_config: SvelteTransitionParams = {};
@@ -47,9 +52,9 @@
 	use:tooltip={{ ...tooltip_options }}
 	title={title ?? tooltip_options.title}
 	class="btn {classes}"
-	class:low={box_shadow === 'low'}
-	class:medium={box_shadow === 'medium'}
-	class:high={box_shadow === 'high'}
+	class:low={box_shadow_elevation === 'low'}
+	class:medium={box_shadow_elevation === 'medium'}
+	class:high={box_shadow_elevation === 'high'}
 	class:hovered
 	class:focused
 	style={`${styles}`}

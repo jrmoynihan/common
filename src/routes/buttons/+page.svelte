@@ -71,7 +71,7 @@
 			})}
 		text="I'm a button with low elevation"
 		styles={`--shadow-color: 350deg 50% 70%;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}
-		box_shadow="low"
+		box_shadow_elevation="low"
 		tooltip_options={{ position, title: 'Click me!', log_functions: true, keep_visible }}
 	/>
 	<Button
@@ -80,13 +80,13 @@
 		styles={`--shadow-color: 350deg 50% 70%;background-color: ${
 			position === 'top' ? 'hsla(195, 10%, 60%, 20%)' : `green`
 		};`}
-		box_shadow="medium"
+		box_shadow_elevation="medium"
 		tooltip_options={{ position, title: 'Click me!', log_functions: true, keep_visible }}
 	/>
 	<Button
 		on:click={() => (keep_visible = !keep_visible)}
 		text="I'm a button with high elevation"
-		box_shadow="high"
+		box_shadow_elevation="high"
 		styles={'--button-hover-background: linear-gradient(to bottom left, hsla(350, 100%, 50%, 80%), hsl(33, 100%, 55%),  hsla(350, 100%, 50%, 80%)); --shadow-color: 350deg 50% 70%; '}
 		tooltip_options={{
 			position,

@@ -27,3 +27,4 @@ export type SvelteTransitionParams = BlurParams &
 	ScaleParams &
 	SlideParams;
 export type SvelteTransition = (node: Element, {}: SvelteTransitionParams) => TransitionConfig;
+export type BoxShadowElevation = 'none' | 'low' | 'medium' | 'high';
