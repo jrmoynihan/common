@@ -38,6 +38,7 @@ import Transition from './wrappers/Transition.svelte';
 
 // Exports
 // Functions
+export { Temporal } from '@js-temporal/polyfill';
 export {
 	arrayFromNumber,
 	capitalize,
