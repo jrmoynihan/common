@@ -1,20 +1,21 @@
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
 	import type { DatalistOption } from '$inputs/types.js';
-	import type { SvelteTransition, SvelteTransitionParams } from '../lib_types.js';
 	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
-	import { createEventDispatcher, type ComponentProps } from 'svelte';
 	import { Fa } from '@jrmoynihan/svelte-fa';
+	import { createEventDispatcher, type ComponentProps } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import type { SvelteTransition, SvelteTransitionParams } from '../lib_types.js';
 	import Placeholder from './Placeholder.svelte';
 
 	export let value = '';
+	export let id = crypto?.randomUUID() ?? '';
 	export let type: 'text' | 'datalist' = 'text';
 	export let title = '';
 	export let required = false;
 	export let pattern: RegExp | null = null;
-	export let list = crypto?.randomUUID();
+	export let list = crypto?.randomUUID() ?? '';
 	export let show_confirm = true;
 	export let options: DatalistOption[] = [];
 	export let input_container_styles = '';
@@ -72,6 +73,7 @@
 				hover_styles: input_hover_styles,
 				focus_styles: input_focus_styles
 			}}
+			{id}
 			type="text"
 			bind:this={input}
 			bind:value
@@ -90,6 +92,7 @@
 				hover_styles: input_hover_styles,
 				focus_styles: input_focus_styles
 			}}
+			{id}
 			type="text"
 			bind:this={input}
 			bind:value
