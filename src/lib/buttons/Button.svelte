@@ -2,6 +2,7 @@
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
 	import type {
 		BoxShadowElevation,
+		ButtonType,
 		IconSize,
 		SvelteTransition,
 		SvelteTransitionParams
@@ -37,6 +38,11 @@
 	export let disabled = false;
 	/** Plain text to display within the button */
 	export let text: string = '';
+	/** The type of the button. Possible values are:
+	 * * `submit`: The button submits the form data to the server. This is the default if the attribute is not specified, or if the attribute is dynamically changed to an empty or invalid value.
+	 * * `reset`: The button resets all the controls to their initial values.
+	 * * `button`: The button has no default behavior. It can have client-side scripts associated with the element's events, which are triggered when the events occur. */
+	export let type: ButtonType = 'submit';
 	/** What height the box-shadows should convey to the element */
 	export let box_shadow_elevation: BoxShadowElevation = 'low';
 	/** A Svelte transition to use on the button */
@@ -51,6 +57,7 @@
 	use:dynamicStyle={{ styles, hover_styles, focus_styles }}
 	use:tooltip={{ ...tooltip_options }}
 	title={title ?? tooltip_options.title}
+	{type}
 	class="btn {classes}"
 	class:low={box_shadow_elevation === 'low'}
 	class:medium={box_shadow_elevation === 'medium'}
