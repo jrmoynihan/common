@@ -83,16 +83,16 @@
 			>
 		{/if}
 	</button>
-	<Transition
-		bind:refresh={open}
-		{transition}
-		{transition_parameters}
-		tooltip_parameters={content_tooltip_parameters}
-	>
-		{#if open}
+	{#if open}
+		<Transition
+			bind:refresh={open}
+			{transition}
+			{transition_parameters}
+			tooltip_parameters={content_tooltip_parameters}
+		>
 			<slot name="content" />
-		{/if}
-	</Transition>
+		</Transition>
+	{/if}
 </div>
 
 <style lang="scss">
