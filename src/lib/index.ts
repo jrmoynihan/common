@@ -102,8 +102,8 @@ export {
 	type TooltipDirections,
 	type TooltipParameters
 } from './tooltip/tooltip-action.js';
+export type { ButtonProps } from './wrappers/ModalWithButton.svelte';
 export { Tab } from './wrappers/tab.js';
-export type { ButtonProps } from '/ModalWithButton.svelte';
 export {
 	Button,
 	LightDarkToggle,

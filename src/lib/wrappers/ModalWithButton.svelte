@@ -16,7 +16,7 @@
 	export let close: () => Promise<void> = null;
 </script>
 
-<Button on:click={open} {...button_parameters}>
+<Button on:click={() => open()} {...button_parameters}>
 	<svelte:fragment>
 		<slot name="button-content" />
 	</svelte:fragment>
