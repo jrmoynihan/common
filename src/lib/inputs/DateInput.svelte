@@ -81,6 +81,7 @@
 		bind:value={internal}
 		on:input={(e) => changed(e.currentTarget.value)}
 	/>
+	<!-- TODO: Add datalist option https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist#date_and_time_types -->
 	{#if labelPosition === 'after'}
 		{labelText}
 		<slot name="label" />
