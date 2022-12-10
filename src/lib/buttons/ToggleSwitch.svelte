@@ -50,6 +50,7 @@
 		checked = !checked;
 		toggled();
 	}}
+	role="switch"
 	box_shadow_elevation={'none'}
 	{...button_props}
 	styles={`border: 0; --scale: ${scale}; display: grid; gap: 0.5rem; --button-padding: 0.2rem; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-backgrond, inherit); --button-color: var(--toggle-button-color, inherit); ${button_props.styles}`}
@@ -76,7 +77,13 @@
 		style:--inactiveBgColorDarken={inactiveBgColorDarken ?? null}
 	>
 		<!-- NOTE: Subtle fix made by changing this to on:change event instead of on:click -->
-		<input type="checkbox" {disabled} bind:checked on:change|stopPropagation={toggled} />
+		<input
+			type="checkbox"
+			aria-checked={checked}
+			{disabled}
+			bind:checked
+			on:change|stopPropagation={toggled}
+		/>
 		<span class="slider round" style={slider_styles} data-slider-text={slider_text} />
 	</span>
 	{#if label_position === 'after' && label_text !== ''}
