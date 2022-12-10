@@ -93,6 +93,12 @@
 				focus_styles: input_focus_styles
 			}}
 			{id}
+			role="combobox"
+			aria-expanded={value !== ''}
+			aria-controls={list}
+			aria-autocomplete="list"
+			aria-haspopup="listbox"
+			aria-label={list}
 			type="text"
 			bind:this={input}
 			bind:value
