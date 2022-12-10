@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
-	import { onMount } from 'svelte';
+	import { createEventDispatcher, onMount } from 'svelte';
 	import { fly, scale } from 'svelte/transition';
 
 	export let modal_foreground_styles = '';
@@ -18,15 +18,18 @@
 	let is_open = false;
 	let use_scale = transition === scale;
 	let use_fly = transition === fly;
+	let dispatch = createEventDispatcher();
 
 	/** Exposed binding for closing the modal */
 	export const close = async (): Promise<void> => {
+		dispatch('closing');
 		is_open = false;
 		// Delay the actual close long enough for the class-based transition to play
 		setTimeout(() => modal?.close(), 200);
 	};
 	/** Exposed binding for opening the modal */
 	export const open = async (): Promise<void> => {
+		dispatch('opening');
 		modal?.showModal();
 		is_open = true;
 	};

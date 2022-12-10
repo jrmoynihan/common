@@ -11,9 +11,9 @@
 	export let button_parameters: ButtonProps = {};
 	export let modal_parameters: ModalProps = {};
 	//@ts-ignore
-	export let open: () => Promise<void> = null;
+	export let open: () => Promise<void> = undefined;
 	//@ts-ignore
-	export let close: () => Promise<void> = null;
+	export let close: () => Promise<void> = undefined;
 </script>
 
 <Button on:click={() => open()} {...button_parameters}>
@@ -21,7 +21,7 @@
 		<slot name="button-content" />
 	</svelte:fragment>
 </Button>
-<Modal bind:open bind:close {...modal_parameters}>
+<Modal bind:open bind:close {...modal_parameters} on:closing on:opening>
 	<svelte:fragment slot="modal-content">
 		<slot name="modal-content" />
 	</svelte:fragment>
