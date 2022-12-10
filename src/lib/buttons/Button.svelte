@@ -5,7 +5,8 @@
 		ButtonType,
 		IconSize,
 		SvelteTransition,
-		SvelteTransitionParams
+		SvelteTransitionParams,
+		WidgetRole
 	} from '$lib/lib_types.js';
 	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -16,6 +17,8 @@
 	export let tooltip_options: TooltipParameters = {
 		disabled: true
 	};
+	/** Add role attributes to the button */
+	export let role: WidgetRole = 'button';
 	/** Style the button, allowing dynamic updates */
 	export let styles = '';
 	/** External classes to add to the button (typically, these are best done by wrapping a Button and passing in specific styles, making a styled component) */
@@ -58,6 +61,7 @@
 	use:tooltip={{ ...tooltip_options }}
 	title={title ?? tooltip_options.title}
 	{type}
+	{role}
 	class="btn {classes}"
 	class:low={box_shadow_elevation === 'low'}
 	class:medium={box_shadow_elevation === 'medium'}
