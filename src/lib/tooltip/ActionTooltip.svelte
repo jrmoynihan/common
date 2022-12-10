@@ -90,10 +90,7 @@
 			transition:transition={transition_config}
 			class:visible={visible || keep_visible}
 			class:nothing={only_for_measuring}
-			class:top={position === 'top'}
-			class:right={position === 'right'}
-			class:left={position === 'left'}
-			class:bottom={position === 'bottom'}
+			tip-position={position}
 			style={`left: ${x}px; top: ${y}px; position:${position_type}; ${styles}`}
 		>
 			{#if title}
@@ -105,13 +102,7 @@
 			<!-- {#if !title && !custom_component}
 			{/if} -->
 			{#if show_arrow}
-				<span
-					class="arrow"
-					class:bottom={position === 'bottom'}
-					class:top={position === 'top'}
-					class:left={position === 'left'}
-					class:right={position === 'right'}
-				/>
+				<span class="arrow" tip-position={position} />
 			{/if}
 		</tool-tip>
 	{/key}
@@ -129,6 +120,7 @@
 		font-weight: var(--tooltip-font-weight, normal);
 		font-family: var(--tooltip-font-family, inherit);
 		pointer-events: var(--tooltip-pointer-events, none);
+		user-select: var(--tooltip-user-select, none);
 		transform: var(--tooltip-transform);
 		display: var(--tooltip-display, grid);
 		place-items: var(--tooltip-place-items, center);
@@ -162,8 +154,8 @@
 			);
 			border-width: var(--default-arrow-size, 0.5rem);
 		}
-		&.left,
-		&.right {
+		&[tip-position='left'],
+		&[tip-position='right'] {
 			width: calc(
 				var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) + var(--arrow-cushion, 4px)
 			);
@@ -176,8 +168,8 @@
 					transparent;
 			}
 		}
-		&.bottom,
-		&.top {
+		&[tip-position='bottom'],
+		&[tip-position='top'] {
 			width: calc(var(--tooltip-arrow-width, calc(var(--default-arrow-size, 0.5rem) * 2)));
 			height: calc(
 				var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + var(--arrow-cushion, 4px)
@@ -191,7 +183,7 @@
 					transparent;
 			}
 		}
-		&.bottom {
+		&[tip-position='bottom'] {
 			top: calc(
 				-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 * var(--arrow-cushion, 4px)
 			); /* overlap with the tooltip box */
@@ -204,7 +196,7 @@
 					);
 			}
 		}
-		&.top {
+		&[tip-position='top'] {
 			top: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
 
 			&::after {
@@ -215,7 +207,7 @@
 					);
 			}
 		}
-		&.left {
+		&[tip-position='left'] {
 			left: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
 
 			&::after {
@@ -226,7 +218,7 @@
 					);
 			}
 		}
-		&.right {
+		&[tip-position='right'] {
 			left: calc(-1 * var(--tooltip-arrow-width, 0.75rem) + -1 * var(--arrow-cushion, 0px));
 
 			&::after {
@@ -239,16 +231,16 @@
 		}
 	}
 
-	.bottom {
+	[tip-position='bottom'] {
 		transform-origin: center top;
 	}
-	.top {
+	[tip-position='top'] {
 		transform-origin: center bottom;
 	}
-	.left {
+	[tip-position='left'] {
 		transform-origin: right center;
 	}
-	.right {
+	[tip-position='right'] {
 		transform-origin: left center;
 	}
 </style>
