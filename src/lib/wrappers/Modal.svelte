@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
-	import { fly, scale } from 'svelte/transition';
 	import { onMount } from 'svelte';
+	import { fly, scale } from 'svelte/transition';
 
 	export let modal_foreground_styles = '';
 	export let dialog_styles = '';
@@ -45,6 +45,7 @@
 	class:fly={use_fly}
 	class:scale={use_scale}
 	style={dialog_styles}
+	on:keypress
 	on:click|capture|self={close}
 	style:--transition-duration={`${transition_parameters?.duration ?? 400}ms`}
 	style:--fly-x={`${transition_parameters?.x ?? -100}px`}
@@ -63,7 +64,9 @@
 
 <style lang="scss">
 	dialog {
-		overflow: visible; // added for tooltips to escape the edges, but should be silent/inactive usually
+		overflow: var(
+			--modal-overflow
+		); // added for tooltips to escape the edges, but should be silent/inactive usually
 		scrollbar-width: thin;
 		position: fixed;
 		border: none;
