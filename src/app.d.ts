@@ -12,4 +12,7 @@ declare namespace App {
 declare module '@fortawesome/free-solid-svg-icons/index' {
 	export * from '@fortawesome/free-solid-svg-icons';
 }
+declare module '*.svelte' {
+	export { SvelteComponentDev as default } from 'svelte/internal';
+}
 declare module '*.md';
