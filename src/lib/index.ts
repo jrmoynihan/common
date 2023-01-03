@@ -20,8 +20,8 @@ import type { DatalistOption, TextInputTypes } from './inputs/types.js';
 // Navigation
 import AnchorHeading from './navigation/AnchorHeading.svelte';
 import LinkableAnchorHeading from './navigation/LinkableAnchorHeading.svelte';
-import Navigation from './navigation/Navigation.svelte';
 import NavLink from './navigation/NavLink.svelte';
+import Navigation from './navigation/Navigation.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 
 // Toasts
@@ -102,7 +102,6 @@ export {
 	type TooltipDirections,
 	type TooltipParameters
 } from './tooltip/tooltip-action.js';
-export type { ButtonProps } from './wrappers/ModalWithButton.svelte';
 export { Tab } from './wrappers/tab.js';
 export {
 	Button,
