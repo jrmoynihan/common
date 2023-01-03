@@ -1,9 +1,15 @@
 <script lang="ts">
 	import { use_dark_theme } from '$routes/stores.js';
 	export let url: URL;
+	export let prefetch = true;
 </script>
 
-<mark><a href={url.href} data-sveltekit-prefetch class:dark={$use_dark_theme}><slot /></a></mark>
+<mark>
+	{#if prefetch}
+		<link rel="prefetch" href={url.href} />
+	{/if}
+	<a href={url.href} class:dark={$use_dark_theme}><slot /></a></mark
+>
 
 <style lang="scss">
 	:global(mark) {
