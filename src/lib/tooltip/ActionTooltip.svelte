@@ -21,7 +21,7 @@
 	export let visible = false;
 	export let start = 0;
 	export let opacity = 0;
-	export let duration = 350;
+	export let duration = 400;
 	export let delay = 0;
 	export let easing: EasingFunction = cubicInOut;
 	export let offsetHeight: number;
@@ -36,7 +36,7 @@
 	export let paddingBottom: number;
 	export let paddingLeft: number;
 	export let paddingRight: number;
-	export let custom_component: unknown | null = null;
+	export let custom_component: ConstructorOfATypedSvelteComponent | null = null;
 	export let show_arrow = true;
 	export let keep_visible = false;
 	export let css: [string, string][] = [];
@@ -90,7 +90,7 @@
 			transition:transition={transition_config}
 			class:visible={visible || keep_visible}
 			class:nothing={only_for_measuring}
-			tip-position={position}
+			data-tip-position={position}
 			style={`left: ${x}px; top: ${y}px; position:${position_type}; ${styles}`}
 		>
 			{#if title}
@@ -102,7 +102,7 @@
 			<!-- {#if !title && !custom_component}
 			{/if} -->
 			{#if show_arrow}
-				<span class="arrow" tip-position={position} />
+				<span class="arrow" data-tip-position={position} />
 			{/if}
 		</tool-tip>
 	{/key}
@@ -154,8 +154,8 @@
 			);
 			border-width: var(--default-arrow-size, 0.5rem);
 		}
-		&[tip-position='left'],
-		&[tip-position='right'] {
+		&[data-tip-position='left'],
+		&[data-tip-position='right'] {
 			width: calc(
 				var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) + var(--arrow-cushion, 4px)
 			);
@@ -168,8 +168,8 @@
 					transparent;
 			}
 		}
-		&[tip-position='bottom'],
-		&[tip-position='top'] {
+		&[data-tip-position='bottom'],
+		&[data-tip-position='top'] {
 			width: calc(var(--tooltip-arrow-width, calc(var(--default-arrow-size, 0.5rem) * 2)));
 			height: calc(
 				var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + var(--arrow-cushion, 4px)
@@ -183,7 +183,7 @@
 					transparent;
 			}
 		}
-		&[tip-position='bottom'] {
+		&[data-tip-position='bottom'] {
 			top: calc(
 				-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 * var(--arrow-cushion, 4px)
 			); /* overlap with the tooltip box */
@@ -196,7 +196,7 @@
 					);
 			}
 		}
-		&[tip-position='top'] {
+		&[data-tip-position='top'] {
 			top: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
 
 			&::after {
@@ -207,7 +207,7 @@
 					);
 			}
 		}
-		&[tip-position='left'] {
+		&[data-tip-position='left'] {
 			left: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
 
 			&::after {
@@ -218,7 +218,7 @@
 					);
 			}
 		}
-		&[tip-position='right'] {
+		&[data-tip-position='right'] {
 			left: calc(-1 * var(--tooltip-arrow-width, 0.75rem) + -1 * var(--arrow-cushion, 0px));
 
 			&::after {
@@ -231,16 +231,16 @@
 		}
 	}
 
-	[tip-position='bottom'] {
+	[data-tip-position='bottom'] {
 		transform-origin: center top;
 	}
-	[tip-position='top'] {
+	[data-tip-position='top'] {
 		transform-origin: center bottom;
 	}
-	[tip-position='left'] {
+	[data-tip-position='left'] {
 		transform-origin: right center;
 	}
-	[tip-position='right'] {
+	[data-tip-position='right'] {
 		transform-origin: left center;
 	}
 </style>
