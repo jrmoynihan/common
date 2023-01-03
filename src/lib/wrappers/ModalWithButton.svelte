@@ -1,15 +1,10 @@
-<script lang="ts" context="module">
-	export interface ButtonProps extends ComponentProps<Button> {}
-	export interface ModalProps extends ComponentProps<Modal> {}
-</script>
-
 <script lang="ts">
 	import Button from '$buttons/Button.svelte';
 	import type { ComponentProps } from 'svelte/internal';
 	import Modal from './Modal.svelte';
 
-	export let button_parameters: ButtonProps = {};
-	export let modal_parameters: ModalProps = {};
+	export let button_parameters: ComponentProps<Button> = {};
+	export let modal_parameters: ComponentProps<Modal> = {};
 	//@ts-ignore
 	export let open: () => Promise<void> = undefined;
 	//@ts-ignore
