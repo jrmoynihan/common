@@ -14,6 +14,7 @@
 	export let label_styles = '';
 	export let label_hover_styles = '';
 	export let label_focus_styles = '';
+	export let label_active_styles = '';
 	/** Properties of the {@link Button} container.  This is also where you can add an icon. */
 	export let button_props: ComponentProps<Button> = {};
 	export let bgColorHue: number | null = null; // = 246; // 207;
@@ -61,7 +62,8 @@
 			use:dynamicStyle={{
 				styles: label_styles,
 				hover_styles: label_hover_styles,
-				focus_styles: label_focus_styles
+				focus_styles: label_focus_styles,
+				active_styles: label_active_styles
 			}}
 			class="label-text pointer"
 			for={'toggle'}
@@ -91,7 +93,8 @@
 			use:dynamicStyle={{
 				styles: label_styles,
 				hover_styles: label_hover_styles,
-				focus_styles: label_focus_styles
+				focus_styles: label_focus_styles,
+				active_styles: label_active_styles
 			}}
 			class="label-text pointer"
 			for={'toggle'}

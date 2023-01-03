@@ -21,12 +21,15 @@
 	export let input_container_styles = '';
 	export let input_container_hover_styles = '';
 	export let input_container_focus_styles = '';
+	export let input_container_active_styles = '';
 	export let input_styles = '';
 	export let input_hover_styles = '';
 	export let input_focus_styles = '';
+	export let input_active_styles = '';
 	export let button_styles = '';
 	export let button_hover_styles = '';
 	export let button_focus_styles = '';
+	export let button_active_styles = '';
 	export let placeholder_props: ComponentProps<Placeholder> = {};
 	export let transition: SvelteTransition = fade;
 	export let transition_parameters: SvelteTransitionParams = { duration: 0 };
@@ -60,7 +63,8 @@
 	use:dynamicStyle={{
 		styles: input_container_styles,
 		hover_styles: input_container_hover_styles,
-		focus_styles: input_container_focus_styles
+		focus_styles: input_container_focus_styles,
+		active_styles: input_container_active_styles
 	}}
 	use:tooltip={{ ...tooltip_options }}
 	{title}
@@ -71,7 +75,8 @@
 			use:dynamicStyle={{
 				styles: input_styles,
 				hover_styles: input_hover_styles,
-				focus_styles: input_focus_styles
+				focus_styles: input_focus_styles,
+				active_styles: input_active_styles
 			}}
 			{id}
 			type="text"
@@ -90,7 +95,8 @@
 			use:dynamicStyle={{
 				styles: input_styles,
 				hover_styles: input_hover_styles,
-				focus_styles: input_focus_styles
+				focus_styles: input_focus_styles,
+				active_styles: input_active_styles
 			}}
 			{id}
 			role="combobox"
@@ -123,7 +129,8 @@
 				use:dynamicStyle={{
 					styles: button_styles,
 					hover_styles: button_hover_styles,
-					focus_styles: button_focus_styles
+					focus_styles: button_focus_styles,
+					active_styles: button_active_styles
 				}}
 				class="confirm-btn"
 				tabindex={value ? 0 : -1}
@@ -138,7 +145,8 @@
 				use:dynamicStyle={{
 					styles: button_styles,
 					hover_styles: button_hover_styles,
-					focus_styles: button_focus_styles
+					focus_styles: button_focus_styles,
+					active_styles: button_active_styles
 				}}
 				class="cancel-btn"
 				class:no-confirm={!show_confirm}

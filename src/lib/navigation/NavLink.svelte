@@ -25,6 +25,8 @@
 	export let hover_styles: string = '';
 	/** Focus styles to apply to the links. */
 	export let focus_styles: string = '';
+	/** Active styles to apply to the links */
+	export let active_styles: string = '';
 	/** Pass in an array of icons to use in a FaLayer component. */
 	export let icons: IconLayer[] | null = null;
 	/** Is the link hovered? */
@@ -81,7 +83,8 @@
 	use:dynamicStyle={{
 		styles: is_current_page ? current_page_styles : styles,
 		hover_styles,
-		focus_styles
+		focus_styles,
+		active_styles
 	}}
 	use:tooltip={Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
 	href={url.href}

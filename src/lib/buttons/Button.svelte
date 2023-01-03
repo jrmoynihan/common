@@ -27,6 +27,8 @@
 	export let hover_styles: string = '';
 	/** An array of focus CSS styles rules and values to apply to the button.  (default: uses the same styles as hover state). */
 	export let focus_styles: string = hover_styles;
+	/** An array of `:active` CSS styles rules and values to apply to the button when it is activated. */
+	export let active_styles: string = '';
 	/** A font-awwesome icon to use inside the button */
 	export let icon: IconDefinition | null = null;
 	/** The size of the icon */
@@ -57,7 +59,7 @@
 
 <button
 	transition:transition={transition_config ?? { duration: 0 }}
-	use:dynamicStyle={{ styles, hover_styles, focus_styles }}
+	use:dynamicStyle={{ styles, hover_styles, focus_styles, active_styles }}
 	use:tooltip={{ ...tooltip_options }}
 	title={title ?? tooltip_options.title}
 	{type}
