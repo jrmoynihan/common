@@ -85,7 +85,7 @@
 	}}
 	use:tooltip={Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
 	href={url.href}
-	data-sveltekit-prefetch
+	data-sveltekit-preload-code
 	class="link"
 	class:current-page={is_current_page}
 	style={styles}
