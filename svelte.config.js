@@ -1,9 +1,9 @@
-import { mdsvex } from 'mdsvex';
-import mdsvexConfig from './mdsvex.config.js';
 import adapter from '@sveltejs/adapter-auto';
-import preprocess from 'svelte-preprocess';
+import { mdsvex } from 'mdsvex';
 import path, { dirname } from 'path';
+import preprocess from 'svelte-preprocess';
 import { fileURLToPath } from 'url';
+import mdsvexConfig from './mdsvex.config.js';
 
 const $filepath = dirname(fileURLToPath(import.meta.url)).replace(/\\/g, '/');
 const $src = path.resolve($filepath, './src');
