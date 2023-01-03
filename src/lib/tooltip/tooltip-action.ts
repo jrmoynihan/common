@@ -1,7 +1,7 @@
+import { waitForAnimations } from '$actions/general.js';
 import { browser } from '$app/environment';
 import { getAncestors, getMax, getTransitionDurations } from '$functions/helpers.js';
 import { ErrorLog } from '$functions/logging.js';
-import ActionTooltip from './ActionTooltip.svelte';
 import { get, writable } from 'svelte/store';
 import type {
 	EasingFunction,
@@ -11,6 +11,7 @@ import type {
 	SlideParams,
 	TransitionConfig
 } from 'svelte/transition';
+import ActionTooltip from './ActionTooltip.svelte';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
 
@@ -97,15 +98,8 @@ const default_parameters: TooltipActionParameters = {
 	used_on_top_layer: false
 };
 
-export const tooltip = (
-	element: HTMLElement,
-	parameters: TooltipParameters = default_parameters
-) => {
+export function tooltip(element: HTMLElement, parameters: TooltipParameters = default_parameters) {
 	try {
-		const { used_on_top_layer } = parameters;
-		// Get animations running within the document's body
-		const animations = document.body.getAnimations({ subtree: true });
-
 		// Find max transition/animation time on ancestor nodes
 		const ancestor_nodes = getAncestors(element) as HTMLElement[];
 		const ancestor_transition_durations = getTransitionDurations(ancestor_nodes);
@@ -121,9 +115,8 @@ export const tooltip = (
 			...default_parameters,
 			...parameters
 		});
-		let { log_functions } = get(tooltip_parameters);
 		let title_attribute: string | null;
-		let tooltipComponent: ActionTooltip;
+		let tooltip_component: ActionTooltip;
 		let ticking = false;
 		let is_intersecting_viewport = false;
 
@@ -140,10 +133,10 @@ export const tooltip = (
 
 		// Create an intersection observer for the parent element
 		const intersection_observer = new IntersectionObserver(async (entries) => {
-			for (const entry of entries) {
+			for await (const entry of entries) {
 				if (entry.isIntersecting) {
 					is_intersecting_viewport = true;
-					initializeTooltipPosition();
+					await initializeTooltipPosition();
 				} else {
 					is_intersecting_viewport = false;
 				}
@@ -152,9 +145,9 @@ export const tooltip = (
 
 		// Create a resize observer for the parent element if it's box size changes
 		const resize_observer = new ResizeObserver(async (entries) => {
-			for (const entry of entries) {
+			for await (const entry of entries) {
 				if (is_intersecting_viewport && (entry.borderBoxSize || entry.contentRect)) {
-					initializeTooltipPosition();
+					await initializeTooltipPosition();
 				}
 			}
 		});
@@ -162,8 +155,8 @@ export const tooltip = (
 		// Add a resize event to the window that triggers repositioning/resizing of the tooltip
 		async function resize() {
 			if (!ticking && is_intersecting_viewport) {
-				window.requestAnimationFrame(() => {
-					initializeTooltipPosition();
+				window.requestAnimationFrame(async () => {
+					await initializeTooltipPosition();
 					ticking = false;
 				});
 				ticking = true;
@@ -172,8 +165,8 @@ export const tooltip = (
 
 		async function scroll() {
 			if (!ticking && is_intersecting_viewport) {
-				window.requestAnimationFrame(() => {
-					initializeTooltipPosition({ allow_offscreen: true });
+				window.requestAnimationFrame(async () => {
+					await initializeTooltipPosition(true);
 					ticking = false;
 				});
 				ticking = true;
@@ -181,7 +174,7 @@ export const tooltip = (
 		}
 
 		// Add event listeners and observers to the parent element, window, or document
-		function addEventListeners() {
+		async function addEventListeners() {
 			if (browser) {
 				intersection_observer.observe(element);
 				resize_observer.observe(element);
@@ -197,13 +190,14 @@ export const tooltip = (
 		addEventListeners();
 
 		// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
-		const new_tooltip_parameters = getParametersForNewTooltip();
+		let new_tooltip_parameters = getParametersForNewTooltip();
+
 		const { visible, in_delay, out_delay, visibility_delay, ...all_other_new_tooltip_parameters } =
 			new_tooltip_parameters;
 		const { delay } = new_tooltip_parameters;
 
 		// Make the tooltip instance.
-		tooltipComponent = new ActionTooltip({
+		tooltip_component = new ActionTooltip({
 			//@ts-ignore
 			props: {
 				...all_other_new_tooltip_parameters
@@ -212,16 +206,6 @@ export const tooltip = (
 			target: dialog?.firstElementChild ? dialog.firstElementChild : document.body
 		});
 		// TODO: See if Pop-Up API (top-layer promotion) is available yet https://chromestatus.com/feature/5463833265045504
-
-		async function waitForAnimations() {
-			window.requestAnimationFrame(async () => {
-				// Make sure all animations have settled (resolved or rejected); Rejection can happen when the element unmounts before the animation finishes
-				if (animations?.length > 0) {
-					const finishes = animations.map((a) => a.finished);
-					await Promise.allSettled(finishes);
-				}
-			});
-		}
 
 		// NOTE: need to call get(tooltip_parameters) here to ensure accurate loading of the delay params, likely due to hoisting behaviour
 		const {
@@ -235,12 +219,24 @@ export const tooltip = (
 		if (i_delay) delays.push(i_delay);
 		const max_delay = getMax([...delays, 0]);
 
-		// If the tooltip is made visibile immediately upon mounting, allow a delay before triggering that visibility.
-		if (visible && is_intersecting_viewport) {
-			makeVisibleAfterDelay(tooltipComponent, max_delay);
+		async function changeVisiblityAfterDelay({
+			visibility,
+			delay
+		}: {
+			visibility: boolean;
+			delay: number;
+		}) {
+			setTimeout(async () => {
+				tooltip_component.$set({ visible: visibility });
+			}, delay);
 		}
 
-		function mouseEnter(event?: MouseEvent) {
+		// If the tooltip is made visibile immediately upon mounting, allow a delay before triggering that visibility.
+		if (visible && is_intersecting_viewport) {
+			changeVisiblityAfterDelay({ visibility: true, delay: max_delay });
+		}
+
+		async function mouseEnter(event?: MouseEvent) {
 			// Check if the anchor element has moved since mounting
 			const { top, left } = element.getBoundingClientRect();
 			if (top !== anchor_top || left !== anchor_left) {
@@ -249,17 +245,18 @@ export const tooltip = (
 				initializeTooltipPosition();
 			}
 
-			// If not left-clicking while entering the element's box (i.e. dragging)...
-			if (event?.buttons !== 1 && get(tooltip_parameters).disabled !== true) {
-				// Remember the existing title attribute and set the title store to it can react to changes
-				storeTitle();
+			const { in_delay, disabled, delay } = get(tooltip_parameters);
 
-				setTimeout(async () => {
-					tooltipComponent.$set({ visible: true });
-					// }
-				}, get(tooltip_parameters).in_delay);
+			// If not left-clicking while entering the element's box (i.e. dragging)...
+			if (event?.buttons !== 1 && disabled !== true) {
+				// Remember the existing title attribute and set the title store to it can react to changes
+				await storeTitle();
+
+				// Make the tooltip visible after a delay
+				await changeVisiblityAfterDelay({ visibility: true, delay: in_delay ?? delay ?? 0 });
 			}
 		}
+		/** Prune away the unneeded params before passing/setting the tooltip parameters (avoids console warning messages for extraneous props) */
 		function getParametersForNewTooltip(): TooltipActionParameters {
 			const {
 				horizontal_offset,
@@ -275,26 +272,22 @@ export const tooltip = (
 			} = get(tooltip_parameters);
 			return passing_parameters;
 		}
-		function makeInvisibleTooltip(parameters: TooltipActionParameters) {
+		async function makeInvisibleTooltip(parameters: TooltipActionParameters) {
 			return new ActionTooltip({
 				//@ts-ignore
 				props: { ...parameters, visible: true, only_for_measuring: true },
 				target: document.body
 			});
 		}
-		async function initializeTooltipPosition({
-			allow_offscreen = false,
-			wait_for_animations = true
-		}: { allow_offscreen?: boolean; wait_for_animations?: boolean } = {}) {
-			// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
+		async function initializeTooltipPosition(allow_offscreen = false) {
 			const new_tooltip_parameters = getParametersForNewTooltip();
 			const { horizontal_offset, vertical_offset } = get(tooltip_parameters);
 			const { visible, ...parameters_without_visible } = new_tooltip_parameters;
 
-			await waitForAnimations();
+			await waitForAnimations(ticking);
 
 			// Create a non-interactive copy of the tooltip that appears instantly so we can measure the full width of the new tooltip before positioning it
-			const invisible_tooltip = makeInvisibleTooltip(new_tooltip_parameters);
+			const invisible_tooltip = await makeInvisibleTooltip(new_tooltip_parameters);
 
 			// Position the invisible tooltip
 			await positionTooltip(
@@ -308,7 +301,7 @@ export const tooltip = (
 			);
 
 			// Move the real one to the same position
-			tooltipComponent.$set({
+			tooltip_component.$set({
 				...parameters_without_visible,
 				x: invisible_tooltip.x,
 				y: invisible_tooltip.y,
@@ -318,12 +311,13 @@ export const tooltip = (
 			// Remove the invisible tooltip
 			invisible_tooltip.$destroy();
 		}
-		function storeTitle() {
+		async function storeTitle() {
 			// Store any existing title attribute for use/re-use
 			title_attribute = element.getAttribute('title');
+			const params = get(tooltip_parameters);
 
 			// Set the store to keep track of changing values for the tooltip's title
-			if (get(tooltip_parameters).title === undefined) {
+			if (params.title === undefined) {
 				tooltip_parameters.update((current_params) => {
 					return { ...current_params, title: title_attribute ?? '' };
 				});
@@ -349,18 +343,22 @@ export const tooltip = (
 		}
 
 		async function mouseLeave(event: MouseEvent) {
-			// If the left-button isn't being pressed...
-			if (event.buttons !== 1 && tooltipComponent && element) {
+			// If the left mouse button isn't being pressed...
+			if (event.buttons !== 1 && tooltip_component && element) {
 				const { delay, out_delay } = get(tooltip_parameters);
-				await new Promise((r) => setTimeout(r, out_delay ?? delay));
-				tooltipComponent.$set({ visible: false });
+
+				await changeVisiblityAfterDelay({ visibility: false, delay: out_delay ?? delay ?? 0 });
+
 				// Restore the `title` attribute
 				if (title_attribute) element.setAttribute('title', title_attribute);
 			}
 		}
 
 		/** Updates the store values for the horizontal and vertical offset parameters when the position changes */
-		function changeOffsets(old_parameters: TooltipParameters, new_parameters: TooltipParameters) {
+		async function changeOffsets(
+			old_parameters: TooltipParameters,
+			new_parameters: TooltipParameters
+		) {
 			let old_position = old_parameters?.position ?? 'top';
 			let new_position = new_parameters?.position ?? 'top';
 
@@ -475,12 +473,17 @@ export const tooltip = (
 			// Change the position of the tooltip to the middle of the parent element's box, on the edge indicated by the 'position' parameter
 			x =
 				dialog && parent_styles
-					? positionXAbsolute({ ...x_params, tip_margin_right, tip_padding_left, parent_styles })
-					: positionX(x_params);
+					? await positionXAbsolute({
+							...x_params,
+							tip_margin_right,
+							tip_padding_left,
+							parent_styles
+					  })
+					: await positionX(x_params);
 			y =
 				dialog && parent_styles
-					? positionYAbsolute({ ...y_params, parent_styles })
-					: positionY(y_params);
+					? await positionYAbsolute({ ...y_params, parent_styles })
+					: await positionY(y_params);
 
 			// ** Adjust the tooltip if it would be positioned outside the viewport **
 			// Outside left-edge:
@@ -488,7 +491,7 @@ export const tooltip = (
 				if (x < 0) {
 					if (allow_dynamic_position) {
 						horizontal_offset = getHorizontalOffset(new_position, horizontal_offset, true);
-						x = repositionX({
+						x = await repositionX({
 							position: new_position,
 							left,
 							width,
@@ -505,7 +508,7 @@ export const tooltip = (
 				else if (x + tip_width > window.innerWidth) {
 					if (allow_dynamic_position) {
 						horizontal_offset = getHorizontalOffset(new_position, horizontal_offset, true);
-						x = repositionX({
+						x = await repositionX({
 							position: new_position,
 							left,
 							width,
@@ -522,7 +525,7 @@ export const tooltip = (
 				if (y < 0) {
 					if (allow_dynamic_position) {
 						vertical_offset = getVerticalOffset(new_position, vertical_offset, true);
-						y = repositionY({
+						y = await repositionY({
 							position: new_position,
 							top,
 							bottom,
@@ -539,7 +542,7 @@ export const tooltip = (
 				else if (y + tip_height > window.innerHeight) {
 					if (allow_dynamic_position) {
 						vertical_offset = getVerticalOffset(new_position, vertical_offset, true);
-						y = repositionY({
+						y = await repositionY({
 							position: new_position,
 							top,
 							bottom,
@@ -559,10 +562,10 @@ export const tooltip = (
 
 		// FIXME: tooltip updates on scroll while not visible!
 		return {
-			update(new_parameters: TooltipParameters) {
-				if (tooltipComponent && new_parameters) {
+			async update(new_parameters: TooltipParameters) {
+				if (tooltip_component && new_parameters) {
 					// Temporarily store the old parameter values
-					let old_parameters = get(tooltip_parameters);
+					const old_parameters = get(tooltip_parameters);
 
 					// Update the parameters store, overriting any existing values with new parameters
 					tooltip_parameters.update((current_parameters) => {
@@ -570,26 +573,26 @@ export const tooltip = (
 					});
 
 					if (new_parameters.position) {
-						changeOffsets(old_parameters, new_parameters);
-						initializeTooltipPosition({ wait_for_animations: false });
+						await changeOffsets(old_parameters, new_parameters);
+						await initializeTooltipPosition();
 					}
 
-					tooltipComponent.$set({ ...new_parameters });
+					tooltip_component.$set({ ...new_parameters });
 				}
 			},
-			destroy() {
-				tooltipComponent.$destroy();
+			async destroy() {
 				element.removeEventListener('mouseover', mouseEnter);
 				element.removeEventListener('mouseleave', mouseLeave);
 				element.removeEventListener('mousemove', mouseMove);
 				window.removeEventListener('resize', resize);
 				resize_observer.disconnect();
+				tooltip_component.$destroy();
 			}
 		};
 	} catch (error) {
 		if (error instanceof Error) ErrorLog({ error });
 	}
-};
+}
 
 function getHorizontalOffset(
 	position: TooltipDirections,
@@ -624,7 +627,7 @@ function getVerticalOffset(
 		return 0;
 	}
 }
-function getParentPaddings(parent_styles: CSSStyleDeclaration) {
+async function getParentPaddings(parent_styles: CSSStyleDeclaration) {
 	const { paddingLeft, paddingRight, paddingTop, paddingBottom } = parent_styles;
 	const parent_padding_left: number = parseInt(paddingLeft.replace('px', ''));
 	const parent_padding_right: number = parseInt(paddingRight.replace('px', ''));
@@ -647,7 +650,7 @@ interface positionXAbsolute_params extends positionX_params {
 	parent_styles: CSSStyleDeclaration;
 }
 
-function positionX(input: positionX_params): number {
+async function positionX(input: positionX_params): Promise<number> {
 	const {
 		position,
 		left,
@@ -667,7 +670,7 @@ function positionX(input: positionX_params): number {
 		return 0;
 	}
 }
-function positionXAbsolute(input: positionXAbsolute_params): number {
+async function positionXAbsolute(input: positionXAbsolute_params): Promise<number> {
 	const {
 		position,
 		left,
@@ -681,7 +684,7 @@ function positionXAbsolute(input: positionXAbsolute_params): number {
 		parent_styles
 	} = input;
 	const { parent_padding_left, parent_padding_right, parent_padding_top, parent_padding_bottom } =
-		getParentPaddings(parent_styles);
+		await getParentPaddings(parent_styles);
 
 	if (position === 'top' || position === 'bottom') {
 		return (
@@ -706,8 +709,8 @@ function positionXAbsolute(input: positionXAbsolute_params): number {
 		return 0;
 	}
 }
-function repositionX(input: positionX_params) {
-	let x = positionX(input);
+async function repositionX(input: positionX_params) {
+	let x = await positionX(input);
 	const { tip_offset_width } = input;
 	const min_margin = 16; // The minimum margin (in px) between the tooltip and the edge of the screen
 	const screen_width = window.innerWidth;
@@ -728,7 +731,7 @@ interface positionY_params {
 interface positionYAbsolute_params extends positionY_params {
 	parent_styles: CSSStyleDeclaration;
 }
-function positionY(input: positionY_params): number {
+async function positionY(input: positionY_params): Promise<number> {
 	const {
 		position,
 		top,
@@ -748,7 +751,7 @@ function positionY(input: positionY_params): number {
 		return 0;
 	}
 }
-function positionYAbsolute(input: positionYAbsolute_params) {
+async function positionYAbsolute(input: positionYAbsolute_params) {
 	const {
 		position,
 		top,
@@ -760,7 +763,7 @@ function positionYAbsolute(input: positionYAbsolute_params) {
 		parent_styles
 	} = input;
 	const { parent_padding_left, parent_padding_right, parent_padding_top, parent_padding_bottom } =
-		getParentPaddings(parent_styles);
+		await getParentPaddings(parent_styles);
 
 	if (position === 'left' || position === 'right') {
 		return vertical_middle - tip_margin_top - tip_offset_height / 2 + vertical_offset;
@@ -772,18 +775,12 @@ function positionYAbsolute(input: positionYAbsolute_params) {
 		return 0;
 	}
 }
-function repositionY(input: positionY_params) {
-	let y = positionY(input);
+async function repositionY(input: positionY_params) {
+	let y = await positionY(input);
 	const { tip_offset_height } = input;
 	const min_margin = 16; // The minimum margin (in px) between the tooltip and the edge of the screen
 	const screen_height = window.innerHeight;
 	if (y < 0) y = 0 + min_margin;
 	if (y + tip_offset_height > screen_height) y = screen_height - tip_offset_height - min_margin;
 	return y;
-}
-
-function makeVisibleAfterDelay(tooltip: ActionTooltip, max_delay: number) {
-	setTimeout(() => {
-		tooltip.$set({ visible: true });
-	}, max_delay);
 }
