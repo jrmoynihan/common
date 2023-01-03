@@ -4,12 +4,14 @@ export interface DynamicStyleParameters {
 	styles?: string;
 	hover_styles?: string;
 	focus_styles?: string;
+	active_styles?: string;
 	dynamic_styles?: string;
 }
 const default_parameters: DynamicStyleParameters = {
 	styles: '',
 	hover_styles: '',
 	focus_styles: '',
+	active_styles: '',
 	dynamic_styles: ''
 };
 
@@ -31,6 +33,12 @@ export function dynamicStyle(
 			set(rules);
 		}
 	});
+	const split_active_rules: Readable<string[]> = derived(store, (store_value, set) => {
+		if (store_value.active_styles) {
+			const rules = splitStyleRules(store_value.active_styles);
+			set(rules);
+		}
+	});
 	const split_focus_rules: Readable<string[]> = derived(store, ($store, set) => {
 		// For accessibility, if no focus styles are explicitly given, they should instead use the hover styles
 		if (!$store.focus_styles && $store.hover_styles) {
@@ -44,6 +52,7 @@ export function dynamicStyle(
 
 	addStaticStyles();
 
+	// Event-Listener functions
 	function mouseEnter() {
 		if (get(split_hover_rules)) {
 			applyStyles(element, get(split_hover_rules));
@@ -64,6 +73,16 @@ export function dynamicStyle(
 			removeStyles(element, get(split_focus_rules));
 		}
 	}
+	function activated() {
+		if (get(split_active_rules)) {
+			applyStyles(element, get(split_active_rules));
+		}
+	}
+	function deactivated() {
+		if (get(split_active_rules)) {
+			removeStyles(element, get(split_active_rules));
+		}
+	}
 
 	function addStaticStyles() {
 		if (get(split_static_rules)) {
@@ -80,6 +99,10 @@ export function dynamicStyle(
 		element.addEventListener('focus', focused);
 		element.addEventListener('blur', blurred);
 	}
+	if (get(store).active_styles) {
+		element.addEventListener('mousedown', activated);
+		element.addEventListener('mouseup', deactivated);
+	}
 
 	return {
 		update(new_parameters: DynamicStyleParameters) {
@@ -91,6 +114,8 @@ export function dynamicStyle(
 			element.removeEventListener('mouseleave', mouseLeave);
 			element.removeEventListener('focus', focused);
 			element.removeEventListener('blur', blurred);
+			element.removeEventListener('mousedown', activated);
+			element.removeEventListener('mouseup', deactivated);
 		}
 	};
 }
