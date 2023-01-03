@@ -1,5 +1,5 @@
-import type ActionTooltip from '.tooltip/ActionTooltip.svelte';
 import { tooltip } from '$tooltip/tooltip-action.js';
+import type ActionTooltip from '.tooltip/ActionTooltip.svelte';
 import type { ComponentProps } from 'svelte';
 import type ActionSpotlight from './spotlight/ActionSpotlight.svelte';
 import { spotlight } from './spotlight/spotlight.js';
