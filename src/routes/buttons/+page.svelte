@@ -4,8 +4,12 @@
 	import { arrayFromNumber, delay } from '$functions/helpers.js';
 	import { checkeredFlag, Log } from '$functions/logging.js';
 	// import { realShadow } from '../styles/shadow.js';
+	import { spotlight } from '$actions/spotlight/spotlight.js';
 	import { defaultToast } from '$toasts/toasts.js';
 	import type { TooltipDirections } from '$tooltip/tooltip-action.js';
+	import { tooltip } from '$tooltip/tooltip-action.js';
+	import { onDestroy } from 'svelte';
+	import { tutorial} from '$actions/general.js'
 
 	let position: TooltipDirections = 'top';
 	let keep_visible: boolean = false;
@@ -50,11 +54,31 @@
 				break;
 		}
 	}
+	let spotlight_shape: 'square' | 'circle' | 'ellipse' = 'square';
+	let step = 0;
+	setTimeout(() => {
+		step++;
+	}, 800);
 </script>
 
 <section class="buttons">
 	<div class="directions">
-		<h3 style="grid-column: span 2; place-self: center; width: max-content">Tooltip Direction</h3>
+		<!-- use:tooltip={{ visible: step === 1, title: `Cool spotlight, right?`, position, disabled: step !== 1 }}
+		use:spotlight={{
+			shape: 'square',
+			padding: 40,
+			visible: step === 1,
+			onClose: async () => step++
+		}} -->
+		<h3
+			use:tutorial={{
+				tooltip: { visible: step === 1, title: `Cool spotlight, right?`, position, disabled: step !== 1 },
+				spotlight: { shape: 'square', padding: 40, visible: step === 1, onClose: async () => step++ }
+			}}
+			style=" grid-column: span 2; place-self: center; width: max-content"
+		>
+			Tooltip Direction
+		</h3>
 		{#each ['top', 'right', 'bottom', 'left'] as direction}
 			<label for={direction}>
 				{direction}
@@ -63,12 +87,14 @@
 		{/each}
 	</div>
 	<Button
-		on:click={() =>
+		on:click={() => {
+			step++;
 			Log({
 				msg: 'clicking with the low elevation button?',
 				title: 'HEY YOU CLICKED ME!',
 				icon: checkeredFlag
-			})}
+			});
+		}}
 		text="I'm a button with low elevation"
 		styles={`--shadow-color: 350deg 50% 70%;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}
 		box_shadow_elevation="low"
@@ -109,6 +135,15 @@
 		label_hover_styles={'color: yellow;'}
 	/>
 	<Button hover_styles={'box-shadow: 0 0 10px yellow'} />
+	<h3
+	style:opacity={step <= 2 ? 1 : 0}
+		use:tutorial={{
+			tooltip: { visible: step === 2, title: 'It really is!', position, disabled: step !== 2 },
+			spotlight: { visible: step === 2, shape: 'ellipse', onClose: async () => step++}
+		}}
+	>
+		Is that enough?
+	</h3>
 </section>
 
 <style lang="scss">
