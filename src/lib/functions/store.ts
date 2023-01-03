@@ -4,18 +4,18 @@ import {
 	readable,
 	writable,
 	type Readable,
-	type Writable,
 	type StartStopNotifier,
-	type Unsubscriber
+	type Unsubscriber,
+	type Writable
 } from 'svelte/store';
 
 /** One or more `Readable`s. */
-export declare type Stores =
+declare type Stores =
 	| Readable<any>
 	| [Readable<any>, ...Array<Readable<any>>]
 	| Array<Readable<any>>;
 /** One or more values from `Readable` stores. */
-export declare type StoresValues<T> = T extends Readable<infer U>
+declare type StoresValues<T> = T extends Readable<infer U>
 	? U
 	: {
 			[K in keyof T]: T[K] extends Readable<infer U> ? U : never;
@@ -56,4 +56,11 @@ export function setDerivedContext<S, T>(
 }
 export function getDerivedContext<T>(key: string): Readable<T> {
 	return getReadableContext(key);
+}
+export function asyncGet<T>(store: Readable<T>) {
+	return new Promise<T>((resolve) => {
+		store.subscribe((value) => {
+			resolve(value);
+		});
+	});
 }
