@@ -33,11 +33,11 @@ export function tutorial(
 			tooltip: ComponentProps<ActionTooltip>;
 		}) {
 			spot.update(parameters.spotlight);
-			tip.update(parameters.tooltip);
+			tip?.update(parameters.tooltip);
 		},
 		destroy() {
 			spot.destroy();
-			tip.destroy();
+			tip?.destroy();
 		}
 	};
 }
