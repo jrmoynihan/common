@@ -1,10 +1,10 @@
 import { page } from '$app/stores';
 import { deKebab } from '$functions/helpers.js';
-import type { IconSize } from '../lib_types.js';
+import { ErrorLog } from '$functions/logging.js';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index';
 import type { NavigationTarget } from '@sveltejs/kit';
 import { get } from 'svelte/store';
-import { ErrorLog } from '$functions/logging.js';
+import type { IconSize } from '../lib_types.js';
 
 interface INavigationLink {
 	url: URL;
@@ -25,14 +25,14 @@ export type IconLayer = {
 export class NavigationLink {
 	url: URL;
 	link_text: string;
-	icons: IconLayer[] | null;
-	anchors: NavigationLink[] | null;
+	icons: IconLayer[] | undefined;
+	anchors: NavigationLink[] | undefined;
 
 	constructor(args: INavigationLink) {
 		this.url = args?.url;
 		this.link_text = args?.link_text ?? deKebab(this.getLastSegment(args?.url.pathname)) ?? null;
-		this.icons = args?.icons ?? null;
-		this.anchors = args?.anchors ?? null;
+		this.icons = args?.icons ?? undefined;
+		this.anchors = args?.anchors ?? undefined;
 	}
 	private getLastSegment(pathname: string): string {
 		const segments = pathname.split('/');
