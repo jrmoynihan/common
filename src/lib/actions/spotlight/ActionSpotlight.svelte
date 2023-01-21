@@ -1,12 +1,11 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
+	import { cubicOut } from 'svelte/easing';
+	import { tweened } from 'svelte/motion';
 	import { fade } from 'svelte/transition';
 
-	export let width_px: string = '';
-	export let height_px: string = '';
-	export let top_px: string = '';
-	export let left_px: string = '';
 	export let width: number = 0;
 	export let height: number = 0;
 	export let top: number = 0;
@@ -18,71 +17,111 @@
 	export let delay: number = 0;
 	export let duration: number = 400;
 	export let opacity: number = 0.75;
-	export let color: string = null;
+	export let color: string = '';
 	export let soft_edges: boolean = true;
 	export let soft_edge_distance: string = '1.5rem';
+	/** 
+	 * The shape the spotlight will take.
+	 * @default circle
+	*/
 	export let shape: 'circle' | 'ellipse' | 'square' = 'circle';
+	/** The additional nodes to travel to after closing the initial spotlight. */
+	export let nodes: HTMLElement[] = [];
+	export let node_index: number = 0;
 	export let onClose: () => void = async () => {};
 	export let onOpen: () => void = async () => {};
-	$: hasOpened = visible ? true : hasOpened;
+	let dialog: HTMLElement;
+	let initial_x = 0;
+	let initial_y = 0;
+	let initial_width = window?.innerWidth;
+	let initial_height = window?.innerHeight;
+	$: final_x = left - padding_width / 2;
+	$: final_y = top - padding_height / 2;
+	$: final_width = width + padding_width;
+	$: final_height = height + padding_height;
+	const x = tweened(initial_x, { duration, delay, easing: cubicOut });
+	const y = tweened(initial_y, { duration, delay, easing: cubicOut });
+	const w = tweened(initial_width, { duration, delay, easing: cubicOut });
+	const h = tweened(initial_height, { duration, delay, easing: cubicOut });
+	const dispatch = createEventDispatcher();
 
-	async function close() {
+	export async function close() {
+		visible = false;
 		await onClose?.();
 	}
 
-	async function open() {
+	export async function open() {
+		await reposition();
 		await onOpen?.();
 	}
-
-	$: if (visible) {
-		open();
-	} else if (hasOpened) {
-		close();
+	export async function reposition() {
+		$x = final_x;
+		$y = final_y;
+		$w = final_width;
+		$h = final_height;
 	}
 
-	// let dialog: HTMLDialogElement;
-	// $: dialog?.showModal();
-	
+	export async function moveToNextNode() {
+		if (node_index < nodes.length) {
+			dispatch('next', { node_index, node: nodes[node_index] });
+		} else {
+			await close();
+			dispatch('closeAll');
+		}
+	}
+
+	export async function nextNodeOrClose() {
+		if (nodes?.length > 0) {
+			await moveToNextNode();
+		} else {
+			await close();
+		}
+	}
+	$: visible ? open() : null;
 </script>
 
-{#if visible}
-	{#if shape === 'square'}
-		<svg>
-			<defs>
+{#if shape === 'square' && visible}
+	<svg transition:fade={{ duration, delay, easing: cubicOut }}>
+		<defs>
 			<mask id="square-mask">
-				<rect fill="white" x="0" y="0" width="100%" height="100%" opacity={`${opacity * 100}%`} />
 				<rect
-				fill="black"
-				x={left - padding_width / 2}
-				y={top - padding_height / 2}
-				width={width + padding_width}
-				height={height + padding_height}
+					style:opacity
+					fill={`hsla(0,100%,100%, ${opacity * 100}%)`}
+					x="0"
+					y="0"
+					width="100%"
+					height="100%"
 				/>
+				<rect id="animated-mask" fill="black" x={$x} y={$y} width={$w} height={$h} />
 			</mask>
 		</defs>
-		<rect fill="black" x="0" y="0" width="100%" height="100%" mask="url(#square-mask)"/>
-		</svg>
-	{/if}
-	<button
-		transition:fade={{ duration, delay }}
-		class="spotlight"
-		class:visible
-		class:circle={shape === 'circle'}
-		class:ellipse={shape === 'ellipse'}
-		class:square={shape === 'square'}
-		style:--height={height_px}
-		style:--width={width_px}
-		style:--top={top_px}
-		style:--left={left_px}
-		style:--spotlight-padding={`${padding}px`}
-		style:--soft-edges={soft_edges ? soft_edge_distance : '0'}
-		style:--opacity={opacity}
-		style:--color={color}
-		on:click|self|stopPropagation={() => {
-			visible = false;
-		}}
-	/>
+		<rect fill="black" x="0" y="0" width="100%" height="100%" mask="url(#square-mask)" />
+	</svg>
 {/if}
+<button
+	bind:this={dialog}
+	transition:fade={{ duration, delay, easing: cubicOut }}
+	class="spotlight"
+	class:visible
+	class:circle={shape === 'circle'}
+	class:ellipse={shape === 'ellipse'}
+	class:square={shape === 'square'}
+	style:--left={`${$x}px`}
+	style:--top={`${$y}px`}
+	style:--width={`${$w}px`}
+	style:--height={`${$h}px`}
+	style:--duration={duration}
+	style:--spotlight-padding={`${padding}px`}
+	style:--soft-edges={soft_edges ? soft_edge_distance : '0'}
+	style:--opacity={opacity}
+	style:--color={color}
+	on:click|self|stopPropagation={nextNodeOrClose}
+	on:keydown|self|stopPropagation={(e) => {
+		if (e.key === 'Escape') {
+			nextNodeOrClose();
+		}
+	}}
+/>
 
 <style lang="scss">
 	svg {
@@ -100,6 +139,9 @@
 		pointer-events: none;
 		width: 100vw;
 		height: 100vh;
+		opacity: 0;
+		transition: webkit-mask var(--duration) ease-out, mask var(--duration) ease-out,
+			opacity var(--duration) ease-out;
 
 		&.visible {
 			pointer-events: initial;
