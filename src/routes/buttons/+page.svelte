@@ -4,12 +4,10 @@
 	import { arrayFromNumber, delay } from '$functions/helpers.js';
 	import { checkeredFlag, Log } from '$functions/logging.js';
 	// import { realShadow } from '../styles/shadow.js';
-	import { spotlight } from '$actions/spotlight/spotlight.js';
+	import { tutorial } from '$actions/general.js';
+	import type { TooltipDirections } from '$actions/tooltip/tooltip.js';
 	import { defaultToast } from '$toasts/toasts.js';
-	import type { TooltipDirections } from '$tooltip/tooltip-action.js';
-	import { tooltip } from '$tooltip/tooltip-action.js';
-	import { onDestroy } from 'svelte';
-	import { tutorial} from '$actions/general.js'
+	import { onMount } from 'svelte';
 
 	let position: TooltipDirections = 'top';
 	let keep_visible: boolean = false;
@@ -54,26 +52,72 @@
 				break;
 		}
 	}
-	let spotlight_shape: 'square' | 'circle' | 'ellipse' = 'square';
 	let step = 0;
-	setTimeout(() => {
-		step++;
-	}, 800);
+	let heading_three: HTMLHeadingElement;
+	let high_button: HTMLDivElement;
+
+	onMount(() => {
+		setTimeout(() => {
+			step++;
+		}, 1_000);
+	});
 </script>
 
+step: {step}
 <section class="buttons">
 	<div class="directions">
-		<!-- use:tooltip={{ visible: step === 1, title: `Cool spotlight, right?`, position, disabled: step !== 1 }}
-		use:spotlight={{
-			shape: 'square',
-			padding: 40,
-			visible: step === 1,
-			onClose: async () => step++
-		}} -->
 		<h3
 			use:tutorial={{
-				tooltip: { visible: step === 1, title: `Cool spotlight, right?`, position, disabled: step !== 1 },
-				spotlight: { shape: 'square', padding: 40, visible: step === 1, onClose: async () => step++ }
+				tooltip: {
+					visible: step === 1,
+					title: `Cool spotlight, right?`,
+					position,
+					disabled: step !== 1,
+					delay: 500,
+					steps: [
+						{
+							node: heading_three,
+							title: 'This is a heading',
+							position,
+							disabled: step !== 1,
+						},
+						{
+							node: high_button,
+							title: 'This is a button',
+							position,
+							disabled: step !== 1,
+						}
+					]
+				},
+				spotlight: {
+					shape: 'circle',
+					padding: 40,
+					visible: step === 1,
+					duration: 1000,
+					steps: [
+						{
+							node: heading_three,
+							shape: 'circle',
+							opacity: 0.5,
+							padding: 10,
+							onClose: () => {
+								defaultToast({ msg: 'moving on...', duration: 1_000 });
+								step++;
+							}
+						},
+						{
+							node: high_button,
+							shape: 'ellipse',
+							color: 'hsl(5, 70%, 20%)',
+							opacity: 0.55,
+							padding: 60,
+							onClose: () => {
+								defaultToast({ msg: 'closing', duration: 1_000 });
+								step++;
+							}
+						}
+					]
+				}
 			}}
 			style=" grid-column: span 2; place-self: center; width: max-content"
 		>
@@ -109,20 +153,23 @@
 		box_shadow_elevation="medium"
 		tooltip_options={{ position, title: 'Click me!', log_functions: true, keep_visible }}
 	/>
-	<Button
-		on:click={() => (keep_visible = !keep_visible)}
-		text="I'm a button with high elevation"
-		box_shadow_elevation="high"
-		styles={'--button-hover-background: linear-gradient(to bottom left, hsla(350, 100%, 50%, 80%), hsl(33, 100%, 55%),  hsla(350, 100%, 50%, 80%)); --shadow-color: 350deg 50% 70%; '}
-		tooltip_options={{
-			position,
-			title: 'Click me!',
-			keep_visible
-		}}
-	/>
-	<!-- <button style={`${shadows} padding: 1rem; background: inherit; color: var(--text);`}
-		>[WIP] Shadow Generation</button
-	> -->
+	<div bind:this={high_button}>
+		<Button
+			on:click={() => {
+				keep_visible = !keep_visible;
+				step = 0;
+			}}
+			text="I'm a button with high elevation"
+			box_shadow_elevation="high"
+			styles={'--button-hover-background: linear-gradient(to bottom left, hsla(350, 100%, 50%, 80%), hsl(33, 100%, 55%),  hsla(350, 100%, 50%, 80%)); --shadow-color: 350deg 50% 70%; '}
+			tooltip_options={{
+				position,
+				title: 'Click me!',
+				keep_visible
+			}}
+		/>
+	</div>
+
 	<ToggleSwitch
 		bind:checked={keep_visible}
 		on:toggle={(e) => console.log(e.detail.checked)}
@@ -135,13 +182,16 @@
 		label_hover_styles={'color: yellow;'}
 	/>
 	<Button hover_styles={'box-shadow: 0 0 10px yellow'} />
-	<h3
-	style:opacity={step <= 2 ? 1 : 0}
-		use:tutorial={{
+	<h3 bind:this={heading_three} style:opacity={step <= 2 ? 1 : 0}>
+		<!-- use:tutorial={{
 			tooltip: { visible: step === 2, title: 'It really is!', position, disabled: step !== 2 },
-			spotlight: { visible: step === 2, shape: 'ellipse', onClose: async () => step++}
-		}}
-	>
+			spotlight: {
+				visible: step === 2,
+				shape: 'ellipse',
+				duration: 400,
+				onClose: async () => step++
+			}
+		}} -->
 		Is that enough?
 	</h3>
 </section>
