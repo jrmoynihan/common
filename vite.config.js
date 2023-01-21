@@ -13,10 +13,10 @@ const config = {
 	plugins: [examples, sveltekit()],
 	resolve: {
 		alias: {
-			$lib: $lib,
-			$routes: $routes,
-			$scripts: $scripts,
-			$actions: $actions
+			$lib,
+			$routes,
+			$scripts,
+			$actions
 		}
 	},
 	ssr: {
