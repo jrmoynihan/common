@@ -2,106 +2,51 @@ import { waitForAnimations } from '$actions/general.js';
 import { browser } from '$app/environment';
 import { getAncestors, getMax, getTransitionDurations } from '$functions/helpers.js';
 import { ErrorLog } from '$functions/logging.js';
+import type { ComponentProps } from 'svelte';
 import { get, writable } from 'svelte/store';
-import type {
-	EasingFunction,
-	FadeParams,
-	FlyParams,
-	ScaleParams,
-	SlideParams,
-	TransitionConfig
-} from 'svelte/transition';
 import ActionTooltip from './ActionTooltip.svelte';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
 
+/** Each additional step takes the same parameters as the action itself, but you must also provide a node to move the tooltips to at each step. */
+export type TooltipStep = {
+	node: HTMLElement;
+} & Omit<TooltipParameters, 'nodes'>;
+
 // An optional "public" interface for the user to pass into the tooltip action from elements
-export interface TooltipParameters {
-	/** Choose from top, bottom, right, left anchor positions for the tooltip. */
-	position?: TooltipDirections;
-	/** The text content of the tooltip.  Will be set as the title attribute after the tooltip is hidden. */
-	title?: string;
+export interface TooltipParameters extends ComponentProps<ActionTooltip> {
 	/** How far (in px) to horizontally offset the tooltip */
 	horizontal_offset?: number;
 	/** How far (in px) to vertically offset the tooltip */
 	vertical_offset?: number;
-	/** Allow the tooltip to start visible when mounted to the DOM and programmatically trigger its visibility. May be useful for e.g. guided tour interactions. */
-	visible?: boolean;
-	/** Allow the tooltip to stay visible even after the user moves the mouse outside the parent element. */
-	keep_visible?: boolean;
-	/** Enable or disable the tooltip arrow */
-	show_arrow?: boolean;
 	/** Allows the tooltip to reposition itself to fit on-screen */
 	allow_dynamic_position?: boolean;
-	/** Delay the entrnace and exit transition of the tooltip symmetrically.  An explicit transition config's delay property will override this! */
-	delay?: number;
 	/** Delay just on the appearance of the tooltip.  Overrides the more general 'delay' property, but an explicit transition config's delay property will override this! */
 	in_delay?: number;
 	/** Delay just on the exit of the tooltip.  Overrides the more general 'delay' property, an explicit transition config's delay property will override this! */
 	out_delay?: number;
 	/** Delays the calculation of the tooltip's position upon mounting.  Tooltips inherently wait for parent transitions/animations to finish before calculating their positions (since it may change by the end of the transition).  If you want the tooltip to be visible "immediately", it is recommended to add a positioning delay here to  */
 	visibility_delay?: number;
-	/** Duration of the in/out transition of the tooltip.  An explicit transition config will override this! */
-	duration?: number;
-	/** Easing function of the in/out transition of the tooltip.  An explicit transition config will override this! */
-	easing?: EasingFunction;
-	/** CSS properties/value pairs. These can change dynamically on the tooltip.  Note: use '--tooltip'-prefixed CSS custom properties wherever possible (e.g. --tooltip-background: 'white' instead of background: 'white'). */
-	css?: [string, string][];
 	/** A component to show inside the tooltip */
-	custom_component?: unknown;
+	custom_component?: ConstructorOfATypedSvelteComponent;
 	/** Disabling the tooltip prevents it from appearing on mouseover events. */
 	disabled?: boolean;
-	/** A Svelte transition to use on the tooltip */
-	transition?: any;
-	/** An explicit transition config. Will override delay, duration, easing props on the tooltip action. */
-	transition_config?: FlyParams | FadeParams | ScaleParams | SlideParams | TransitionConfig;
-	/** For development-only.  Console log certain events/function calls. */
-	log_functions?: boolean;
-	/** Is the tooltip used on a top-layer element, like a <dialog> (more coming to HTML soon! https://chromestatus.com/feature/5463833265045504) */
-	used_on_top_layer?: boolean;
+	/** The additional nodes to travel to after closing the initial spotlight. */
+	steps?: TooltipStep[];
 }
 
-// A non-optional default/private interface to ensure type-safety and all variables are set
-interface TooltipActionParameters extends TooltipParameters {
-	position: TooltipDirections;
-	x: number;
-	y: number;
-	offsetWidth: number;
-	offsetHeight: number;
-	clientWidth: number;
-	clientHeight: number;
-	marginLeft: number;
-	marginTop: number;
-}
-const default_parameters: TooltipActionParameters = {
-	position: 'top',
-	delay: 0,
+const default_parameters: TooltipParameters = {
 	in_delay: 0,
 	out_delay: 0,
 	visibility_delay: 0,
-	duration: 400,
-	keep_visible: false,
-	visible: false,
-	custom_component: null,
 	allow_dynamic_position: true,
-	css: [],
-	x: 0,
-	y: 0,
-	offsetWidth: 0,
-	offsetHeight: 0,
-	clientWidth: 0,
-	clientHeight: 0,
-	marginLeft: 0,
-	marginTop: 0,
-	disabled: false,
-	log_functions: false,
-	used_on_top_layer: false
+	disabled: false
 };
 
-export function tooltip(element: HTMLElement, parameters: TooltipParameters = default_parameters) {
+export function tooltip(node: HTMLElement, parameters: TooltipParameters = default_parameters) {
 	try {
 		// Find max transition/animation time on ancestor nodes
-		const ancestor_nodes = getAncestors(element) as HTMLElement[];
+		const ancestor_nodes = getAncestors(node) as HTMLElement[];
 		const ancestor_transition_durations = getTransitionDurations(ancestor_nodes);
 		const max_ancestor_transition_duration = getMax(ancestor_transition_durations) * 1000;
 
@@ -109,24 +54,25 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 		const dialog = ancestor_nodes?.find((ele) => ele?.tagName === 'DIALOG') as HTMLDialogElement;
 
 		// Measure anchor element's position in the DOM to check if it reflows somewhere down the line
-		let { top: anchor_top, left: anchor_left } = element.getBoundingClientRect();
+		let { top: anchor_top, left: anchor_left } = node.getBoundingClientRect();
 
-		let tooltip_parameters = writable<TooltipActionParameters>({
+		let tooltip_parameters = writable<TooltipParameters>({
 			...default_parameters,
 			...parameters
 		});
 		let title_attribute: string | null;
-		let tooltip_component: ActionTooltip;
+		let tooltip: ActionTooltip;
 		let ticking = false;
 		let is_intersecting_viewport = false;
 
 		// Find offsets if none were provided
 		tooltip_parameters.update((current_parameters) => {
-			if (current_parameters.horizontal_offset === undefined) {
-				current_parameters.horizontal_offset = getHorizontalOffset(current_parameters.position);
+			const { horizontal_offset, vertical_offset, position } = current_parameters;
+			if (position && horizontal_offset === undefined) {
+				current_parameters.horizontal_offset = getHorizontalOffset(position);
 			}
-			if (current_parameters.vertical_offset === undefined) {
-				current_parameters.vertical_offset = getVerticalOffset(current_parameters.position);
+			if (position && vertical_offset === undefined) {
+				current_parameters.vertical_offset = getVerticalOffset(position);
 			}
 			return current_parameters;
 		});
@@ -173,21 +119,21 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 			}
 		}
 
-		// Add event listeners and observers to the parent element, window, or document
-		async function addEventListeners() {
-			if (browser) {
-				intersection_observer.observe(element);
-				resize_observer.observe(element);
-				element.addEventListener('mouseenter', mouseEnter);
-				element.addEventListener('mouseleave', mouseLeave);
-				element.addEventListener('mousemove', mouseMove);
+		/** Add event listeners and observers to the parent element, window, or document */
+		async function addEventListeners(node: HTMLElement) {
+			if (browser && node) {
+				intersection_observer.observe(node);
+				resize_observer.observe(node);
+				node.addEventListener('mouseenter', mouseEnter);
+				node.addEventListener('mouseleave', mouseLeave);
+				node.addEventListener('mousemove', mouseMove);
 				window.addEventListener('resize', resize);
-				element.addEventListener('resize', resize);
+				node.addEventListener('resize', resize);
 				document.addEventListener('scroll', scroll);
 			}
 		}
 
-		addEventListeners();
+		addEventListeners(node);
 
 		// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
 		let new_tooltip_parameters = getParametersForNewTooltip();
@@ -197,7 +143,7 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 		const { delay } = new_tooltip_parameters;
 
 		// Make the tooltip instance.
-		tooltip_component = new ActionTooltip({
+		tooltip = new ActionTooltip({
 			//@ts-ignore
 			props: {
 				...all_other_new_tooltip_parameters
@@ -227,7 +173,7 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 			delay: number;
 		}) {
 			setTimeout(async () => {
-				tooltip_component.$set({ visible: visibility });
+				tooltip.$set({ visible: visibility });
 			}, delay);
 		}
 
@@ -238,7 +184,7 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 
 		async function mouseEnter(event?: MouseEvent) {
 			// Check if the anchor element has moved since mounting
-			const { top, left } = element.getBoundingClientRect();
+			const { top, left } = node.getBoundingClientRect();
 			if (top !== anchor_top || left !== anchor_left) {
 				anchor_top = top;
 				anchor_left = left;
@@ -257,24 +203,22 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 			}
 		}
 		/** Prune away the unneeded params before passing/setting the tooltip parameters (avoids console warning messages for extraneous props) */
-		function getParametersForNewTooltip(): TooltipActionParameters {
+		function getParametersForNewTooltip(): TooltipParameters {
 			const {
 				horizontal_offset,
 				vertical_offset,
 				allow_dynamic_position,
 				disabled,
-				log_functions,
 				out_delay,
 				in_delay,
-				used_on_top_layer,
 				visibility_delay: positioning_delay,
 				...passing_parameters
 			} = get(tooltip_parameters);
 			return passing_parameters;
 		}
-		async function makeInvisibleTooltip(parameters: TooltipActionParameters) {
+		async function makeInvisibleTooltip(parameters: TooltipParameters) {
+			// @ts-ignore
 			return new ActionTooltip({
-				//@ts-ignore
 				props: { ...parameters, visible: true, only_for_measuring: true },
 				target: document.body
 			});
@@ -282,7 +226,7 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 		async function initializeTooltipPosition(allow_offscreen = false) {
 			const new_tooltip_parameters = getParametersForNewTooltip();
 			const { horizontal_offset, vertical_offset } = get(tooltip_parameters);
-			const { visible, ...parameters_without_visible } = new_tooltip_parameters;
+			// const { visible, ...pruned_parameters } = new_tooltip_parameters;
 
 			await waitForAnimations(ticking);
 
@@ -291,7 +235,7 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 
 			// Position the invisible tooltip
 			await positionTooltip(
-				element,
+				node,
 				invisible_tooltip,
 				new_tooltip_parameters.position ?? 'top',
 				new_tooltip_parameters.allow_dynamic_position,
@@ -301,8 +245,7 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 			);
 
 			// Move the real one to the same position
-			tooltip_component.$set({
-				...parameters_without_visible,
+			tooltip.$set({
 				x: invisible_tooltip.x,
 				y: invisible_tooltip.y,
 				position: invisible_tooltip.position
@@ -313,7 +256,7 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 		}
 		async function storeTitle() {
 			// Store any existing title attribute for use/re-use
-			title_attribute = element.getAttribute('title');
+			title_attribute = node.getAttribute('title');
 			const params = get(tooltip_parameters);
 
 			// Set the store to keep track of changing values for the tooltip's title
@@ -324,7 +267,7 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 			}
 
 			// Remove the `title` attribute, to prevent showing the default browser tooltip; set it back on `mouseleave`
-			element.removeAttribute('title');
+			node.removeAttribute('title');
 		}
 
 		function mouseMove(event: MouseEvent) {
@@ -344,13 +287,13 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 
 		async function mouseLeave(event: MouseEvent) {
 			// If the left mouse button isn't being pressed...
-			if (event.buttons !== 1 && tooltip_component && element) {
+			if (event.buttons !== 1 && tooltip && node) {
 				const { delay, out_delay } = get(tooltip_parameters);
 
 				await changeVisiblityAfterDelay({ visibility: false, delay: out_delay ?? delay ?? 0 });
 
 				// Restore the `title` attribute
-				if (title_attribute) element.setAttribute('title', title_attribute);
+				if (title_attribute) node.setAttribute('title', title_attribute);
 			}
 		}
 
@@ -413,6 +356,8 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 				});
 			}
 		}
+
+		// TODO: Move this into reactive statements inside the component itself?
 		async function positionTooltip(
 			anchor_element: HTMLElement,
 			tooltipComponent: ActionTooltip,
@@ -436,19 +381,19 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 
 			// Measure the rendered tooltip's dimensions
 			let {
-				clientWidth: tip_width,
-				offsetWidth: tip_offset_width,
-				clientHeight: tip_height,
-				offsetHeight: tip_offset_height,
-				marginLeft: tip_margin_left,
-				marginTop: tip_margin_top,
+				clientWidth: tip_width = 0,
+				offsetWidth: tip_offset_width = 0,
+				clientHeight: tip_height = 0,
+				offsetHeight: tip_offset_height = 0,
+				marginLeft: tip_margin_left = 0,
+				marginTop: tip_margin_top = 0,
 				marginRight: tip_margin_right,
-				paddingTop: tip_padding_top,
-				paddingBottom: tip_padding_bottom,
 				paddingLeft: tip_padding_left,
-				paddingRight: tip_padding_right,
-				marginBottom: tip_margin_bottom,
-				position: current_position
+				paddingRight: tip_padding_right
+				// paddingTop: tip_padding_top,
+				// paddingBottom: tip_padding_bottom,
+				// marginBottom: tip_margin_bottom,
+				// position: current_position
 			} = tooltipComponent;
 
 			const x_params = {
@@ -458,7 +403,10 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 				horizontal_middle,
 				horizontal_offset,
 				tip_offset_width,
-				tip_margin_left
+				tip_margin_left,
+				tip_margin_right,
+				tip_padding_left,
+				tip_padding_right
 			};
 			const y_params = {
 				position: new_position,
@@ -559,34 +507,66 @@ export function tooltip(element: HTMLElement, parameters: TooltipParameters = de
 			// Update the component state
 			tooltipComponent.$set({ x, y, position: new_position });
 		}
+		async function updater(new_parameters: TooltipParameters) {
+			if (tooltip && new_parameters) {
+				// Temporarily store the old parameter values
+				const old_parameters = get(tooltip_parameters);
+
+				// Update the parameters store, overriting any existing values with new parameters
+				tooltip_parameters.update((current_parameters) => {
+					return { ...current_parameters, ...new_parameters };
+				});
+
+				if (new_parameters.position) {
+					await changeOffsets(old_parameters, new_parameters);
+					await initializeTooltipPosition();
+				}
+
+				tooltip.$set({ ...new_parameters });
+			}
+		}
+		async function reassignNode(new_node: HTMLElement) {
+			// Remove the event listeners from the current node
+			await removeEventListeners(node);
+			// Set the node to the next node in the steps array
+			node = new_node;
+			// Add the event listeners to the new node
+			await addEventListeners(node);
+		}
+		async function removeEventListeners(node: HTMLElement) {
+			node.removeEventListener('mouseover', mouseEnter);
+			node.removeEventListener('mouseleave', mouseLeave);
+			node.removeEventListener('mousemove', mouseMove);
+			window.removeEventListener('resize', resize);
+			document.removeEventListener('scroll', scroll);
+			resize_observer.unobserve(node);
+		}
 
 		// FIXME: tooltip updates on scroll while not visible!
 		return {
 			async update(new_parameters: TooltipParameters) {
-				if (tooltip_component && new_parameters) {
-					// Temporarily store the old parameter values
-					const old_parameters = get(tooltip_parameters);
-
-					// Update the parameters store, overriting any existing values with new parameters
-					tooltip_parameters.update((current_parameters) => {
-						return { ...current_parameters, ...new_parameters };
-					});
-
-					if (new_parameters.position) {
-						await changeOffsets(old_parameters, new_parameters);
-						await initializeTooltipPosition();
-					}
-
-					tooltip_component.$set({ ...new_parameters });
-				}
+				updater(new_parameters);
 			},
 			async destroy() {
-				element.removeEventListener('mouseover', mouseEnter);
-				element.removeEventListener('mouseleave', mouseLeave);
-				element.removeEventListener('mousemove', mouseMove);
-				window.removeEventListener('resize', resize);
+				await removeEventListeners(node);
 				resize_observer.disconnect();
-				tooltip_component.$destroy();
+				tooltip.$destroy();
+			},
+			async goToNextNode(next_index: number, next_delay = delay) {
+				const props = get(tooltip_parameters);
+				const { steps } = props;
+				if (steps && steps.length > 0) {
+					// Update the node index
+					next_index++;
+					const next = steps[next_index - 1];
+					// Update the tooltip parameters
+					setTimeout(async () => {
+						const { node, ...rest } = next;
+						await reassignNode(node);
+						await updater(rest);
+						await initializeTooltipPosition();
+					}, next_delay);
+				}
 			}
 		};
 	} catch (error) {
@@ -645,8 +625,8 @@ interface positionX_params {
 	horizontal_offset?: number;
 }
 interface positionXAbsolute_params extends positionX_params {
-	tip_margin_right: number;
-	tip_padding_left: number;
+	tip_margin_right?: number;
+	tip_padding_left?: number;
 	parent_styles: CSSStyleDeclaration;
 }
 
@@ -670,21 +650,18 @@ async function positionX(input: positionX_params): Promise<number> {
 		return 0;
 	}
 }
-async function positionXAbsolute(input: positionXAbsolute_params): Promise<number> {
+export async function positionXAbsolute(input: positionXAbsolute_params): Promise<number> {
 	const {
 		position,
-		left,
-		width,
 		horizontal_middle,
 		tip_offset_width,
-		tip_margin_left,
-		tip_margin_right,
-		tip_padding_left,
+		tip_margin_left = 0,
+		tip_margin_right = 0,
+		tip_padding_left = 0,
 		horizontal_offset = 0,
 		parent_styles
 	} = input;
-	const { parent_padding_left, parent_padding_right, parent_padding_top, parent_padding_bottom } =
-		await getParentPaddings(parent_styles);
+	const { parent_padding_left, parent_padding_right } = await getParentPaddings(parent_styles);
 
 	if (position === 'top' || position === 'bottom') {
 		return (

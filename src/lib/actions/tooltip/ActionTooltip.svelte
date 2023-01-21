@@ -1,7 +1,8 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-	import type { TooltipDirections } from '$tooltip/tooltip-action.js';
+	import { dynamicStyle } from '$actions/dynamic-styles.js';
+	import type { TooltipDirections } from '$actions/tooltip/tooltip.js';
 	import { cubicInOut } from 'svelte/easing';
 	import {
 		scale,
@@ -13,35 +14,44 @@
 		type TransitionConfig
 	} from 'svelte/transition';
 
+	/** The text content of the tooltip.  Will be set as the title attribute after the tooltip is hidden. */
 	export let title: string = '';
-	export let position: TooltipDirections;
+	/** Choose from top, bottom, right, left anchor positions for the tooltip. */
+	export let position: TooltipDirections = 'top';
 	export let position_type: 'fixed' | 'absolute' = 'fixed';
-	export let x: number;
-	export let y: number;
+	export let x: NonNullable<number> = 0;
+	export let y: NonNullable<number> = 0;
+	/** Allow the tooltip to start visible when mounted to the DOM and programmatically trigger its visibility. May be useful for e.g. guided tour interactions. */
 	export let visible = false;
 	export let start = 0;
 	export let opacity = 0;
+	/** Duration of the in/out transition of the tooltip.  An explicit transition config will override this! */
 	export let duration = 400;
+	/** Delay the entrnace and exit transition of the tooltip symmetrically.  An explicit transition config's delay property will override this! */
 	export let delay = 0;
+	/** Easing function of the in/out transition of the tooltip.  An explicit transition config will override this! */
 	export let easing: EasingFunction = cubicInOut;
-	export let offsetHeight: number;
-	export let clientHeight: number;
-	export let clientWidth: number;
-	export let offsetWidth: number;
-	export let marginTop: number;
-	export let marginLeft: number;
-	export let marginRight: number;
-	export let marginBottom: number;
-	export let paddingTop: number;
-	export let paddingBottom: number;
-	export let paddingLeft: number;
-	export let paddingRight: number;
+	export let offsetHeight: number = 0;
+	export let clientHeight: number = 0;
+	export let clientWidth: number = 0;
+	export let offsetWidth: number = 0;
+	export let marginTop: number = 0;
+	export let marginLeft: number = 0;
+	export let marginRight: number = 0;
+	export let marginBottom: number = 0;
+	export let paddingTop: number = 0;
+	export let paddingBottom: number = 0;
+	export let paddingLeft: number = 0;
+	export let paddingRight: number = 0;
 	export let custom_component: ConstructorOfATypedSvelteComponent | null = null;
+	/** Enable or disable the tooltip arrow */
 	export let show_arrow = true;
+	/** Allow the tooltip to stay visible even after the user moves the mouse outside the parent element. */
 	export let keep_visible = false;
-	export let css: [string, string][] = [];
 	export let only_for_measuring = false;
+	/** A Svelte transition to use on the tooltip */
 	export let transition = scale;
+	/** A transition config for a Svelte transition. Will override delay, duration, easing props on the tooltip action. */
 	export let transition_config:
 		| ScaleParams
 		| FlyParams
@@ -54,15 +64,10 @@
 		start,
 		opacity
 	};
-	let styles: string = '';
+	/** Dynamic styles that can change on the tooltip.  Note: use '--tooltip'-prefixed CSS custom properties wherever possible (e.g. --tooltip-background: 'white' instead of background: 'white'). */
+	export let styles: string = '';
 	let tooltip_element: HTMLElement | null = null;
 
-	$: {
-		if (css.length > 0) styles = '';
-		css?.forEach(([key, value]) => {
-			styles = styles.concat(`${key}: ${value};`);
-		});
-	}
 	$: marginLeft = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginLeft) : 0;
 	$: marginTop = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginTop) : 0;
 	$: marginBottom = tooltip_element ? parseInt(getComputedStyle(tooltip_element).marginBottom) : 0;
@@ -87,6 +92,7 @@
 			bind:clientHeight
 			bind:clientWidth
 			bind:offsetWidth
+			use:dynamicStyle={{ styles }}
 			transition:transition={transition_config}
 			class:visible={visible || keep_visible}
 			class:nothing={only_for_measuring}
