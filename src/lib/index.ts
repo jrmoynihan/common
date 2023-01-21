@@ -50,6 +50,7 @@ export {
 	type TooltipDirections,
 	type TooltipParameters
 } from './actions/tooltip/tooltip.js';
+export { willChange } from './actions/will-change.js';
 export {
 	arrayFromNumber,
 	capitalize,
