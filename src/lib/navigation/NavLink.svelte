@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
+	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { capitalize } from '$functions/helpers.js';
-	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import { Fa, FaLayers, FaLayersText } from '@jrmoynihan/svelte-fa';
 	import type { IconLayer } from './nav-functions.js';
 

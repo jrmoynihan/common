@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
+	import type { TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import { browser } from '$app/environment';
 	import { beforeNavigate } from '$app/navigation';
 	import NavLink from '$navigation/NavLink.svelte';
-	import type { TooltipParameters } from '$tooltip/tooltip-action.js';
 	import type { NavigationLink } from './nav-functions.js';
 
 	/** An array of items to display within the nav wrapper element */

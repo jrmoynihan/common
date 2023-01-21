@@ -3,7 +3,7 @@
 		tooltip,
 		type TooltipDirections,
 		type TooltipParameters
-	} from '$tooltip/tooltip-action.js';
+	} from '$actions/tooltip/tooltip.js';
 	import { Temporal } from '@js-temporal/polyfill';
 	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';

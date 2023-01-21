@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
+	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import type { DatalistOption } from '$inputs/types.js';
-	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
 	import { Fa } from '@jrmoynihan/svelte-fa';
 	import { createEventDispatcher, type ComponentProps } from 'svelte';

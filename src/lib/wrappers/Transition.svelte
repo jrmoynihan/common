@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
-	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import { beforeNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import LightDarkToggle from '$buttons/LightDarkToggle.svelte';
@@ -10,7 +11,6 @@
 	import Navigation from '$navigation/Navigation.svelte';
 	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
 	import { reminderToast } from '$toasts/toasts.js';
-	import type { TooltipParameters } from '$tooltip/tooltip-action.js';
 	import Transition from '$wrappers/Transition.svelte';
 	import {
 		faCalculator,

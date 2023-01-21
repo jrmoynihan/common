@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
-	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import Transition from '$wrappers/Transition.svelte';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 	import { Fa } from '@jrmoynihan/svelte-fa';

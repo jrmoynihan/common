@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
+	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import type {
 		BoxShadowElevation,
 		ButtonType,
@@ -8,7 +9,6 @@
 		SvelteTransitionParams,
 		WidgetRole
 	} from '$lib/lib_types.js';
-	import { tooltip, type TooltipParameters } from '$tooltip/tooltip-action.js';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from '@jrmoynihan/svelte-fa';
 	import { fade } from 'svelte/transition';
