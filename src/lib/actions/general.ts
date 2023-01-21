@@ -1,8 +1,5 @@
-import { tooltip } from '$tooltip/tooltip-action.js';
-import type ActionTooltip from '.tooltip/ActionTooltip.svelte';
-import type { ComponentProps } from 'svelte';
-import type ActionSpotlight from './spotlight/ActionSpotlight.svelte';
-import { spotlight } from './spotlight/spotlight.js';
+import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
+import { spotlight, type SpotlightParameters } from './spotlight/spotlight.js';
 
 export async function waitForAnimations(ticking: boolean) {
 	// Get animations running within the document's body
@@ -23,15 +20,26 @@ export async function waitForAnimations(ticking: boolean) {
 
 export function tutorial(
 	node: HTMLElement,
-	parameters: { spotlight: ComponentProps<ActionSpotlight>; tooltip: ComponentProps<ActionTooltip> }
+	parameters: { spotlight: SpotlightParameters; tooltip: TooltipParameters }
 ) {
 	const spot = spotlight(node, parameters.spotlight);
 	const tip = tooltip(node, parameters.tooltip);
+
+	spot.spotlight.$on('next', (e) => {
+		if (parameters?.tooltip?.steps) {
+			const next = parameters.tooltip.steps[e.detail.node_index];
+			if (next && tip) {
+				const delay = parameters.spotlight.steps
+					? parameters.spotlight.steps[e.detail.node_index].delay
+					: undefined;
+				tip.goToNextNode(e.detail.node_index, delay);
+			}
+		}
+	});
+	spot.spotlight.$on('closeAll', () => tip?.destroy());
+
 	return {
-		async update(parameters: {
-			spotlight: ComponentProps<ActionSpotlight>;
-			tooltip: ComponentProps<ActionTooltip>;
-		}) {
+		async update(parameters: { spotlight: SpotlightParameters; tooltip: TooltipParameters }) {
 			spot.update(parameters.spotlight);
 			tip?.update(parameters.tooltip);
 		},
