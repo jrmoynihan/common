@@ -9,7 +9,7 @@ import LightDarkToggle from './buttons/LightDarkToggle.svelte';
 import ToggleSwitch from './buttons/ToggleSwitch.svelte';
 
 // Tooltips
-import ActionTooltip from './tooltip/ActionTooltip.svelte';
+import ActionTooltip from './actions/tooltip/ActionTooltip.svelte';
 
 // Inputs
 import NumericInput from './inputs/NumericInput.svelte';
@@ -38,7 +38,18 @@ import Transition from './wrappers/Transition.svelte';
 
 // Exports
 // Functions
+export { tutorial } from '$actions/general.js';
+export {
+	spotlight,
+	type SpotlightParameters,
+	type SpotlightStep
+} from '$actions/spotlight/spotlight.js';
 export { Temporal } from '@js-temporal/polyfill';
+export {
+	tooltip,
+	type TooltipDirections,
+	type TooltipParameters
+} from './actions/tooltip/tooltip.js';
 export {
 	arrayFromNumber,
 	capitalize,
@@ -66,14 +77,14 @@ export {
 	setLocalStorageItem
 } from './functions/local-storage.js';
 export {
-	all_icons,
-	default_log_style,
 	ErrorAndToast,
 	ErrorLog,
 	Log,
 	LogAndToast,
 	SuccessLog,
 	WarningLog,
+	all_icons,
+	default_log_style,
 	type ErrorAndToastOptions,
 	type ErrorLogOptions,
 	type LogAndToastOptions,
@@ -88,20 +99,15 @@ export {
 	setWritableContext
 } from './functions/store.js';
 export {
+	NavigationLink,
 	makeAnchorLinks,
 	makeLinks,
 	makeNavLinks,
-	NavigationLink,
 	shouldLayoutTransitionOnNavigation,
 	type IconLayer,
 	type makeNavLinksOptions
 } from './navigation/nav-functions.js';
 export { defaultToast, errorToast, reminderToast, type ToastOptions } from './toasts/toasts.js';
-export {
-	tooltip,
-	type TooltipDirections,
-	type TooltipParameters
-} from './tooltip/tooltip-action.js';
 export { Tab } from './wrappers/tab.js';
 export {
 	Button,
