@@ -1,6 +1,6 @@
 <script lang="ts">
+	import { tooltip, type TooltipDirections } from '$actions/tooltip/tooltip.js';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import { tooltip, type TooltipDirections } from '$tooltip/tooltip-action.js';
 	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons/index';
 	import { Fa } from '@jrmoynihan/svelte-fa';
 	import { fly } from 'svelte/transition';
@@ -25,6 +25,8 @@
 		['--tooltip-background', 'lightyellow'],
 		['box-shadow', '0px 0px 16px 8px orange']
 	];
+	$: styling_green_styles = styling_green_CSS.map(([prop, val]) => `${prop}: ${val};`).join(' ');
+	$: hot_sun_styles = hot_sun_CSS.map(([prop, val]) => `${prop}: ${val};`).join(' ');
 
 	function capitalize(str: string) {
 		return str.charAt(0).toUpperCase() + str.slice(1);
@@ -98,7 +100,7 @@
 			title: dynamic_tooltip_text,
 			disabled,
 			delay: 150,
-			css: [['max-width', 'min(100vw, 200px)']],
+			styles: 'max-width: min(100vw, 200px)',
 			keep_visible
 		}}
 	>
@@ -133,7 +135,7 @@
 				x: -70,
 				y: 70
 			},
-			css: styling_green_CSS
+			styles: styling_green_styles
 		}}
 	>
 		Tooltips Can Be Styled
@@ -145,7 +147,7 @@
 			title: 'There are different delays on each the tooltips to achieve a staggered effect',
 			disabled: !keep_visible,
 			keep_visible,
-			css: hot_sun_CSS,
+			styles: hot_sun_styles,
 			position: 'left',
 			vertical_offset: -200
 		}}
