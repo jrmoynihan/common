@@ -79,13 +79,13 @@ step: {step}
 							node: heading_three,
 							title: 'This is a heading',
 							position,
-							disabled: step !== 1,
+							disabled: step !== 1
 						},
 						{
 							node: high_button,
 							title: 'This is a button',
 							position,
-							disabled: step !== 1,
+							disabled: step !== 1
 						}
 					]
 				},
@@ -142,7 +142,7 @@ step: {step}
 		text="I'm a button with low elevation"
 		styles={`--shadow-color: 350deg 50% 70%;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}
 		box_shadow_elevation="low"
-		tooltip_options={{ position, title: 'Click me!', log_functions: true, keep_visible }}
+		tooltip_options={{ position, title: 'Click me!', keep_visible }}
 	/>
 	<Button
 		on:click={() => testToastUpdate()}
@@ -151,7 +151,7 @@ step: {step}
 			position === 'top' ? 'hsla(195, 10%, 60%, 20%)' : `green`
 		};`}
 		box_shadow_elevation="medium"
-		tooltip_options={{ position, title: 'Click me!', log_functions: true, keep_visible }}
+		tooltip_options={{ position, title: 'Click me!', keep_visible }}
 	/>
 	<div bind:this={high_button}>
 		<Button
