@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { PageData } from '.svelte-kit/types/src/routes/wrappers/transition/$types.js';
+	import type { PageData } from '../$types';
 
 	export let data: PageData;
 	const image = data.links.find((link) => link.path === $page.params.image);
