@@ -40,17 +40,17 @@ export class NavigationLink {
 			args?.link_text ?? capitalize(deKebab(this.getLastSegment(args?.url.pathname))) ?? null;
 		this.icons = args?.icons ?? undefined;
 		this.anchors = args?.anchors ?? undefined;
-		this.is_current_page = this.isCurrentPage(get(page)) ?? false;
+		this.is_current_page = false;
 	}
-	private getLastSegment(pathname: string): string {
+	getLastSegment = (pathname: string): string => {
 		const segments = pathname.split('/');
 		return segments[segments.length - 1];
-	}
-	isCurrentPage(page: Page<Record<string, string>, string | null>): boolean {
-		const is_current = page?.url?.pathname === this.url.pathname;
+	};
+	isCurrentPage = (page: Page<Record<string, string>, string | null>): boolean => {
+		const is_current = page?.url?.pathname === this.url?.pathname;
 		this.is_current_page = is_current;
 		return is_current;
-	}
+	};
 }
 
 export interface makeNavLinksOptions {

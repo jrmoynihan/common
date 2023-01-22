@@ -68,7 +68,7 @@
 		anchor_path_to_scroll_to = '';
 	}
 
-	$: is_current_page = nav_link.isCurrentPage($page);
+	$: if (nav_link.isCurrentPage && $page) is_current_page = nav_link.isCurrentPage($page);
 </script>
 
 <a
