@@ -1,8 +1,8 @@
 <script lang="ts">
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import type { PageData } from '.svelte-kit/types/src/routes/recipes/gallery/$types.js';
 	import { flip } from 'svelte/animate';
 	import { crossfade } from 'svelte/transition';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 	const { images } = data;
@@ -10,6 +10,18 @@
 	let image_id: string | null = null;
 	let dialog: HTMLDialogElement;
 	let use_full_size = false;
+
+	function closeImage() {
+		image_id = null;
+		// Delay the closing of the dialog until the crossfade duration (default: 800ms) finishes
+		setTimeout(() => {
+			dialog.close();
+		}, 300);
+	}
+	function showImage(uuid: string) {
+		image_id = uuid;
+		dialog.showModal();
+	}
 </script>
 
 <section>
@@ -22,8 +34,14 @@
 		{#each images?.filter((image) => image.uuid !== image_id) as { path, text, href, uuid } (uuid)}
 			<img
 				on:click={() => {
-					image_id = uuid;
-					dialog.showModal();
+					showImage(uuid);
+				}}
+				on:keydown={(e) => {
+					if (e.key === 'Escape') {
+						closeImage();
+					} else {
+						showImage(uuid);
+					}
 				}}
 				class="image"
 				alt={text}
@@ -40,16 +58,18 @@
 	<dialog
 		bind:this={dialog}
 		on:click={() => {
-			image_id = null;
-			// Delay the closing of the dialog until the crossfade duration (default: 800ms) finishes
-			setTimeout(() => {
-				dialog.close();
-			}, 300);
+			closeImage();
+		}}
+		on:keydown={(e) => {
+			if (e.key === 'Escape') {
+				closeImage();
+			}
 		}}
 	>
 		{#each images?.filter((image) => image.uuid === image_id) as { path, text, href, uuid } (uuid)}
 			<img
 				on:click
+				on:keydown
 				class="selected-image"
 				class:full-size={use_full_size}
 				alt={text}
