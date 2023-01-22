@@ -3,14 +3,11 @@
 	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { capitalize } from '$functions/helpers.js';
 	import { Fa, FaLayers, FaLayersText } from '@jrmoynihan/svelte-fa';
-	import type { IconLayer } from './nav-functions.js';
+	import type { NavigationLink } from './nav-functions.js';
 
-	/** The URL object describing the link */
-	export let url: URL;
-	/** The displayed text for the link (defaults to the link's pathname)*/
-	export let link_text: string = capitalize(url.pathname);
+	/** The entire Navlink instance */
+	export let nav_link: NavigationLink;
 	/** Tooltip options to apply to the nav links. If an array is passed, each options object will be applied to each link, individually.  Must pass the index in the array, `i` as well!  */
 	export let tooltip_options: TooltipParameters | TooltipParameters[] = { disabled: true };
 	/** Is the link the currently active page/url? */
@@ -27,23 +24,18 @@
 	export let focus_styles: string = '';
 	/** Active styles to apply to the links */
 	export let active_styles: string = '';
-	/** Pass in an array of icons to use in a FaLayer component. */
-	export let icons: IconLayer[] | null = null;
 	/** Is the link hovered? */
 	export let hovered = false;
 	/** Is the link focused? */
 	export let focused = false;
+	/** The tab index (only set if necessary!) */
+	export let tabindex: number = 0;
 
 	let anchor_path_to_scroll_to: string;
 
-	// Determine if the current path matches a given path string
-	function doesPathMatchCurrentURL(path: string, currentURL: string) {
-		return currentURL.includes(`${path}`);
-	}
-
 	beforeNavigate(({ from, to, cancel }) => {
 		const href = to?.url?.href;
-		if (href !== url.href) return;
+		if (href !== nav_link.url.href) return;
 		if (href) {
 			const is_anchor = href.includes('#');
 			const path_segments = href.split('#');
@@ -61,7 +53,7 @@
 		}
 	});
 	afterNavigate(({ to }) => {
-		if (to && !url.href.includes(to.url.href)) return;
+		if (to && !nav_link.url.href.includes(to.url.href)) return;
 		if (anchor_path_to_scroll_to) {
 			scrollToElement();
 		}
@@ -76,7 +68,7 @@
 		anchor_path_to_scroll_to = '';
 	}
 
-	$: is_current_page = doesPathMatchCurrentURL(url.href, $page?.url?.href);
+	$: is_current_page = nav_link.isCurrentPage($page);
 </script>
 
 <a
@@ -87,7 +79,8 @@
 		active_styles
 	}}
 	use:tooltip={Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
-	href={url.href}
+	href={nav_link.url.href}
+	{tabindex}
 	data-sveltekit-preload-code
 	class="link"
 	class:current-page={is_current_page}
@@ -98,9 +91,9 @@
 	on:blur={() => (focused = false)}
 	on:click
 >
-	{#if Array.isArray(icons) && icons.length > 0}
+	{#if Array.isArray(nav_link.icons) && nav_link.icons.length > 0}
 		<FaLayers>
-			{#each icons as { icon, translateX, translateY, color, text, size, scale, style }}
+			{#each nav_link.icons as { icon, translateX, translateY, color, text, size, scale, style }}
 				{#if icon}
 					<Fa {icon} {size} {translateX} {translateY} {color} {scale} {style} />
 				{:else if text}
@@ -111,7 +104,7 @@
 			{/each}
 		</FaLayers>
 	{/if}
-	{link_text}
+	{nav_link.link_text}
 </a>
 
 <style lang="scss">

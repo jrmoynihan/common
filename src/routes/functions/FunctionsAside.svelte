@@ -38,19 +38,20 @@
 	/>
 	{#await makeAnchorLinks( { parent_path: `${parent_path}/${paths[0]}`, paths: context_nav_anchor_paths, link_texts: context_nav_anchor_link_texts } ) then context_nav_anchors}
 		{#await makeNavLinks( { paths: ['contexts#contexts'], parent_path, anchors: context_nav_anchors } ) then topics}
-			{#each topics as { url, link_text, anchors }, i}
+			{#each topics as nav_link, i}
 				<NavLink
-					{url}
-					{link_text}
+					{nav_link}
+					{...nav_link}
 					styles={'padding: 0.5rem; background: none; font-weight: bold; font-size: 1rem; --current-nav-page-box-shadow: 0 0 8px 2px var(--accent);'}
 				/>
-				{#if anchors}
+				{#if nav_link.anchors}
+					{@const anchors = nav_link.anchors}
 					<ul>
-						{#each anchors as { url, link_text }, n}
+						{#each anchors as nav_link, n}
 							<li>
 								<NavLink
-									{url}
-									{link_text}
+									{nav_link}
+									{...nav_link}
 									styles={'padding: 0rem 0.5rem; background: none; font-size: 0.75rem; --current-nav-page-box-shadow: 0 0 10px 2px var(--accent); text-align: center;'}
 								/>
 							</li>

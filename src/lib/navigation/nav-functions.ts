@@ -1,8 +1,8 @@
 import { page } from '$app/stores';
-import { deKebab } from '$functions/helpers.js';
+import { capitalize, deKebab } from '$functions/helpers.js';
 import { ErrorLog } from '$functions/logging.js';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index';
-import type { NavigationTarget } from '@sveltejs/kit';
+import type { NavigationTarget, Page } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import type { IconSize } from '../lib_types.js';
 
@@ -23,20 +23,33 @@ export type IconLayer = {
 	style?: string;
 };
 export class NavigationLink {
+	/** The URL object describing the link */
 	url: URL;
+	/** The displayed text for the link (defaults to the link's pathname)*/
 	link_text: string;
+	/** Pass in an array of icons to use in a FaLayer component. */
 	icons: IconLayer[] | undefined;
+	/** Pass in an array of NavigationLinks to use as anchors for the link. */
 	anchors: NavigationLink[] | undefined;
+	/** Whether or not the link is the current page.  Can update with the `isCurrentPage()` method. */
+	is_current_page: boolean;
 
 	constructor(args: INavigationLink) {
 		this.url = args?.url;
-		this.link_text = args?.link_text ?? deKebab(this.getLastSegment(args?.url.pathname)) ?? null;
+		this.link_text =
+			args?.link_text ?? capitalize(deKebab(this.getLastSegment(args?.url.pathname))) ?? null;
 		this.icons = args?.icons ?? undefined;
 		this.anchors = args?.anchors ?? undefined;
+		this.is_current_page = this.isCurrentPage(get(page)) ?? false;
 	}
 	private getLastSegment(pathname: string): string {
 		const segments = pathname.split('/');
 		return segments[segments.length - 1];
+	}
+	isCurrentPage(page: Page<Record<string, string>, string | null>): boolean {
+		const is_current = page?.url?.pathname === this.url.pathname;
+		this.is_current_page = is_current;
+		return is_current;
 	}
 }
 
