@@ -45,6 +45,7 @@ export {
 	type SpotlightStep
 } from '$actions/spotlight/spotlight.js';
 export { Temporal } from '@js-temporal/polyfill';
+export { dynamicStyle } from './actions/dynamic-styles.js';
 export {
 	tooltip,
 	type TooltipDirections,
