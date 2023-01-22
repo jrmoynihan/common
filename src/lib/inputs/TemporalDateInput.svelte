@@ -23,13 +23,8 @@
 	export let tooltip_options: TooltipParameters = {
 		disabled: true
 	};
-	export let invalid_tooltip_css: [string, string][] = [
-		['font-size', 'smaller'],
-		['color', 'var(--date-input-invalid-message-color, salmon)'],
-		['background', 'var(--date-input-invalid-message-background, white)'],
-		['padding', '0.5rem'],
-		['border-radius', '1rem']
-	];
+	export let invalid_tooltip_styles: string =
+		'font-size: smaller; color: var(--date-input-invalid-message-color, salmon); background: var(--date-input-invalid-message-background, white); padding: 0.5rem; border-radius: 1rem';
 	export let label_position: 'before' | 'after' = 'before';
 	export let use_transition: boolean = false;
 	export let transition = fly;
@@ -113,7 +108,7 @@
 		title: `${invalid_msg}`,
 		visible: !is_valid,
 		disabled: is_valid || !invalid_msg,
-		css: invalid_tooltip_css,
+		styles: invalid_tooltip_styles,
 		...tooltip_options
 	}}
 >
