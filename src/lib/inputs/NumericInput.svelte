@@ -137,6 +137,7 @@
 			-webkit-appearance: none;
 			appearance: none;
 		}
+		appearance: textfield;
 		-moz-appearance: textfield;
 		text-align: center;
 		padding: 1rem;
