@@ -68,7 +68,7 @@
 		anchor_path_to_scroll_to = '';
 	}
 
-	$: if (nav_link.isCurrentPage && $page) is_current_page = nav_link.isCurrentPage($page);
+	$: if (nav_link?.isCurrentPage && $page) is_current_page = nav_link.isCurrentPage($page);
 </script>
 
 <a
@@ -84,7 +84,7 @@
 	data-sveltekit-preload-code
 	class="link"
 	class:current-page={is_current_page}
-	style={styles}
+	style={`${styles}; ${is_current_page ? current_page_styles : ''}`}
 	on:mouseenter={() => (hovered = true)}
 	on:mouseleave={() => (hovered = false)}
 	on:focus={() => (focused = true)}
