@@ -25,7 +25,7 @@ import Navigation from './navigation/Navigation.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 
 // Toasts
-import { SvelteToast, toast } from '@zerodevx/svelte-toast';
+import { SvelteToast, toast, type SvelteToastOptions } from '@zerodevx/svelte-toast';
 import SeenToast from './toasts/SeenToast.svelte';
 
 // Wrappers
@@ -124,5 +124,5 @@ export {
 };
 export { TextInput, TemporalDateInput, NumericInput, type TextInputTypes, type DatalistOption };
 export { Navigation, NavLink, AnchorHeading, LinkableAnchorHeading, ScrollProgress };
-export { SeenToast, SvelteToast, toast };
+export { SeenToast, SvelteToast, toast, SvelteToastOptions };
 export { ActionTooltip };
