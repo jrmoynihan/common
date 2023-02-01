@@ -10,6 +10,7 @@
 
 	export let value: unknown = '';
 	export let id = crypto?.randomUUID() ?? '';
+	export let name = '';
 	export let title = '';
 	export let required = false;
 	export let options: SelectOptionList = [];
@@ -56,6 +57,7 @@
 		bind:value
 		{required}
 		{id}
+		{name}
 	>
 		{#each options as option}
 			<OptionOrGroup {option} />
