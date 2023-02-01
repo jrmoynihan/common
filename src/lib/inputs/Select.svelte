@@ -62,6 +62,7 @@
 		{#each options as option}
 			<OptionOrGroup {option} />
 		{/each}
+		<slot name="options" />
 	</select>
 	{#key placeholder_props}
 		<Placeholder {...placeholder_props} />
