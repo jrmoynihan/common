@@ -1,8 +1,9 @@
 <script lang="ts">
 	import NumericInput from '$inputs/NumericInput.svelte';
+	import Select from '$inputs/Select.svelte';
 	import TemporalDateInput from '$inputs/TemporalDateInput.svelte';
 	import TextInput from '$inputs/TextInput.svelte';
-	import type { DatalistOption } from '$inputs/types.js';
+	import type { DatalistOption, SelectOptionList } from '$inputs/types.js';
 	import { Temporal } from '@js-temporal/polyfill';
 
 	const unicode_apple = '\u{1F34E}';
@@ -25,6 +26,17 @@
 		{ value: unicode_pineapple, label: 'Pineapple' }
 	];
 	let selected_fruit: string;
+	let select_options: SelectOptionList = [
+		{ value: null },
+		{ value: 1, disabled: true, display_text: 'One' },
+		{
+			label: 'Group Of Options',
+			options: [
+				{ value: 2, display_text: 'Two' },
+				{ value: 3, display_text: 'Three' }
+			]
+		}
+	];
 </script>
 
 <div class="inputs-container">
@@ -81,6 +93,13 @@
 			tooltip_options={{ title: `That's not between 0 and 10 !` }}
 			max={10}
 			show_spinner_buttons={false}
+		/>
+	</section>
+	<section class="select-inputs">
+		<Select
+			options={select_options}
+			placeholder_props={{ placeholder: 'pick one...' }}
+			required={true}
 		/>
 	</section>
 </div>
