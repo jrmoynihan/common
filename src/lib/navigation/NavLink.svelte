@@ -81,6 +81,7 @@
 	use:tooltip={Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
 	href={nav_link.url.href}
 	{tabindex}
+	aria-label={nav_link.link_text ?? nav_link.url.pathname}
 	data-sveltekit-preload-code
 	class="link"
 	class:current-page={is_current_page}
