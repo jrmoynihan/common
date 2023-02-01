@@ -13,9 +13,17 @@ import ActionTooltip from './actions/tooltip/ActionTooltip.svelte';
 
 // Inputs
 import NumericInput from './inputs/NumericInput.svelte';
+import OptionOrGroup from './inputs/OptionOrGroup.svelte';
+import Select from './inputs/Select.svelte';
 import TemporalDateInput from './inputs/TemporalDateInput.svelte';
 import TextInput from './inputs/TextInput.svelte';
-import type { DatalistOption, TextInputTypes } from './inputs/types.js';
+import type {
+	DatalistOption,
+	SelectOption,
+	SelectOptionGroup,
+	SelectOptionList,
+	TextInputTypes
+} from './inputs/types.js';
 
 // Navigation
 import AnchorHeading from './navigation/AnchorHeading.svelte';
@@ -122,7 +130,18 @@ export {
 	Tabs,
 	Transition
 };
-export { TextInput, TemporalDateInput, NumericInput, type TextInputTypes, type DatalistOption };
+export {
+	TextInput,
+	TemporalDateInput,
+	NumericInput,
+	Select,
+	OptionOrGroup,
+	type TextInputTypes,
+	type DatalistOption,
+	type SelectOption,
+	type SelectOptionGroup,
+	type SelectOptionList
+};
 export { Navigation, NavLink, AnchorHeading, LinkableAnchorHeading, ScrollProgress };
 export { SeenToast, SvelteToast, toast, SvelteToastOptions };
 export { ActionTooltip };
