@@ -9,7 +9,7 @@
 	import type { SvelteTransition, SvelteTransitionParams } from '../lib_types.js';
 	import Placeholder from './Placeholder.svelte';
 
-	export let value = '';
+	export let value: unknown = '';
 	export let id = crypto?.randomUUID() ?? '';
 	export let type: 'text' | 'datalist' = 'text';
 	export let title = '';
