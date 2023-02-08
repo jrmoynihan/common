@@ -534,7 +534,7 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 			await addEventListeners(node);
 		}
 		async function removeEventListeners(node: HTMLElement) {
-			node.removeEventListener('mouseover', mouseEnter);
+			node.removeEventListener('mouseenter', mouseEnter);
 			node.removeEventListener('mouseleave', mouseLeave);
 			node.removeEventListener('mousemove', mouseMove);
 			window.removeEventListener('resize', resize);
