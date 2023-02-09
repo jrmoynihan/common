@@ -28,10 +28,11 @@
 	let selected_fruit: string;
 	let select_options: SelectOptionList = [
 		{ value: null },
-		{ value: 1, disabled: true, display_text: 'One' },
+		{ value: 1, disabled: true, display_text: 'a disabled option' },
 		{
-			label: 'Group Of Options',
+			label: 'A Group Of Options',
 			options: [
+				{ value: 1, display_text: 'One' },
 				{ value: 2, display_text: 'Two' },
 				{ value: 3, display_text: 'Three' }
 			]
@@ -88,7 +89,12 @@
 	</section>
 	<section class="numeric-inputs">
 		<h2>Numeric Inputs</h2>
-		<NumericInput tooltip_options={{ title: `I'm an input with custom spinner buttons!` }} />
+		<NumericInput
+			tooltip_options={{ title: `I'm an input with custom spinner buttons!` }}
+			step={null}
+			value={null}
+			placeholder={'a placeholder that disappears'}
+		/>
 		<NumericInput
 			tooltip_options={{ title: `That's not between 0 and 10 !` }}
 			max={10}
