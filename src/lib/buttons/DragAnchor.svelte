@@ -1,12 +1,23 @@
 <script lang="ts">
+	import { dynamicStyle } from '$actions/dynamic-styles';
 	import { faGripVertical } from '@fortawesome/free-solid-svg-icons/index';
 	import { Fa } from '@jrmoynihan/svelte-fa';
 
 	export let hovered: boolean = false;
 	export let grabbed: boolean = false;
+	export let styles: string = '';
+	export let focus_styles: string = '';
+	export let hover_styles: string = '';
+	export let active_styles: string = '';
 </script>
 
 <button
+	use:dynamicStyle={{
+		styles,
+		focus_styles,
+		hover_styles,
+		active_styles
+	}}
 	class="drag-anchor"
 	class:faded={!hovered}
 	class:grabbed
