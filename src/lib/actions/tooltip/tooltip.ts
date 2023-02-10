@@ -540,6 +540,7 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 			window.removeEventListener('resize', resize);
 			document.removeEventListener('scroll', scroll);
 			resize_observer.unobserve(node);
+			intersection_observer.unobserve(node);
 		}
 
 		// FIXME: tooltip updates on scroll while not visible!
