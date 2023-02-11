@@ -3,7 +3,7 @@
 	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from '@jrmoynihan/svelte-fa';
-	import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher, type ComponentProps } from 'svelte';
 	import {
 		fly,
 		type BlurParams,
@@ -12,12 +12,13 @@
 		type ScaleParams,
 		type SlideParams
 	} from 'svelte/transition';
+	import Placeholder from './Placeholder.svelte';
 
 	export let numeric_input: HTMLInputElement | null = null;
-	export let value: string | number | string[] = 0;
+	export let value: string | number | string[] | null = 0;
 	export let min: string | number = 0;
 	export let max: string | number = Infinity;
-	export let step: number = 1;
+	export let step: number | null = 1;
 	export let placeholder: string = '';
 	export let name: string = '';
 	export let id: string = '';
@@ -38,7 +39,9 @@
 	/** Styles for when the input fails its validity test */
 	export let invalid_input_styles: string = 'color: salmon;';
 	export let pattern: string | null | undefined = null;
+	export let placeholder_props: ComponentProps<Placeholder> = {};
 	// TODO: add a prop for a custom validity function?
+	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
 
 	export let svelteTransition = fly;
 	export let transitionParams: FlyParams | FadeParams | SlideParams | ScaleParams | BlurParams = {
@@ -70,6 +73,7 @@
 	class:show-spinner-buttons={show_spinner_buttons}
 	transition:svelteTransition={transitionParams}
 >
+	<Placeholder {...placeholder_props} />
 	<input
 		use:dynamicStyle={{
 			styles: input_styles,
@@ -79,6 +83,7 @@
 		}}
 		bind:this={numeric_input}
 		type="number"
+		inputmode="numeric"
 		{id}
 		{name}
 		{placeholder}
@@ -123,6 +128,7 @@
 		isolation: isolate; // Contain the z-index stacking context for the buttons to this container.
 		&.show-spinner-buttons {
 			grid-template-columns: minmax(0, 1fr) minmax(0, 1.75rem);
+			grid-template-rows: repeat(2, minmax(0, 1fr));
 			grid-template-areas:
 				'input plus '
 				'input minus ';

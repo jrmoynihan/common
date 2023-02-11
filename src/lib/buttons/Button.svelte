@@ -97,7 +97,7 @@
 		--base: 0.5px;
 		--offset-ratio: 2;
 		--spread-ratio: 2;
-		--crispiness: 1;
+		--crispness: 1;
 		--total-shadows: 3;
 		--shadow: 2;
 		--blur-ratio: var();
@@ -147,7 +147,10 @@
 			}
 		}
 		&:focus-visible {
-			outline: var(--button-hover-outline, -webkit-focus-ring-color auto 1px);
+			outline-color: var(--button-outline-color--focus-visible, initial);
+			outline-width: var(--button-outline-width--focus-visible, initial);
+			outline-style: var(--button-outline-style--focus-visible, initial);
+			outline-offset: var(--button-outline-offset--focus-visible, initial);
 		}
 		&:active {
 			scale: var(--button-active-scale, 1, 1, 1);

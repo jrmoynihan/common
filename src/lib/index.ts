@@ -5,6 +5,7 @@
 
 // Buttons
 import Button from './buttons/Button.svelte';
+import DragAnchor from './buttons/DragAnchor.svelte';
 import LightDarkToggle from './buttons/LightDarkToggle.svelte';
 import ToggleSwitch from './buttons/ToggleSwitch.svelte';
 
@@ -123,6 +124,7 @@ export {
 	Button,
 	LightDarkToggle,
 	ToggleSwitch,
+	DragAnchor,
 	Accordion,
 	ErrorModal,
 	Modal,
