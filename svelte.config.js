@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import vercel from '@sveltejs/adapter-vercel';
 import { mdsvex } from 'mdsvex';
 import path, { dirname } from 'path';
 import preprocess from 'svelte-preprocess';
@@ -24,7 +24,7 @@ const config = {
 	],
 
 	kit: {
-		adapter: adapter(),
+		adapter: vercel(),
 		alias: {
 			$routes,
 			$actions: path.resolve($lib, './actions'),
