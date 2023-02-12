@@ -13,20 +13,29 @@
 	let initially_visible_example = true;
 	let dynamic_tooltip_text =
 		'Type in the text input while hovering the parent element to see the magic happen!';
-	let styling_green_CSS: [string, string][] = [
-		['max-width', `${max_width}px`],
-		['--tooltip-color', 'black'],
-		['--tooltip-font-weight', '600'],
-		['--tooltip-font-size', '1.5rem'],
-		['--tooltip-background', 'radial-gradient( white 30%, lightgreen)'],
-		['--tooltip-drop-shadow', '0px 0px 10px lime']
-	];
-	let hot_sun_CSS: [string, string][] = [
-		['--tooltip-background', 'lightyellow'],
-		['box-shadow', '0px 0px 16px 8px orange']
-	];
-	$: styling_green_styles = styling_green_CSS.map(([prop, val]) => `${prop}: ${val};`).join(' ');
-	$: hot_sun_styles = hot_sun_CSS.map(([prop, val]) => `${prop}: ${val};`).join(' ');
+
+	let styling_green_map = new Map()
+		.set('max-width', `${max_width}px`)
+		.set('--tooltip-color', 'black')
+		.set('--tooltip-font-weight', '600')
+		.set('--tooltip-font-size', '1.5rem')
+		.set('--tooltip-background', 'radial-gradient( white 30%, lightgreen)')
+		.set('--tooltip-drop-shadow', '0px 0px 10px lime');
+
+	let hot_sun_map = new Map()
+		.set('--tooltip-background', 'lightyellow')
+		.set('box-shadow', '0px 0px 16px 8px orange');
+
+	$: styling_green_styles = convertMapToStyleString(styling_green_map);
+	$: hot_sun_styles = convertMapToStyleString(hot_sun_map);
+
+	function convertMapToStyleString(map: Map<string, string>) {
+		let styles = '';
+		for (const [key, value] of map) {
+			styles += `${key}: ${value}; `;
+		}
+		return styles;
+	}
 
 	function capitalize(str: string) {
 		return str.charAt(0).toUpperCase() + str.slice(1);
@@ -74,7 +83,7 @@
 			title: `This is a tooltip positioned on ${selected_position} ${
 				selected_position === 'top' ? '(the default)' : ''
 			}. It will automatically reposition itself to stay within the viewport and can update its position dynamically.`,
-			css: [['max-width', `min(100vw, 200px)`]]
+			styles: 'max-width: min(100vw, 200px);'
 		}}
 	>
 		Tooltips Can Adjust Their Position Automatically
@@ -88,7 +97,7 @@
 			disabled,
 			visibility_delay: 900,
 			title: `This is a tooltip that is set to become visible as soon as its parent is mounted (after waiting for a specified delay). Mouseout its parent to hide the tooltip, or do it programmatically by clicking its parent button!`,
-			css: [['max-width', `min(100vw, 200px)`], ...hot_sun_CSS]
+			styles: `max-width: min(100vw, 200px); ${hot_sun_styles}`
 		}}
 		on:click={() => (initially_visible_example = !initially_visible_example)}
 	>
@@ -155,28 +164,19 @@
 		<h4>Rule</h4>
 		<h4>Value</h4>
 		<div />
-		{#each styling_green_CSS as [rule, value]}
+		{#each [...styling_green_map] as [rule, value]}
 			<input type="text" bind:value={rule} />
 			<input type="text" bind:value />
-			<button
-				class="delete"
-				on:click={() =>
-					(styling_green_CSS = styling_green_CSS.filter((r) => r[0] !== rule && r[1] !== value))}
+			<button class="delete" on:click={() => styling_green_map.delete(rule)}
 				><Fa icon={faTrash} size="lg" /></button
 			>
 		{/each}
-		<button class="add" on:click={() => (styling_green_CSS = [...styling_green_CSS, ['', '']])}
+		<button class="add" on:click={() => styling_green_map.set('', '')}
 			><Fa icon={faPlus} />Add CSS Rule</button
 		>
 	</div>
 </section>
 
-<!-- <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(0,1fr));">
-	<button use:tooltip={{ title: 'tooltip' }}>Test</button>
-	{#if keep_visible}
-		<button transition:fly use:tooltip={{ title: 'hello', visible: true }}>Test</button>
-	{/if}
-</div> -->
 <style lang="scss">
 	section {
 		display: flex;

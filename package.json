@@ -5,6 +5,8 @@
 	"author": "James Moynihan",
 	"scripts": {
 		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
 		"build package": "svelte-kit sync && svelte-package",
 		"package-publish-patch": "pnpm version patch && svelte-package && cd package && pnpm publish",
 		"package-publish-minor": "pnpm version minor && svelte-package && cd package && pnpm publish",
@@ -19,8 +21,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.30.0",
-		"@sveltejs/adapter-auto": "^1.0.3",
-		"@sveltejs/kit": "^1.5.5",
+		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/package": "^1.0.2",
 		"@typescript-eslint/eslint-plugin": "^5.51.0",
 		"@typescript-eslint/parser": "^5.51.0",
@@ -47,6 +48,7 @@
 		"@fortawesome/free-solid-svg-icons": "^6.3.0",
 		"@jrmoynihan/svelte-fa": "^3.0.6",
 		"@js-temporal/polyfill": "^0.4.3",
+		"@sveltejs/kit": "^1.5.5",
 		"@zerodevx/svelte-toast": "^0.8.2",
 		"mdsvexamples": "^0.3.3",
 		"svelte": "^3.55.1"
