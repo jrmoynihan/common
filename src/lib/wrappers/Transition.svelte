@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
+	// Inspired by https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
+
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
 	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
@@ -22,23 +23,15 @@
 			//@ts-ignore
 			x: -1 * in_transition_parameters?.x
 		} ?? {};
-	export let tooltip_parameters: TooltipParameters = { disabled: true };
 	$: internal_in_transition = transition ?? in_transition;
 	$: internal_out_transition = transition ?? out_transition;
 	$: internal_in_transition_parameters = transition_parameters ?? in_transition_parameters;
 	$: internal_out_transition_parameters = transition_parameters ?? out_transition_parameters;
-	// $: console.log({ internal_in_transition_parameters });
-	// $: console.log({ internal_out_transition_parameters });
-	// $: console.log({ internal_in_transition });
-	// $: console.log({ internal_out_transition });
-
-	// https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
 </script>
 
 <div class="transition-outer">
 	{#key refresh}
 		<div
-			use:tooltip={tooltip_parameters}
 			class="transition-inner {inner_container_classes}"
 			style={inner_container_styles}
 			in:internal_in_transition={internal_in_transition_parameters}

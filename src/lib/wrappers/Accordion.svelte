@@ -19,7 +19,6 @@
 	export let closed_icon_rotation = 90; // in degrees
 	export let open_icon_rotation = -90; // in degrees
 	export let summary_tooltip_parameters: TooltipParameters = { disabled: true };
-	export let content_tooltip_parameters: TooltipParameters = { disabled: true };
 
 	export const toggle = () => (open = !open);
 </script>
@@ -84,12 +83,7 @@
 		{/if}
 	</button>
 	{#if open}
-		<Transition
-			bind:refresh={open}
-			{transition}
-			{transition_parameters}
-			tooltip_parameters={content_tooltip_parameters}
-		>
+		<Transition bind:refresh={open} {transition} {transition_parameters}>
 			<slot name="content" />
 		</Transition>
 	{/if}

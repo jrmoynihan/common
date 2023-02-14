@@ -1,11 +1,15 @@
 <script lang="ts">
+	import type { TooltipParameters } from '$lib';
 	import Accordion from '$wrappers/Accordion.svelte';
 	import type { ComponentProps } from 'svelte';
 	import { blur, fly, scale } from 'svelte/transition';
 
 	const custom_accordion_container_styles = 'max-width: 30%';
 	const custom_summary_styles = 'min-width: min(20rem, 30vw)';
-	const accordion_configs: ComponentProps<Accordion>[] = [
+	interface AccordionConfig extends ComponentProps<Accordion> {
+		content_tooltip_parameters?: TooltipParameters;
+	}
+	const accordion_configs: AccordionConfig[] = [
 		{
 			summary_text: 'Classic slide transition',
 			custom_summary_styles,
@@ -22,8 +26,7 @@
 			custom_summary_styles,
 			custom_accordion_container_styles,
 			transition: blur,
-			transition_parameters: { duration: 600 },
-			content_tooltip_parameters: { title: 'A content tooltip', position: 'bottom' }
+			transition_parameters: { duration: 600 }
 		},
 		{
 			summary_text: 'A fly-in transition',
