@@ -82,12 +82,19 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 			for await (const entry of entries) {
 				if (entry.isIntersecting) {
 					is_intersecting_viewport = true;
+					addHoverListeners(node);
+					// const{visibile, keep_visible}= get(tooltip_parameters)
+					// if()
 					await initializeTooltipPosition();
 				} else {
+					removeHoverListeners(node)
 					is_intersecting_viewport = false;
 				}
 			}
 		});
+
+		addIntersectionObserver(node);
+		
 
 		// Create a resize observer for the parent element if it's box size changes
 		const resize_observer = new ResizeObserver(async (entries) => {
@@ -120,20 +127,47 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 		}
 
 		/** Add event listeners and observers to the parent element, window, or document */
-		async function addEventListeners(node: HTMLElement) {
+		function addIntersectionObserver(node: HTMLElement) {
 			if (browser && node) {
 				intersection_observer.observe(node);
+			}
+		}
+
+		function addScrollResizeListeners(node: HTMLElement) {
+			if (browser && node) {
 				resize_observer.observe(node);
-				node.addEventListener('mouseenter', mouseEnter);
-				node.addEventListener('mouseleave', mouseLeave);
-				node.addEventListener('mousemove', mouseMove);
 				window.addEventListener('resize', resize);
-				node.addEventListener('resize', resize);
 				document.addEventListener('scroll', scroll);
 			}
 		}
 
-		addEventListeners(node);
+		function addHoverListeners(node: HTMLElement) {
+			if (browser && node) {
+				node.addEventListener('mouseenter', mouseEnter);
+				node.addEventListener('mouseleave', mouseLeave);
+			}
+		}
+
+		function removeIntersectionObserver(node: HTMLElement) {
+			if (browser && node) {
+				intersection_observer.observe(node);
+			}
+		}
+
+		function removeScrollResizeListeners(node: HTMLElement) {
+			if (browser && node) {
+				resize_observer.observe(node);
+				window.removeEventListener('resize', resize);
+				document.removeEventListener('scroll', scroll);
+			}
+		}
+
+		function removeHoverListeners(node: HTMLElement) {
+			if (browser && node) {
+				node.removeEventListener('mouseenter', mouseEnter);
+				node.removeEventListener('mouseleave', mouseLeave);
+			}
+		}
 
 		// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
 		let new_tooltip_parameters = getParametersForNewTooltip();
@@ -533,15 +567,6 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 			// Add the event listeners to the new node
 			await addEventListeners(node);
 		}
-		async function removeEventListeners(node: HTMLElement) {
-			node.removeEventListener('mouseenter', mouseEnter);
-			node.removeEventListener('mouseleave', mouseLeave);
-			node.removeEventListener('mousemove', mouseMove);
-			window.removeEventListener('resize', resize);
-			document.removeEventListener('scroll', scroll);
-			resize_observer.unobserve(node);
-			intersection_observer.unobserve(node);
-		}
 
 		// FIXME: tooltip updates on scroll while not visible!
 		return {
@@ -549,8 +574,7 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 				updater(new_parameters);
 			},
 			async destroy() {
-				await removeEventListeners(node);
-				resize_observer.disconnect();
+				intersection_observer && removeHoverListeners(node)
 				tooltip.$destroy();
 			},
 			async goToNextNode(next_index: number, next_delay = delay) {
