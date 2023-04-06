@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { dynamicStyle } from '$actions/dynamic-styles';
+	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip';
 	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';
 	// TODO: Use Temporal API instead of Date constructor
@@ -8,18 +10,30 @@
 	export let min: Date = new Date(-8640000000000000);
 	export let max: Date = new Date(8640000000000000);
 	export let name: string = '';
-	export let labelText: string = '';
-	export let labelStyles: string = '';
-	export let inputStyles: string = '';
-	export let invalidMsg: string | undefined = '';
-	export let labelPosition: 'before' | 'after' = 'before';
-	export let useTransition: boolean = false;
+	export let label_text: string = '';
+	export let label_styles: string = '';
+	export let input_styles = '';
+	export let input_hover_styles = '';
+	export let input_focus_styles = '';
+	export let input_active_styles = '';
+	export let input_container_styles = '';
+	export let input_container_hover_styles = '';
+	export let input_container_focus_styles = '';
+	export let input_container_active_styles = '';
+	export let invalid_msg: string | undefined = '';
+	export let label_position: 'before' | 'after' = 'before';
+	export let use_transition: boolean = false;
 	export let transition = fly;
-	export let transitionParams = { duration: useTransition ? 500 : 0, x: useTransition ? 200 : 0 };
-	export let dateInput: HTMLInputElement | null = null;
-	export let labelElement: HTMLLabelElement | null = null;
-	export let isValid: boolean | undefined = false;
+	export let transition_parameters = {
+		duration: use_transition ? 500 : 0,
+		x: use_transition ? 200 : 0
+	};
+	export let date_input: HTMLInputElement | null = null;
+	export let label_element: HTMLLabelElement | null = null;
+	export let is_valid: boolean | undefined = false;
 	export let required: boolean = false;
+	export let tooltip_options: TooltipParameters | null = null;
+	export let title: string = '';
 	let internal: string;
 	const dispatch = createEventDispatcher();
 	const changed = (value: string | number) => {
@@ -49,32 +63,45 @@
 	$: minInternal = convertDateToString(min);
 	$: {
 		date;
-		isValid = dateInput?.checkValidity();
-		invalidMsg = dateInput?.validationMessage;
+		is_valid = date_input?.checkValidity();
+		invalid_msg = date_input?.validationMessage;
 	}
 </script>
 
 <label
-	bind:this={labelElement}
+	bind:this={label_element}
 	for={name}
-	style={labelStyles}
-	transition:transition={transitionParams}
+	style={label_styles}
+	use:tooltip={{ ...tooltip_options }}
+	use:dynamicStyle={{
+		styles: input_container_styles,
+		hover_styles: input_container_hover_styles,
+		focus_styles: input_container_focus_styles,
+		active_styles: input_container_active_styles
+	}}
+	title={title ? title : null}
+	transition:transition={transition_parameters}
 >
-	{#if labelPosition === 'before'}
-		<p>{labelText}</p>
-		{#if !isValid}
+	{#if label_position === 'before'}
+		<p>{label_text}</p>
+		{#if !is_valid}
 			<p class="invalid-msg">
-				{invalidMsg}
+				{invalid_msg}
 			</p>
 		{/if}
 		<slot name="label" />
 	{/if}
 	<input
-		bind:this={dateInput}
+		use:dynamicStyle={{
+			styles: input_styles,
+			hover_styles: input_hover_styles,
+			focus_styles: input_focus_styles,
+			active_styles: input_active_styles
+		}}
+		bind:this={date_input}
 		id={name}
 		type="date"
 		class="invalid"
-		style={inputStyles}
 		max={maxInternal}
 		min={minInternal}
 		{required}
@@ -82,8 +109,8 @@
 		on:input={(e) => changed(e.currentTarget.value)}
 	/>
 	<!-- TODO: Add datalist option https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist#date_and_time_types -->
-	{#if labelPosition === 'after'}
-		{labelText}
+	{#if label_position === 'after'}
+		{label_text}
 		<slot name="label" />
 	{/if}
 </label>

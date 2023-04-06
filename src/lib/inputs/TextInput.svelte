@@ -17,6 +17,7 @@
 	export let pattern: RegExp | null = null;
 	export let list = crypto?.randomUUID() ?? '';
 	export let show_confirm = true;
+	export let show_cancel = true;
 	export let options: DatalistOption[] = [];
 	export let input_container_styles = '';
 	export let input_container_hover_styles = '';
@@ -33,11 +34,7 @@
 	export let placeholder_props: ComponentProps<Placeholder> = {};
 	export let transition: SvelteTransition = fade;
 	export let transition_parameters: SvelteTransitionParams = { duration: 0 };
-	export let use_tooltip = false;
-	export let tooltip_options: TooltipParameters = {
-		title,
-		disabled: !use_tooltip
-	};
+	export let tooltip_options: TooltipParameters | null = null;
 	export let custom_validity_function:
 		| ((arg0: Event & { currentTarget: EventTarget & HTMLInputElement }) => void)
 		| null = null;
@@ -67,7 +64,7 @@
 		active_styles: input_container_active_styles
 	}}
 	use:tooltip={{ ...tooltip_options }}
-	{title}
+	title={title ? title : placeholder_props?.placeholder}
 	transition:transition={transition_parameters}
 >
 	{#if type === 'text'}
@@ -140,7 +137,7 @@
 				<Fa icon={faCheck} color="inherit" />
 			</button>
 		{/if}
-		{#if value}
+		{#if value && show_cancel}
 			<button
 				use:dynamicStyle={{
 					styles: button_styles,
@@ -240,7 +237,6 @@
 
 		&.value {
 			opacity: 0.4;
-			outline: 1px var(--button-outline, hsla(0, 0%, 0%, 0.2)) solid;
 			&:hover,
 			&:focus-visible {
 				opacity: 1;
@@ -271,7 +267,7 @@
 	.text-input-container:focus-within > :global(.placeholder),
 	input:active ~ :global(.placeholder),
 	input.value:not(:focus) ~ :global(.placeholder) {
-		translate: -3% -0.8rem 0;
+		translate: -0.5rem -0.8rem 0;
 		font-size: 0.75rem;
 	}
 

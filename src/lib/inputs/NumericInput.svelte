@@ -21,12 +21,13 @@
 	export let step: number | null = 1;
 	export let placeholder: string = '';
 	export let name: string = '';
+	export let title: string = '';
 	export let id: string = '';
 	export let invalid_msg: string = '';
 	export let required = false;
 	export let is_valid: boolean = true;
 	export let show_spinner_buttons = true;
-	export let tooltip_options: TooltipParameters = {};
+	export let tooltip_options: TooltipParameters | null = null;
 	export let container_styles: string = '';
 	export let container_hover_styles: string = '';
 	export let container_focus_styles: string = '';
@@ -58,17 +59,14 @@
 </script>
 
 <div
-	use:tooltip={{
-		visible: !is_valid,
-		disabled: is_valid || !invalid_msg,
-		...tooltip_options
-	}}
+	use:tooltip={tooltip_options ? { ...tooltip_options } : { disabled: true, visible: false }}
 	use:dynamicStyle={{
 		styles: container_styles,
 		hover_styles: container_hover_styles,
 		focus_styles: container_focus_styles,
 		dynamic_styles: container_dynamic_styles
 	}}
+	title={title ? title : placeholder}
 	class="numeric-input-container"
 	class:show-spinner-buttons={show_spinner_buttons}
 	transition:svelteTransition={transitionParams}
@@ -96,10 +94,12 @@
 		on:change={async (e) => changed(e.currentTarget.value)}
 	/>
 	{#if show_spinner_buttons}
+		{@const max_num = Number(max)}
+		{@const min_num = Number(min)}
 		<button
 			class="plus spinner"
 			on:click={() => {
-				if (Number(value) + Number(step) <= max) {
+				if (Number(value) + Number(step) <= max_num) {
 					value = Number(value) + Number(step);
 				}
 			}}
@@ -109,7 +109,7 @@
 		<button
 			class="minus spinner"
 			on:click={() => {
-				if (Number(value) - Number(step) >= min) {
+				if (Number(value) - Number(step) >= min_num) {
 					value = Number(value) - Number(step);
 				}
 			}}

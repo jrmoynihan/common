@@ -89,14 +89,10 @@
 	</section>
 	<section class="numeric-inputs">
 		<h2>Numeric Inputs</h2>
+		<!-- tooltip_options={{ title: `I'm an input with custom spinner buttons!` }} -->
+		<NumericInput step={null} value={null} placeholder={'a placeholder that disappears'} />
 		<NumericInput
-			tooltip_options={{ title: `I'm an input with custom spinner buttons!` }}
-			step={null}
-			value={null}
-			placeholder={'a placeholder that disappears'}
-		/>
-		<NumericInput
-			tooltip_options={{ title: `That's not between 0 and 10 !` }}
+			tooltip_options={{ title: `Is it between 0 and 10?` }}
 			max={10}
 			show_spinner_buttons={false}
 		/>
