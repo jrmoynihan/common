@@ -54,7 +54,7 @@
 	role="switch"
 	box_shadow_elevation={'none'}
 	{...button_props}
-	styles={`border: 0; --scale: ${scale}; display: grid; gap: 0.5rem; --button-padding: 0.2rem; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-backgrond, inherit); --button-color: var(--toggle-button-color, inherit); ${button_props.styles}`}
+	styles={`border: 0; --scale: ${scale}; display: grid; gap: 0.5rem; --button-padding: 0.2rem; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-background, inherit); --button-color: var(--toggle-button-color, inherit); ${button_props.styles}`}
 	classes={`toggle ${button_props.classes}`}
 >
 	{#if label_position === 'before' && label_text !== ''}
