@@ -240,6 +240,8 @@
 			&:hover,
 			&:focus-visible {
 				opacity: 1;
+			}
+			&:focus-visible {
 				outline: 1px var(--button-outline-hover-or-focus, hsla(0, 0%, 0%, 0.5)) solid;
 			}
 		}
