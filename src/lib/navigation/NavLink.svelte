@@ -4,6 +4,7 @@
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Fa, FaLayers, FaLayersText } from '@jrmoynihan/svelte-fa';
+	import type { IconSize, PullDirection } from '@jrmoynihan/svelte-fa/utils.js';
 	import type { NavigationLink } from './nav-functions.js';
 
 	/** The entire Navlink instance */
@@ -30,6 +31,16 @@
 	export let focused = false;
 	/** The tab index (only set if necessary!) */
 	export let tabindex: number = 0;
+	/** */
+	export let layers_container_props:
+		| {
+				class?: string | undefined;
+				id?: string | undefined;
+				style?: string | undefined;
+				size?: IconSize | undefined;
+				pull?: PullDirection | undefined;
+		  }
+		| undefined = undefined;
 
 	let anchor_path_to_scroll_to: string;
 
@@ -93,7 +104,7 @@
 	on:click
 >
 	{#if Array.isArray(nav_link.icons) && nav_link.icons.length > 0}
-		<FaLayers>
+		<FaLayers {...layers_container_props}>
 			{#each nav_link.icons as { icon, translateX, translateY, color, text, size, scale, style }}
 				{#if icon}
 					<Fa {icon} {size} {translateX} {translateY} {color} {scale} {style} />
