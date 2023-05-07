@@ -1,8 +1,10 @@
+/* eslint-disable no-inner-declarations */
+/* eslint-disable svelte/no-inner-declarations */
 import { waitForAnimations } from '$actions/general.js';
 import { browser } from '$app/environment';
 import { getAncestors, getMax, getTransitionDurations } from '$functions/helpers.js';
 import { ErrorLog } from '$functions/logging.js';
-import type { ComponentProps } from 'svelte';
+import type { ComponentProps, ComponentType, SvelteComponentTyped } from 'svelte';
 import { get, writable } from 'svelte/store';
 import ActionTooltip from './ActionTooltip.svelte';
 
@@ -28,7 +30,7 @@ export interface TooltipParameters extends ComponentProps<ActionTooltip> {
 	/** Delays the calculation of the tooltip's position upon mounting.  Tooltips inherently wait for parent transitions/animations to finish before calculating their positions (since it may change by the end of the transition).  If you want the tooltip to be visible "immediately", it is recommended to add a positioning delay here to  */
 	visibility_delay?: number;
 	/** A component to show inside the tooltip */
-	custom_component?: ConstructorOfATypedSvelteComponent;
+	custom_component?: ComponentType<SvelteComponentTyped>;
 	/** Disabling the tooltip prevents it from appearing on mouseover events. */
 	disabled?: boolean;
 	/** The additional nodes to travel to after closing the initial spotlight. */
@@ -56,12 +58,11 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 		// Measure anchor element's position in the DOM to check if it reflows somewhere down the line
 		let { top: anchor_top, left: anchor_left } = node.getBoundingClientRect();
 
-		let tooltip_parameters = writable<TooltipParameters>({
+		const tooltip_parameters = writable<TooltipParameters>({
 			...default_parameters,
 			...parameters
 		});
 		let title_attribute: string | null;
-		let tooltip: ActionTooltip;
 		let ticking = false;
 		let is_intersecting_viewport = false;
 
@@ -136,15 +137,14 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 		addEventListeners(node);
 
 		// Prune away the unneeded params before passing/setting the tooltip parameters (avoids warning msg in console)
-		let new_tooltip_parameters = getParametersForNewTooltip();
+		const new_tooltip_parameters = getParametersForNewTooltip();
 
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { visible, in_delay, out_delay, visibility_delay, ...all_other_new_tooltip_parameters } =
 			new_tooltip_parameters;
-		const { delay } = new_tooltip_parameters;
 
 		// Make the tooltip instance.
-		tooltip = new ActionTooltip({
-			//@ts-ignore
+		const tooltip = new ActionTooltip({
 			props: {
 				...all_other_new_tooltip_parameters
 			},
@@ -205,19 +205,25 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 		/** Prune away the unneeded params before passing/setting the tooltip parameters (avoids console warning messages for extraneous props) */
 		function getParametersForNewTooltip(): TooltipParameters {
 			const {
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				horizontal_offset,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				vertical_offset,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				allow_dynamic_position,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				disabled,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				out_delay,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				in_delay,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				visibility_delay: positioning_delay,
 				...passing_parameters
 			} = get(tooltip_parameters);
 			return passing_parameters;
 		}
 		async function makeInvisibleTooltip(parameters: TooltipParameters) {
-			// @ts-ignore
 			return new ActionTooltip({
 				props: { ...parameters, visible: true, only_for_measuring: true },
 				target: document.body
@@ -288,9 +294,9 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 		async function mouseLeave(event: MouseEvent) {
 			// If the left mouse button isn't being pressed...
 			if (event.buttons !== 1 && tooltip && node) {
-				const { delay, out_delay } = get(tooltip_parameters);
+				const { out_delay } = get(tooltip_parameters);
 
-				await changeVisiblityAfterDelay({ visibility: false, delay: out_delay ?? delay ?? 0 });
+				await changeVisiblityAfterDelay({ visibility: false, delay: out_delay ?? 0 });
 
 				// Restore the `title` attribute
 				if (title_attribute) node.setAttribute('title', title_attribute);
@@ -302,8 +308,8 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 			old_parameters: TooltipParameters,
 			new_parameters: TooltipParameters
 		) {
-			let old_position = old_parameters?.position ?? 'top';
-			let new_position = new_parameters?.position ?? 'top';
+			const old_position = old_parameters?.position ?? 'top';
+			const new_position = new_parameters?.position ?? 'top';
 
 			// If the position swapped sides, invert the horizontal or vertical offsets, respectively
 			if (
@@ -365,13 +371,13 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 			allow_dynamic_position: boolean | undefined,
 			horizontal_offset?: number,
 			vertical_offset?: number,
-			allow_offscreen: boolean = false
+			allow_offscreen = false
 		) {
 			let x: number;
 			let y: number;
 
 			// Find the bounds of the affixed element and the padding of the parent of the affixed element for the tooltip (for absolute positioning within dialogs)
-			const { top, bottom, left, right, height, width } = anchor_element.getBoundingClientRect();
+			const { top, bottom, left, height, width } = anchor_element.getBoundingClientRect();
 			const parent_styles: CSSStyleDeclaration | null = anchor_element?.parentElement
 				? window.getComputedStyle(anchor_element?.parentElement)
 				: null;
@@ -380,7 +386,7 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 			const horizontal_middle = width / 2;
 
 			// Measure the rendered tooltip's dimensions
-			let {
+			const {
 				clientWidth: tip_width = 0,
 				offsetWidth: tip_offset_width = 0,
 				clientHeight: tip_height = 0,
@@ -553,7 +559,7 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 				resize_observer.disconnect();
 				tooltip.$destroy();
 			},
-			async goToNextNode(next_index: number, next_delay = delay) {
+			async goToNextNode(next_index: number, next_delay = 0) {
 				const props = get(tooltip_parameters);
 				const { steps } = props;
 				if (steps && steps.length > 0) {
