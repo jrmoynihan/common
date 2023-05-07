@@ -1,0 +1,18 @@
+// Responsive Media Queries
+@mixin responsive_desktop_only($min-width: 1024px) {
+	@media only screen and (min-width: $min-width) {
+		@content;
+	}
+}
+
+@mixin responsive_mobile_only($max-width: 1024px) {
+	@media only screen and (max-width: $max-width) {
+		@content;
+	}
+}
+// Fonts
+@mixin monospace {
+	font-family: 'Fira Code iScript', 'Fira Code', Consolas, 'Andale Mono WT', 'Andale Mono',
+		'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono',
+		'Liberation Mono', 'Nimbus Mono L', Monaco, 'Courier New', Courier, monospace;
+}
