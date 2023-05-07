@@ -17,6 +17,7 @@
 	export let tooltip_options: TooltipParameters = {
 		disabled: true
 	};
+	export let id: string = '';
 	/** Add role attributes to the button */
 	export let role: WidgetRole = 'button';
 	/** Style the button, allowing dynamic updates */
@@ -62,6 +63,7 @@
 	use:dynamicStyle={{ styles, hover_styles, focus_styles, active_styles }}
 	use:tooltip={{ ...tooltip_options }}
 	title={title ?? tooltip_options.title}
+	{id}
 	{type}
 	{role}
 	class="btn {classes}"
