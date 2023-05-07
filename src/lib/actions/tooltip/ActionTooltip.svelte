@@ -100,7 +100,7 @@
 			style={`left: ${x}px; top: ${y}px; position:${position_type}; ${styles}`}
 		>
 			{#if title}
-				{title}
+				{@html title}
 			{/if}
 			{#if custom_component}
 				<svelte:component this={custom_component} />
