@@ -105,8 +105,6 @@
 			{#if custom_component}
 				<svelte:component this={custom_component} />
 			{/if}
-			<!-- {#if !title && !custom_component}
-			{/if} -->
 			{#if show_arrow}
 				<span class="arrow" data-tip-position={position} />
 			{/if}
