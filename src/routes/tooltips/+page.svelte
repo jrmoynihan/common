@@ -4,6 +4,7 @@
 	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons/index';
 	import { Fa } from '@jrmoynihan/svelte-fa';
 	import { fly } from 'svelte/transition';
+	import CustomComponent from './CustomComponent.svelte';
 	let selected_position: TooltipDirections = 'top';
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width = 150;
@@ -48,7 +49,7 @@
 	}
 </script>
 
-<section>
+<section id="tooltips-section">
 	<div class="settings full-width">
 		{#each positions as position}
 			<label>
@@ -126,6 +127,19 @@
 				: `I'll disappear after a short delay`,
 			keep_visible,
 			disabled
+		}}
+	>
+		Tooltips Can Stay Visible Or Be Disabled
+	</button>
+	<button
+		id="custom-component-button"
+		use:tooltip={{
+			position: selected_position,
+			title: `I've got a custom component!`,
+			keep_visible,
+			visible,
+			disabled,
+			custom_component: CustomComponent
 		}}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
