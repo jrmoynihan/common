@@ -34,7 +34,8 @@ import Navigation from './navigation/Navigation.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 
 // Toasts
-import { SvelteToast, toast, type SvelteToastOptions } from '@zerodevx/svelte-toast';
+import { SvelteToast, toast } from '@zerodevx/svelte-toast';
+import type { SvelteToastOptions } from '@zerodevx/svelte-toast/stores';
 import SeenToast from './toasts/SeenToast.svelte';
 
 // Wrappers
