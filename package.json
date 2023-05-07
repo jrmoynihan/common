@@ -54,333 +54,333 @@
 	"exports": {
 		"./package.json": "./package.json",
 		"./actions/drag-action": {
-			"types": "./package/actions/drag-action.d.ts",
-			"default": "./package/actions/drag-action.js"
+			"types": "./dist/actions/drag-action.d.ts",
+			"default": "./dist/actions/drag-action.js"
 		},
 		"./actions/dynamic-styles": {
-			"types": "./package/actions/dynamic-styles.d.ts",
-			"default": "./package/actions/dynamic-styles.js"
+			"types": "./dist/actions/dynamic-styles.d.ts",
+			"default": "./dist/actions/dynamic-styles.js"
 		},
 		"./actions/general": {
-			"types": "./package/actions/general.d.ts",
-			"default": "./package/actions/general.js"
+			"types": "./dist/actions/general.d.ts",
+			"default": "./dist/actions/general.js"
 		},
 		"./actions/spotlight/ActionSpotlight.svelte": {
-			"types": "./package/actions/spotlight/ActionSpotlight.svelte.d.ts",
-			"svelte": "./package/actions/spotlight/ActionSpotlight.svelte",
-			"default": "./package/actions/spotlight/ActionSpotlight.svelte"
+			"types": "./dist/actions/spotlight/ActionSpotlight.svelte.d.ts",
+			"svelte": "./dist/actions/spotlight/ActionSpotlight.svelte",
+			"default": "./dist/actions/spotlight/ActionSpotlight.svelte"
 		},
 		"./actions/spotlight/spotlight": {
-			"types": "./package/actions/spotlight/spotlight.d.ts",
-			"default": "./package/actions/spotlight/spotlight.js"
+			"types": "./dist/actions/spotlight/spotlight.d.ts",
+			"default": "./dist/actions/spotlight/spotlight.js"
 		},
 		"./actions/tooltip/ActionTooltip.svelte": {
-			"types": "./package/actions/tooltip/ActionTooltip.svelte.d.ts",
-			"svelte": "./package/actions/tooltip/ActionTooltip.svelte",
-			"default": "./package/actions/tooltip/ActionTooltip.svelte"
+			"types": "./dist/actions/tooltip/ActionTooltip.svelte.d.ts",
+			"svelte": "./dist/actions/tooltip/ActionTooltip.svelte",
+			"default": "./dist/actions/tooltip/ActionTooltip.svelte"
 		},
 		"./actions/tooltip/tooltip": {
-			"types": "./package/actions/tooltip/tooltip.d.ts",
-			"default": "./package/actions/tooltip/tooltip.js"
+			"types": "./dist/actions/tooltip/tooltip.d.ts",
+			"default": "./dist/actions/tooltip/tooltip.js"
 		},
 		"./actions/will-change": {
-			"types": "./package/actions/will-change.d.ts",
-			"default": "./package/actions/will-change.js"
+			"types": "./dist/actions/will-change.d.ts",
+			"default": "./dist/actions/will-change.js"
 		},
 		"./buttons/Button.svelte": {
-			"types": "./package/buttons/Button.svelte.d.ts",
-			"svelte": "./package/buttons/Button.svelte",
-			"default": "./package/buttons/Button.svelte"
+			"types": "./dist/buttons/Button.svelte.d.ts",
+			"svelte": "./dist/buttons/Button.svelte",
+			"default": "./dist/buttons/Button.svelte"
 		},
 		"./buttons/DragAnchor.svelte": {
-			"types": "./package/buttons/DragAnchor.svelte.d.ts",
-			"svelte": "./package/buttons/DragAnchor.svelte",
-			"default": "./package/buttons/DragAnchor.svelte"
+			"types": "./dist/buttons/DragAnchor.svelte.d.ts",
+			"svelte": "./dist/buttons/DragAnchor.svelte",
+			"default": "./dist/buttons/DragAnchor.svelte"
 		},
 		"./buttons/LightDarkToggle.svelte": {
-			"types": "./package/buttons/LightDarkToggle.svelte.d.ts",
-			"svelte": "./package/buttons/LightDarkToggle.svelte",
-			"default": "./package/buttons/LightDarkToggle.svelte"
+			"types": "./dist/buttons/LightDarkToggle.svelte.d.ts",
+			"svelte": "./dist/buttons/LightDarkToggle.svelte",
+			"default": "./dist/buttons/LightDarkToggle.svelte"
 		},
 		"./buttons/ToggleSwitch.svelte": {
-			"types": "./package/buttons/ToggleSwitch.svelte.d.ts",
-			"svelte": "./package/buttons/ToggleSwitch.svelte",
-			"default": "./package/buttons/ToggleSwitch.svelte"
+			"types": "./dist/buttons/ToggleSwitch.svelte.d.ts",
+			"svelte": "./dist/buttons/ToggleSwitch.svelte",
+			"default": "./dist/buttons/ToggleSwitch.svelte"
 		},
 		"./functions/helpers": {
-			"types": "./package/functions/helpers.d.ts",
-			"default": "./package/functions/helpers.js"
+			"types": "./dist/functions/helpers.d.ts",
+			"default": "./dist/functions/helpers.js"
 		},
 		"./functions/local-storage": {
-			"types": "./package/functions/local-storage.d.ts",
-			"default": "./package/functions/local-storage.js"
+			"types": "./dist/functions/local-storage.d.ts",
+			"default": "./dist/functions/local-storage.js"
 		},
 		"./functions/logging": {
-			"types": "./package/functions/logging.d.ts",
-			"default": "./package/functions/logging.js"
+			"types": "./dist/functions/logging.d.ts",
+			"default": "./dist/functions/logging.js"
 		},
 		"./functions/store": {
-			"types": "./package/functions/store.d.ts",
-			"default": "./package/functions/store.js"
+			"types": "./dist/functions/store.d.ts",
+			"default": "./dist/functions/store.js"
 		},
 		".": {
-			"types": "./package/index.d.ts",
-			"svelte": "./package/index.js",
-			"default": "./package/index.js"
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
 		},
 		"./inputs/DateInput.svelte": {
-			"types": "./package/inputs/DateInput.svelte.d.ts",
-			"svelte": "./package/inputs/DateInput.svelte",
-			"default": "./package/inputs/DateInput.svelte"
+			"types": "./dist/inputs/DateInput.svelte.d.ts",
+			"svelte": "./dist/inputs/DateInput.svelte",
+			"default": "./dist/inputs/DateInput.svelte"
 		},
 		"./inputs/NumericInput.svelte": {
-			"types": "./package/inputs/NumericInput.svelte.d.ts",
-			"svelte": "./package/inputs/NumericInput.svelte",
-			"default": "./package/inputs/NumericInput.svelte"
+			"types": "./dist/inputs/NumericInput.svelte.d.ts",
+			"svelte": "./dist/inputs/NumericInput.svelte",
+			"default": "./dist/inputs/NumericInput.svelte"
 		},
 		"./inputs/OptionOrGroup.svelte": {
-			"types": "./package/inputs/OptionOrGroup.svelte.d.ts",
-			"svelte": "./package/inputs/OptionOrGroup.svelte",
-			"default": "./package/inputs/OptionOrGroup.svelte"
+			"types": "./dist/inputs/OptionOrGroup.svelte.d.ts",
+			"svelte": "./dist/inputs/OptionOrGroup.svelte",
+			"default": "./dist/inputs/OptionOrGroup.svelte"
 		},
 		"./inputs/Placeholder.svelte": {
-			"types": "./package/inputs/Placeholder.svelte.d.ts",
-			"svelte": "./package/inputs/Placeholder.svelte",
-			"default": "./package/inputs/Placeholder.svelte"
+			"types": "./dist/inputs/Placeholder.svelte.d.ts",
+			"svelte": "./dist/inputs/Placeholder.svelte",
+			"default": "./dist/inputs/Placeholder.svelte"
 		},
 		"./inputs/Select.svelte": {
-			"types": "./package/inputs/Select.svelte.d.ts",
-			"svelte": "./package/inputs/Select.svelte",
-			"default": "./package/inputs/Select.svelte"
+			"types": "./dist/inputs/Select.svelte.d.ts",
+			"svelte": "./dist/inputs/Select.svelte",
+			"default": "./dist/inputs/Select.svelte"
 		},
 		"./inputs/TemporalDateInput.svelte": {
-			"types": "./package/inputs/TemporalDateInput.svelte.d.ts",
-			"svelte": "./package/inputs/TemporalDateInput.svelte",
-			"default": "./package/inputs/TemporalDateInput.svelte"
+			"types": "./dist/inputs/TemporalDateInput.svelte.d.ts",
+			"svelte": "./dist/inputs/TemporalDateInput.svelte",
+			"default": "./dist/inputs/TemporalDateInput.svelte"
 		},
 		"./inputs/TextInput.svelte": {
-			"types": "./package/inputs/TextInput.svelte.d.ts",
-			"svelte": "./package/inputs/TextInput.svelte",
-			"default": "./package/inputs/TextInput.svelte"
+			"types": "./dist/inputs/TextInput.svelte.d.ts",
+			"svelte": "./dist/inputs/TextInput.svelte",
+			"default": "./dist/inputs/TextInput.svelte"
 		},
 		"./lib_types": {
-			"types": "./package/lib_types.d.ts",
-			"default": "./package/lib_types.js"
+			"types": "./dist/lib_types.d.ts",
+			"default": "./dist/lib_types.js"
 		},
 		"./navigation/AnchorHeading.svelte": {
-			"types": "./package/navigation/AnchorHeading.svelte.d.ts",
-			"svelte": "./package/navigation/AnchorHeading.svelte",
-			"default": "./package/navigation/AnchorHeading.svelte"
+			"types": "./dist/navigation/AnchorHeading.svelte.d.ts",
+			"svelte": "./dist/navigation/AnchorHeading.svelte",
+			"default": "./dist/navigation/AnchorHeading.svelte"
 		},
 		"./navigation/LinkableAnchorHeading.svelte": {
-			"types": "./package/navigation/LinkableAnchorHeading.svelte.d.ts",
-			"svelte": "./package/navigation/LinkableAnchorHeading.svelte",
-			"default": "./package/navigation/LinkableAnchorHeading.svelte"
+			"types": "./dist/navigation/LinkableAnchorHeading.svelte.d.ts",
+			"svelte": "./dist/navigation/LinkableAnchorHeading.svelte",
+			"default": "./dist/navigation/LinkableAnchorHeading.svelte"
 		},
 		"./navigation/NavLink.svelte": {
-			"types": "./package/navigation/NavLink.svelte.d.ts",
-			"svelte": "./package/navigation/NavLink.svelte",
-			"default": "./package/navigation/NavLink.svelte"
+			"types": "./dist/navigation/NavLink.svelte.d.ts",
+			"svelte": "./dist/navigation/NavLink.svelte",
+			"default": "./dist/navigation/NavLink.svelte"
 		},
 		"./navigation/Navigation.svelte": {
-			"types": "./package/navigation/Navigation.svelte.d.ts",
-			"svelte": "./package/navigation/Navigation.svelte",
-			"default": "./package/navigation/Navigation.svelte"
+			"types": "./dist/navigation/Navigation.svelte.d.ts",
+			"svelte": "./dist/navigation/Navigation.svelte",
+			"default": "./dist/navigation/Navigation.svelte"
 		},
 		"./navigation/ScrollProgress.svelte": {
-			"types": "./package/navigation/ScrollProgress.svelte.d.ts",
-			"svelte": "./package/navigation/ScrollProgress.svelte",
-			"default": "./package/navigation/ScrollProgress.svelte"
+			"types": "./dist/navigation/ScrollProgress.svelte.d.ts",
+			"svelte": "./dist/navigation/ScrollProgress.svelte",
+			"default": "./dist/navigation/ScrollProgress.svelte"
 		},
 		"./navigation/nav-functions": {
-			"types": "./package/navigation/nav-functions.d.ts",
-			"default": "./package/navigation/nav-functions.js"
+			"types": "./dist/navigation/nav-functions.d.ts",
+			"default": "./dist/navigation/nav-functions.js"
 		},
-		"./styles/mixins.scss": "./package/styles/mixins.scss",
+		"./styles/mixins.scss": "./dist/styles/mixins.scss",
 		"./styles/shadow": {
-			"types": "./package/styles/shadow.d.ts",
-			"default": "./package/styles/shadow.js"
+			"types": "./dist/styles/shadow.d.ts",
+			"default": "./dist/styles/shadow.js"
 		},
 		"./toasts/DefaultToast.svelte": {
-			"types": "./package/toasts/DefaultToast.svelte.d.ts",
-			"svelte": "./package/toasts/DefaultToast.svelte",
-			"default": "./package/toasts/DefaultToast.svelte"
+			"types": "./dist/toasts/DefaultToast.svelte.d.ts",
+			"svelte": "./dist/toasts/DefaultToast.svelte",
+			"default": "./dist/toasts/DefaultToast.svelte"
 		},
 		"./toasts/SeenToast.svelte": {
-			"types": "./package/toasts/SeenToast.svelte.d.ts",
-			"svelte": "./package/toasts/SeenToast.svelte",
-			"default": "./package/toasts/SeenToast.svelte"
+			"types": "./dist/toasts/SeenToast.svelte.d.ts",
+			"svelte": "./dist/toasts/SeenToast.svelte",
+			"default": "./dist/toasts/SeenToast.svelte"
 		},
 		"./toasts/toasts": {
-			"types": "./package/toasts/toasts.d.ts",
-			"default": "./package/toasts/toasts.js"
+			"types": "./dist/toasts/toasts.d.ts",
+			"default": "./dist/toasts/toasts.js"
 		},
 		"./wrappers/Accordion.svelte": {
-			"types": "./package/wrappers/Accordion.svelte.d.ts",
-			"svelte": "./package/wrappers/Accordion.svelte",
-			"default": "./package/wrappers/Accordion.svelte"
+			"types": "./dist/wrappers/Accordion.svelte.d.ts",
+			"svelte": "./dist/wrappers/Accordion.svelte",
+			"default": "./dist/wrappers/Accordion.svelte"
 		},
 		"./wrappers/ErrorModal.svelte": {
-			"types": "./package/wrappers/ErrorModal.svelte.d.ts",
-			"svelte": "./package/wrappers/ErrorModal.svelte",
-			"default": "./package/wrappers/ErrorModal.svelte"
+			"types": "./dist/wrappers/ErrorModal.svelte.d.ts",
+			"svelte": "./dist/wrappers/ErrorModal.svelte",
+			"default": "./dist/wrappers/ErrorModal.svelte"
 		},
 		"./wrappers/Modal.svelte": {
-			"types": "./package/wrappers/Modal.svelte.d.ts",
-			"svelte": "./package/wrappers/Modal.svelte",
-			"default": "./package/wrappers/Modal.svelte"
+			"types": "./dist/wrappers/Modal.svelte.d.ts",
+			"svelte": "./dist/wrappers/Modal.svelte",
+			"default": "./dist/wrappers/Modal.svelte"
 		},
 		"./wrappers/ModalWithButton.svelte": {
-			"types": "./package/wrappers/ModalWithButton.svelte.d.ts",
-			"svelte": "./package/wrappers/ModalWithButton.svelte",
-			"default": "./package/wrappers/ModalWithButton.svelte"
+			"types": "./dist/wrappers/ModalWithButton.svelte.d.ts",
+			"svelte": "./dist/wrappers/ModalWithButton.svelte",
+			"default": "./dist/wrappers/ModalWithButton.svelte"
 		},
 		"./wrappers/Tabs.svelte": {
-			"types": "./package/wrappers/Tabs.svelte.d.ts",
-			"svelte": "./package/wrappers/Tabs.svelte",
-			"default": "./package/wrappers/Tabs.svelte"
+			"types": "./dist/wrappers/Tabs.svelte.d.ts",
+			"svelte": "./dist/wrappers/Tabs.svelte",
+			"default": "./dist/wrappers/Tabs.svelte"
 		},
 		"./wrappers/Transition.svelte": {
-			"types": "./package/wrappers/Transition.svelte.d.ts",
-			"svelte": "./package/wrappers/Transition.svelte",
-			"default": "./package/wrappers/Transition.svelte"
+			"types": "./dist/wrappers/Transition.svelte.d.ts",
+			"svelte": "./dist/wrappers/Transition.svelte",
+			"default": "./dist/wrappers/Transition.svelte"
 		},
 		"./wrappers/tab": {
-			"types": "./package/wrappers/tab.d.ts",
-			"default": "./package/wrappers/tab.js"
+			"types": "./dist/wrappers/tab.d.ts",
+			"default": "./dist/wrappers/tab.js"
 		}
 	},
 	"files": [
 		"package"
 	],
-	"svelte": "./package/index.js",
+	"svelte": "./dist/index.js",
 	"typesVersions": {
 		">4.0": {
 			"actions/drag-action": [
-				"./package/actions/drag-action.d.ts"
+				"./dist/actions/drag-action.d.ts"
 			],
 			"actions/dynamic-styles": [
-				"./package/actions/dynamic-styles.d.ts"
+				"./dist/actions/dynamic-styles.d.ts"
 			],
 			"actions/general": [
-				"./package/actions/general.d.ts"
+				"./dist/actions/general.d.ts"
 			],
 			"actions/spotlight/ActionSpotlight.svelte": [
-				"./package/actions/spotlight/ActionSpotlight.svelte.d.ts"
+				"./dist/actions/spotlight/ActionSpotlight.svelte.d.ts"
 			],
 			"actions/spotlight/spotlight": [
-				"./package/actions/spotlight/spotlight.d.ts"
+				"./dist/actions/spotlight/spotlight.d.ts"
 			],
 			"actions/tooltip/ActionTooltip.svelte": [
-				"./package/actions/tooltip/ActionTooltip.svelte.d.ts"
+				"./dist/actions/tooltip/ActionTooltip.svelte.d.ts"
 			],
 			"actions/tooltip/tooltip": [
-				"./package/actions/tooltip/tooltip.d.ts"
+				"./dist/actions/tooltip/tooltip.d.ts"
 			],
 			"actions/will-change": [
-				"./package/actions/will-change.d.ts"
+				"./dist/actions/will-change.d.ts"
 			],
 			"buttons/Button.svelte": [
-				"./package/buttons/Button.svelte.d.ts"
+				"./dist/buttons/Button.svelte.d.ts"
 			],
 			"buttons/DragAnchor.svelte": [
-				"./package/buttons/DragAnchor.svelte.d.ts"
+				"./dist/buttons/DragAnchor.svelte.d.ts"
 			],
 			"buttons/LightDarkToggle.svelte": [
-				"./package/buttons/LightDarkToggle.svelte.d.ts"
+				"./dist/buttons/LightDarkToggle.svelte.d.ts"
 			],
 			"buttons/ToggleSwitch.svelte": [
-				"./package/buttons/ToggleSwitch.svelte.d.ts"
+				"./dist/buttons/ToggleSwitch.svelte.d.ts"
 			],
 			"functions/helpers": [
-				"./package/functions/helpers.d.ts"
+				"./dist/functions/helpers.d.ts"
 			],
 			"functions/local-storage": [
-				"./package/functions/local-storage.d.ts"
+				"./dist/functions/local-storage.d.ts"
 			],
 			"functions/logging": [
-				"./package/functions/logging.d.ts"
+				"./dist/functions/logging.d.ts"
 			],
 			"functions/store": [
-				"./package/functions/store.d.ts"
+				"./dist/functions/store.d.ts"
 			],
 			"index": [
-				"./package/index.d.ts"
+				"./dist/index.d.ts"
 			],
 			"inputs/DateInput.svelte": [
-				"./package/inputs/DateInput.svelte.d.ts"
+				"./dist/inputs/DateInput.svelte.d.ts"
 			],
 			"inputs/NumericInput.svelte": [
-				"./package/inputs/NumericInput.svelte.d.ts"
+				"./dist/inputs/NumericInput.svelte.d.ts"
 			],
 			"inputs/OptionOrGroup.svelte": [
-				"./package/inputs/OptionOrGroup.svelte.d.ts"
+				"./dist/inputs/OptionOrGroup.svelte.d.ts"
 			],
 			"inputs/Placeholder.svelte": [
-				"./package/inputs/Placeholder.svelte.d.ts"
+				"./dist/inputs/Placeholder.svelte.d.ts"
 			],
 			"inputs/Select.svelte": [
-				"./package/inputs/Select.svelte.d.ts"
+				"./dist/inputs/Select.svelte.d.ts"
 			],
 			"inputs/TemporalDateInput.svelte": [
-				"./package/inputs/TemporalDateInput.svelte.d.ts"
+				"./dist/inputs/TemporalDateInput.svelte.d.ts"
 			],
 			"inputs/TextInput.svelte": [
-				"./package/inputs/TextInput.svelte.d.ts"
+				"./dist/inputs/TextInput.svelte.d.ts"
 			],
 			"lib_types": [
-				"./package/lib_types.d.ts"
+				"./dist/lib_types.d.ts"
 			],
 			"navigation/AnchorHeading.svelte": [
-				"./package/navigation/AnchorHeading.svelte.d.ts"
+				"./dist/navigation/AnchorHeading.svelte.d.ts"
 			],
 			"navigation/LinkableAnchorHeading.svelte": [
-				"./package/navigation/LinkableAnchorHeading.svelte.d.ts"
+				"./dist/navigation/LinkableAnchorHeading.svelte.d.ts"
 			],
 			"navigation/NavLink.svelte": [
-				"./package/navigation/NavLink.svelte.d.ts"
+				"./dist/navigation/NavLink.svelte.d.ts"
 			],
 			"navigation/Navigation.svelte": [
-				"./package/navigation/Navigation.svelte.d.ts"
+				"./dist/navigation/Navigation.svelte.d.ts"
 			],
 			"navigation/ScrollProgress.svelte": [
-				"./package/navigation/ScrollProgress.svelte.d.ts"
+				"./dist/navigation/ScrollProgress.svelte.d.ts"
 			],
 			"navigation/nav-functions": [
-				"./package/navigation/nav-functions.d.ts"
+				"./dist/navigation/nav-functions.d.ts"
 			],
 			"styles/shadow": [
-				"./package/styles/shadow.d.ts"
+				"./dist/styles/shadow.d.ts"
 			],
 			"toasts/DefaultToast.svelte": [
-				"./package/toasts/DefaultToast.svelte.d.ts"
+				"./dist/toasts/DefaultToast.svelte.d.ts"
 			],
 			"toasts/SeenToast.svelte": [
-				"./package/toasts/SeenToast.svelte.d.ts"
+				"./dist/toasts/SeenToast.svelte.d.ts"
 			],
 			"toasts/toasts": [
-				"./package/toasts/toasts.d.ts"
+				"./dist/toasts/toasts.d.ts"
 			],
 			"wrappers/Accordion.svelte": [
-				"./package/wrappers/Accordion.svelte.d.ts"
+				"./dist/wrappers/Accordion.svelte.d.ts"
 			],
 			"wrappers/ErrorModal.svelte": [
-				"./package/wrappers/ErrorModal.svelte.d.ts"
+				"./dist/wrappers/ErrorModal.svelte.d.ts"
 			],
 			"wrappers/Modal.svelte": [
-				"./package/wrappers/Modal.svelte.d.ts"
+				"./dist/wrappers/Modal.svelte.d.ts"
 			],
 			"wrappers/ModalWithButton.svelte": [
-				"./package/wrappers/ModalWithButton.svelte.d.ts"
+				"./dist/wrappers/ModalWithButton.svelte.d.ts"
 			],
 			"wrappers/Tabs.svelte": [
-				"./package/wrappers/Tabs.svelte.d.ts"
+				"./dist/wrappers/Tabs.svelte.d.ts"
 			],
 			"wrappers/Transition.svelte": [
-				"./package/wrappers/Transition.svelte.d.ts"
+				"./dist/wrappers/Transition.svelte.d.ts"
 			],
 			"wrappers/tab": [
-				"./package/wrappers/tab.d.ts"
+				"./dist/wrappers/tab.d.ts"
 			]
 		}
 	}
