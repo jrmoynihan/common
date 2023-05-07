@@ -135,7 +135,7 @@
 		id="custom-component-button"
 		use:tooltip={{
 			position: selected_position,
-			title: `I've got a custom component!`,
+			title: `I've got a <br/> custom component!`,
 			keep_visible,
 			visible,
 			disabled,

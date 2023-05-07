@@ -1,6 +1,6 @@
 {
 	"name": "@jrmoynihan/common",
-	"version": "8.0.3",
+	"version": "8.1.0",
 	"repository": "github:jrmoynihan/common",
 	"author": "James Moynihan",
 	"scripts": {
@@ -51,5 +51,11 @@
 		"@zerodevx/svelte-toast": "^0.9.3",
 		"mdsvexamples": "^0.3.3",
 		"svelte": "^3.59.0"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js"
+		}
 	}
 }
