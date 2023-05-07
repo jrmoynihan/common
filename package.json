@@ -11,7 +11,7 @@
 		"package-publish-patch": "pnpm version patch && svelte-package && pnpm publish",
 		"package-publish-minor": "pnpm version minor && svelte-package && cd dist && pnpm publish",
 		"package-publish-major": "pnpm version major && svelte-package && cd dist && pnpm publish",
-		"publish": "cd dist && pnpm publish",
+		"publish": "pnpm publish",
 		"test": "playwright test",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
