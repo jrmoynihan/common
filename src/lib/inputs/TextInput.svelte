@@ -10,7 +10,7 @@
 	import Placeholder from './Placeholder.svelte';
 
 	export let value: unknown = '';
-	export let id = crypto?.randomUUID() ?? '';
+	export let id: string = crypto?.randomUUID() ?? '';
 	export let type: 'text' | 'datalist' = 'text';
 	export let title = '';
 	export let required = false;
