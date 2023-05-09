@@ -7,7 +7,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"build package": "svelte-kit sync && svelte-package",
+		"build package": "svelte-kit sync && svelte-package && pnpm publish",
 		"package-publish-patch": "pnpm version patch && svelte-package && pnpm publish",
 		"package-publish-minor": "pnpm version minor && svelte-package && pnpm publish",
 		"package-publish-major": "pnpm version major && svelte-package && pnpm publish",
