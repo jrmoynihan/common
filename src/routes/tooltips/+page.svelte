@@ -139,7 +139,10 @@
 			keep_visible,
 			visible,
 			disabled,
-			custom_component: CustomComponent
+			custom_component: CustomComponent,
+			component_props: {
+				text: 'I changed the text from within the action params!'
+			}
 		}}
 	>
 		Tooltips Can Stay Visible Or Be Disabled

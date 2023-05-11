@@ -44,6 +44,7 @@
 	export let paddingLeft: number = 0;
 	export let paddingRight: number = 0;
 	export let custom_component: ConstructorOfATypedSvelteComponent | null = null;
+	export let component_props: Object = {};
 	/** Enable or disable the tooltip arrow */
 	export let show_arrow = true;
 	/** Allow the tooltip to stay visible even after the user moves the mouse outside the parent element. */
@@ -103,7 +104,7 @@
 				{@html title}
 			{/if}
 			{#if custom_component}
-				<svelte:component this={custom_component} />
+				<svelte:component this={custom_component} {...component_props} />
 			{/if}
 			{#if show_arrow}
 				<span class="arrow" data-tip-position={position} />

@@ -31,6 +31,8 @@ export interface TooltipParameters extends ComponentProps<ActionTooltip> {
 	visibility_delay?: number;
 	/** A component to show inside the tooltip */
 	custom_component?: ComponentType<SvelteComponentTyped>;
+	/** The props to pass to the custom component */
+	component_props?: Record<string, unknown>;
 	/** Disabling the tooltip prevents it from appearing on mouseover events. */
 	disabled?: boolean;
 	/** The additional nodes to travel to after closing the initial spotlight. */
