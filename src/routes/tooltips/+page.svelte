@@ -139,7 +139,8 @@
 			keep_visible,
 			visible,
 			disabled,
-			custom_component: CustomComponent
+			custom_component: CustomComponent,
+			custom_component_props: { text: 'I can be changed!' }
 		}}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
