@@ -16,12 +16,7 @@ const config = {
 
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
-	preprocess: [
-		mdsvex(mdsvexConfig),
-		preprocess({
-			scss: true
-		})
-	],
+	preprocess: [mdsvex(mdsvexConfig), preprocess()],
 
 	kit: {
 		adapter: auto(),
