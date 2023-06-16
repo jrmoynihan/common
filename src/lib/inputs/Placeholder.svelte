@@ -19,13 +19,12 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
-		opacity: 0.6;
 		display: grid;
 		box-sizing: border-box;
 		grid-row: 1;
 		grid-column: 1;
 		height: 100%;
 		padding: var(--text-input-padding, 1.25rem);
-		color: var(--text-input-color, black);
+		color: gray;
 	}
 </style>
