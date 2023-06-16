@@ -9,3 +9,5 @@ node_modules
 .dccache
 .vercel
 /dist
+launch.json
+```
