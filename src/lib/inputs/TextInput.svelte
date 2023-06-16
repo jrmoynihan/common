@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
-	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import type { DatalistOption } from '$inputs/types.js';
 	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
 	import { Fa } from '@jrmoynihan/svelte-fa';
@@ -18,6 +17,7 @@
 	export let list = crypto?.randomUUID() ?? '';
 	export let show_confirm = true;
 	export let show_cancel = true;
+	export let allow_enter_to_confirm = true;
 	export let options: DatalistOption[] = [];
 	export let input_container_styles = '';
 	export let input_container_hover_styles = '';
@@ -34,7 +34,7 @@
 	export let placeholder_props: ComponentProps<Placeholder> = {};
 	export let transition: SvelteTransition = fade;
 	export let transition_parameters: SvelteTransitionParams = { duration: 0 };
-	export let tooltip_options: TooltipParameters | null = null;
+	// export let tooltip_options: TooltipParameters | null = null;
 	export let custom_validity_function:
 		| ((arg0: Event & { currentTarget: EventTarget & HTMLInputElement }) => void)
 		| null = null;
@@ -49,12 +49,17 @@
 		dispatch('confirm', value);
 	}
 	function passInput(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-		if (custom_validity_function) custom_validity_function(e);
-		dispatch('input', e.currentTarget.value);
+		try {
+			if (custom_validity_function) custom_validity_function(e);
+			dispatch('input', e.currentTarget.value);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
+<!-- use:tooltip={{ ...tooltip_options }} -->
 <div
 	class="text-input-container"
 	use:dynamicStyle={{
@@ -63,7 +68,6 @@
 		focus_styles: input_container_focus_styles,
 		active_styles: input_container_active_styles
 	}}
-	use:tooltip={{ ...tooltip_options }}
 	title={title ? title : placeholder_props?.placeholder}
 	transition:transition={transition_parameters}
 >
@@ -82,6 +86,9 @@
 			class:value
 			{required}
 			pattern={pattern?.source}
+			on:keypress={(e) => {
+				if (e.key === 'Enter' && allow_enter_to_confirm) confirm();
+			}}
 			on:input={(e) => passInput(e)}
 		/>
 		{#key placeholder_props}
@@ -134,7 +141,7 @@
 				class:value
 				on:click={confirm}
 			>
-				<Fa icon={faCheck} color="inherit" />
+				<Fa icon={faCheck} color="var(--text-input-button-color, buttontext)" />
 			</button>
 		{/if}
 		{#if value && show_cancel}
@@ -152,7 +159,7 @@
 				style={button_styles}
 				on:click={clearInput}
 			>
-				<Fa icon={faX} color="inherit" />
+				<Fa icon={faX} color="var(--text-input-button-color, buttontext)" />
 			</button>
 		{/if}
 	</div>
@@ -176,14 +183,14 @@
 		grid-column: 1;
 		height: 100%;
 		padding: var(--text-input-padding, 1.25rem);
-		color: var(--text-input-color, black);
-		background-color: var(--text-input-background, white);
+		color: var(--text-input-color, fieldtext);
+		background-color: var(--text-input-background, field);
 		width: 100%;
 		margin: 0;
 		padding-bottom: 0.5rem;
 		border-radius: var(--text-input-border-radius, 1rem);
 		border: var(--text-input-border, none);
-		max-height: max-content;
+		// max-height: max-content;  // causes issues on Safari
 		min-height: 5ch;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -193,12 +200,12 @@
 		&:invalid {
 			outline: var(--input-invalid-outline, intitial);
 		}
-		&:valid {
-			outline: var(--input-valid-outline, initial);
+		&:valid:focus-visible {
+			outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
 		}
 
-		&:not(:focus):hover ~ :global(.placeholder) {
-			opacity: 0.2;
+		&:not(:focus-visible):hover ~ :global(.placeholder) {
+			opacity: 0.5;
 		}
 	}
 	.btn-container {
@@ -221,9 +228,9 @@
 		place-items: center;
 		height: min(50%, var(--max-width));
 		aspect-ratio: 1 / 1;
-		background-color: inherit;
-		color: var(--text-input-color, inherit);
-		border: var(--text-input-button-border, none);
+		background-color: field;
+		color: var(--text-input-color, fieldtext);
+		border: var(--text-input-button-border, 1px solid buttonborder);
 
 		transition: color 300ms ease, opacity 300ms ease;
 		opacity: 0;
@@ -231,18 +238,17 @@
 		margin-right: var(--text-input-button-margin-right, var(--text-input-button-margin));
 
 		&:focus {
-			accent-color: blue;
-			outline: hsl(240, 63.8%, 72.9%) 3px solid;
+			outline: 1px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) solid;
 		}
 
 		&.value {
-			opacity: 0.4;
+			opacity: 0.5;
 			&:hover,
 			&:focus-visible {
 				opacity: 1;
 			}
 			&:focus-visible {
-				outline: 1px var(--button-outline-hover-or-focus, hsla(0, 0%, 0%, 0.5)) solid;
+				outline: 1px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) solid;
 			}
 		}
 	}
