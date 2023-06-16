@@ -1,5 +1,10 @@
 <svelte:options accessors={true} />
 
+<!--
+@component
+https://web.dev/building-a-tooltip-component/
+-->
+
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
 	import type { TooltipDirections } from '$actions/tooltip/tooltip.js';
