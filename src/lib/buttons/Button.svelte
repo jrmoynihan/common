@@ -103,9 +103,9 @@
 		--total-shadows: 3;
 		--shadow: 2;
 		--blur-ratio: var();
-		--color-function-low: hsla(var(--shadow-color), var(--low-elevation-opacity));
-		--color-function-medium: hsla(var(--shadow-color), var(--medium-elevation-opacity));
-		--color-function-high: hsla(var(--shadow-color), var(--high-elevation-opacity));
+		--color-function-low: hsla(var(--shadow-color) / var(--low-elevation-opacity));
+		--color-function-medium: hsla(var(--shadow-color) / var(--medium-elevation-opacity));
+		--color-function-high: hsla(var(--shadow-color) / var(--high-elevation-opacity));
 
 		/* 0.4, 0.8, 1, -1.2*/
 		--shadow-elevation-low: 0.3px 0.5px 0.7px var(--color-function-low),
