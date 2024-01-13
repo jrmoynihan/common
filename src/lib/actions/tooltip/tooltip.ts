@@ -67,6 +67,7 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 		let title_attribute: string | null;
 		let ticking = false;
 		let is_intersecting_viewport = false;
+		let first_mouse_enter = true;
 
 		// Find offsets if none were provided
 		tooltip_parameters.update((current_parameters) => {
@@ -187,7 +188,8 @@ export function tooltip(node: HTMLElement, parameters: TooltipParameters = defau
 		async function mouseEnter(event?: MouseEvent) {
 			// Check if the anchor element has moved since mounting
 			const { top, left } = node.getBoundingClientRect();
-			if (top !== anchor_top || left !== anchor_left) {
+			if (top !== anchor_top || left !== anchor_left || first_mouse_enter) {
+				first_mouse_enter = false;
 				anchor_top = top;
 				anchor_left = left;
 				initializeTooltipPosition();
