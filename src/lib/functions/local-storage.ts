@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import { Log } from '$functions/logging.js';
 
-export const getLocalStorageItem = async <T>(key: string): Promise<any> => {
+export const getLocalStorageItem = async <T>(key: string): Promise<T | undefined> => {
 	if (browser) {
 		const item = localStorage.getItem(key);
 		if (item) {
