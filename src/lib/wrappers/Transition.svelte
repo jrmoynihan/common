@@ -55,7 +55,7 @@
 		background-size: cover;
 		will-change: opacity transform;
 		display: grid;
-		grid-auto-rows: max-content;
+		grid-auto-rows: minmax(0, max-content);
 		grid-row: 1;
 		grid-column: 1;
 	}
