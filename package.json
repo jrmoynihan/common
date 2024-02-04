@@ -61,7 +61,6 @@
 	"files": [
 		"dist"
 	],
-	"svelte": "./dist/index.js",
 	"typesVersions": {
 		">4.0": {
 			"actions/drag-action": [
