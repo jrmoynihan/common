@@ -1,0 +1,11 @@
+[data-theme='light'] {
+	--text: hsla(0 0% 0% / 1); /* main/text color */
+	--background: hsla(0 0% 100% / 1); /* background/alternate color */
+	--accent: hsl(195 81% 24%);
+}
+
+[data-theme='dark'] {
+	--text: hsla(0 0% 100% / 1); /* main/text color */
+	--background: hsla(195 61% 14%); /* background/alternate color */
+	--accent: var(--orange);
+}
