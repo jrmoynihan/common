@@ -2,13 +2,13 @@
 	import type { TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import { beforeNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
-	import LightDarkToggle from '$buttons/LightDarkToggle.svelte';
+	import LightDarkToggle_v2 from '$buttons/LightDarkToggle_v2.svelte';
+	import Navigation from '$navigation/Navigation.svelte';
 	import {
 		makeNavLinks,
 		shouldLayoutTransitionOnNavigation,
 		type IconLayer
 	} from '$navigation/nav-functions.js';
-	import Navigation from '$navigation/Navigation.svelte';
 	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
 	import { reminderToast } from '$toasts/toasts.js';
 	import Transition from '$wrappers/Transition.svelte';
@@ -23,8 +23,9 @@
 	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import { onDestroy } from 'svelte';
 	import { fly } from 'svelte/transition';
+	import '../../src/app.css';
 	import '../../src/mdsvex.css';
-	import { aside_visible, use_dark_theme } from './stores.js';
+	import { aside_visible } from './stores.js';
 
 	const parent_path = '/';
 	const paths: string[] = ['tooltips', 'inputs', 'buttons', 'wrappers', 'recipes', 'functions'];
@@ -94,7 +95,8 @@
 
 <div class="app-container" class:padded-left={$aside_visible}>
 	<div class="top right">
-		<LightDarkToggle bind:use_dark_theme={$use_dark_theme} />
+		<!-- <LightDarkToggle bind:use_dark_theme={$use_dark_theme} /> -->
+		<LightDarkToggle_v2 />
 	</div>
 	<h1>
 		<a href="/" class="cool-text">The Commons</a>
@@ -126,10 +128,20 @@
 
 <style lang="scss">
 	:root {
-		font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', -apple-system,
-			BlinkMacSystemFont, 'Segoe UI', sans-serif;
-		background-color: var(--background, hsl(195, 61%, 14%));
-		color: var(--text, white);
+		font-family:
+			Roboto,
+			Oxygen,
+			Ubuntu,
+			Cantarell,
+			'Open Sans',
+			'Helvetica Neue',
+			-apple-system,
+			BlinkMacSystemFont,
+			'Segoe UI',
+			sans-serif;
+		color-scheme: dark light;
+		background-color: var(--background);
+		color: var(--text);
 		--tooltip-color: black;
 		--tooltip-font-weight: 400;
 		--tooltip-font-size: 12px;
@@ -145,6 +157,7 @@
 		--spinner-background: var(--orange);
 		--spinner-color: black;
 	}
+
 	.app-container {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr); // prevent overflow;

@@ -1,55 +1,93 @@
+<!--@component
+### A button to toggle between light and dark mode.
+	- Will first check the user's local storage, then the system's color scheme preference: `window.matchMedia('(prefers-color-scheme: dark)')`.
+	- When toggled, the user's preference will be saved to local storage, and the `data-theme` attribute will be set on the `html` element.
+	- You can use the `data-theme` attribute selector to style your app based on the user's preference
+***
+### Usage:
+It is recommended to add CSS variables to the `:root` element to control the color scheme of your app. Then, use the `data-theme` attribute to style your app based on the user's preference.
+	***
+	`app.css`
+	```css
+	:root {
+		[data-theme='dark'] {
+			--color: white;
+			--background: black;
+			// ...global dark mode styles
+		}
+		[data-theme='light'] {
+			--color: black;
+			--background: white;
+			// ...global light mode styles
+		}
+	}
+	```
+***
+However, you can also use the `:global` selector to apply a CSS rules for a given theme to more specific selectors.
+***
+	`Component.svelte`
+	```svelte
+
+	<p>Some content</p>
+
+	<style>
+		// Select any (scoped) descendant <p> tag of any element with the `data-theme` attribute set to `dark`
+		:global([data-theme='dark']) p {
+			color: orange;
+		}
+	</style>
+	```
+-->
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 
+	type Theme = 'light' | 'dark';
 	const storage_key = 'theme-preference';
 
-	const get_color_preference = () => {
-		if (localStorage.getItem(storage_key)) return localStorage.getItem(storage_key);
+	let toggle_button: HTMLButtonElement | null;
+	let theme: Theme = 'light';
+
+	function get_color_preference(): Theme {
+		if (window.localStorage.getItem(storage_key))
+			return window.localStorage.getItem(storage_key) as Theme;
 		else return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	};
-	const set_preference = (theme: string) => {
-		localStorage.setItem(storage_key, theme);
-		reflect_preference();
-	};
+	}
+	function set_preference(theme: Theme) {
+		window.localStorage.setItem(storage_key, theme);
+		reflect_preference(theme);
+	}
 
-	let theme = get_color_preference();
-
-	const toggle = () => {
+	function toggle() {
 		if (theme === 'light') {
 			theme = 'dark';
 		} else if (theme === 'dark') {
 			theme = 'light';
 		}
+		set_preference(theme);
+	}
 
-		if (theme) set_preference(theme);
-	};
-
-	const reflect_preference = () => {
-		if (theme) {
-			document?.firstElementChild?.setAttribute('data-theme', theme);
-			document?.querySelector('#color-scheme-toggle')?.setAttribute('aria-label', theme);
-		}
-	};
+	function reflect_preference(theme: string) {
+		document?.firstElementChild?.setAttribute('data-theme', theme);
+		toggle_button?.setAttribute('aria-label', theme);
+	}
 
 	// set early so no page flashes / CSS is made aware
+	// TODO: Convert to Svelte 5 $effect rune
 	onMount(() => {
+		window
+			.matchMedia('(prefers-color-scheme: dark)')
+			.addEventListener('change', ({ matches: isDark }) => {
+				theme = isDark ? 'dark' : 'light';
+				set_preference(theme);
+			});
 		theme = get_color_preference();
-		if (theme === 'light') {
-		} else if (theme === 'dark') {
-		}
-		reflect_preference();
+		reflect_preference(theme);
 	});
-
-	// sync with system changes; TODO: SVELTE IT
-	window
-		.matchMedia('(prefers-color-scheme: dark)')
-		.addEventListener('change', ({ matches: isDark }) => {
-			theme = isDark ? 'dark' : 'light';
-			set_preference(theme);
-		});
 </script>
 
 <button
+	bind:this={toggle_button}
 	on:click={toggle}
 	class="color-scheme-toggle"
 	id="color-scheme-toggle"
@@ -77,12 +115,18 @@
 </button>
 
 <style>
-	@import 'https://unpkg.com/open-props/easings.min.css';
+	/* Easings Source: 
+	'https://unpkg.com/open-props/easings.min.css';
+	*/
 
 	.color-scheme-toggle {
 		--size: 2rem;
 		--icon-fill: hsl(210 10% 30%);
 		--icon-fill-hover: hsl(210 10% 15%);
+		--ease-3: cubic-bezier(0.25, 0, 0.3, 1);
+		--ease-elastic-out-3: cubic-bezier(0.5, 1.25, 0.75, 1.25);
+		--ease-elastic-out-4: cubic-bezier(0.5, 1.5, 0.75, 1.25);
+		--ease-out-5: cubic-bezier(0, 0, 0, 1);
 
 		background: none;
 		border: none;
@@ -163,12 +207,12 @@
 		}
 
 		& > .sun {
-			transition: transform 0.5s var(--ease-elastic-3);
+			transition: transform 0.5s var(--ease-elastic-out-3);
 		}
 
 		& > .sun-beams {
 			transition:
-				transform 0.5s var(--ease-elastic-4),
+				transform 0.5s var(--ease-elastic-out-4),
 				opacity 0.5s var(--ease-3);
 		}
 
