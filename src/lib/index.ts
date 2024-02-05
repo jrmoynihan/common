@@ -4,10 +4,10 @@
 // Reexport your entry components here
 
 // Buttons
-import LightDarkToggleV2 from '$buttons/LightDarkToggle_v2.svelte';
 import Button from './buttons/Button.svelte';
 import DragAnchor from './buttons/DragAnchor.svelte';
 import LightDarkToggle from './buttons/LightDarkToggle.svelte';
+import LightDarkToggleV2 from './buttons/LightDarkToggle_v2.svelte';
 import ToggleSwitch from './buttons/ToggleSwitch.svelte';
 
 // Tooltips
