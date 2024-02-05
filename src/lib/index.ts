@@ -4,6 +4,7 @@
 // Reexport your entry components here
 
 // Buttons
+import LightDarkToggleV2 from '$buttons/LightDarkToggle_v2.svelte';
 import Button from './buttons/Button.svelte';
 import DragAnchor from './buttons/DragAnchor.svelte';
 import LightDarkToggle from './buttons/LightDarkToggle.svelte';
@@ -122,29 +123,35 @@ export {
 export { defaultToast, errorToast, reminderToast, type ToastOptions } from './toasts/toasts.js';
 export { Tab } from './wrappers/tab.js';
 export {
-	Button,
-	LightDarkToggle,
-	ToggleSwitch,
-	DragAnchor,
 	Accordion,
+	ActionTooltip,
+	AnchorHeading,
+	Button,
+	DragAnchor,
 	ErrorModal,
+	LightDarkToggle,
+	LightDarkToggleV2,
+	LinkableAnchorHeading,
 	Modal,
 	ModalWithButton,
-	Tabs,
-	Transition
-};
-export {
-	TextInput,
-	TemporalDateInput,
+	NavLink,
+	Navigation,
 	NumericInput,
-	Select,
 	OptionOrGroup,
-	type TextInputTypes,
+	ScrollProgress,
+	SeenToast,
+	Select,
+	SvelteToast,
+	SvelteToastOptions,
+	Tabs,
+	TemporalDateInput,
+	TextInput,
+	ToggleSwitch,
+	Transition,
+	toast,
 	type DatalistOption,
 	type SelectOption,
 	type SelectOptionGroup,
-	type SelectOptionList
+	type SelectOptionList,
+	type TextInputTypes
 };
-export { Navigation, NavLink, AnchorHeading, LinkableAnchorHeading, ScrollProgress };
-export { SeenToast, SvelteToast, toast, SvelteToastOptions };
-export { ActionTooltip };
