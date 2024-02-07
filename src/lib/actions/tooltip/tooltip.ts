@@ -4,7 +4,7 @@ import { waitForAnimations } from '$actions/general.js';
 import { browser } from '$app/environment';
 import { getAncestors, getMax, getTransitionDurations } from '$functions/helpers.js';
 import { ErrorLog } from '$functions/logging.js';
-import type { ComponentProps, ComponentType, SvelteComponentTyped } from 'svelte';
+import type { ComponentProps, ComponentType, SvelteComponent } from 'svelte';
 import { get, writable } from 'svelte/store';
 import ActionTooltip from './ActionTooltip.svelte';
 
@@ -30,7 +30,7 @@ export interface TooltipParameters extends ComponentProps<ActionTooltip> {
 	/** Delays the calculation of the tooltip's position upon mounting.  Tooltips inherently wait for parent transitions/animations to finish before calculating their positions (since it may change by the end of the transition).  If you want the tooltip to be visible "immediately", it is recommended to add a positioning delay here to  */
 	visibility_delay?: number;
 	/** A component to show inside the tooltip */
-	custom_component?: ComponentType<SvelteComponentTyped>;
+	custom_component?: ComponentType<SvelteComponent>;
 	/** Props to pass to the custom component */
 	custom_component_props?: Record<string, unknown>;
 	/** Disabling the tooltip prevents it from appearing on mouseover events. */

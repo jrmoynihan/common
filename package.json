@@ -49,7 +49,7 @@
 		"@sveltejs/kit": "^1.30.3",
 		"@zerodevx/svelte-toast": "^0.9.5",
 		"mdsvexamples": "^0.3.4",
-		"svelte": "^3.59.2"
+		"svelte": "^4.0.0"
 	},
 	"exports": {
 		".": {

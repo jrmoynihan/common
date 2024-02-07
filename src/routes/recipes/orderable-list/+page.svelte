@@ -46,7 +46,7 @@
 		<div
 			class="item-container"
 			animate:flip={{ duration: (d) => Math.sqrt(d) * 60 }}
-			transition:fly|local={{ y: -100, duration: 300 }}
+			transition:fly={{ y: -100, duration: 300 }}
 			class:dragging={grabbed && i === dragFrom}
 			class:targetedDown={grabbed && isDropTarget && down}
 			class:targetedUp={grabbed && isDropTarget && up}
