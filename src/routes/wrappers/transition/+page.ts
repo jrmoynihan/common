@@ -28,6 +28,6 @@ export function load(event: LoadEvent): { links: { path: string; text: string; h
 	if (links) {
 		return { links };
 	} else {
-		throw error(404, 'Not found.');
+		error(404, 'Not found.');
 	}
 }

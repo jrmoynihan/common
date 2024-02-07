@@ -35,6 +35,6 @@ export function load(event: LoadEvent): {
 	if (images) {
 		return { images };
 	} else {
-		throw error(404, 'Not found.');
+		error(404, 'Not found.');
 	}
 }

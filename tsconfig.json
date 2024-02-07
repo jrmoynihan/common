@@ -2,7 +2,7 @@
 	"extends": "./.svelte-kit/tsconfig.json",
 	"compilerOptions": {
 		// https://kit.svelte.dev/docs/packaging#caveats
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"allowJs": true,
 		"checkJs": true,
 		"esModuleInterop": true,
