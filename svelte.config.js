@@ -1,4 +1,5 @@
 import auto from '@sveltejs/adapter-auto';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex } from 'mdsvex';
 import path, { dirname } from 'path';
 import preprocess from 'svelte-preprocess';
@@ -16,7 +17,9 @@ const config = {
 
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
-	preprocess: [mdsvex(mdsvexConfig), preprocess()],
+	preprocess: [mdsvex(mdsvexConfig), preprocess(), vitePreprocess({style: {
+		postcss: true
+	}, mdsvex: {extension: '.svx'}})],
 
 	kit: {
 		adapter: auto(),

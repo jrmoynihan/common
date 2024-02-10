@@ -12,3 +12,4 @@ node_modules
 launch.json
 ```
 tsconfig.tsbuildinfo
+.vscode/settings.json
