@@ -3,14 +3,11 @@
 	"compilerOptions": {
 		// https://kit.svelte.dev/docs/packaging#caveats
 		"moduleResolution": "bundler",
-		"allowJs": true,
-		"checkJs": true,
 		"esModuleInterop": true,
 		"incremental": true,
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
-		"sourceMap": true,
 		"strict": true,
 		"types": ["svelte"]
 	}

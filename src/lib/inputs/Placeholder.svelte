@@ -1,18 +1,23 @@
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.js';
-	export let placeholder = '';
-	export let styles = '';
-	export let focus_styles = '';
-	export let hover_styles = '';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
+
+	interface PlaceholderProps {
+		text?: string;
+		dynamic_styles?: DynamicStyleParameters;
+	}
+
+	let { text, dynamic_styles }: PlaceholderProps = $props();
 </script>
 
-<div class="placeholder" use:dynamicStyle={{ styles, focus_styles, hover_styles }}>
-	{placeholder ?? ''}
+<div class="placeholder" use:dynamicStyle={dynamic_styles}>
+	{text ?? ''}
 </div>
 
 <style lang="scss">
 	.placeholder {
-		font-size: var(--text-input-placeholder-font-size, 1rem);
+		font-size: var(--placeholder-font-size, 1em);
+		font-style: var(--placeholder-font-style, normal);
+		font-family: var(--placeholder-font-family, inherit);
 		inset: 0;
 		transition: all ease-in-out 300ms;
 		pointer-events: none;
@@ -21,10 +26,10 @@
 		overflow: hidden;
 		display: grid;
 		box-sizing: border-box;
-		grid-row: 1;
-		grid-column: 1;
-		height: 100%;
-		padding: var(--text-input-padding, 1.25rem);
+		grid-area: input;
+		padding: var(--text-input-padding, 1.25em);
 		color: gray;
+		z-index: 0; /* addresses stacking context issue on the same grid-area */
+		// height: 100%;  /* causes layout bug in Safari */
 	}
 </style>

@@ -1,212 +1,158 @@
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.js';
-	import type { DatalistOption } from '$inputs/types.js';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
 	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
 	import { Fa } from '@jrmoynihan/svelte-fa';
-	import { createEventDispatcher, type ComponentProps } from 'svelte';
-	import { fade } from 'svelte/transition';
-	import type { SvelteTransition, SvelteTransitionParams } from '../lib_types.js';
+	import { type ComponentProps, type Snippet } from 'svelte';
+	import type {
+		EventHandler,
+		FormEventHandler,
+		HTMLInputAttributes,
+		MouseEventHandler
+	} from 'svelte/elements';
+	import Input from './Input.svelte';
+	import InputLabel from './InputLabel.svelte';
 	import Placeholder from './Placeholder.svelte';
 
-	export let value: unknown = '';
-	export let id: string = crypto?.randomUUID() ?? '';
-	export let type: 'text' | 'datalist' = 'text';
-	export let title = '';
-	export let required = false;
-	export let pattern: RegExp | null = null;
-	export let list = crypto?.randomUUID() ?? '';
-	export let show_confirm = true;
-	export let show_cancel = true;
-	export let allow_enter_to_confirm = true;
-	export let options: DatalistOption[] = [];
-	export let input_container_styles = '';
-	export let input_container_hover_styles = '';
-	export let input_container_focus_styles = '';
-	export let input_container_active_styles = '';
-	export let input_styles = '';
-	export let input_hover_styles = '';
-	export let input_focus_styles = '';
-	export let input_active_styles = '';
-	export let button_styles = '';
-	export let button_hover_styles = '';
-	export let button_focus_styles = '';
-	export let button_active_styles = '';
-	export let placeholder_props: ComponentProps<Placeholder> = {};
-	export let transition: SvelteTransition = fade;
-	export let transition_parameters: SvelteTransitionParams = { duration: 0 };
-	// export let tooltip_options: TooltipParameters | null = null;
-	export let custom_validity_function:
-		| ((arg0: Event & { currentTarget: EventTarget & HTMLInputElement }) => void)
-		| null = null;
-	let input: HTMLInputElement;
-	const dispatch = createEventDispatcher();
+	type TextInputProps = {
+		input_element?: HTMLInputElement;
+		value?: unknown;
+		show_confirm?: boolean;
+		show_cancel?: boolean;
+		allow_enter_to_confirm?: boolean;
+		dynamic_button_styles?: DynamicStyleParameters;
+		dynamic_input_styles?: DynamicStyleParameters;
+		input_attributes?: HTMLInputAttributes;
+		label_element?: HTMLLabelElement;
+		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
+		label_props?: ComponentProps<InputLabel>;
+		placeholder_props?: ComponentProps<Placeholder>;
+		children?: Snippet;
+		/** A callback that runs when the confirm button is clicked */
+		onconfirm?: EventHandler;
+		/** A callback that runs when the cancel button is clicked */
+		oncancel?: (
+			e: FormEventHandler<HTMLInputElement>
+		) => unknown | MouseEventHandler<HTMLButtonElement>;
+		/** A callback that runs when the input is changed */
+		oninput?: FormEventHandler<HTMLInputElement> | undefined | null;
+	};
+	let {
+		input_element = $bindable(),
+		value = $bindable(),
+		show_confirm = true,
+		show_cancel = true,
+		allow_enter_to_confirm = true,
+		dynamic_button_styles,
+		dynamic_input_styles,
+		input_attributes,
+		placeholder_props = {},
+		label_element = $bindable(),
+		label_props = { placeholder_props },
+		children,
+		onconfirm = () => input_element?.blur(),
+		oncancel = clear_input,
+		oninput
+	}: TextInputProps = $props();
 
-	function clearInput() {
+	function clear_input() {
 		value = '';
-		input.focus();
+		input_element?.focus();
 	}
-	function confirm() {
-		dispatch('confirm', value);
+
+	function cancel(e: any) {
+		clear_input();
+		oncancel?.(e);
 	}
-	function passInput(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-		try {
-			if (custom_validity_function) custom_validity_function(e);
-			dispatch('input', e.currentTarget.value);
-		} catch (error) {
-			console.error(error);
+
+	function confirm(e: any) {
+		if (!valid) {
+			return;
 		}
+		onconfirm?.(e);
 	}
+
+	function handle_keypress(e: KeyboardEvent) {
+		if (e.key === 'Enter' && allow_enter_to_confirm) confirm(e);
+	}
+	function handle_input(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
+		oninput?.(e);
+	}
+
+	function handle_click(e: MouseEvent) {
+		confirm(e);
+	}
+
+	let valid = $state(true);
+	
+
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
-<!-- use:tooltip={{ ...tooltip_options }} -->
-<div
-	class="text-input-container"
-	use:dynamicStyle={{
-		styles: input_container_styles,
-		hover_styles: input_container_hover_styles,
-		focus_styles: input_container_focus_styles,
-		active_styles: input_container_active_styles
-	}}
-	title={title ? title : placeholder_props?.placeholder}
-	transition:transition={transition_parameters}
->
-	{#if type === 'text'}
-		<input
-			use:dynamicStyle={{
-				styles: input_styles,
-				hover_styles: input_hover_styles,
-				focus_styles: input_focus_styles,
-				active_styles: input_active_styles
-			}}
-			{id}
-			type="text"
-			bind:this={input}
-			bind:value
-			class:value
-			{required}
-			pattern={pattern?.source}
-			on:keypress={(e) => {
-				if (e.key === 'Enter' && allow_enter_to_confirm) confirm();
-			}}
-			on:input={(e) => passInput(e)}
-		/>
+<InputLabel {...label_props} bind:label_element bind:valid >
+	<Input 
+		bind:dynamic_input_styles
+		bind:input_element
+		bind:value
+		bind:valid
+		input_attributes={{
+			onkeypress: handle_keypress,
+			oninput: handle_input,
+			type: 'text',
+			...input_attributes
+		}}
+	/>
 		{#key placeholder_props}
 			<Placeholder {...placeholder_props} />
 		{/key}
-	{:else if type === 'datalist'}
-		<input
-			use:dynamicStyle={{
-				styles: input_styles,
-				hover_styles: input_hover_styles,
-				focus_styles: input_focus_styles,
-				active_styles: input_active_styles
-			}}
-			{id}
-			role="combobox"
-			aria-expanded={value !== ''}
-			aria-controls={list}
-			aria-autocomplete="list"
-			aria-haspopup="listbox"
-			aria-label={list}
-			type="text"
-			bind:this={input}
-			bind:value
-			class:value
-			{required}
-			pattern={pattern?.source}
-			{list}
-			on:input={(e) => passInput(e)}
-		/>
-		{#key placeholder_props}
-			<Placeholder {...placeholder_props} />
-		{/key}
-		<datalist id={list} tabindex="-1">
-			{#each options as { value, label }}
-				<option {value}>{label}</option>
-			{/each}
-		</datalist>
-	{/if}
-	<div class="btn-container">
+		{#if children}
+			{@render children()}
+		{/if}
+	<div class="btn-container" class:valid class:show_confirm class:value>
 		{#if show_confirm}
+			<!-- <ButtonRunes 
+				icon_props={{
+					icon: faCheck,
+					color: 'var(--text-input-button-color, buttontext)'
+				}} 
+				attributes={{ onclick: confirm, disabled: !value}}
+				dynamic_styles={dynamic_button_styles}
+				classes={`confirm-btn ${is_valid ? 'valid': ''} ${value ? 'value' : ''}`}
+			/> -->
 			<button
-				use:dynamicStyle={{
-					styles: button_styles,
-					hover_styles: button_hover_styles,
-					focus_styles: button_focus_styles,
-					active_styles: button_active_styles
-				}}
+				use:dynamicStyle={dynamic_button_styles}
 				class="confirm-btn"
-				tabindex={value ? 0 : -1}
+				class:valid
+				tabindex={value && valid ? 0 : -1}
 				class:value
-				on:click={confirm}
+				onclick={handle_click}
+				disabled={!value}
 			>
 				<Fa icon={faCheck} color="var(--text-input-button-color, buttontext)" />
 			</button>
 		{/if}
-		{#if value && show_cancel}
+		{#if show_cancel}
 			<button
-				use:dynamicStyle={{
-					styles: button_styles,
-					hover_styles: button_hover_styles,
-					focus_styles: button_focus_styles,
-					active_styles: button_active_styles
-				}}
+				use:dynamicStyle={dynamic_button_styles}
 				class="cancel-btn"
-				class:no-confirm={!show_confirm}
+				class:no-confirm={!show_confirm || !valid}
 				tabindex={value ? 0 : -1}
 				class:value
-				style={button_styles}
-				on:click={clearInput}
+				onclick={cancel}
+				disabled={!value}
 			>
 				<Fa icon={faX} color="var(--text-input-button-color, buttontext)" />
 			</button>
 		{/if}
 	</div>
-</div>
+	<!-- {#if invalid_msg_visible && invalid_msg}
+		<span transition:slide class="invalid-msg">{invalid_msg}</span>
+	{/if} -->
+</InputLabel>
 
-<style lang="scss">
-	/* Avoid miscalculating size of padding/widths by including it in the box mesaurement */
+<style>
+	/** Avoid miscalculating size of padding/widths by including it in the box mesaurement */
 	* {
 		box-sizing: border-box;
-	}
-	.text-input-container {
-		--text-input-padding: 1.25rem;
-		position: relative;
-		display: grid;
-		max-width: max-content;
-		grid-auto-rows: minmax(7ch, max-content);
-	}
-	input[type='text'] {
-		box-sizing: border-box;
-		grid-row: 1;
-		grid-column: 1;
-		height: 100%;
-		padding: var(--text-input-padding, 1.25rem);
-		color: var(--text-input-color, fieldtext);
-		background-color: var(--text-input-background, field);
-		width: 100%;
-		margin: 0;
-		padding-bottom: 0.5rem;
-		border-radius: var(--text-input-border-radius, 1rem);
-		border: var(--text-input-border, none);
-		// max-height: max-content;  // causes issues on Safari
-		min-height: 5ch;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		/* to make room for the cancel button */
-		padding-right: var(--text-input-button-padding-space, 2.5rem);
-		&:invalid {
-			outline: var(--input-invalid-outline, intitial);
-		}
-		&:valid:focus-visible {
-			outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
-		}
-
-		&:not(:focus-visible):hover ~ :global(.placeholder) {
-			opacity: 0.5;
-		}
 	}
 	.btn-container {
 		--text-input-button-margin: 0.15rem;
@@ -214,73 +160,104 @@
 		box-sizing: content-box;
 		margin: 0;
 		display: grid;
-		gap: 0.25rem;
 		place-items: center;
-		grid-area: 1 / 1;
+		grid-area: input; /* Overlap with the placeholder and input; */
 		place-self: center end;
 		height: 100%;
-	}
-	.cancel-btn,
-	.confirm-btn {
-		--max-width: 1.75rem;
-		box-sizing: content-box;
-		display: grid;
-		place-items: center;
-		height: min(50%, var(--max-width));
-		aspect-ratio: 1 / 1;
-		background-color: field;
-		color: var(--text-input-color, fieldtext);
-		border: var(--text-input-button-border, 1px solid buttonborder);
-
-		transition: color 300ms ease, opacity 300ms ease;
-		opacity: 0;
-		padding: var(--text-input-button-padding, calc(var(--max-width) / 3.5));
-		margin-right: var(--text-input-button-margin-right, var(--text-input-button-margin));
-
-		&:focus {
-			outline: 1px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) solid;
+		grid-template-rows: repeat(auto-fit, minmax(0, 1fr));
+		grid-template-areas: 
+			'confirm'
+			'cancel';
+		transition: all 300ms ease;
+		scale: 1 1;
+		z-index: 0;
+		transform-origin: right;
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		border-top-right-radius: max(
+			calc(var(--text-input-border-radius, 1em) - var(--text-input-padding, 1.25em)),
+			var(--text-input-border-radius, 1em)
+		);
+		border-bottom-right-radius: max(
+			calc(var(--text-input-border-radius, 1em) - var(--text-input-padding, 1.25em)),
+			var(--text-input-border-radius, 1em)
+		);
+		overflow: hidden;
+		&:not(.valid) {
+			grid-template-rows: 0fr 1fr;
 		}
-
-		&.value {
-			opacity: 0.5;
-			&:hover,
-			&:focus-visible {
-				opacity: 1;
-			}
-			&:focus-visible {
+		&:not(.show_confirm) {
+			grid-template-rows: 0 1fr;
+		}
+		&:not(.value) {
+			grid-template-rows: none;
+			grid-template-columns: none;
+		}
+	}
+	@layer button {
+		.cancel-btn, .confirm-btn {
+			--max-width: 1.75rem;
+			box-sizing: content-box;
+			display: grid;
+			place-items: center;
+			max-height: var(--max-width);
+			aspect-ratio: 1 / 1;
+			background-color: field;
+			appearance: textfield;
+			color: var(--text-input-color, fieldtext);
+			border: var(--text-input-button-border, 1px inset buttonborder);
+			padding: var(--text-input-button-padding, calc(var(--max-width) / 3.5));
+			opacity: 0;
+			transition: all 300ms ease;
+			outline: 1px currentColor inset;
+			outline-offset: -1px;
+			border: 0px;
+	
+			&:focus {
 				outline: 1px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) solid;
 			}
+	
+			&.value {
+				opacity: 0.5;
+	
+				&:hover,
+				&:focus-visible {
+					opacity: 1;
+				}
+				&:focus-visible {
+					outline: 1px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) solid;
+				}
+			}
 		}
-	}
-	.cancel-btn {
-		border-radius: var(--text-input-border-radius, 1rem) 0 var(--text-input-border-radius, 1rem) 0;
-		margin-bottom: var(--button-margin-bottom, var(--button-margin));
-		&.no-confirm {
-			box-sizing: border-box;
-			border-radius: var(--text-input-border-radius);
-			margin-bottom: 0;
-			padding: calc(var(--max-width) / 3.5) calc(var(--max-width) / 3);
-			height: 100%;
-			justify-self: end;
-			margin-right: 0;
-			aspect-ratio: unset;
+		.cancel-btn {
+			grid-area: cancel;
+			transform-origin: top right;
+			scale: 1 1;
+			&:not(.value) {
+				scale: 0 1;
+			}
+			&.no-confirm {
+				box-sizing: border-box;
+				margin-bottom: 0;
+				/* padding: calc(var(--max-width) / 3.5) calc(var(--max-width) / 3); */
+				max-height: 100%;
+				height: 100%;
+				justify-self: end;
+				margin-right: 0;
+				aspect-ratio: unset;
+			}
 		}
-	}
-	.confirm-btn {
-		border-radius: 0 var(--text-input-border-radius, 1rem) 0 var(--text-input-border-radius, 1rem);
-		margin-top: var(--text-input-button-margin-top, var(--text-input-button-margin));
-	}
+		.confirm-btn {
+			grid-area: confirm;
+			transform-origin: top right;
+			&:not(.valid) {
+				pointer-events: none;
+				opacity: 0;
+				scale: 1 0;
+				padding: 0;
+				height: 0;
+			}
+		}
 
-	/* Move the placeholder div when anything in the container receives focus or the input has a value */
-	.text-input-container:focus-within > :global(.placeholder),
-	input:active ~ :global(.placeholder),
-	input.value:not(:focus) ~ :global(.placeholder) {
-		translate: -0.5rem -0.8rem 0;
-		font-size: 0.75rem;
-	}
-
-	/* When the input isn't focused, but has a value, continue to fade and translate the placeholder div */
-	input.value:not(:focus) ~ :global(.placeholder) {
-		opacity: 0.4;
 	}
 </style>

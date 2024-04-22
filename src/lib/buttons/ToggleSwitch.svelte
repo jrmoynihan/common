@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles.js';
-	import { createEventDispatcher, type ComponentProps } from 'svelte';
-	import Button from './Button.svelte';
+	import { type ComponentProps } from 'svelte';
+	import type { PointerEventHandler } from 'svelte/elements';
+	import ButtonRunes from './Button_Runes.svelte';
 
 	export let checked = false;
 	export let disabled = false;
@@ -16,7 +17,7 @@
 	export let label_focus_styles = '';
 	export let label_active_styles = '';
 	/** Properties of the {@link Button} container.  This is also where you can add an icon. */
-	export let button_props: ComponentProps<Button> = {};
+	export let button_props: ComponentProps<ButtonRunes> = {};
 	export let bgColorHue: number | null = null; // = 246; // 207;
 	export let bgColorSaturation: number | null = null; // = 46; // 90;
 	export let bgColorLuminosity: number | null = null; // = 37; // 54;
@@ -38,24 +39,34 @@
 			: null;
 
 	// Create an event dispatcher object
-	const dispatch = createEventDispatcher();
+	// const dispatch = createEventDispatcher();
 
 	// A function when the input is clicked; dispatches/triggers the event named "toggle" to the parent component
-	function toggled() {
-		dispatch('toggle', { checked });
+	function toggled(e: Event) {
+		// dispatch('toggle', { checked, e });
 	}
+	const onpointerdown: PointerEventHandler<HTMLButtonElement> = (e) => {
+		checked = !checked;
+		toggled(e);
+	};
 </script>
 
-<Button
-	on:click={() => {
-		checked = !checked;
-		toggled();
+<ButtonRunes
+	--button-hover-background={'var(--toggle-button-hover-background, inherit)'}
+	attributes={{
+		onpointerdown,
+		role: 'switch',
+		style: `border: 0;
+		 	padding: 0.2rem; 
+			display: grid; 
+			gap: 0.5rem; 
+			scale: ${scale};
+			background-color: var(--toggle-button-background, inherit);
+			color: var(--toggle-button-color, inherit);
+			${button_props.attributes?.style}`
 	}}
-	role="switch"
-	box_shadow_elevation={'none'}
-	{...button_props}
-	styles={`border: 0; --scale: ${scale}; display: grid; gap: 0.5rem; --button-padding: 0.2rem; --button-background: var(--toggle-button-background, inherit); --button-hover-background: var(--toggle-button-hover-background, inherit); --button-color: var(--toggle-button-color, inherit); ${button_props.styles}`}
 	classes={`toggle ${button_props.classes}`}
+	{...button_props}
 >
 	{#if label_position === 'before' && label_text !== ''}
 		<label
@@ -102,7 +113,7 @@
 			{label_text}
 		</label>
 	{/if}
-</Button>
+</ButtonRunes>
 
 <!-- </button> -->
 <style lang="scss">

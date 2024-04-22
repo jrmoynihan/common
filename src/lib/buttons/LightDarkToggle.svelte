@@ -94,26 +94,27 @@
 	$: setCSSvariables(default_colors);
 </script>
 
-<button
-	class="switch"
-	style={button_switch_styles}
-	tabindex="0"
-	for="light-dark-toggle"
-	on:click={() => {
-		use_dark_theme = !use_dark_theme;
-		storeDarkThemePreference();
-	}}
->
-	<input
-		type="checkbox"
-		name="light-dark-toggle"
-		bind:checked={use_dark_theme}
-		on:change={storeDarkThemePreference}
-	/>
-	<div>
-		<span />
-	</div>
-</button>
+<label for="light-dark-toggle">
+	<button
+		class="switch"
+		style={button_switch_styles}
+		tabindex="0"
+		on:click={() => {
+			use_dark_theme = !use_dark_theme;
+			storeDarkThemePreference();
+		}}
+	>
+		<input
+			type="checkbox"
+			name="light-dark-toggle"
+			bind:checked={use_dark_theme}
+			on:change={storeDarkThemePreference}
+		/>
+		<div>
+			<span />
+		</div>
+	</button>
+</label>
 
 <style lang="scss">
 	.switch {
@@ -179,7 +180,9 @@
 						border-radius: 50%;
 						box-shadow: inset 0 0 0 var(--scale) var(--box-shadow-color);
 						translate: var(--translateX) 0 0;
-						transition: box-shadow var(--duration) ease, translate var(--duration) ease;
+						transition:
+							box-shadow var(--duration) ease,
+							translate var(--duration) ease;
 					}
 					&:not(:empty) {
 						padding-left: 4em;

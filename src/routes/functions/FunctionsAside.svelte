@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { makeAnchorLinks, makeNavLinks } from '$navigation/nav-functions.js';
-	import NavLink from '$navigation/NavLink.svelte';
 	import ScrollToTopButton from '$navigation/ScrollProgress.svelte';
 	import { aside_visible } from '$routes/stores.js';
 	import { onDestroy, onMount } from 'svelte';
@@ -29,14 +27,17 @@
 <aside in:fly={{ x: -300, duration: 400, delay: 0 }} out:fly={{ x: -300, duration: 400 }}>
 	<ScrollToTopButton
 		button_props={{
-			text: 'Return to Top',
 			transition: fly,
 			transition_config: { y: -50 },
-			styles:
-				'position: absolute; top:0; right: 0; font-size: 0.6rem; padding: 0.5rem 1rem; border: 1px solid hsla(var(--accent-value), 50%); border-radius: 0 0 0 1rem; display: flex; max-width: 40%;'
+			dynamic_styles: {
+				styles:
+					'position: absolute; top:0; right: 0; font-size: 0.6rem; padding: 0.5rem 1rem; border: 1px solid hsla(var(--accent-value), 50%); border-radius: 0 0 0 1rem; display: flex; max-width: 40%;'
+			}
 		}}
-	/>
-	{#await makeAnchorLinks( { parent_path: `${parent_path}/${paths[0]}`, paths: context_nav_anchor_paths, link_texts: context_nav_anchor_link_texts } ) then context_nav_anchors}
+	>
+		Return to Top
+	</ScrollToTopButton>
+	<!-- {#await makeAnchorLinks( { parent_path: `${parent_path}/${paths[0]}`, paths: context_nav_anchor_paths, link_texts: context_nav_anchor_link_texts } ) then context_nav_anchors}
 		{#await makeNavLinks( { paths: ['contexts#contexts'], parent_path, anchors: context_nav_anchors } ) then topics}
 			{#each topics as nav_link, i}
 				<NavLink
@@ -60,7 +61,7 @@
 				{/if}
 			{/each}
 		{/await}
-	{/await}
+	{/await} -->
 </aside>
 
 <style lang="scss">

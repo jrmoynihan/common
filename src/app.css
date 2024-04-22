@@ -1,3 +1,5 @@
+/* Write your global styles here, in PostCSS syntax */
+
 [data-theme='light'] {
 	--text: hsla(0 0% 0% / 1); /* main/text color */
 	--background: hsla(0 0% 100% / 1); /* background/alternate color */
@@ -8,4 +10,81 @@
 	--text: hsla(0 0% 100% / 1); /* main/text color */
 	--background: hsla(195 61% 14%); /* background/alternate color */
 	--accent: var(--orange);
+	--shadow-color: 220 3% 85%;  /* For <dialog> box-shadows */
 }
+
+@position-fallback --top-bottom-right-left {
+	@try {
+		bottom: calc(anchor(top) + var(--distance));
+		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+	}
+	@try {
+		bottom: calc(anchor(bottom) + var(--distance));
+		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+	}
+	@try {
+		left: calc(anchor(right) + var(--distance));
+		top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+	}
+	@try {
+		right: calc(anchor(left) + var(--distance));
+		top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+	}
+}
+
+@position-fallback --bottom-top-right-left {
+	@try {
+		top: calc(anchor(bottom) + var(--distance));
+		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+	}
+	@try {
+		top: calc(anchor(top) + var(--distance));
+		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+	}
+	@try {
+		left: calc(anchor(right) + var(--distance));
+		bottom: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+	}
+	@try {
+		right: calc(anchor(left) + var(--distance));
+		bottom: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+	}
+}
+
+@position-fallback --left-right-top-bottom {
+	@try {
+		right: calc(anchor(left) + var(--distance));
+		top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+	}
+	@try {
+		right: calc(anchor(right) + var(--distance));
+		top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+	}
+	@try {
+		top: calc(anchor(top) + var(--distance));
+		right: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+	}
+	@try {
+		bottom: calc(anchor(bottom) + var(--distance));
+		right: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+	}
+}
+
+@position-fallback --right-left-top-bottom {
+	@try {
+		left: calc(anchor(right) + var(--distance));
+		top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+	}
+	@try {
+		left: calc(anchor(left) + var(--distance));
+		top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+	}
+	@try {
+		top: calc(anchor(top) + var(--distance));
+		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+	}
+	@try {
+		bottom: calc(anchor(bottom) + var(--distance));
+		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+	}
+}}

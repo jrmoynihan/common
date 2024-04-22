@@ -1,8 +1,11 @@
 <script lang="ts">
+	let {
+		children
+	} = $props();
 </script>
 
 <section class="functions-page-layout">
-	<slot />
+	{@render children()}
 </section>
 
 <style lang="scss">

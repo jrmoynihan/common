@@ -1,5 +1,5 @@
-import { Temporal } from '@js-temporal/polyfill';
-import { ErrorLog } from './logging.js';
+import { Temporal } from "@js-temporal/polyfill";
+import { ErrorLog } from "./logging.js";
 
 /**
  * Capitalize the first letter of a string
@@ -23,7 +23,7 @@ export const splitCamelCase = (str: string): string[] => {
  * @returns an array of strings
  */
 export const splitSnakeCase = (str: string): string[] => {
-	return str.indexOf('_') !== -1 ? str.split('_') : str.split('-');
+	return str.indexOf("_") !== -1 ? str.split("_") : str.split("-");
 };
 /**
  * Removes special characters from a string
@@ -31,22 +31,17 @@ export const splitSnakeCase = (str: string): string[] => {
  * @returns a string with the special characters replaced by ''
  */
 export function removeSpecialCharacters(str: string): string {
-	return str.replace(/[^a-zA-Z0-9 ]/g, '');
+	return str.replace(/[^a-zA-Z0-9 ]/g, "");
 }
 /** Replaces kebab case (e.g. "hello-world") with a space between words and capitalized words ("Hello World") */
 export function deKebab(str: string): string {
 	return str
-		.replace(/-/g, ' ')
-		.split(' ')
+		.replace(/-/g, " ")
+		.split(" ")
 		.map((s) => capitalize(s))
-		.join(' ');
+		.join(" ");
 }
 
-// A function to make an array of length equal to the provided number
-export function arrayFromNumber(n: number, map_function?: (a: any, i: number) => any) {
-	if (!map_function) map_function = (_: any, i?: number) => i;
-	return Array(n).fill(0).map(map_function);
-}
 // A function to clamp a number between two numbers
 export function clamp(n: number, min: number, max: number) {
 	return Math.min(Math.max(n, min), max);
@@ -70,7 +65,7 @@ export function getRandomBetween(min: number, max: number) {
  */
 export const getMax = (array: number[]): number => {
 	let len = array.length;
-	let max = -Infinity;
+	let max = Number.NEGATIVE_INFINITY;
 
 	while (len--) {
 		max = array[len] > max ? array[len] : max;
@@ -82,9 +77,9 @@ export const getMax = (array: number[]): number => {
  * @param array An array of numbers to search
  * @returns The minimum number in the array
  */
-export const getMin = (array: any[]): number => {
+export const getMin = (array: number[]): number => {
 	let len = array.length;
-	let min = Infinity;
+	let min = Number.POSITIVE_INFINITY;
 
 	while (len--) {
 		min = array[len] < min ? array[len] : min;
@@ -111,10 +106,10 @@ export const getMinDate = (array: Date[]): Date => {
  * @returns The minimum datetime in the array
  */
 export const getMinTemporalZonedDateTime = (
-	array: Temporal.ZonedDateTime[]
+	array: Temporal.ZonedDateTime[],
 ): Temporal.ZonedDateTime => {
 	let len = array.length;
-	let max_date = new Date(8640000000000000);
+	const max_date = new Date(8640000000000000);
 	let min = Temporal.ZonedDateTime.from(max_date.toLocaleDateString());
 	while (len--) {
 		// https://tc39.es/proposal-temporal/docs/zoneddatetime.html#compare
@@ -133,10 +128,10 @@ export const getMinTemporalZonedDateTime = (
  * @returns The minimum datetime in the array
  */
 export const getMaxTemporalZonedDateTime = (
-	array: Temporal.ZonedDateTime[]
+	array: Temporal.ZonedDateTime[],
 ): Temporal.ZonedDateTime => {
 	let len = array.length;
-	let min_date = new Date(-8640000000000000);
+	const min_date = new Date(-8640000000000000);
 	let max = Temporal.ZonedDateTime.from(min_date.toLocaleDateString());
 	while (len--) {
 		// https://tc39.es/proposal-temporal/docs/zoneddatetime.html#compare
@@ -165,21 +160,34 @@ export const getMaxDate = (array: Date[]): Date => {
 };
 
 /** Take an object and return its entire structure flattened to the top-level of a new object's keys. */
-export const flattenObjectRecursively = (obj: Object & { [key: string]: unknown }) => {
+export const flattenObjectRecursively = (
+	obj: { [key: string]: unknown } & { [key: string]: unknown },
+) => {
 	try {
 		// The object which contains the final result
-		let result: { [key: string]: unknown } = {};
+		const result: { [key: string]: unknown } = {};
 		// loop through the object "ob"
-		if (obj && typeof obj === 'object' && !Array.isArray(obj) && !(obj instanceof Date)) {
+		if (
+			obj &&
+			typeof obj === "object" &&
+			!Array.isArray(obj) &&
+			!(obj instanceof Date)
+		) {
 			for (const [key, value] of Object.entries(obj)) {
 				// We check the type of the i using typeof() function and recursively call the function again
-				if (typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
-					const val_typed = value as Object & { [key: string]: unknown };
+				if (
+					typeof value === "object" &&
+					!Array.isArray(value) &&
+					!(value instanceof Date)
+				) {
+					const val_typed = value as { [key: string]: unknown };
 
-					const temp = flattenObjectRecursively(val_typed) as Object & { [key: string]: unknown };
+					const temp = flattenObjectRecursively(val_typed) as {
+						[key: string]: unknown;
+					};
 					for (const [key2, val2] of Object.entries(temp)) {
 						// Store temp in result
-						result[key + '.' + key2] = val2;
+						result[`${key}.${key2}`] = val2;
 					}
 				}
 				// Else store ob[i] in result directly
@@ -190,12 +198,13 @@ export const flattenObjectRecursively = (obj: Object & { [key: string]: unknown 
 		}
 		return result;
 	} catch (error) {
-		if (error instanceof Error) ErrorLog({ msg: 'error in flattening object recursively', error });
+		if (error instanceof Error)
+			ErrorLog({ msg: "error in flattening object recursively", error });
 	}
 };
 /** Returns an array of the ancestor elements for the provided HTML element. */
 export const getAncestors = (element: HTMLElement) => {
-	let ancestors: HTMLElement[] = [];
+	const ancestors: HTMLElement[] = [];
 	let parent = element.parentElement;
 	try {
 		while (parent) {
@@ -209,21 +218,50 @@ export const getAncestors = (element: HTMLElement) => {
 		return ancestors;
 	} catch (error) {
 		if (error instanceof Error)
-			ErrorLog({ error, msg: 'Encountered an error getting element ancestors.' });
+			ErrorLog({
+				error,
+				msg: "Encountered an error getting element ancestors.",
+			});
 	}
 };
 export function getTransitionDurations(elements: HTMLElement[]): number[] {
 	const durations: number[] = [];
-	elements.forEach((ele) => {
+	for (const ele of elements) {
 		const computed_style = window.getComputedStyle(ele);
 		const duration = computed_style.transitionDuration;
 		if (duration) {
-			durations.push(parseFloat(duration.replace('s', '')) as number);
+			durations.push(Number.parseFloat(duration.replace("s", "")) as number);
 		}
-	});
+	}
 	return durations;
 }
 export function modulo(dividend: number, divisor: number): number {
 	// handle negative numbers to behave like a true modulo operation instead of a remainder operation
 	return ((dividend % divisor) + divisor) % divisor;
+}
+
+export function createMediaQuery(query: string) {
+	let match = $state<boolean | null>(null);
+
+	$effect.pre(() => {
+		const mediaQueryList = window.matchMedia(query);
+
+		const updateMatch = (queryList: MediaQueryList | MediaQueryListEvent) => {
+			match = queryList.matches;
+		};
+
+		updateMatch(mediaQueryList);
+
+		mediaQueryList.addEventListener("change", updateMatch);
+
+		return () => {
+			mediaQueryList.removeEventListener("change", updateMatch);
+		};
+	});
+
+	return {
+		get match() {
+			return match;
+		},
+	};
 }

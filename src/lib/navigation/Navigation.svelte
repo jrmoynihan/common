@@ -1,61 +1,81 @@
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.js';
-	import type { TooltipParameters } from '$actions/tooltip/tooltip.js';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
+	import type { TooltipParameters } from '$actions/tooltip/tooltip.svelte.js';
 	import { browser } from '$app/environment';
 	import { beforeNavigate } from '$app/navigation';
 	import NavLink from '$navigation/NavLink.svelte';
+	import type { Snippet } from 'svelte';
+	import type { HTMLAnchorAttributes } from 'svelte/elements';
 	import type { NavigationLink } from './nav-functions.js';
+	
+	interface NavigationProps {
+		/** Dynamic styles for the <nav> parent element that will be applied on hover, focus, and active states, and base styles that will be re-applied when those states are lost. */
+		dynamic_styles?: DynamicStyleParameters,
+		/** Dynamic styles to the individual nav links that will be applied on hover, focus, and active states, and base styles that will be re-applied when those states are lost. */
+		dynamic_link_styles?: DynamicStyleParameters | DynamicStyleParameters[],
+		/** An array of items to display within the nav wrapper element */
+		links: NavigationLink[],
+		/** Classes to apply to the <a> elements. */
+		link_classes?: string | string[],
+		/** Attributes to apply to the <a> elements. */
+		link_attributes?: HTMLAnchorAttributes | HTMLAnchorAttributes[],
+		/** Styles to apply to the link if it is part of the current page path */
+		link_current_page_styles?: string,
+		/** The tooltip options for all parameters, or an array of tooltip options.  Each item of the options array will be passed into each respective nav item.*/
+		tooltip_options?: TooltipParameters | TooltipParameters[],
+		/** A snippet to render as the children of the <nav> element.*/
+		children?: Snippet
+	}
 
-	/** An array of items to display within the nav wrapper element */
-	export let nav_links: NavigationLink[] = [];
-	/** Styles for the <nav> parent element */
-	export let styles = '';
-	/** Hover styles for the <nav> parent element */
-	export let hover_styles = '';
-	/** Focus styles for the <nav> parent element */
-	export let focus_styles = hover_styles;
-	/** Active styles for the <nav> parent element*/
-	export let active_styles = '';
-	/** Styles to pass to the individual nav links */
-	export let nav_link_styles = '';
-	/** Hover styles to pass to the individual nav links */
-	export let nav_link_hover_styles: string = '';
-	/** Focus syles to pass to the individual nav links */
-	export let nav_link_focus_styles: string = '';
-	/** Active styles to pass to the individual nav links */
-	export let nav_link_active_styles: string = '';
-	/** Styles to apply to the link if it is part of the current page path */
-	export let nav_link_current_page_styles: string = '';
-	/** The tooltip options for all parameters, or an array of tooltip options.  Each item of the options array will be passed into each respective nav item.*/
-	export let tooltip_options: TooltipParameters | TooltipParameters[] = { disabled: true };
+	let {
+		dynamic_styles,
+		dynamic_link_styles,
+		links = [],
+		link_classes,
+		link_attributes,
+		link_current_page_styles,
+		tooltip_options = { disabled: true },
+		children
+	} : NavigationProps = $props()
 
 	// Close any open dialog elements before navigating.
 	beforeNavigate(() => {
 		if (browser) {
 			const dialogs = document.getElementsByTagName('dialog');
-			if (dialogs.length > 0) {
+			if (dialogs?.length > 0) {
 				for (const dialog of dialogs) {
-					dialog.close();
+					console.log(dialog)
+					dialog?.close();
 				}
 			}
 		}
 	});
 </script>
 
-<nav use:dynamicStyle={{ styles, hover_styles, focus_styles, active_styles }}>
-	{#each nav_links as nav_link, i}
-		<NavLink
-			bind:tooltip_options
-			{i}
-			{nav_link}
-			styles={nav_link_styles}
-			hover_styles={nav_link_hover_styles}
-			focus_styles={nav_link_focus_styles}
-			active_styles={nav_link_active_styles}
-			current_page_styles={nav_link_current_page_styles}
-		/>
-	{/each}
-	<slot />
+<!-- svelte-ignore a11y-no-redundant-roles -->
+<nav 
+	role="navigation"
+	use:dynamicStyle={dynamic_styles}
+>
+	{#if links?.length > 0}
+		{#each links as nav_link, i}
+			{@const link_tooltip_options = Array.isArray(tooltip_options) ? tooltip_options[i] : tooltip_options}
+			{@const link_dynamic_styles = Array.isArray(dynamic_link_styles) ? dynamic_link_styles[i] : dynamic_link_styles}
+			{@const link_class = Array.isArray(link_classes) ? link_classes[i] : link_classes}
+			{@const attributes = Array.isArray(link_attributes) ? link_attributes[i] : link_attributes}
+			<NavLink
+				{nav_link}
+				current_page_styles={link_current_page_styles}
+				tooltip_options={link_tooltip_options}
+				dynamic_styles={link_dynamic_styles}
+				classes={link_class}
+				anchor_attributes={attributes}	
+			/>
+		{/each}
+	{/if}
+	{#if children}
+		{@render children()}
+	{/if}
 </nav>
 
 <style lang="scss">

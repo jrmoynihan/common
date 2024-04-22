@@ -1,7 +1,7 @@
 <script lang="ts">
+	import LinkableAnchorHeading from '$navigation/LinkableAnchorHeading.svelte';
 	import Code from '$routes/internal/Code.svelte';
 	import ExternalLink from '$routes/internal/ExternalLink.svelte';
-	import LinkableAnchorHeading from '$navigation/LinkableAnchorHeading.svelte';
 	import DerivedContextExample from './DerivedContextExample.svelte.md';
 	import ReadableContextExample from './ReadableContextExample.svelte.md';
 	import WritableContextExample from './WritableContextExample.svelte.md';

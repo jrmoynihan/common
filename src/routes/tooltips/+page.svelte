@@ -1,21 +1,32 @@
 <script lang="ts">
-	import { tooltip, type TooltipDirections } from '$actions/tooltip/tooltip.js';
+	import { tooltip, type TooltipDirections } from '$actions/tooltip/tooltip.svelte.js';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons/index';
-	import { Fa } from '@jrmoynihan/svelte-fa';
-	import { fly } from 'svelte/transition';
-	import CustomComponent from './CustomComponent.svelte';
-	let selected_position: TooltipDirections = 'top';
+	let position: TooltipDirections = $state('top');
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width = 150;
-	let keep_visible = false;
-	let disabled = false;
-	let visible = false;
-	let initially_visible_example = true;
-	let dynamic_tooltip_text =
-		'Type in the text input while hovering the parent element to see the magic happen!';
+	let disabled = $state(false);
+	let visible = $state(false);
+	let keep_visible = $state(false);
 
-	let styling_green_map = new Map()
+	// NOTE - These must be marked as derived because they depend on other $state() changes; otherwise, the tooltip's internal state will not be updated. */
+	let content = $derived(
+		`This is a tooltip positioned on the ${position}${position === 'top' ? ' (the default)' : ''}. It will automatically reposition itself to stay within the viewport and can update its position dynamically.`
+	);
+
+	let tooltip_props = $derived({
+		position,
+		keep_visible,
+		disabled,
+		styles: 'max-width: min(100vw, 300px);',
+		content
+	});
+
+	let initially_visible_example = $state(true);
+	let dynamic_tooltip_text = $state(
+		'Type in the text input while hovering the parent element to see the magic happen!'
+	);
+
+	const styling_green_map = new Map()
 		.set('max-width', `${max_width}px`)
 		.set('--tooltip-color', 'black')
 		.set('--tooltip-font-weight', '600')
@@ -23,12 +34,12 @@
 		.set('--tooltip-background', 'radial-gradient( white 30%, lightgreen)')
 		.set('--tooltip-drop-shadow', '0px 0px 10px lime');
 
-	let hot_sun_map = new Map()
+	const hot_sun_map = new Map()
 		.set('--tooltip-background', 'lightyellow')
 		.set('box-shadow', '0px 0px 16px 8px orange');
 
-	$: styling_green_styles = convertMapToStyleString(styling_green_map);
-	$: hot_sun_styles = convertMapToStyleString(hot_sun_map);
+	let styling_green_styles = $derived(convertMapToStyleString(styling_green_map));
+	let hot_sun_styles = $derived(convertMapToStyleString(hot_sun_map));
 
 	function convertMapToStyleString(map: Map<string, string>) {
 		let styles = '';
@@ -43,7 +54,6 @@
 	}
 	function hideAll() {
 		disabled = true;
-		keep_visible = false;
 		visible = false;
 		disabled = false;
 	}
@@ -51,10 +61,10 @@
 
 <section id="tooltips-section">
 	<div class="settings full-width">
-		{#each positions as position}
+		{#each positions as p}
 			<label>
-				<input type="radio" bind:group={selected_position} value={position} />
-				{capitalize(position)}
+				<input type="radio" bind:group={position} value={p} />
+				{capitalize(p)}
 			</label>
 		{/each}
 		<label for="disabled-toggle">
@@ -65,39 +75,21 @@
 			Keep Tooltip Visible:
 			<ToggleSwitch bind:checked={keep_visible} />
 		</label>
-		{#if keep_visible}
-			<button
-				transition:fly={{ x: 100, duration: 300 }}
-				style="box-shadow: 0 0 14px 1px yellow;"
-				on:click={hideAll}>Hide All Tooltips</button
-			>
-		{/if}
 	</div>
 
-	<button
-		class="full-width"
-		use:tooltip={{
-			position: selected_position,
-			keep_visible,
-			visible,
-			disabled,
-			title: `This is a tooltip positioned on ${selected_position} ${
-				selected_position === 'top' ? '(the default)' : ''
-			}. It will automatically reposition itself to stay within the viewport and can update its position dynamically.`,
-			styles: 'max-width: min(100vw, 200px);'
-		}}
-	>
+	<!-- position: selected_position, -->
+	<button class="full-width" use:tooltip={tooltip_props}>
 		Tooltips Can Adjust Their Position Automatically
 	</button>
-	<button
+	<!-- <button
 		class="full-width"
 		use:tooltip={{
 			position: selected_position,
 			visible: initially_visible_example && visible,
-			keep_visible,
+			
 			disabled,
 			visibility_delay: 900,
-			title: `This is a tooltip that is set to become visible as soon as its parent is mounted (after waiting for a specified delay). Mouseout its parent to hide the tooltip, or do it programmatically by clicking its parent button!`,
+			content: `This is a tooltip that is set to become visible as soon as its parent is mounted (after waiting for a specified delay). Mouseout its parent to hide the tooltip, or do it programmatically by clicking its parent button!`,
 			styles: `max-width: min(100vw, 200px); ${hot_sun_styles}`
 		}}
 		on:click={() => (initially_visible_example = !initially_visible_example)}
@@ -107,12 +99,12 @@
 	<button
 		use:tooltip={{
 			position: selected_position,
-			title: dynamic_tooltip_text,
+			content: dynamic_tooltip_text,
 			disabled,
 			delay: 150,
 			styles: 'max-width: min(100vw, 200px)',
 			keep_visible
-		}}
+}}
 	>
 		Dynamically Updating Tooltip Text
 	</button>
@@ -121,11 +113,10 @@
 	<button
 		use:tooltip={{
 			position: selected_position,
-			delay: 300,
-			title: keep_visible
-				? `I'll stick around. It's useful for debugging styles on the tip too!`
+			content: keep_visible
+? `I'll stick around. It's useful for debugging styles on the tip too!`
 				: `I'll disappear after a short delay`,
-			keep_visible,
+			
 			disabled
 		}}
 	>
@@ -135,8 +126,7 @@
 		id="custom-component-button"
 		use:tooltip={{
 			position: selected_position,
-			title: `I've got a <br/> custom component!`,
-			keep_visible,
+			content: `I've got a <br/> custom component!`,			
 			visible,
 			disabled,
 			custom_component: CustomComponent,
@@ -148,10 +138,9 @@
 	<button
 		use:tooltip={{
 			position: selected_position,
-			title: `I'm so stylin'!`,
+			content: `I'm so stylin'!`,
 			show_arrow: false,
-			disabled,
-			keep_visible,
+			disabled,			
 			delay: 200,
 			transition: fly,
 			transition_config: {
@@ -168,9 +157,7 @@
 		style="display:grid; grid-template-columns: repeat(3, minmax(0,max-content)); column-gap: 0.5rem; row-gap:1rem;"
 		use:tooltip={{
 			delay: 600,
-			title: 'There are different delays on each the tooltips to achieve a staggered effect',
-			disabled: !keep_visible,
-			keep_visible,
+			content: 'There are different delays on each the tooltips to achieve a staggered effect',		
 			styles: hot_sun_styles,
 			position: 'left',
 			vertical_offset: -200
@@ -189,7 +176,7 @@
 		<button class="add" on:click={() => styling_green_map.set('', '')}
 			><Fa icon={faPlus} />Add CSS Rule</button
 		>
-	</div>
+	</div> -->
 </section>
 
 <style lang="scss">
@@ -198,15 +185,14 @@
 		gap: 1rem;
 		flex-wrap: wrap;
 		place-items: center;
-		max-width: 80%;
-		justify-content: center;
+		// max-width: 80%;
+		// justify-content: center;
 		margin: auto;
 	}
 	.settings {
-		display: grid;
-		grid-template-columns: repeat(7, minmax(0, 1fr));
-		grid-template-rows: 4rem;
-		gap: 8rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2rem;
 		place-content: center;
 		margin: 2rem;
 	}
@@ -234,14 +220,14 @@
 		&:active {
 			scale: 0.98, 0.98, 1;
 		}
-		&.delete,
+		// &.delete,
 		&.add {
 			border: initial;
 			border-radius: 1rem;
 		}
-		&.delete {
-			background-color: hsl(0, 41%, 41%);
-		}
+		// &.delete {
+		// 	background-color: hsl(0, 41%, 41%);
+		// }
 		&.add {
 			background-color: darkcyan;
 			grid-column: 1 / span 2;
