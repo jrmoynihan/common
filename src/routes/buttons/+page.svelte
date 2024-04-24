@@ -1,6 +1,5 @@
 <script lang="ts">
 import type { TooltipDirections } from "$actions/tooltip/tooltip.svelte.js";
-import Button from "$buttons/Button.svelte";
 import ButtonRunes from "$buttons/Button_Runes.svelte";
 import ToggleSwitch from "$buttons/ToggleSwitch.svelte";
 import { delay } from "$functions/helpers.svelte.js";
@@ -52,29 +51,34 @@ let high_button: HTMLButtonElement | undefined = $state(undefined);
 	{#snippet tooltip_one()}
 		Click me!
 	{/snippet}
-	<Button
-		on:click={() => {
+	<ButtonRunes
+	attributes={{
+		onclick: () => {
 			step++;
 			Log({
 				msg: 'clicking with the low elevation button?',
 				title: 'HEY YOU CLICKED ME!',
 				icon: checkeredFlag
-			});
-		}}
-		text="I'm a button with low elevation"
-		styles={`--shadow-color: 350deg 50% 70%;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}
-		box_shadow_elevation="low"
+			})
+		}
+	}}
+		dynamic_styles={{styles: `;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}}
 		tooltip_options={{ position, content: tooltip_one, keep_visible }}
-	/>
-	<Button
-		on:click={() => testToastUpdate()}
-		text="I'm a button with medium elevation"
-		styles={`--shadow-color: 350deg 50% 70%;background-color: ${
+		--shadow-color={'350deg 50% 70%'}
+	>
+		I'm a button with low elevation
+	</ButtonRunes>
+	<ButtonRunes
+	attributes={{
+		onclick: testToastUpdate
+	}}
+		dynamic_styles={{styles: `--shadow-color: 350deg 50% 70%;background-color: ${
 			position === 'top' ? 'hsla(195, 10%, 60%, 20%)' : `green`
-		};`}
-		box_shadow_elevation="medium"
+		};`}}
 		tooltip_options={{ position, content: tooltip_one, keep_visible }}
-	/>
+	>
+		I'm a button with medium elevation
+	</ButtonRunes>
 	<!-- <div bind:this={high_button}>
 		<Button
 			on:click={() => {
@@ -102,10 +106,13 @@ let high_button: HTMLButtonElement | undefined = $state(undefined);
 		bind:checked={keep_visible}
 		label_text={`I'm a toggle switch!`}
 		button_props={{
-			styles:
-				'display: grid; transition: color 400ms ease; gap: 1rem; grid-auto-flow: column; --toggle-button-background: hsla(0,70%, 50%, 30%); padding: 1rem;',
+			dynamic_styles: {
+				styles:
+				'display: grid; transition: color 400ms ease; gap: 1rem; grid-auto-flow: column; padding: 1rem;',
 			hover_styles: 'background-color: green;'
+			}
 		}}
+		--toggle-button-background={`hsla(0,70%, 50%, 30%)`}
 		label_hover_styles={'color: yellow;'}
 	/>
 	<ButtonRunes dynamic_styles={{hover_styles: 'box-shadow: 0 0 10px yellow'}} />
