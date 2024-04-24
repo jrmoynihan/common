@@ -1,4 +1,5 @@
-import auto from '@sveltejs/adapter-auto';
+// import auto from '@sveltejs/adapter-auto';
+import vercel from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex } from 'mdsvex';
 import path, { dirname } from 'path';
@@ -35,7 +36,7 @@ const config = {
 	}})],
 
 	kit: {
-		adapter: auto(),
+		adapter: vercel({runtime: 'nodejs20.x'}),
 		alias: {
 			$routes,
 			$actions: path.resolve($lib, './actions'),
