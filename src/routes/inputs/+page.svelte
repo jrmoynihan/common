@@ -10,6 +10,7 @@
 	let { data } = $props();
 	const { datalist, select_options, date_inputs } : PageData = data;
 	let selected_fruit: string = $state('');
+	let valid_email: string = $state('');
 	
 </script>
 
@@ -29,6 +30,7 @@
 			--input-invalid-outline="var(--accent) 2px solid"
 			/>
 		<TextInput
+			bind:value={valid_email}
 			placeholder_props={{ text: 'john@example.com' }}
 			label_props={{
 				invalid_text: "Invalid email address.",
@@ -37,15 +39,16 @@
 			}}
 			input_attributes={{type: 'email', autocomplete: 'email', required: true }}
 			onconfirm={() => {
-				alert('Email confirmed!');
+				alert(`Email confirmed!  ${valid_email}`);
 			}}
 			--input-invalid-outline="var(--accent) 2px solid"
 		/>
 
 		<DatalistTextInput 
 			{datalist} 
+			bind:value={selected_fruit}
 			text_input_props={{
-				onconfirm: () => alert(`Selected fruit:  ${selected_fruit}`),
+				onconfirm: () => alert(`Selected fruit:  ${selected_fruit}, ${datalist.find(d => d.value === selected_fruit)?.label}`),
 				input_attributes: { required: true },
 				placeholder_props: {text: 'Pick a fruit'}, 
 				label_props: {label_text: "Datalist Text Input:"}
