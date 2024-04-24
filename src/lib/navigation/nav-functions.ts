@@ -1,8 +1,8 @@
-import { capitalize, deKebab } from "$functions/helpers.svelte.js";
-import { ErrorLog } from "$functions/logging.js";
-import type { IconDefinition } from "@fortawesome/free-solid-svg-icons/index";
-import type { NavigationTarget, Page } from "@sveltejs/kit";
-import type { IconSize } from "../lib_types.js";
+import { capitalize, deKebab } from '$functions/helpers.svelte.js';
+import { ErrorLog } from '$functions/logging.js';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index';
+import type { NavigationTarget, Page } from '@sveltejs/kit';
+import type { IconSize } from '../lib_types.js';
 
 interface INavigationLink {
 	url: URL;
@@ -45,17 +45,13 @@ export class NavigationLink {
 
 	constructor(args: INavigationLink) {
 		this.url = args?.url;
-		this.link_text = args?.link_text
-			? capitalize(deKebab(args?.link_text))
-			: "";
+		this.link_text = args?.link_text ? capitalize(deKebab(args?.link_text)) : '';
 		this.icons = args?.icons ?? undefined;
 		this.anchors = args?.anchors ?? undefined;
 		this.is_current_page = false;
 	}
 
-	isCurrentPage = (
-		page: Page<Record<string, string>, string | null>,
-	): boolean => {
+	isCurrentPage = (page: Page<Record<string, string>, string | null>): boolean => {
 		const is_current = page?.url?.pathname === this.url?.pathname;
 		this.is_current_page = is_current;
 		return is_current;
@@ -63,23 +59,21 @@ export class NavigationLink {
 }
 
 export async function get_subroutes(current_pathname: string) {
-	const match = `/src/routes${
-		current_pathname === "/" ? "" : current_pathname
-	}/`;
-	const all_path_components = import.meta.glob("/src/routes/**/*.svelte");
+	const match = `/src/routes${current_pathname === '/' ? '' : current_pathname}/`;
+	const all_path_components = import.meta.glob('/src/routes/**/*.svelte');
 	const subdirectories = Object.entries(all_path_components)
 		.map(([key, value]) => {
-			const trimmed_key = key.replace(match, "").replace("/+page.svelte", "");
+			const trimmed_key = key.replace(match, '').replace('/+page.svelte', '');
 			return { path: key, name: trimmed_key };
 		})
 		.filter(({ path, name }) => {
 			if (
-				path.includes("+page.svelte") &&
+				path.includes('+page.svelte') &&
 				path.includes(match) &&
 				path !== `${match}+page.svelte`
 			) {
 				// Retain only *direct* sub-routes
-				return !name.includes("/");
+				return !name.includes('/');
 			}
 		})
 		.map(({ name }) => name);
@@ -88,47 +82,42 @@ export async function get_subroutes(current_pathname: string) {
 }
 
 export async function make_subroute_nav_links(
-	imported_meta_url: string,
 	load_event_url: URL,
-	icon_map?: Map<string, IconLayer>,
+	icon_map?: Map<string, IconLayer>
 ) {
-	const base_url = await make_base_url(imported_meta_url, load_event_url);
-	const is_root_path = base_url.pathname.endsWith("/");
-	const subroutes = await get_subroutes(base_url.pathname);
+	const is_root_path = load_event_url.pathname.endsWith('/');
+	const subroutes = await get_subroutes(load_event_url.pathname);
 	const nav_links = subroutes.map((name) => {
 		const subroute_url = new URL(
-			`${base_url.origin}${base_url.pathname}${is_root_path ? "" : "/"}${name}`,
+			`${load_event_url.origin}${load_event_url.pathname}${is_root_path ? '' : '/'}${name}`
 		);
 		return new NavigationLink({
 			url: subroute_url,
 			link_text: name,
-			icons: icon_map ? [{ ...icon_map.get(name) }] : undefined,
+			icons: icon_map ? [{ ...icon_map.get(name) }] : undefined
 		});
 	});
+
 	return nav_links;
-}
-async function make_base_url(imported_meta_url: string, load_url: URL) {
-	const replaced_meta_url = imported_meta_url.replace("/src/routes", ""); // Remove the source directory portion
-	const slice_index = replaced_meta_url.indexOf("/+"); // Find index of page or layout `+`descriptor
-	const sliced_meta = replaced_meta_url.slice(0, slice_index); // Slice at that index to get the rest of the address path
-	return new URL(sliced_meta, load_url.href); // Make a URL object from that, which forms the base for all the subroutes
 }
 
 /** Compares the navigation targets (from and to) and returns true if layout should transition, and false if it should not */
 export async function shouldLayoutTransitionOnNavigation({
 	from,
 	to,
-	layout_parent_path,
-} : {from: NavigationTarget,
-	to: NavigationTarget,
-	layout_parent_path: string}) {
+	layout_parent_path
+}: {
+	from: NavigationTarget;
+	to: NavigationTarget;
+	layout_parent_path: string;
+}) {
 	try {
 		if (from?.url.pathname === to?.url.pathname) return false;
 
 		// Ignore the empty string to the left of the first slash in the route id
-		const from_routeID = from?.route?.id?.split("/").slice(1);
-		const to_routeID = to?.route?.id?.split("/").slice(1);
-		
+		const from_routeID = from?.route?.id?.split('/').slice(1);
+		const to_routeID = to?.route?.id?.split('/').slice(1);
+
 		// console.trace({from, to, from_routeID, to_routeID, layout_parent})
 		if (from_routeID && to_routeID) {
 			// If the beginning of the path is different, it should always transition.  You're moving to a new part of the route hierarchy.
@@ -136,14 +125,18 @@ export async function shouldLayoutTransitionOnNavigation({
 				// console.log('returning true because beginning of path is different');
 				return true;
 			}
-			if(from_routeID.length !== to_routeID.length) {
+			if (from_routeID.length !== to_routeID.length) {
 				// console.log('returning false because lengths are different');
-				return false
+				return false;
 			}
-			console.log(to_routeID[to_routeID.length - 2])
-			if(to_routeID[to_routeID.length - 2] && to_routeID[to_routeID.length - 2] === layout_parent_path && from_routeID[from_routeID.length - 1] !== to_routeID[to_routeID.length - 1]) {
-					return true;
-				}		
+			console.log(to_routeID[to_routeID.length - 2]);
+			if (
+				to_routeID[to_routeID.length - 2] &&
+				to_routeID[to_routeID.length - 2] === layout_parent_path &&
+				from_routeID[from_routeID.length - 1] !== to_routeID[to_routeID.length - 1]
+			) {
+				return true;
+			}
 		}
 		return false;
 	} catch (error) {

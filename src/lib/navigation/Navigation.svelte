@@ -44,7 +44,6 @@
 			const dialogs = document.getElementsByTagName('dialog');
 			if (dialogs?.length > 0) {
 				for (const dialog of dialogs) {
-					console.log(dialog)
 					dialog?.close();
 				}
 			}
