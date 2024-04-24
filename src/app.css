@@ -10,10 +10,10 @@
 	--text: hsla(0 0% 100% / 1); /* main/text color */
 	--background: hsla(195 61% 14%); /* background/alternate color */
 	--accent: var(--orange);
-	--shadow-color: 220 3% 85%;  /* For <dialog> box-shadows */
+	--shadow-color: 220 3% 85%; /* For <dialog> box-shadows */
 }
 
-@position-fallback --top-bottom-right-left {
+@position-try --top-bottom-right-left {
 	@try {
 		bottom: calc(anchor(top) + var(--distance));
 		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
@@ -32,7 +32,7 @@
 	}
 }
 
-@position-fallback --bottom-top-right-left {
+@position-try --bottom-top-right-left {
 	@try {
 		top: calc(anchor(bottom) + var(--distance));
 		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
@@ -51,7 +51,7 @@
 	}
 }
 
-@position-fallback --left-right-top-bottom {
+@position-try --left-right-top-bottom {
 	@try {
 		right: calc(anchor(left) + var(--distance));
 		top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
@@ -70,21 +70,22 @@
 	}
 }
 
-@position-fallback --right-left-top-bottom {
-	@try {
-		left: calc(anchor(right) + var(--distance));
-		top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+@position-try --right-left-top-bottom {
+	
+	/* @try { */
+	/* bottom: calc(anchor(bottom) + var(--distance));
+	left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+	/* } */
+	/* @try { */
+	/* top: calc(anchor(top) + var(--distance)); */
+	/* left: calc(anchor(center) - (var(--tooltip-width) * 0.5)); */
+	/* } */
+	/* @try { */
+	/* left: calc(anchor(left) + var(--distance)); */
+	/* top: calc(anchor(center) - (var(--tooltip-height) * 0.5)); */
+	/* } */
+	/* @try { */
+	/* left: calc(anchor(right) + var(--distance)); */
+	/* top: calc(anchor(center) - (var(--tooltip-height) * 0.5)); */
 	}
-	@try {
-		left: calc(anchor(left) + var(--distance));
-		top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
-	}
-	@try {
-		top: calc(anchor(top) + var(--distance));
-		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
-	}
-	@try {
-		bottom: calc(anchor(bottom) + var(--distance));
-		left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
-	}
-}}
+}

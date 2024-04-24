@@ -96,7 +96,8 @@ https://web.dev/building-a-tooltip-component/
 				top: calc(anchor(bottom) + var(--distance));
 				bottom: auto;
 				&.fallback{
-					position-fallback: --bottom-top-right-left;
+					// position-try-options: --bottom-top-right-left;
+					position-try-options: flip-block, flip-inline, flip-start;
 				}
 			}
 			&[data-tip-position='top'] {
@@ -105,7 +106,8 @@ https://web.dev/building-a-tooltip-component/
 				bottom: calc(anchor(top) + var(--distance));
 				top: auto;
 				&.fallback{
-					position-fallback: --top-bottom-right-left;
+					// position-try-options: --top-bottom-right-left;
+					position-try-options: flip-block, flip-inline, flip-start;
 				}
 			}
 			&[data-tip-position='left'] {
@@ -114,7 +116,8 @@ https://web.dev/building-a-tooltip-component/
 				left: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
 				&.fallback{
-					position-fallback: --left-right-top-bottom;
+					// position-try-options: --left-right-top-bottom;
+					position-try-options: flip-inline, flip-block, flip-start;
 				}
 			}
 			&[data-tip-position='right'] {
@@ -123,7 +126,8 @@ https://web.dev/building-a-tooltip-component/
 				right: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
 				&.fallback{
-					position-fallback: --right-left-top-bottom;
+					// position-try-options: --right-left-top-bottom;
+					position-try-options: flip-inline, flip-block, flip-start;
 				}
 			}
 			&.visible {
