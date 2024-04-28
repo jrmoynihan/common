@@ -1,130 +1,67 @@
 <script lang="ts">
-	import type { TooltipParameters } from '$actions/tooltip/tooltip.js';
 	import { beforeNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
-	import LightDarkToggle_v2 from '$buttons/LightDarkToggle_v2.svelte';
+	import LightDarkToggleV2 from '$buttons/LightDarkToggle_v2.svelte';
 	import Navigation from '$navigation/Navigation.svelte';
 	import {
-		makeNavLinks,
-		shouldLayoutTransitionOnNavigation,
-		type IconLayer
+		shouldLayoutTransitionOnNavigation
 	} from '$navigation/nav-functions.js';
 	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
-	import { reminderToast } from '$toasts/toasts.js';
-	import Transition from '$wrappers/Transition.svelte';
-	import {
-		faCalculator,
-		faComputerMouse,
-		faGifts,
-		faKeyboard,
-		faReceipt,
-		faTools
-	} from '@fortawesome/free-solid-svg-icons/index';
-	import { SvelteToast } from '@zerodevx/svelte-toast';
-	import { onDestroy } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
+	import { type Snippet } from 'svelte';
 	import '../../src/app.css';
 	import '../../src/mdsvex.css';
+	import type { LayoutData } from './$types';
 	import { aside_visible } from './stores.js';
 
-	const parent_path = '/';
-	const paths: string[] = ['tooltips', 'inputs', 'buttons', 'wrappers', 'recipes', 'functions'];
-	const link_icons: IconLayer[][] = [
-		[{ icon: faTools }],
-		[{ icon: faKeyboard }],
-		[{ icon: faComputerMouse }],
-		[{ icon: faGifts }],
-		[{ icon: faReceipt }],
-		[{ icon: faCalculator }]
-	];
-	let refresh: boolean = false;
-	let tooltips_visible = true;
-	let tooltips_disabled = false;
-
-	const delay_tips = (i: number) => {
-		return (i + 1) * 100 + 100;
-	};
-	let tooltip_words = ['Click', 'on a', 'link', 'to explore', 'the cool stuff', 'available!'];
-	const getTitleSegment = (i: number) => {
-		return tooltip_words[i];
-	};
-	const assignTooltips = () =>
-		tooltip_words.map((word, i) => {
-			const delay = delay_tips(i);
-			const title = getTitleSegment(i);
-			return {
-				visible: tooltips_visible,
-				disabled: tooltips_disabled,
-				delay,
-				title
-			};
-		});
-	let link_tooltip_options: TooltipParameters[] = assignTooltips();
-
-	const disableTooltips = () => {
-		const new_options = link_tooltip_options.map((tooltip) => {
-			const { ...existing_options } = tooltip;
-			return { ...existing_options, visible: false, disabled: true };
-		});
-		// Trigger reactive update
-		link_tooltip_options = [...new_options];
+	type LayoutProps = {
+		data: LayoutData;
+		children: Snippet;
 	};
 
+	let {
+		data,
+		children
+	} : LayoutProps = $props()
+	const { nav_links } = data;
+	
+	let trigger: boolean = $state(false);
 	beforeNavigate(async (nav) => {
 		const { from, to } = nav;
-		if (from && to && (await shouldLayoutTransitionOnNavigation(from, to, parent_path)))
-			refresh = !refresh;
-		disableTooltips();
+		if (from && to && (await shouldLayoutTransitionOnNavigation({from, to, layout_parent_path: '/' }))){
+			trigger = !trigger;
+		}
 	});
-
-	const countdown = setTimeout(() => {
-		disableTooltips();
-	}, 5_000);
-
-	setTimeout(
-		() =>
-			reminderToast({
-				msg: 'this is a reminder',
-				useSeenToastComponent: true,
-				local_storage_key: 'toast-reminder-key'
-			}),
-		2000
-	);
-	onDestroy(() => clearTimeout(countdown));
 </script>
 
 <div class="app-container" class:padded-left={$aside_visible}>
 	<div class="top right">
-		<!-- <LightDarkToggle bind:use_dark_theme={$use_dark_theme} /> -->
-		<LightDarkToggle_v2 />
+		<LightDarkToggleV2 />
 	</div>
 	<h1>
 		<a href="/" class="cool-text">The Commons</a>
 	</h1>
-	{#await makeNavLinks({ paths, link_icons }) then nav_links}
 		<Navigation
-			{nav_links}
-			bind:tooltip_options={link_tooltip_options}
-			nav_link_styles={`color: white`}
-			nav_link_hover_styles={'background: darkorange'}
+			links={nav_links}
+			link_current_page_styles="color: white"
+			dynamic_link_styles={{
+				styles: `color: white`,
+				hover_styles: 'background: darkorange'
+			}}
 		/>
-	{/await}
 	<main>
-		<Transition
-			bind:refresh
-			transition={fly}
-			in_transition_parameters={{ duration: 350, x: -100, delay: 300 }}
-			out_transition_parameters={{ duration: 350, x: 100 }}
-		>
-			<slot />
-		</Transition>
+		<TransitionRunes
+			bind:trigger
+			>
+			{@render children()}
+		</TransitionRunes>
 	</main>
 	{#if $page.url.pathname.includes('/functions')}
 		<FunctionsAside />
 	{/if}
 </div>
 
-<SvelteToast />
+<!-- <SvelteToast /> -->
 
 <style lang="scss">
 	:root {
@@ -139,7 +76,6 @@
 			BlinkMacSystemFont,
 			'Segoe UI',
 			sans-serif;
-		color-scheme: dark light;
 		background-color: var(--background);
 		color: var(--text);
 		--tooltip-color: black;

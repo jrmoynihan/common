@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { dynamicStyle } from '$actions/dynamic-styles';
-	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip';
+	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';
 	// TODO: Use Temporal API instead of Date constructor
@@ -32,7 +32,7 @@
 	export let label_element: HTMLLabelElement | null = null;
 	export let is_valid: boolean | undefined = false;
 	export let required: boolean = false;
-	export let tooltip_options: TooltipParameters | null = null;
+	export let tooltip_options: TooltipProps | null = null;
 	export let title: string = '';
 	let internal: string;
 	const dispatch = createEventDispatcher();
@@ -131,6 +131,11 @@
 		font-size: small;
 		display: flex;
 		cursor: pointer;
+
+		&::-webkit-datetime-edit {
+			background-color: inherit;
+			color: inherit;
+		}
 
 		&:invalid {
 			border: 3px solid red;

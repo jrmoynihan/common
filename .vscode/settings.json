@@ -8,6 +8,27 @@
 		"Functions",
 		"Toasts",
 		"Packages",
-		"Actions"
-	]
+		"Actions",
+		"Deployment"
+	],
+	"files.exclude": {
+		".DS_Store": true,
+		".dccache": true,
+		".eslintignore": true,
+		".eslintrc.cjs": true,
+		".git": true,
+		".gitignore": true,
+		".markdownlint.jsonc": true,
+		".npmrc": true,
+		".prettierignore": true,
+		".prettierrc": true,
+		".svelte-kit": true,
+		".vscode": true,
+		"README.md": true,
+		"biome.jsonc": true,
+		"dist": true,
+		"mdsvex.config.js": true,
+		"node_modules": true,
+		"playwright.config.ts": true
+	}
 }

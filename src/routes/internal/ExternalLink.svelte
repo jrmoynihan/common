@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { use_dark_theme } from '$routes/stores.js';
 	export let url: URL;
 	export let prefetch = true;
 </script>
@@ -8,11 +7,11 @@
 	{#if prefetch}
 		<link rel="prefetch" href={url.href} />
 	{/if}
-	<a href={url.href} class:dark={$use_dark_theme}><slot /></a></mark
+	<a href={url.href}><slot /></a></mark
 >
 
 <style lang="scss">
-	:global(mark) {
+	mark {
 		background-color: transparent;
 		padding: 0 0.25rem;
 		border-radius: 0.25rem;
@@ -20,11 +19,11 @@
 			padding: 0;
 		}
 	}
-	:global(a) {
+	a {
 		color: hsl(39, 100%, 50%);
 		&:visited {
 			color: hsl(15deg 100% 50%);
-			&.dark {
+			@media (prefers-color-scheme: dark) {
 				color: hsl(15deg 100% 70%);
 			}
 		}

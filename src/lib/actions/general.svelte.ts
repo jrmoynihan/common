@@ -1,5 +1,5 @@
-import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
-import { spotlight, type SpotlightParameters } from './spotlight/spotlight.js';
+import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.svelte.js';
+import { spotlight, type SpotlightParameters } from './spotlight/spotlight.svelte.js';
 
 export async function waitForAnimations(ticking: boolean) {
 	// Get animations running within the document's body
@@ -25,6 +25,7 @@ export function tutorial(
 	const spot = spotlight(node, parameters.spotlight);
 	const tip = tooltip(node, parameters.tooltip);
 
+
 	spot.spotlight.$on('next', (e) => {
 		if (parameters?.tooltip?.steps) {
 			const next = parameters.tooltip.steps[e.detail.node_index];
@@ -36,7 +37,7 @@ export function tutorial(
 			}
 		}
 	});
-	spot.spotlight.$on('closeAll', () => tip?.destroy());
+	spot.$on('closeAll', () => tip?.destroy());
 
 	return {
 		async update(parameters: { spotlight: SpotlightParameters; tooltip: TooltipParameters }) {

@@ -1,10 +1,7 @@
 <script lang="ts">
+	import LinkableAnchorHeading from '$navigation/LinkableAnchorHeading.svelte';
 	import Code from '$routes/internal/Code.svelte';
 	import ExternalLink from '$routes/internal/ExternalLink.svelte';
-	import LinkableAnchorHeading from '$navigation/LinkableAnchorHeading.svelte';
-	import DerivedContextExample from './DerivedContextExample.svelte.md';
-	import ReadableContextExample from './ReadableContextExample.svelte.md';
-	import WritableContextExample from './WritableContextExample.svelte.md';
 </script>
 
 <a id="contexts"><h2>Contexts</h2></a>
@@ -32,7 +29,7 @@
 		equivalent key to access it, <Code>getContext(Symbol.for('key'))</Code>.
 	</p>
 	<p>
-		<ReadableContextExample />
+		<!-- <ReadableContextExample /> -->
 	</p>
 </section>
 <section>
@@ -55,7 +52,7 @@
 		<Code>getReadableContext</Code> -- all stores inherit the Readable interface).
 	</p>
 	<p>
-		<WritableContextExample />
+		<!-- <WritableContextExample /> -->
 	</p>
 </section>
 <section>
@@ -75,7 +72,7 @@
 		<Code>getReadableContext</Code> -- all stores inherit the Readable interface).
 	</p>
 	<p>
-		<DerivedContextExample />
+		<!-- <DerivedContextExample /> -->
 	</p>
 </section>
 

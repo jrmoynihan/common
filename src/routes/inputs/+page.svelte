@@ -1,109 +1,96 @@
 <script lang="ts">
+	import Checkbox from '$inputs/Checkbox.svelte';
+	import DatalistTextInput from '$inputs/DatalistTextInput.svelte';
 	import NumericInput from '$inputs/NumericInput.svelte';
 	import Select from '$inputs/Select.svelte';
 	import TemporalDateInput from '$inputs/TemporalDateInput.svelte';
 	import TextInput from '$inputs/TextInput.svelte';
-	import type { DatalistOption, SelectOptionList } from '$inputs/types.js';
-	import { Temporal } from '@js-temporal/polyfill';
+	import type { PageData } from './$types';
 
-	const unicode_apple = '\u{1F34E}';
-	const unicode_orange = '\u{1F34A}';
-	const unicode_banana = '\u{1F34C}';
-	const unicode_cherry = '\u{1F352}';
-	const unicode_grapes = '\u{1F347}';
-	const unicode_lemon = '\u{1F34B}';
-	const unicode_pear = '\u{1F350}';
-	const unicode_pineapple = '\u{1F34D}';
-
-	let datalist: DatalistOption[] = [
-		{ value: unicode_apple, label: 'Apple' },
-		{ value: unicode_banana, label: 'Banana' },
-		{ value: unicode_orange, label: 'Orange' },
-		{ value: unicode_cherry, label: 'Cherry' },
-		{ value: unicode_grapes, label: 'Grape' },
-		{ value: unicode_lemon, label: 'Lemon' },
-		{ value: unicode_pear, label: 'Pear' },
-		{ value: unicode_pineapple, label: 'Pineapple' }
-	];
-	let selected_fruit: string;
-	let select_options: SelectOptionList = [
-		{ value: null },
-		{ value: 1, disabled: true, display_text: 'a disabled option' },
-		{
-			label: 'A Group Of Options',
-			options: [
-				{ value: 1, display_text: 'One' },
-				{ value: 2, display_text: 'Two' },
-				{ value: 3, display_text: 'Three' }
-			]
-		}
-	];
+	let { data } = $props();
+	const { datalist, select_options, date_inputs } : PageData = data;
+	let selected_fruit: string = $state('');
+	let valid_email: string = $state('');
+	
 </script>
 
 <div class="inputs-container">
 	<section class="text-inputs">
 		<h2>Text Inputs</h2>
 		<TextInput
-			placeholder_props={{ placeholder: "I'm a placeholder" }}
+			placeholder_props={{ text: "required" }}
 			show_confirm={false}
-			tooltip_options={{ title: `I'm a plain text input with a cancel button!` }}
-		/>
+			label_props={{
+				invalid_text: "Please enter text between 3-16 characters.",
+				label_text: "Labels for Inputs",
+				tooltip_options: { content: `I'm a plain text input with a cancel button!`, position: 'top'},
+				valid: false
+			}}
+			input_attributes={{ autocomplete: 'off', required: true, pattern: "[a-z]{3,16}" }}
+			--input-invalid-outline="var(--accent) 2px solid"
+			/>
 		<TextInput
+			bind:value={valid_email}
+			placeholder_props={{ text: 'john@example.com' }}
+			label_props={{
+				invalid_text: "Invalid email address.",
+				label_text: "Email address:",
+				tooltip_options: { content: `I'm an email input that hides the confirm button when the email is invalid!`}
+			}}
+			input_attributes={{type: 'email', autocomplete: 'email', required: true }}
+			onconfirm={() => {
+				alert(`Email confirmed!  ${valid_email}`);
+			}}
+			--input-invalid-outline="var(--accent) 2px solid"
+		/>
+
+		<DatalistTextInput 
+			{datalist} 
 			bind:value={selected_fruit}
-			on:confirm={(e) => {
-				alert(`Selected fruit: ${e.detail}`);
+			text_input_props={{
+				onconfirm: () => alert(`Selected fruit:  ${selected_fruit}, ${datalist.find(d => d.value === selected_fruit)?.label}`),
+				input_attributes: { required: true },
+				placeholder_props: {text: 'Pick a fruit'}, 
+				label_props: {label_text: "Datalist Text Input:"}
 			}}
-			type="datalist"
-			options={datalist}
-			placeholder_props={{ placeholder: 'Pick a fruit' }}
-			tooltip_options={{
-				title: `I'm a datalist input with a cancel AND a confirmation button!`,
-				position: 'bottom'
-			}}
+			--input-invalid-outline="var(--accent) 2px solid"
 		/>
 		<span class="selected-fruit">{selected_fruit}</span>
 	</section>
 	<section class="date-inputs">
 		<h2>Date Inputs</h2>
-		<TemporalDateInput
-			date={Temporal.Now.zonedDateTimeISO().add({ days: 1 })}
-			min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
-			max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
-		/>
-		<TemporalDateInput
-			type={'datetime-local'}
-			date={Temporal.Now.zonedDateTimeISO().add({ days: 1 })}
-			min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
-			max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
-		/>
-		<TemporalDateInput
-			type={'datetime'}
-			min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
-			max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
-		/>
-		<TemporalDateInput
-			type={'time'}
-			min={Temporal.Now.zonedDateTimeISO().subtract({ days: 7 })}
-			max={Temporal.Now.zonedDateTimeISO().add({ days: 7 })}
-		/>
+		{#each date_inputs as input}
+			<TemporalDateInput {...input} />
+		{/each}
 	</section>
 	<section class="numeric-inputs">
 		<h2>Numeric Inputs</h2>
-		<!-- tooltip_options={{ title: `I'm an input with custom spinner buttons!` }} -->
-		<NumericInput step={null} value={null} placeholder={'a placeholder that disappears'} />
+		<NumericInput input_attributes={{ placeholder: 'a placeholder that disappears'}} />
 		<NumericInput
-			tooltip_options={{ title: `Is it between 0 and 10?` }}
-			max={10}
+			input_attributes={{ min: 0, max: 10 }}
+			tooltip_options={{ content: `Is it between 0 and 10?` }}
 			show_spinner_buttons={false}
 		/>
 	</section>
 	<section class="select-inputs">
 		<Select
+			input_label_props={{ label_text: "Select an option" }}
 			options={select_options}
-			placeholder_props={{ placeholder: 'pick one...' }}
-			required={true}
+			placeholder_props={{ text: 'pick one...' }}
+			select_attributes={{ required: true }}
 		/>
 	</section>
+	<section class="checkbox-inputs">
+		<Checkbox>
+			{#snippet label()}
+				<p>Labeled Checkbox</p>
+				<strong style="display: grid; place-content: center; color: var(--background); background-color: var(--accent); padding: 0.5rem">with custom html!</strong>
+			{/snippet}
+		</Checkbox>
+		<Checkbox disabled text={"Disabled Checkbox"}/>
+		<Checkbox />
+	</section>
+	<button class="orange">I'm a button</button>
 </div>
 
 <style lang="scss">
@@ -114,6 +101,8 @@
 		width: 100%;
 		height: 100%;
 		gap: 2rem 1rem;
+		flex-wrap: wrap;
+		flex-basis: min(100rem, 50vw);
 	}
 	section {
 		display: flex;
@@ -129,6 +118,13 @@
 		justify-content: center;
 		justify-self: center;
 		gap: 1rem;
+	}
+	.date-inputs{
+		@layer input_label {
+			:global(label) {
+				max-width: 14em;
+			}
+		}
 	}
 	.selected-fruit {
 		margin: 1rem;

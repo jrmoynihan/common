@@ -1,124 +1,114 @@
-<script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.js';
-	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
-	import type { SelectOptionList } from '$inputs/types.js';
-	import type { ComponentProps } from 'svelte';
-	import { fade } from 'svelte/transition';
-	import type { SvelteTransition, SvelteTransitionParams } from '../lib_types.js';
-	import OptionOrGroup from './OptionOrGroup.svelte';
-	import Placeholder from './Placeholder.svelte';
+<script lang=ts context=module>
+	export interface SelectProps {
+		value?: unknown;
+		select_attributes? : HTMLSelectAttributes;
+		/** A snippet of HTML for the `<optgroup>` of the `<select>`.*/
+		group_snippet?: Snippet<[any]>,
+		/** A snippet for how to render a single `<option>` in the `<select>`.*/
+		option_snippet?: Snippet<[any]>,
+		options?: SelectOptionList,
+		dynamic_select_styles?: DynamicStyleParameters;
+		input_label_props: ComponentProps<InputLabel>;
+		label?: Snippet<[any]>;
+		placeholder_props?: ComponentProps<Placeholder>;
+	}
+</script>
 
-	export let value: unknown = '';
-	export let id = crypto?.randomUUID() ?? '';
-	export let name = '';
-	export let title = '';
-	export let required = false;
-	export let options: SelectOptionList = [];
-	export let select_styles = '';
-	export let select_hover_styles = '';
-	export let select_focus_styles = '';
-	export let select_active_styles = '';
-	export let select_container_styles = '';
-	export let select_container_hover_styles = '';
-	export let select_container_focus_styles = '';
-	export let select_container_active_styles = '';
-	export let placeholder_props: ComponentProps<Placeholder> = {};
-	export let transition: SvelteTransition = fade;
-	export let transition_parameters: SvelteTransitionParams = { duration: 0 };
-	export let use_tooltip = false;
-	export let tooltip_options: TooltipParameters = {
-		title,
-		disabled: !use_tooltip
-	};
+<script lang="ts">
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
+	import type { SelectOption, SelectOptionGroup, SelectOptionList } from '$lib/lib_types';
+	import type { ComponentProps, Snippet } from 'svelte';
+	import type { HTMLSelectAttributes } from 'svelte/elements';
+	import InputLabel from './InputLabel.svelte';
+	import Placeholder from './Placeholder.svelte';
+	
+	let {
+		value = $bindable(),
+		select_attributes,
+		options = [],
+		option_snippet = option,
+		group_snippet = group,
+		dynamic_select_styles,
+		input_label_props,
+		placeholder_props = {},
+		
+	} : SelectProps = $props();
 
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
-<div
-	class="select-container"
-	use:dynamicStyle={{
-		styles: select_container_styles,
-		hover_styles: select_container_hover_styles,
-		focus_styles: select_container_focus_styles,
-		active_styles: select_container_active_styles
-	}}
-	transition:transition={transition_parameters}
-	use:tooltip={{ ...tooltip_options }}
->
+{#snippet option({value, disabled, text}: SelectOption)}
+	<option {value} {disabled}>
+		{text ?? ''}
+	</option>
+{/snippet}
+
+{#snippet group(o: SelectOptionGroup | SelectOption)}
+	{#if 'options' in o}
+		<optgroup label={o.label}>
+			{#each o.options as suboption}
+				{@render group(suboption)}
+			{/each}
+		</optgroup>
+	{:else}
+		{@render option(o)}
+	{/if}
+{/snippet}
+
+<InputLabel {...input_label_props}>
 	<select
+	use:dynamicStyle={dynamic_select_styles}
+	bind:value
 		class="select"
 		class:value
-		use:dynamicStyle={{
-			styles: select_styles,
-			hover_styles: select_hover_styles,
-			focus_styles: select_focus_styles,
-			active_styles: select_active_styles
-		}}
-		bind:value
-		{required}
-		{id}
-		{name}
-	>
-		{#each options as option}
-			<OptionOrGroup {option} />
-		{/each}
-		<slot name="options" />
+		id={crypto?.randomUUID()}
+		{...select_attributes}
+	>	
+		{#if group_snippet}
+			{#each options as opt}
+				{@render group_snippet(opt)}
+			{/each}
+		{:else if option_snippet}
+			{#each options as opt}
+				{@render option_snippet(opt)}
+			{/each}
+		{/if}
 	</select>
-	{#key placeholder_props}
-		<Placeholder {...placeholder_props} />
-	{/key}
-</div>
+	<Placeholder {...placeholder_props} />
+</InputLabel>
 
 <style lang="scss">
 	/* Avoid miscalculating size of padding/widths by including it in the box mesaurement */
 	* {
 		box-sizing: border-box;
 	}
-	.select-container {
-		--text-input-padding: 1.25rem;
-		position: relative;
-		display: grid;
-		max-width: max-content;
-		grid-auto-rows: minmax(7ch, max-content);
-	}
 	select {
 		box-sizing: border-box;
-		grid-row: 1;
-		grid-column: 1;
-		height: 100%;
-		padding: var(--text-input-padding, 1.25rem);
-		color: var(--text-input-color, black);
-		background-color: var(--text-input-background, white);
+		grid-area: input;
+		padding: var(--text-input-padding, 1.25em);
+		color: var(--text-input-color, inherit);
+		background-color: var(--text-input-background, revert);
 		width: 100%;
 		margin: 0;
 		padding-bottom: 0.5rem;
 		border-radius: var(--text-input-border-radius, 1rem);
-		border: var(--text-input-border, none);
-		max-height: max-content;
-		min-height: 5ch;
+		border: var(--text-input-border, inset);
+		min-height: 3ch;
+		// -webkit-appearance: initial;
+		// height: 100%;
+		// max-height: max-content;  /** Causes issues on Safari */
+		
+		// Different rules that only get applied to Safari:
+		
+		background-color: var(--text-input-background, revert);
 
-		&:invalid {
-			outline: var(--input-invalid-outline, intitial);
-		}
-		&:valid {
-			outline: var(--input-valid-outline, initial);
+		&:focus-visible{
+			outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
 		}
 
-		&:not(:focus):hover ~ :global(.placeholder) {
-			opacity: 0.2;
+		&:invalid:not(:focus) {
+			outline: var(--input-invalid-outline, initial);
 		}
 	}
 
-	/* Move the placeholder div when anything in the container receives focus or the select has a value */
-	.select-container:focus-within > :global(.placeholder),
-	select:active ~ :global(.placeholder),
-	select.value:not(:focus) ~ :global(.placeholder) {
-		translate: -3% -0.8rem 0;
-		font-size: 0.75rem;
-	}
-
-	/* When the select isn't focused, but has a value, continue to fade and translate the placeholder div */
-	select.value:not(:focus) ~ :global(.placeholder) {
-		opacity: 0.4;
-	}
 </style>

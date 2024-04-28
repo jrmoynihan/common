@@ -1,18 +1,24 @@
 import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
 
+/** Dynamic styles to apply to an element */
 export interface DynamicStyleParameters {
+	/** CSS styles to apply to the element. Will be re-applied when hover, focus, current-page status is lost. */
 	styles?: string;
+	/** CSS styles to apply to the element on hover. */
 	hover_styles?: string;
+	/** CSS styles to apply to the element on focus. */
 	focus_styles?: string;
+	/** CSS styles to apply to the element when it is in the `:active` state. */
 	active_styles?: string;
-	dynamic_styles?: string;
+	/** CSS styles to apply to the element when it is in the `:dynamic` state. */
+	// dynamic_styles?: string;
 }
 const default_parameters: DynamicStyleParameters = {
 	styles: '',
 	hover_styles: '',
 	focus_styles: '',
 	active_styles: '',
-	dynamic_styles: ''
+	// dynamic_styles: ''
 };
 
 export function dynamicStyle(
@@ -53,38 +59,38 @@ export function dynamicStyle(
 	addStaticStyles();
 
 	// Event-Listener functions
-	function mouseEnter() {
+	function mouseEnter(): void {
 		if (get(split_hover_rules)) {
 			applyStyles(element, get(split_hover_rules));
 		}
 	}
-	function mouseLeave() {
+	function mouseLeave() : void {
 		if (get(split_hover_rules)) {
 			removeStyles(element, get(split_hover_rules));
 		}
 	}
-	function focused() {
+	function focused() : void {
 		if (get(split_focus_rules)) {
 			applyStyles(element, get(split_focus_rules));
 		}
 	}
-	function blurred() {
+	function blurred() : void {
 		if (get(split_focus_rules)) {
 			removeStyles(element, get(split_focus_rules));
 		}
 	}
-	function activated() {
+	function activated() : void {
 		if (get(split_active_rules)) {
 			applyStyles(element, get(split_active_rules));
 		}
 	}
-	function deactivated() {
+	function deactivated() : void {
 		if (get(split_active_rules)) {
 			removeStyles(element, get(split_active_rules));
 		}
 	}
 
-	function addStaticStyles() {
+	function addStaticStyles() : void {
 		if (get(split_static_rules)) {
 			applyStyles(element, get(split_static_rules));
 		}
@@ -127,20 +133,20 @@ function splitStyleRules(styles: string): string[] {
 		return [];
 	}
 }
-function splitRuletoKeyValuePair(rule: string) {
+function splitRuletoKeyValuePair(rule: string) : [string, string] {
 	const trimmed_rule = rule.trim();
 	const [key, value] = trimmed_rule.split(':');
 	return [key, value];
 }
-function applyStyles(element: HTMLElement, split_rules: string[]) {
-	split_rules.forEach((rule) => {
+function applyStyles(element: HTMLElement, split_rules: string[]) : void {
+	for(const rule of split_rules) {
 		const [key, value] = splitRuletoKeyValuePair(rule);
 		element.style.setProperty(key, value);
-	});
+	}
 }
-function removeStyles(element: HTMLElement, split_rules: string[]) {
-	split_rules.forEach((rule) => {
+function removeStyles(element: HTMLElement, split_rules: string[]) : void {
+	for(const rule of split_rules) {
 		const [key, value] = splitRuletoKeyValuePair(rule);
 		element.style.removeProperty(key);
-	});
+	}
 }

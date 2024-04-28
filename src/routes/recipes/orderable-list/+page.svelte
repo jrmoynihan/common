@@ -12,7 +12,7 @@
 	];
 	let dragTo: number;
 	let dragFrom: number;
-	let dragContent: typeof items[0];
+	let dragContent: (typeof items)[0];
 	let grabbed = false;
 
 	function draggingOver(i: number) {
@@ -44,22 +44,25 @@
 		{@const up = dragFrom > dragTo}
 		{@const down = dragFrom < dragTo}
 		<div
-			class="item-container"
 			animate:flip={{ duration: (d) => Math.sqrt(d) * 60 }}
-			transition:fly|local={{ y: -100, duration: 300 }}
+			transition:fly={{ y: -100, duration: 300 }}
+			class="item-container"
+			role="listitem"
+			aria-roledescription="draggable item"
 			class:dragging={grabbed && i === dragFrom}
 			class:targetedDown={grabbed && isDropTarget && down}
 			class:targetedUp={grabbed && isDropTarget && up}
 			draggable={grabbed}
-			on:mouseover={() => draggingStart(i)}
-			on:focus={() => draggingStart(i)}
+			aria-grabbed={grabbed}
+			onmouseover={() => draggingStart(i)}
+			onfocus={() => draggingStart(i)}
 			on:dragover|preventDefault={() => draggingOver(i)}
 			on:drop|preventDefault={() => dropped(dragContent, dragTo, dragFrom)}
 		>
 			{item.name}
-			<span class="drag-anchor">
+			<div class="right">
 				<DragAnchor bind:grabbed />
-			</span>
+			</div>
 		</div>
 	{/each}
 </div>
@@ -84,7 +87,7 @@
 		border-radius: 1rem;
 		padding: 1rem 3rem;
 	}
-	.drag-anchor {
+	.right {
 		display: flex;
 		position: absolute;
 		right: 0;

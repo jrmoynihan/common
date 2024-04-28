@@ -1,5 +1,22 @@
 <script lang="ts">
-	import NavigationTransitionExample from './NavigationTransitionExample.svelte.md';
+	import BreadcrumbRunes from '$navigation/BreadcrumbRunes.svelte';
+
+	let crumbs = {
+		FPS: {},
+		RPG: {
+			AAA: {},
+			indie: {
+				new: {},
+				'on sale': {},
+				'under 5': {}
+			},
+			'self published': {}
+		},
+		brawler: {},
+		'dungeon crawler': {},
+		sports: {},
+		puzzle: {}
+	};
 </script>
 
 <section>
@@ -9,7 +26,8 @@
 		nest multiple navigations), and a transition to trigger when moving between its child pages.
 		(Hint: it's used on this page and throughout the site!)
 	</p>
-	<NavigationTransitionExample />
+	<BreadcrumbRunes {crumbs} />
+	<!-- <NavigationTransitionExample /> -->
 </section>
 
 <style lang="scss">

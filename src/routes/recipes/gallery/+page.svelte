@@ -1,28 +1,61 @@
+<!--TODO: Try page-transitions instead with shallow routing -->
 <script lang="ts">
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
+	import Dialog from '$wrappers/Dialog.svelte';
 	import { flip } from 'svelte/animate';
 	import { crossfade } from 'svelte/transition';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	let { data } : { data: PageData } = $props();
+
+	type Image = (typeof images)[0];
 	const { images } = data;
 	const [send, receive] = crossfade({ duration: 500 });
-	let image_id: string | null = null;
-	let dialog: HTMLDialogElement;
-	let use_full_size = false;
 
-	function closeImage() {
-		image_id = null;
-		// Delay the closing of the dialog until the crossfade duration (default: 800ms) finishes
-		setTimeout(() => {
-			dialog.close();
-		}, 300);
+	let selected_image: Image | null = $state(null);
+	let use_full_size = $state(false);
+	let dialog: Dialog | undefined = $state();
+
+	function showImage(image: Image) {
+		selected_image = image;
+		dialog?.open();
 	}
-	function showImage(uuid: string) {
-		image_id = uuid;
-		dialog.showModal();
+	function next() {
+		if (selected_image) {
+			const index = images.findIndex((image) => image.uuid === selected_image?.uuid);
+			if (index < images.length - 1) {
+				showImage(images[index + 1]);
+			} else {
+				showImage(images[0]);
+			}
+		}
+	}
+
+	function previous() {
+		if (selected_image) {
+			const index = images.findIndex((image) => image.uuid === selected_image?.uuid);
+			if (index > 0) {
+				showImage(images[index - 1]);
+			} else {
+				showImage(images[images.length - 1]);
+			}
+		}
 	}
 </script>
+
+{#snippet img({ alt, src, width = '100%', height = 'auto', classes })}
+	<img class={classes} {alt} {src} {width} {height} />
+{/snippet}
+
+<svelte:window
+	on:keydown={(e) => {
+		if (e.key === 'ArrowRight') {
+			next();
+		} else if (e.key === 'ArrowLeft') {
+			previous();
+		}
+	}}
+/>
 
 <section>
 	<h2>Gallery</h2>
@@ -31,57 +64,52 @@
 		<ToggleSwitch bind:checked={use_full_size} />
 	</label>
 	<div class="gallery">
-		{#each images?.filter((image) => image.uuid !== image_id) as { path, text, href, uuid } (uuid)}
-			<img
-				on:click={() => {
-					showImage(uuid);
-				}}
-				on:keydown={(e) => {
-					if (e.key === 'Escape') {
-						closeImage();
-					} else {
-						showImage(uuid);
-					}
-				}}
-				class="image"
-				alt={text}
-				src={href}
-				width="100px"
-				height="auto"
-				in:receive={{ key: uuid }}
-				out:send={{ key: uuid }}
+		{#each images?.filter((image) => image.uuid !== selected_image?.uuid) as image (image.uuid)}
+			<button
+				onclick={() => showImage(image)}
+				in:receive={{ key: image.uuid }}
+				out:send={{ key: image.uuid }}
 				animate:flip={{ duration: 500 }}
-			/>
+			>
+				{@render img({
+					path: image.path,
+					alt: image.text,
+					src: image.href,
+					width: '100px',
+					height: 'auto'
+				})}
+			</button>
 		{/each}
 	</div>
 
-	<dialog
+	<Dialog
 		bind:this={dialog}
-		on:click={() => {
-			closeImage();
-		}}
-		on:keydown={(e) => {
-			if (e.key === 'Escape') {
-				closeImage();
-			}
-		}}
+		attributes={{onclose: () => {
+			selected_image = null;
+		}}}
+		scale='none'
+		slide='both'
+		--dialog-background="transparent"
+		--dialog-overflow="auto"
+		--dialog-max-inline-size="auto"
+		--dialog-max-block-size={use_full_size ? 'auto' : '90vh'}
+		--dialog-width={use_full_size ? '100%' : 'max-content'}
+		--dialog-place-self={use_full_size ? 'auto' : 'center'}
+		--dialog-form-padding="0"
 	>
-		{#each images?.filter((image) => image.uuid === image_id) as { path, text, href, uuid } (uuid)}
-			<img
-				on:click
-				on:keydown
-				class="selected-image"
-				class:full-size={use_full_size}
-				alt={text}
-				src={href}
-				width="100%"
-				height="auto"
-				in:receive={{ key: uuid }}
-				out:send={{ key: uuid }}
-				animate:flip
-			/>
+		{#each images?.filter((image) => image.uuid === selected_image?.uuid) as { path, text, href, uuid } (uuid)}
+			<button in:receive={{ key: uuid }} out:send={{ key: uuid }} animate:flip>
+				{@render img({
+					path,
+					alt: text,
+					src: href,
+					width: use_full_size ? '100%' : 'auto',
+					height: '100%',
+					classes: use_full_size ? 'selected-image full-size' : 'selected-image'
+				})}
+			</button>
 		{/each}
-	</dialog>
+	</Dialog>
 </section>
 
 <style lang="scss">
@@ -104,31 +132,21 @@
 		grid-auto-rows: max-content;
 		grid-template-columns: 1fr;
 	}
-	dialog {
-		display: none;
-		position: fixed;
-		inset: 0;
-		width: 100vw;
-		height: calc(100vh - 1rem);
-		max-width: 100vw;
-		max-height: calc(100vh - 1rem);
-		background-color: hsla(0, 0%, 0%, 70%);
-		&[open] {
-			display: grid;
-			place-content: center;
-			place-items: center;
-		}
-		&::backdrop {
-			background-color: hsla(0, 0%, 0%, 20%);
-		}
-	}
 	.selected-image {
 		box-sizing: border-box;
-		width: auto;
-		height: 100%;
+		max-width: 85dvw;
+		max-height: 85dvh;
 		&.full-size {
-			width: 100%;
-			height: auto;
+			max-width: 100%;
+			max-height: unset;
 		}
+	}
+	button {
+		appearance: none;
+		background-color: transparent;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		outline: none;
 	}
 </style>

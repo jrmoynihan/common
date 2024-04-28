@@ -40,12 +40,11 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 -->
 
 <script lang="ts">
-	import { onMount } from 'svelte';
-
+	
 	type Theme = 'light' | 'dark';
 	const storage_key = 'theme-preference';
 
-	let toggle_button: HTMLButtonElement | null;
+	let toggle_button: HTMLButtonElement | null = $state(null);
 	let theme: Theme = 'light';
 
 	function get_color_preference(): Theme {
@@ -72,9 +71,8 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 		toggle_button?.setAttribute('aria-label', theme);
 	}
 
-	// set early so no page flashes / CSS is made aware
-	// TODO: Convert to Svelte 5 $effect rune
-	onMount(() => {
+	// Set early so no page flashes / CSS is made aware
+	$effect(() => {
 		window
 			.matchMedia('(prefers-color-scheme: dark)')
 			.addEventListener('change', ({ matches: isDark }) => {
@@ -114,7 +112,7 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 	</svg>
 </button>
 
-<style>
+<style lang="scss">
 	/* Easings Source: 
 	'https://unpkg.com/open-props/easings.min.css';
 	*/
@@ -140,14 +138,8 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 		cursor: pointer;
 		touch-action: manipulation;
 		-webkit-tap-highlight-color: transparent;
-
 		outline-offset: 5px;
 
-		& > svg {
-			inline-size: 100%;
-			block-size: 100%;
-			stroke-linecap: round;
-		}
 		&:is(:hover, :focus-visible) {
 			& .sun-and-moon {
 				fill: var(--icon-fill-hover);
@@ -157,12 +149,17 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 			}
 		}
 
+		/* Large size on touch-only interfaces */
 		@media (hover: none) {
 			--size: 48px;
 		}
 	}
+	:global([data-theme='light']) {
+		color-scheme: light;
+	}
 
 	:global([data-theme='dark']) {
+		color-scheme: dark;
 		& .color-scheme-toggle {
 			--icon-fill: hsl(210 10% 70%);
 			--icon-fill-hover: hsl(210 15% 90%);
@@ -193,6 +190,9 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 	}
 
 	.sun-and-moon {
+		inline-size: 100%;
+		block-size: 100%;
+		stroke-linecap: round;
 		& > :is(.moon, .sun, .sun-beams) {
 			transform-origin: center center;
 		}

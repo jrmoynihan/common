@@ -1,27 +1,84 @@
 <script lang="ts">
-	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
-	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
-	import Transition from '$wrappers/Transition.svelte';
+	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
 	import { Fa } from '@jrmoynihan/svelte-fa';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import { cubicInOut } from 'svelte/easing';
-	import { slide } from 'svelte/transition';
+	import TransitionRunes from './Transition_Runes.svelte';
 
-	export let summary_text: string = '';
-	export let expand_icon_position: 'left' | 'right' | 'none' = 'right';
-	export let custom_expand_icon: IconDefinition | null = null;
-	export let icon_class: string = 'fa-CaretDown';
-	export let custom_summary_styles: string = '';
-	export let custom_accordion_container_styles: string = '';
-	export let open = false;
-	export let transition: SvelteTransition = slide;
-	export let transition_parameters: SvelteTransitionParams = { duration: 300, easing: cubicInOut };
-	export let closed_icon_rotation = 90; // in degrees
-	export let open_icon_rotation = -90; // in degrees
-	export let summary_tooltip_parameters: TooltipParameters = { disabled: true };
 
 	export const toggle = () => (open = !open);
+
+	type AccordionProps = {
+		/** A snippet to provide a custom summary section instead of just passing the `summary_text`. */
+		summary?: Snippet,
+		/** A snippet to provide content within the accordion. */
+		content?: Snippet,
+		/** The parameters of the transition. */
+		transition_props?: ComponentProps<TransitionRunes>,
+		/** The position of the expand icon. */
+		expand_icon_position?: 'left' | 'right' | 'none',
+		/** A custom expand icon. */
+		custom_expand_icon?: IconDefinition,
+		/** Classes to apply to the expand icon. */
+		icon_class?: string,
+		/** Custom styles to apply to the summary. */
+		custom_summary_styles?: string
+		/** Custom styles to apply to the accordion container. */
+		custom_accordion_container_styles?: string
+		/** The open state of the accordion. */
+		open?: boolean
+		/** The rotation of the open icon. */
+		closed_icon_rotation?: number
+		/** The rotation of the closed icon. */
+		open_icon_rotation?: number
+		/** The parameters of the tooltip. */
+		summary_tooltip_parameters?: TooltipProps,
+		/** The text of the summary. */
+		summary_text?: string
+	}
+	let {
+		summary,
+		content,
+		transition_props = {
+			slide_transition_parameters: { duration: 300, easing: cubicInOut },
+		},
+		expand_icon_position = 'right',
+		custom_expand_icon,
+		icon_class = 'fa-CaretDown',
+		custom_summary_styles,
+		custom_accordion_container_styles,
+		open = false,
+		closed_icon_rotation = 90,
+		open_icon_rotation = -90,
+		summary_tooltip_parameters = {
+			disabled: true
+		},
+		summary_text
+	} : AccordionProps = $props()
 </script>
+
+{#snippet icon(custom_expand_icon)}
+	<Fa
+	icon={custom_expand_icon}
+	class={icon_class}
+	rotate={open ? open_icon_rotation : closed_icon_rotation}
+	/>
+{/snippet}
+
+{#snippet default_expand_icon()}
+	<svg
+	style="tran"
+	width="20"
+	height="20"
+	fill="none"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+	stroke-width="2"
+	viewBox="0 0 24 24"
+	stroke="currentColor"><path d="M9 5l7 7-7 7" /></svg
+	>
+{/snippet}
 
 <div
 	class="accordion-container"
@@ -30,63 +87,37 @@
 	style:--icon-open-rotation={`${open_icon_rotation}deg`}
 >
 	<button
-		on:click={toggle}
+		onclick={toggle}
 		use:tooltip={summary_tooltip_parameters}
 		class:left-icon={expand_icon_position === 'left'}
 		class:right-icon={expand_icon_position === 'right'}
 		class:no-icon={expand_icon_position === 'none'}
 		aria-expanded={open}
-		tabindex="0"
 		style={custom_summary_styles}
 	>
 		{#if custom_expand_icon && expand_icon_position === 'left'}
-			<Fa
-				icon={custom_expand_icon}
-				class={icon_class}
-				rotate={open ? open_icon_rotation : closed_icon_rotation}
-			/>
+			{@render icon(custom_expand_icon)}
 		{:else if expand_icon_position === 'left'}
-			<svg
-				style="tran"
-				width="20"
-				height="20"
-				fill="none"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				viewBox="0 0 24 24"
-				stroke="currentColor"><path d="M9 5l7 7-7 7" /></svg
-			>
+			{@render default_expand_icon()}
 		{/if}
-		{#if summary_text !== ''}
+		
+		{#if summary}
+			{@render summary()}
+		{:else if summary_text}
 			{summary_text}
 		{/if}
-		<slot name="summary" />
+		
 		{#if custom_expand_icon && expand_icon_position === 'right'}
-			<Fa
-				icon={custom_expand_icon}
-				class={icon_class}
-				rotate={open ? open_icon_rotation : closed_icon_rotation}
-			/>
+			{@render icon(custom_expand_icon)}
 		{:else if expand_icon_position === 'right'}
-			<svg
-				style="tran"
-				width="20"
-				height="20"
-				fill="none"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				viewBox="0 0 24 24"
-				stroke="currentColor"><path d="M9 5l7 7-7 7" /></svg
-			>
+			{@render default_expand_icon()}
 		{/if}
 	</button>
-	{#if open}
-		<Transition bind:refresh={open} {transition} {transition_parameters}>
-			<slot name="content" />
-		</Transition>
-	{/if}
+	<TransitionRunes bind:trigger={open} {...transition_props} >
+		{#if content && open}
+			{@render content()}
+		{/if}
+	</TransitionRunes>
 </div>
 
 <style lang="scss">

@@ -1,35 +1,42 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
-	import { makeNavLinks, shouldLayoutTransitionOnNavigation } from '$navigation/nav-functions.js';
 	import Navigation from '$navigation/Navigation.svelte';
-	import Transition from '$wrappers/Transition.svelte';
-	import { fly } from 'svelte/transition';
+	import { shouldLayoutTransitionOnNavigation } from '$navigation/nav-functions.js';
+	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
+	import type { Snippet } from 'svelte';
+	import type { LayoutData } from '../$types';
 
-	let refresh = false;
-	const parent_path = 'wrappers';
-	const paths: string[] = ['transition', 'accordion', 'modal', 'tabs'];
+	let { data, children }: { data: LayoutData, children: Snippet } = $props();
+	let trigger = $state(false);
 
 	beforeNavigate(async (nav) => {
+		const layout_parent_path = 'wrappers';
 		const { from, to } = nav;
-		if (from && to && (await shouldLayoutTransitionOnNavigation(from, to, parent_path)))
-			refresh = !refresh;
+		if (
+			from &&
+			to &&
+			(await shouldLayoutTransitionOnNavigation({
+				from,
+				to,
+				layout_parent_path
+			}))
+		)
+			trigger = !trigger;
 	});
 </script>
 
 <section>
-	{#await makeNavLinks({ paths, parent_path }) then nav_links}
-		<Navigation {nav_links} nav_link_styles={`color: white`} />
-	{/await}
+	<Navigation
+		links={data.nav_links}
+		link_current_page_styles="color: white"
+		dynamic_link_styles={{ styles: `color: white` }}
+	/>
 
-	<Transition
-		bind:refresh
-		in_transition={fly}
-		out_transition={fly}
-		in_transition_parameters={{ duration: 250, delay: 300, x: -100 }}
-		out_transition_parameters={{ duration: 300, x: 100 }}
-	>
-		<slot />
-	</Transition>
+	<TransitionRunes bind:trigger>
+		{#if children}
+			{@render children()}
+		{/if}
+	</TransitionRunes>
 </section>
 
 <style lang="scss">

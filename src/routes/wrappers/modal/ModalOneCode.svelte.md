@@ -1,13 +1,14 @@
 ```svelte example Wrapper="./ModalExample.svelte"
 <script lang="ts">
 	import Button from '$buttons/Button.svelte';
-	import Modal from '$wrappers/Modal.svelte';
+	import ModalRunes from '$wrappers/ModalRunes.svelte';
 
-	let open: () => Promise<void>;
+	let open_modal: () => Promise<void>;
 </script>
 
-<Button on:click={() => open()}>Toggle the default <b>scale</b> modal!</Button>
-<Modal bind:open>
-	<p slot="modal-content">Hello!</p>
+<!-- <Button on:click={() => open_modal()}>Toggle the default <b>scale</b> modal!</Button> -->
+<button onclick={() => open_modal()}>Toggle the default <b>scale</b> modal!</button>
+<ModalRunes bind:open_modal>
+	<p>Hello!</p>
 </Modal>
 ```

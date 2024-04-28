@@ -1,33 +1,28 @@
-import { arrayFromNumber } from '$functions/helpers.js';
-import { error, type LoadEvent } from '@sveltejs/kit';
+import type { PageLoadEvent } from "./$types";
 
-export function load(event: LoadEvent): { links: { path: string; text: string; href: string }[] } {
+export function load(event: PageLoadEvent): {
+	links: { path: string; text: string; href: string }[];
+} {
 	const seeds = [
-		'?anime,cosplay',
-		'coffee',
-		'cat',
-		'technology',
-		'science',
-		'football',
-		'global',
-		'modern',
-		'beautiful',
-		'dream'
+		"?anime,cosplay",
+		"coffee",
+		"cat",
+		"technology",
+		"science",
+		"football",
+		"global",
+		"modern",
+		"beautiful",
+		"dream",
 	];
-	const number_of_links = 10;
-	const links: { path: string; text: string; href: string }[] = arrayFromNumber(
-		number_of_links,
-		(_, i: number) => {
-			return {
-				path: `route-${i}`,
-				text: 'random',
-				href: `https://source.unsplash.com/random?${seeds[i]}`
-			};
-		}
-	);
-	if (links) {
-		return { links };
-	} else {
-		throw error(404, 'Not found.');
-	}
+	const links: { path: string; text: string; href: string }[] = Array.from({
+		length: 10,
+	}).map((_, i: number) => {
+		return {
+			path: `route-${i}`,
+			text: "random",
+			href: `https://source.unsplash.com/random?${seeds[i]}`,
+		};
+	});
+	return { links };
 }

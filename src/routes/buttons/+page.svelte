@@ -1,159 +1,85 @@
 <script lang="ts">
-	import Button from '$buttons/Button.svelte';
-	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import { arrayFromNumber, delay } from '$functions/helpers.js';
-	import { checkeredFlag, Log } from '$functions/logging.js';
-	// import { realShadow } from '../styles/shadow.js';
-	import { tutorial } from '$actions/general.js';
-	import type { TooltipDirections } from '$actions/tooltip/tooltip.js';
-	import { defaultToast } from '$toasts/toasts.js';
-	import { onMount } from 'svelte';
+import type { TooltipDirections } from "$actions/tooltip/tooltip.svelte.js";
+import ButtonRunes from "$buttons/Button_Runes.svelte";
+import ToggleSwitch from "$buttons/ToggleSwitch.svelte";
+import { delay } from "$functions/helpers.svelte.js";
+import { Log, checkeredFlag } from "$functions/logging.js";
+import { defaultToast } from "$toasts/toasts.js";
 
-	let position: TooltipDirections = 'top';
-	let keep_visible: boolean = false;
-	// let shadows = realShadow({
-	// 	hsl: '0deg 100% 100%',
-	// 	elevation: 'high',
-	// 	horizontal_distance: -1,
-	// 	vertical_distance: 0
-	// });
-	let gradient_direction: TooltipDirections = 'bottom';
+let position: TooltipDirections = $state("top");
+let keep_visible: boolean = $state(false);
 
-	async function testToastUpdate() {
-		const id = await defaultToast({ duration: 5_000 });
-		await updateToasts(id);
-		await defaultToast({ id, msg: 'finished', progress: 0 });
+async function testToastUpdate() {
+	const id = await defaultToast({ duration: 5_000 });
+	await updateToasts(id);
+	await defaultToast({ id, msg: "finished", progress: 0 });
+}
+
+async function updateToast(id: number, i: number) {
+	await defaultToast({ id, msg: `updating ${i}`, next: i / 10 });
+}
+async function updateToasts(id: number) {
+	for (const i of Array.from({ length: 10 }) as number[]) {
+		await delay(1000);
+		await updateToast(id, i);
 	}
+}
 
-	async function updateToast(id: number, i: number) {
-		console.log('updating toast', id, i);
-		await defaultToast({ id, msg: `updating ${i}`, next: i / 10 });
-	}
-	async function updateToasts(id: number) {
-		for (const i of arrayFromNumber(10)) {
-			await delay(1000);
-			await updateToast(id, i);
-		}
-	}
+let gradient_direction: TooltipDirections = $state("bottom");
 
-	$: {
-		switch (position) {
-			case 'top':
-				gradient_direction = 'bottom';
-				break;
-			case 'bottom':
-				gradient_direction = 'top';
-				break;
-			case 'left':
-				gradient_direction = 'right';
-				break;
-			case 'right':
-				gradient_direction = 'left';
-				break;
-		}
+$effect(() => {
+	switch (position) {
+		case "top":
+			gradient_direction = "bottom";
+		case "bottom":
+			gradient_direction = "top";
+		case "left":
+			gradient_direction = "right";
+		case "right":
+			gradient_direction = "left";
+		default:
+			gradient_direction = "bottom";
 	}
-	let step = 0;
-	let heading_three: HTMLHeadingElement;
-	let high_button: HTMLDivElement;
+});
 
-	onMount(() => {
-		setTimeout(() => {
-			step++;
-		}, 1_000);
-	});
+let step = $state(0);
+let heading_three: HTMLHeadingElement | undefined = $state(undefined);
+let high_button: HTMLButtonElement | undefined = $state(undefined);
 </script>
 
-step: {step}
 <section class="buttons">
-	<div class="directions">
-		<h3
-			use:tutorial={{
-				tooltip: {
-					visible: step === 1,
-					title: `Cool spotlight, right?`,
-					position,
-					disabled: step !== 1,
-					delay: 500,
-					steps: [
-						{
-							node: heading_three,
-							title: 'This is a heading',
-							position,
-							disabled: step !== 1
-						},
-						{
-							node: high_button,
-							title: 'This is a button',
-							position,
-							disabled: step !== 1
-						}
-					]
-				},
-				spotlight: {
-					shape: 'circle',
-					padding: 40,
-					visible: step === 1,
-					duration: 1000,
-					steps: [
-						{
-							node: heading_three,
-							shape: 'circle',
-							opacity: 0.5,
-							padding: 10,
-							onClose: () => {
-								defaultToast({ msg: 'moving on...', duration: 1_000 });
-								step++;
-							}
-						},
-						{
-							node: high_button,
-							shape: 'ellipse',
-							color: 'hsl(5, 70%, 20%)',
-							opacity: 0.55,
-							padding: 60,
-							onClose: () => {
-								defaultToast({ msg: 'closing', duration: 1_000 });
-								step++;
-							}
-						}
-					]
-				}
-			}}
-			style=" grid-column: span 2; place-self: center; width: max-content"
-		>
-			Tooltip Direction
-		</h3>
-		{#each ['top', 'right', 'bottom', 'left'] as direction}
-			<label for={direction}>
-				{direction}
-			</label>
-			<input id={direction} type="radio" bind:group={position} value={direction} />
-		{/each}
-	</div>
-	<Button
-		on:click={() => {
+	{#snippet tooltip_one()}
+		Click me!
+	{/snippet}
+	<ButtonRunes
+	attributes={{
+		onclick: () => {
 			step++;
 			Log({
 				msg: 'clicking with the low elevation button?',
 				title: 'HEY YOU CLICKED ME!',
 				icon: checkeredFlag
-			});
-		}}
-		text="I'm a button with low elevation"
-		styles={`--shadow-color: 350deg 50% 70%;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}
-		box_shadow_elevation="low"
-		tooltip_options={{ position, title: 'Click me!', keep_visible }}
-	/>
-	<Button
-		on:click={() => testToastUpdate()}
-		text="I'm a button with medium elevation"
-		styles={`--shadow-color: 350deg 50% 70%;background-color: ${
+			})
+		}
+	}}
+		dynamic_styles={{styles: `;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}}
+		tooltip_options={{ position, content: tooltip_one, keep_visible }}
+		--shadow-color={'350deg 50% 70%'}
+	>
+		I'm a button with low elevation
+	</ButtonRunes>
+	<ButtonRunes
+	attributes={{
+		onclick: testToastUpdate
+	}}
+		dynamic_styles={{styles: `--shadow-color: 350deg 50% 70%;background-color: ${
 			position === 'top' ? 'hsla(195, 10%, 60%, 20%)' : `green`
-		};`}
-		box_shadow_elevation="medium"
-		tooltip_options={{ position, title: 'Click me!', keep_visible }}
-	/>
-	<div bind:this={high_button}>
+		};`}}
+		tooltip_options={{ position, content: tooltip_one, keep_visible }}
+	>
+		I'm a button with medium elevation
+	</ButtonRunes>
+	<!-- <div bind:this={high_button}>
 		<Button
 			on:click={() => {
 				keep_visible = !keep_visible;
@@ -164,56 +90,84 @@ step: {step}
 			styles={'--button-hover-background: linear-gradient(to bottom left, hsla(350, 100%, 50%, 80%), hsl(33, 100%, 55%),  hsla(350, 100%, 50%, 80%)); --shadow-color: 350deg 50% 70%; '}
 			tooltip_options={{
 				position,
-				title: 'Click me!',
+				content: tooltip_one,
 				keep_visible
 			}}
 		/>
-	</div>
+	</div> -->
+	<ButtonRunes
+		bind:button={high_button}
+		classes='orange'
+		attributes={{ onclick: () => keep_visible = !keep_visible, unselectable: 'on' }}>
+		I'm a button with high elevation!!
+	</ButtonRunes>
 
 	<ToggleSwitch
 		bind:checked={keep_visible}
-		on:toggle={(e) => console.log(e.detail.checked)}
 		label_text={`I'm a toggle switch!`}
 		button_props={{
-			styles:
-				'display: grid; transition: color 400ms ease; gap: 1rem; grid-auto-flow: column; --toggle-button-background: hsla(0,70%, 50%, 30%); padding: 1rem;',
+			dynamic_styles: {
+				styles:
+				'display: grid; transition: color 400ms ease; gap: 1rem; grid-auto-flow: column; padding: 1rem;',
 			hover_styles: 'background-color: green;'
+			}
 		}}
+		--toggle-button-background={`hsla(0,70%, 50%, 30%)`}
 		label_hover_styles={'color: yellow;'}
 	/>
-	<Button hover_styles={'box-shadow: 0 0 10px yellow'} />
-	<h3 bind:this={heading_three} style:opacity={step <= 2 ? 1 : 0}>
-		<!-- use:tutorial={{
-			tooltip: { visible: step === 2, title: 'It really is!', position, disabled: step !== 2 },
-			spotlight: {
-				visible: step === 2,
+	<ButtonRunes dynamic_styles={{hover_styles: 'box-shadow: 0 0 10px yellow'}} />
+	<h3 
+	class="orange"
+	bind:this={heading_three}
+	style:opacity={step <= 2 ? 1 : 0}
+	>
+	<!-- use:spotlight={{
+		shape: 'circle',
+		padding: 0,
+		duration: 1000,
+		delay: 1000,
+		steps: [
+			{
+				node: heading_three,
+				opacity: 0.5,
+				padding: 0,
 				shape: 'ellipse',
-				duration: 400,
-				onClose: async () => step++
-			}
-		}} -->
+			},
+			{
+				node: high_button,
+				opacity: 0.5,
+				padding: 48,
+			},
+			]
+		}
+	} -->
 		Is that enough?
 	</h3>
+	<button class="orange">
 </section>
 
-<style lang="scss">
+<style module="mixed">
 	section {
 		display: flex;
+		flex-wrap: wrap;
+    	place-content: center;
 		place-items: center;
 		margin: auto;
 		grid: auto / repeat(2, 1fr);
 		gap: 2rem;
-	}
-	.directions {
-		display: grid;
-		grid-template-columns: max-content 1fr;
-		gap: 1rem;
-		margin: 1rem;
 	}
 	label {
 		display: flex;
 		gap: 1rem;
 		place-items: center;
 		place-self: center;
+	}
+	@layer button {
+		.button.orange {
+			background-color: orange;
+		}
+	}
+	button {
+		background-color: green;
 	}
 </style>

@@ -1,47 +1,57 @@
 <script lang="ts">
-	export let id: string;
-	export let text: string;
-	export let header_type: 1 | 2 | 3 | 4 | 5 | 6 = 3;
+	import type { Snippet } from 'svelte';
+
+	let {
+		href,
+		text,
+		type = 3,
+		id = crypto?.randomUUID(),
+		children
+	}: {
+		href?: string;
+		text?: string;
+		type?: 1 | 2 | 3 | 4 | 5 | 6;
+		id?: string;
+		children?: Snippet;
+	} = $props();
 </script>
 
-<a {id}>
-	{#if header_type === 1}
+{#snippet header(type)}
+	{#if type === 1}
 		<h1>
-			{text}
-			<slot />
+			{@render content()}
 		</h1>
-	{/if}
-	{#if header_type === 2}
+	{:else if type === 2}
 		<h2>
-			{text}
-			<slot />
+			{@render content()}
 		</h2>
-	{/if}
-	{#if header_type === 3}
+	{:else if type === 3}
 		<h3>
-			{text}
-			<slot />
+			{@render content()}
 		</h3>
-	{/if}
-	{#if header_type === 4}
+	{:else if type === 4}
 		<h4>
-			{text}
-			<slot />
+			{@render content()}
 		</h4>
-	{/if}
-	{#if header_type === 5}
+	{:else if type === 5}
 		<h5>
-			{text}
-			<slot />
+			{@render content()}
 		</h5>
-	{/if}
-	{#if header_type === 6}
+	{:else if type === 6}
 		<h6>
-			{text}
-			<slot />
+			{@render content()}
 		</h6>
 	{/if}
-</a>
+{/snippet}
 
-<style lang="scss">
-</style>
+{#snippet content()}
+	{#if children}
+		{@render children()}
+	{:else if text}
+		{text}
+	{/if}
+{/snippet}
+
+<a {id} {href}>
+	{@render header(type)}
+</a>

@@ -1,123 +1,116 @@
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.js';
-	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.js';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
+	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from '@jrmoynihan/svelte-fa';
-	import { createEventDispatcher, type ComponentProps } from 'svelte';
-	import {
-		fly,
-		type BlurParams,
-		type FadeParams,
-		type FlyParams,
-		type ScaleParams,
-		type SlideParams
-	} from 'svelte/transition';
+	import { type ComponentProps, type Snippet } from 'svelte';
+	import type { HTMLInputAttributes } from 'svelte/elements';
+	import InputLabel from './InputLabel.svelte';
 	import Placeholder from './Placeholder.svelte';
 
-	export let numeric_input: HTMLInputElement | null = null;
-	export let value: string | number | string[] | null = 0;
-	export let min: string | number = 0;
-	export let max: string | number = Infinity;
-	export let step: number | null = 1;
-	export let placeholder: string = '';
-	export let name: string = '';
-	export let title: string = '';
-	export let id: string = '';
-	export let invalid_msg: string = '';
-	export let required = false;
-	export let is_valid: boolean = true;
-	export let show_spinner_buttons = true;
-	export let tooltip_options: TooltipParameters | null = null;
-	export let container_styles: string = '';
-	export let container_hover_styles: string = '';
-	export let container_focus_styles: string = '';
-	export let container_dynamic_styles: string = '';
-	export let input_styles: string = '';
-	export let input_hover_styles: string = '';
-	export let input_focus_styles: string = '';
-	/** Dynamically reactive styles to apply.  Invalid input styles automatically get appended to this. */
-	export let input_dynamic_stles: string = '';
-	/** Styles for when the input fails its validity test */
-	export let invalid_input_styles: string = 'color: salmon;';
-	export let pattern: string | null | undefined = null;
-	export let placeholder_props: ComponentProps<Placeholder> = {};
+	interface NumericInputProps {
+		numeric_input?: HTMLInputElement | null;
+		value?: string | number | string[] | null;
+		label_element?: HTMLLabelElement;
+		invalid_msg?: string;
+		show_spinner_buttons?: boolean;
+		tooltip_options?: TooltipProps | null;
+		container_styles?: DynamicStyleParameters;
+		input_styles?: DynamicStyleParameters;
+		placeholder_props?: ComponentProps<Placeholder>;
+		input_attributes?: HTMLInputAttributes;
+		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
+		label_props?: ComponentProps<InputLabel>;
+		/** A spinner button Snippet for both up and down buttons*/
+		spinner_button?: Snippet;
+		/** A spinner button Snippet for the up button */
+		up_spinner_button?: Snippet;
+		/** A spinner button Snippet for the down button */
+		down_spinner_button?: Snippet;
+	}
 	// TODO: add a prop for a custom validity function?
 	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
 
-	export let svelteTransition = fly;
-	export let transitionParams: FlyParams | FadeParams | SlideParams | ScaleParams | BlurParams = {
-		duration: 0
-	};
-	const dispatch = createEventDispatcher();
-	async function changed(value: string) {
-		dispatch('change', value);
-	}
-	$: {
-		value;
-		is_valid = numeric_input?.checkValidity() ?? true;
-	}
+
+	let {
+		value = $bindable(0),
+		numeric_input = $bindable(),
+		label_element = $bindable(),
+		input_attributes,
+		show_spinner_buttons = true,
+		tooltip_options = null,
+		container_styles,
+		input_styles,
+		placeholder_props,
+		label_props,
+		spinner_button,
+		up_spinner_button,
+		down_spinner_button
+	} : NumericInputProps = $props();
+
+	export const is_valid = $derived(numeric_input?.checkValidity() ?? true);
+	
 </script>
 
-<div
-	use:tooltip={tooltip_options ? { ...tooltip_options } : { disabled: true, visible: false }}
-	use:dynamicStyle={{
-		styles: container_styles,
-		hover_styles: container_hover_styles,
-		focus_styles: container_focus_styles,
-		dynamic_styles: container_dynamic_styles
-	}}
-	title={title ? title : placeholder}
-	class="numeric-input-container"
-	class:show-spinner-buttons={show_spinner_buttons}
-	transition:svelteTransition={transitionParams}
+{#snippet default_spinner_button({classes, icon, size, callback})}
+<button
+	class="spinner {classes}"
+	onclick={callback}
 >
-	<Placeholder {...placeholder_props} />
-	<input
-		use:dynamicStyle={{
-			styles: input_styles,
-			hover_styles: input_hover_styles,
-			focus_styles: input_focus_styles,
-			dynamic_styles: `${input_dynamic_stles}; ${is_valid ? '' : invalid_input_styles}`
-		}}
-		bind:this={numeric_input}
-		type="number"
-		inputmode="numeric"
-		{id}
-		{name}
-		{placeholder}
-		{step}
-		{min}
-		{max}
-		{pattern}
-		{required}
-		bind:value
-		on:change={async (e) => changed(e.currentTarget.value)}
-	/>
-	{#if show_spinner_buttons}
-		{@const max_num = Number(max)}
-		{@const min_num = Number(min)}
-		<button
-			class="plus spinner"
-			on:click={() => {
-				if (Number(value) + Number(step) <= max_num) {
-					value = Number(value) + Number(step);
-				}
-			}}
-		>
-			<Fa icon={faCaretUp} size={'xs'} />
-		</button>
-		<button
-			class="minus spinner"
-			on:click={() => {
-				if (Number(value) - Number(step) >= min_num) {
-					value = Number(value) - Number(step);
-				}
-			}}
-		>
-			<Fa icon={faCaretDown} size={'xs'} />
-		</button>
-	{/if}
-</div>
+	<Fa {icon} {size} />
+</button>
+{/snippet}
+
+<InputLabel bind:label_element {...label_props} >
+	<div
+		use:tooltip={tooltip_options ? { ...tooltip_options } : { disabled: true, visible: false }}
+		use:dynamicStyle={container_styles}
+		title={input_attributes?.title ? input_attributes.title : input_attributes?.placeholder}
+		class="numeric-input-container"
+		class:show-spinner-buttons={show_spinner_buttons}
+	>
+		<Placeholder {...placeholder_props} />
+		<input
+			use:dynamicStyle={input_styles}
+			bind:this={numeric_input}
+			bind:value
+			type="number"
+			inputmode="numeric"
+			min={0}
+			max={Infinity}
+			step={1}
+			{...input_attributes}
+		/>
+		{#if show_spinner_buttons}
+			{@const max_num = Number(input_attributes?.max ?? Infinity)}
+			{@const min_num = Number(input_attributes?.min ?? 0)}
+			{@const current = Number(value)}
+			{@const step = Number(input_attributes?.step ?? 1)}
+			{#if up_spinner_button}
+				{@render up_spinner_button()}
+			{:else if spinner_button}
+				{@render spinner_button()}
+			{:else}
+				{@render default_spinner_button({classes: 'plus', icon: faCaretUp, size: 'xs', callback: () => {
+					if(current + step <= max_num) {
+						value = Number(value) + step;
+					}
+				}})}
+			{/if}
+			{#if down_spinner_button}
+				{@render down_spinner_button()}
+			{:else if spinner_button}
+				{@render spinner_button()}
+			{:else}
+				{@render default_spinner_button({classes: 'minus', icon: faCaretDown, size: 'xs', callback: () => {
+					if(current - step >= min_num) {
+						value = Number(value) - step;
+					}
+				}})}
+			{/if}
+		{/if}
+	</div>
+</InputLabel>
 
 <style lang="scss">
 	.numeric-input-container {
