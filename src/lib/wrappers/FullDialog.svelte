@@ -10,7 +10,7 @@
         button_text?: string;
         button_props?: ComponentProps<ButtonRunes>;
         button?: Snippet | null;
-        children?: Snippet;
+        children?: Snippet | null;
         header?: Snippet | null;
         footer?: Snippet | null;
         open?: () => Promise<void>;
@@ -29,19 +29,19 @@
     }
 
     let {
-        heading,
-        button_text,
-        button_props,
-        button,
-        children,
-        header,
-        footer,
+        heading = undefined,
+        button_text = undefined,
+        button_props = undefined,
+        button = null,
+        children = null,
+        header = null,
+        footer = null,
         open = () => dialog?.open(),
         close = () => dialog?.close(),
-        attributes,
+        attributes = undefined,
         mode = 'full', 
         blur = 10,
-        dialog_props
+        dialog_props = undefined
     } : FullDialogProps = $props();
     
     let dialog: Dialog;

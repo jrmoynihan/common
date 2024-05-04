@@ -8,8 +8,8 @@
     }
 
     let {
-        children,
-        dialog_props
+        children = undefined,
+        dialog_props = undefined
     } : MegaModalProps= $props();
 
 </script>
