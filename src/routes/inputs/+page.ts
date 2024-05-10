@@ -1,4 +1,5 @@
-import type { DateInputProps, SelectOptionList } from '$lib/lib_types';
+import type { SelectOptionList } from '$inputs/Select.svelte';
+import type { DateInputProps } from '$inputs/TemporalDateInput.svelte';
 import { Temporal } from '@js-temporal/polyfill';
 import type { PageLoadEvent } from './$types';
 
