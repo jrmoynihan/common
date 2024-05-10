@@ -1,19 +1,5 @@
-<script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
-	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
-	import { Fa } from '@jrmoynihan/svelte-fa';
-	import { type ComponentProps, type Snippet } from 'svelte';
-	import type {
-		EventHandler,
-		FormEventHandler,
-		HTMLInputAttributes,
-		MouseEventHandler
-	} from 'svelte/elements';
-	import Input from './Input.svelte';
-	import InputLabel from './InputLabel.svelte';
-	import Placeholder from './Placeholder.svelte';
-
-	type TextInputProps = {
+<script context="module" lang="ts">
+	export interface TextInputProps extends InputProps {
 		input_element?: HTMLInputElement;
 		value?: unknown;
 		show_confirm?: boolean;
@@ -21,21 +7,32 @@
 		allow_enter_to_confirm?: boolean;
 		dynamic_button_styles?: DynamicStyleParameters;
 		dynamic_input_styles?: DynamicStyleParameters;
-		input_attributes?: HTMLInputAttributes;
 		label_element?: HTMLLabelElement;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
 		label_props?: ComponentProps<InputLabel>;
 		placeholder_props?: ComponentProps<Placeholder>;
 		children?: Snippet;
 		/** A callback that runs when the confirm button is clicked */
-		onconfirm?: EventHandler;
+		onconfirm?: FormEventHandler<HTMLInputElement>;
 		/** A callback that runs when the cancel button is clicked */
-		oncancel?: (
-			e: FormEventHandler<HTMLInputElement>
-		) => unknown | MouseEventHandler<HTMLButtonElement>;
+		oncancel?: FormEventHandler<HTMLInputElement>;
 		/** A callback that runs when the input is changed */
-		oninput?: FormEventHandler<HTMLInputElement> | undefined | null;
+		oninput?: FormEventHandler<HTMLInputElement>;
 	};
+</script>
+
+<script lang="ts">
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
+	import { Fa } from '@jrmoynihan/svelte-fa';
+	import { type ComponentProps, type Snippet } from 'svelte';
+	import type {
+		FormEventHandler
+	} from 'svelte/elements';
+	import Input, { type InputProps } from './Input.svelte';
+	import InputLabel from './InputLabel.svelte';
+	import Placeholder from './Placeholder.svelte';
+
 	let {
 		input_element = $bindable(),
 		value = $bindable(),
@@ -44,14 +41,14 @@
 		allow_enter_to_confirm = true,
 		dynamic_button_styles,
 		dynamic_input_styles,
-		input_attributes,
 		placeholder_props = {},
 		label_element = $bindable(),
-		label_props = { placeholder_props },
+		label_props = { ...placeholder_props },
 		children,
 		onconfirm = () => input_element?.blur(),
 		oncancel = clear_input,
-		oninput
+		oninput,
+		...input_attributes
 	}: TextInputProps = $props();
 
 	function clear_input() {
@@ -94,12 +91,10 @@
 		bind:input_element
 		bind:value
 		bind:valid
-		input_attributes={{
-			onkeypress: handle_keypress,
-			oninput: handle_input,
-			type: 'text',
-			...input_attributes
-		}}
+		onkeypress={handle_keypress}
+		oninput={handle_input}
+		type={'text'}
+		{...input_attributes}
 	/>
 		{#key placeholder_props}
 			<Placeholder {...placeholder_props} />

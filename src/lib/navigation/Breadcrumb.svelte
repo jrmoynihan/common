@@ -2,7 +2,7 @@
 	import type { Snippet } from "svelte";
 
 	interface BreadcrumbProps {
-		obj: Object,
+		obj: Record<string, unknown>,
 		selected_child?: unknown,
 		selected_key?: string,
 		crumb_separator?: Snippet
@@ -55,7 +55,8 @@
 {/if}
 
 <style>
-	a, button {
+	/* a, */
+	button {
 		display: inline-flex;
 		align-items: center;
 		gap: calc(var(--nav-gap) / 4);
@@ -65,14 +66,18 @@
 		display: inline-flex;
 		align-items: center;
 		gap: calc(var(--nav-gap) / 4);
+		
+		&:last-of-type {
+            scroll-snap-align: end;
+        }
 
-		& > a {
+		/* & > a {
 			white-space: nowrap;
 
 			&[aria-current='page'] {
 				font-weight: bold;
 			}
-		}
+		} */
 	}
 
 	.crumbicon {

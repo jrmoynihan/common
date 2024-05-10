@@ -30,7 +30,7 @@
 		on_open?: () => void;
 		on_next?: () => void;
 	};
-	let { 
+	let {
 		steps,
 		padding = 0,
 		visible = false,
@@ -44,8 +44,7 @@
 		on_close = () => {},
 		on_open = () => {},
 		on_next = () => {}
-	 } = $props<ActionSpotlightProps>();
-
+	}: ActionSpotlightProps = $props();
 
 	let initial_x = 0;
 	let initial_y = 0;
@@ -66,50 +65,47 @@
 		await on_open?.();
 		visible = true;
 	}
-	
+
 	async function reposition(next_step: SpotlightStep) {
 		requestAnimationFrame(() => {
-		
-		// TODO: Make sure no other animations or transitions are running at the same time on the same node?
-		
-		const { node, delay: next_delay, duration: next_duration } = next_step; 
-		
-		// Update all the component props with the next step
-		padding = next_step.padding ?? padding;
-		delay = next_step.delay ?? delay;
-		duration = next_step.duration ?? duration;
-		opacity = next_step.opacity ?? opacity;
-		color = next_step.color ?? color;
-		soft_edge_distance = next_step.soft_edge_distance ?? soft_edge_distance;
-		shape = next_step.shape ?? shape;
-		on_close = next_step.on_close ?? on_close;
-		on_open = next_step.on_open ?? on_open;
-		on_next = next_step.on_next ?? on_next;
+			// TODO: Make sure no other animations or transitions are running at the same time on the same node?
 
-		const rect = node.getBoundingClientRect();
-		const { width, height, top, left } = rect;
-			
-	
+			const { node, delay: next_delay, duration: next_duration } = next_step;
+
+			// Update all the component props with the next step
+			padding = next_step.padding ?? padding;
+			delay = next_step.delay ?? delay;
+			duration = next_step.duration ?? duration;
+			opacity = next_step.opacity ?? opacity;
+			color = next_step.color ?? color;
+			soft_edge_distance = next_step.soft_edge_distance ?? soft_edge_distance;
+			shape = next_step.shape ?? shape;
+			on_close = next_step.on_close ?? on_close;
+			on_open = next_step.on_open ?? on_open;
+			on_next = next_step.on_next ?? on_next;
+
+			const rect = node.getBoundingClientRect();
+			const { width, height, top, left } = rect;
+
 			const half_width = width * 0.5;
 			const new_x = left - half_width - padding * 2;
 			const new_y = top - padding * 2;
 			const new_w = width + padding * 2;
 			const new_h = height + padding * 2;
-	
+
 			// Use the new settings from the next step to control the repositioning, or use the existing ones
 			const new_settings = {
 				duration,
 				delay,
 				easing: cubicOut,
 				...next_step
-			}
-	
+			};
+
 			// Update the tweened values
 			x.set(new_x, new_settings);
 			y.set(new_y, new_settings);
 			w.set(new_w, new_settings);
 			h.set(new_h, new_settings);
-	
 		});
 	}
 
@@ -123,7 +119,7 @@
 			await close();
 		}
 	}
-	
+
 	async function next() {
 		if (steps?.length > 0) {
 			await moveToNextNode();
@@ -131,11 +127,15 @@
 			await close();
 		}
 	}
-	
-	setTimeout(()=> open(), delay);
+
+	setTimeout(() => open(), delay);
 </script>
 
-<svelte:window on:keydown={(e) => {if(e.key === 'Escape') close()}} />
+<svelte:window
+	on:keydown={(e) => {
+		if (e.key === 'Escape') close();
+	}}
+/>
 {#if shape === 'square' && visible}
 	<svg transition:fade={{ duration, delay, easing: cubicOut }}>
 		<defs>
@@ -155,24 +155,27 @@
 	</svg>
 {/if}
 {#if visible}
-<button
-	transition:fade={{ duration, delay, easing: cubicOut }}
-	class="spotlight"
-	class:visible
-	class:circle={shape === 'circle'}
-	class:ellipse={shape === 'ellipse'}
-	class:square={shape === 'square'}
-	style:--left={`${$x}px`}
-	style:--top={`${$y}px`}
-	style:--width={`${$w}px`}
-	style:--height={`${$h}px`}
-	style:--duration={duration}
-	style:--padding={`${padding}px`}
-	style:--soft-edge-distance={typeof soft_edge_distance === 'string' ? soft_edge_distance : `${soft_edge_distance}px`}
-	style:--opacity={opacity}
-	style:--color={color}
-	onclick={next}
-/>
+	<button
+		transition:fade={{ duration, delay, easing: cubicOut }}
+		class="spotlight"
+		class:visible
+		class:circle={shape === 'circle'}
+		class:ellipse={shape === 'ellipse'}
+		class:square={shape === 'square'}
+		style:--left={`${$x}px`}
+		style:--top={`${$y}px`}
+		style:--width={`${$w}px`}
+		style:--height={`${$h}px`}
+		style:--duration={duration}
+		style:--padding={`${padding}px`}
+		style:--soft-edge-distance={typeof soft_edge_distance === 'string'
+			? soft_edge_distance
+			: `${soft_edge_distance}px`}
+		style:--opacity={opacity}
+		style:--color={color}
+		onclick={next}
+	>
+	</button>
 {/if}
 
 <style lang="scss">
@@ -198,12 +201,12 @@
 		width: 100vw;
 		height: 100vh;
 		opacity: 0;
-		transition: 
+		transition:
 			-webkit-mask var(--duration) ease-out,
 			mask var(--duration) ease-out,
 			opacity var(--duration) ease-out,
 			background-color var(--duration) ease-out;
-			transition-behavior: allow-discrete;
+		transition-behavior: allow-discrete;
 		-webkit-mask: var(--mask);
 		mask: var(--mask);
 
@@ -213,11 +216,7 @@
 			opacity: var(--opacity, 75%);
 
 			&.circle {
-				--mask: radial-gradient(
-					var(--circle),
-					var(--transparent-gradient),
-					var(--opaque-gradient)
-				);
+				--mask: radial-gradient(var(--circle), var(--transparent-gradient), var(--opaque-gradient));
 			}
 			&.ellipse {
 				--mask: radial-gradient(

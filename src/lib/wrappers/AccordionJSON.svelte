@@ -1,10 +1,9 @@
 <script lang="ts">
 	import type { ComponentProps } from "svelte";
-	import AccordionDetails from "./AccordionDetails.svelte";
+	import AccordionDetails, { type AccordionProps } from "./AccordionDetails.svelte";
 	import TransitionNativeRunes from "./TransitionNative_Runes.svelte";
 
-
-    interface AccordionJsonProps {
+    interface AccordionJsonProps extends AccordionProps {
         value: unknown,
         key?: string,
         open?: boolean,
@@ -14,8 +13,9 @@
     let {
         value,
         key,
-        open = false,
-        level = 1
+        open = $bindable(false),
+        level = 1,
+        ...accordion_details_props
     } : AccordionJsonProps = $props()
 
 	export const isValidUrl = (testString: string) => {
@@ -32,12 +32,11 @@
 			types: ["slide"],
 			slide_transition_parameters: { easing: "ease" },
 		}
-    $inspect(value);
 </script>
 
 
 	{#if value instanceof Object && Object.entries(value).length > 0}
-        <AccordionDetails --details-focus-outline={'none'} bind:open details_classes={'json'} summary_classes={'json'} {transition_props} >
+        <AccordionDetails --details-focus-outline={'none'} bind:open details_classes={'json'} summary_attributes={{class: 'json'}} {transition_props} {...accordion_details_props} >
 
             {#snippet custom_icon()}
                 {#if value instanceof Array && open}
@@ -55,22 +54,20 @@
                     <span class="key">{key}</span>
                 {/if}
             {/snippet}
-            {#snippet content()}
-                    {#if value instanceof Object}
-                        <ul>
-                            {#each Object.entries(value) as [key, v]}
-                                <li style="--level:{level}">
-                                    <svelte:self {key} value={v} level={level + 1} />
-                                </li>
-                            {/each}
-                        </ul>
-                    {/if}
-                    {#if value instanceof Array}
-                        <span class="end-bracket" style="--level:{level}">{']'}</span>
-                    {:else}
-                        <span class="end-bracket" style="--level:{level}">{String.fromCodePoint(0x007d)}</span>
-                    {/if}
-            {/snippet}
+            {#if value instanceof Object}
+                <ul>
+                    {#each Object.entries(value) as [key, v]}
+                        <li style="--level:{level}">
+                            <svelte:self {key} value={v} level={level + 1} />
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
+            {#if value instanceof Array}
+                <span class="end-bracket" style="--level:{level}">{']'}</span>
+            {:else}
+                <span class="end-bracket" style="--level:{level}">{String.fromCodePoint(0x007d)}</span>
+            {/if}
         </AccordionDetails>
 		{:else}
 		<span class="key">{key}</span>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 
 	interface PlaceholderProps {
 		text?: string;

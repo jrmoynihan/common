@@ -1,121 +1,96 @@
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.js';
-	import { type ComponentProps } from 'svelte';
-	import type { PointerEventHandler } from 'svelte/elements';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import { type ComponentProps, type Snippet } from 'svelte';
+	import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
 	import ButtonRunes from './Button_Runes.svelte';
 
-	export let checked = false;
-	export let disabled = false;
-	export let label_position: 'before' | 'after' = 'before';
-	export let label_text = '';
-	export let slider_text = '';
-	// Add override styles
-	export let scale = '1rem';
-	export let slider_styles = '';
-	export let label_styles = '';
-	export let label_hover_styles = '';
-	export let label_focus_styles = '';
-	export let label_active_styles = '';
-	/** Properties of the {@link Button} container.  This is also where you can add an icon. */
-	export let button_props: ComponentProps<ButtonRunes> = {};
-	export let bgColorHue: number | null = null; // = 246; // 207;
-	export let bgColorSaturation: number | null = null; // = 46; // 90;
-	export let bgColorLuminosity: number | null = null; // = 37; // 54;
-	export let darkenHoverPercentage: number = 20;
-	export let inactiveBgColorHue = 0;
-	export let inactiveBgColorSaturation = 0;
-	export let inactiveBgColorLuminosity = 27;
-	export let inactiveBgColor = `hsl(${inactiveBgColorHue}, ${inactiveBgColorSaturation}%, ${inactiveBgColorLuminosity}%)`;
-	export let inactiveBgColorDarken = `hsl(${inactiveBgColorHue}, ${inactiveBgColorSaturation}%, ${
-		inactiveBgColorLuminosity - darkenHoverPercentage
-	}%)`;
-	export let toggleBgColorActive =
-		bgColorHue && bgColorSaturation && bgColorLuminosity
-			? `hsl(${bgColorHue},${bgColorSaturation}%,${bgColorLuminosity}%)`
-			: null;
-	export let toggleBgColorActiveHovered =
-		bgColorHue && bgColorSaturation && bgColorLuminosity
-			? `hsl(${bgColorHue},${bgColorSaturation}%,${bgColorLuminosity - darkenHoverPercentage}%)`
-			: null;
-
-	// Create an event dispatcher object
-	// const dispatch = createEventDispatcher();
-
-	// A function when the input is clicked; dispatches/triggers the event named "toggle" to the parent component
-	function toggled(e: Event) {
-		// dispatch('toggle', { checked, e });
+	interface ToggleSwitchProps {
+		checked?: boolean;
+		disabled?: boolean;
+		label_dynamic_styles?: DynamicStyleParameters;
+		label_position?: 'before' | 'after';
+		label_text?: string;
+		slider_text?: string;
+		ontoggle?: () => void | Promise<void>;
+		input_attributes?: HTMLInputAttributes;
+		slider_attributes?: HTMLAttributes<HTMLSpanElement>;
+		/** Properties of the {@link Button} container.  This is also where you can add an icon. */
+		button_props?: ComponentProps<ButtonRunes>;
+		children?: Snippet;
 	}
-	const onpointerdown: PointerEventHandler<HTMLButtonElement> = (e) => {
+	let {
+		checked = $bindable(false),
+		disabled = false,
+		label_dynamic_styles,
+		label_position = 'before',
+		label_text,
+		slider_text,
+		ontoggle = default_on_toggle,
+		input_attributes,
+		slider_attributes,
+		button_props,
+		children
+	} : ToggleSwitchProps = $props()
+
+	function default_on_toggle() {
 		checked = !checked;
-		toggled(e);
-	};
+	}
+
 </script>
+
+{#snippet label(label_text: string)}
+	<label
+		use:dynamicStyle={label_dynamic_styles}
+		class="label-text pointer"
+		for={'toggle'}
+	>	
+		{label_text}
+	</label>
+{/snippet}
 
 <ButtonRunes
 	--button-hover-background={'var(--toggle-button-hover-background, inherit)'}
-	attributes={{
-		onpointerdown,
-		role: 'switch',
-		style: `border: 0;
+	onpointerdown={ontoggle}
+	role={'switch'}
+	style={`border: 0;
 		 	padding: 0.2rem; 
 			display: grid; 
 			gap: 0.5rem; 
-			scale: ${scale};
+			scale: 1em;
 			background-color: var(--toggle-button-background, inherit);
 			color: var(--toggle-button-color, inherit);
-			${button_props.attributes?.style}`
-	}}
-	classes={`toggle ${button_props.classes}`}
+			${button_props?.style}`}
+	classes={`toggle ${button_props?.classes}`}
 	{...button_props}
 >
-	{#if label_position === 'before' && label_text !== ''}
-		<label
-			use:dynamicStyle={{
-				styles: label_styles,
-				hover_styles: label_hover_styles,
-				focus_styles: label_focus_styles,
-				active_styles: label_active_styles
-			}}
-			class="label-text pointer"
-			for={'toggle'}
-		>
-			{label_text}
-		</label>
+	{#if label_position === 'before'}
+		{#if children}
+			{@render children()}
+		{:else if label_text}
+			{@render label(label_text)}
+		{/if}
 	{/if}
-	<span
-		class="switch"
-		style:--toggleBgColorActive={toggleBgColorActive ?? null}
-		style:--toggleBgColorActiveHovered={toggleBgColorActiveHovered ?? null}
-		style:--inactiveBgColor={inactiveBgColor ?? null}
-		style:--inactiveBgColorDarken={inactiveBgColorDarken ?? null}
-	>
+	<span class="switch">
 		<!-- NOTE: Subtle fix made by changing this to on:change event instead of on:click -->
 		<input
+			bind:checked
 			type="checkbox"
 			aria-checked={checked}
 			{disabled}
-			bind:checked
-			on:change|stopPropagation={toggled}
+			onchange={ontoggle}
+			{...input_attributes}
 		/>
-		<span class="slider round" style={slider_styles} data-slider-text={slider_text} />
+		<span class="slider round" data-slider-text={slider_text} {...slider_attributes}></span>
 	</span>
-	{#if label_position === 'after' && label_text !== ''}
-		<label
-			use:dynamicStyle={{
-				styles: label_styles,
-				hover_styles: label_hover_styles,
-				focus_styles: label_focus_styles,
-				active_styles: label_active_styles
-			}}
-			class="label-text pointer"
-			for={'toggle'}
-		>
-			{label_text}
-		</label>
+	{#if label_position === 'after'}
+		{#if children}
+			{@render children()}
+		{:else if label_text}
+			{@render label(label_text)}
+		{/if}
 	{/if}
 </ButtonRunes>
 
-<!-- </button> -->
 <style lang="scss">
 	$base-scale: var(--scale, 1rem);
 

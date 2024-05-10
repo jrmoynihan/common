@@ -1,12 +1,14 @@
 <script lang='ts'>
+	import type { HTMLAttributes } from "svelte/elements";
 	import Breadcrumb from "./Breadcrumb.svelte";
 
-	interface BreadcrumbProps {
+	interface BreadcrumbProps extends HTMLAttributes<HTMLElement> {
         crumbs: {}
     }
     
     let { 
-        crumbs
+        crumbs,
+        ...attributes
     } : BreadcrumbProps = $props();
 
 </script>
@@ -29,16 +31,15 @@
 
 
 <!-- svelte-ignore a11y-no-redundant-roles -->
-<nav role="navigation" class="breadcrumbs">
+<nav role="navigation" class="breadcrumbs" {...attributes} >
     <!--Or use SvelteFa component-->
-        <!-- <Fa icon={faVial}/> -->
     {#if Object.keys(crumbs).length > 0}
         <Breadcrumb obj={crumbs} {crumb_separator} />
     {/if}
 </nav>
 
 
-<style lang='scss'>
+<style>
     .breadcrumbs {
         --nav-gap: 2ch;
         
@@ -52,29 +53,19 @@
         scroll-padding-inline: calc(var(--nav-gap) / 2);
         flex-wrap: wrap;
     
-        & > .crumb:last-of-type {
-            scroll-snap-align: end;
-        }
-    
         @supports (-webkit-hyphens:none) { & {
             scroll-snap-type: none;
         }}   
     }
 
-    .disguised-select {
-    inline-size: 100%;
-    block-size: 100%;
-    opacity: .01;
-    font-size: min(100%, 16px); /* Defaults to 16px; fixes iOS zoom */
-    }
     @media (width <= 480px) {
-        .breadcrumbs .home-label {
+        /* .breadcrumbs .home-label {
             display: none;
-        }
+        } */
     }
     @media (prefers-reduced-motion: no-preference) {
-        .crumbicon {
+        /* .crumbicon {
             transition: box-shadow .2s ease;
-        }
+        } */
     }
 </style>

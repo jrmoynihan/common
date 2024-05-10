@@ -2,28 +2,15 @@
 Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 -->
 <script context="module">
-	interface ExtendedDialog extends HTMLDialogAttributes {
-        onopen?: () => void | Promise<void>;
-		onopening?: () => void | Promise<void>;
-        onclose?: () => void | Promise<void>;
-		onclosing?: () => void | Promise<void>;
-    }
-</script>
-
-<script lang="ts">
-	import { dialog } from '$actions/dialog/dialog';
-	import { type Snippet } from 'svelte';
-	import type { HTMLDialogAttributes } from 'svelte/elements';
-
-	// onclose?: () => void | Promise<void>;
-	// onopen?: () => void | Promise<void>;
-		
-	interface ModalProps {
-		/** Provided child content */
-		children?: Snippet;
+	interface ModalProps extends HTMLDialogAttributes{
 		/** A binding to the <dialog> element */
-		modal?: HTMLDialogElement | undefined;
-		/** What type of modal is it? */
+		dialog?: HTMLDialogElement | undefined;
+		/** The type of modal to use.  (Default: 'full')
+		
+		Full mode will provide a blurred backdrop and on small screens will be positioned at the bottom, and provide an additional slide-down animation when closing.
+
+		Mini mode will not blur the backdrop and will be positioned at the center on the screen.
+		*/
 		mode?: 'full' | 'mini';
 		/** Number of pixels to blur the ::backdrop pseudo-element background? (default: null) */
 		blur?: number | null;
@@ -35,27 +22,36 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 		slide_in_from?: 'left' | 'right' | 'top' | 'bottom';
 		/** In which direction should the dialog slide out to? */
 		slide_out_to?: 'left' | 'right' | 'top' | 'bottom';
-		/** Additional attributes to add to or access on the <dialog> element, including the added opening and closing events. */
-		attributes?: ExtendedDialog;
-	}
+		}
+	interface ExtendedDialog extends ModalProps {
+        onopen?: () => void | Promise<void>;
+		onopening?: () => void | Promise<void>;
+        onclose?: () => void | Promise<void>;
+		onclosing?: () => void | Promise<void>;
+    }
+</script>
+
+<script lang="ts">
+	import { dialog as dialog_action } from '$actions/dialog/dialog';
+	import type { HTMLDialogAttributes } from 'svelte/elements';
 
 	let { 
 		children,
-		modal,
+		dialog,
 		mode = 'full',
 		blur = null,
 		scale = 'out',
 		slide = 'in',
 		slide_in_from = 'bottom',
 		slide_out_to = 'top',
-		attributes,
-	} : ModalProps = $props();
+		...attributes
+	} : ExtendedDialog = $props();
 	
 	export const close = async () => {
-		modal?.close()
+		dialog?.close()
 	}
 	export const open = async () => {
-		modal?.showModal();
+		dialog?.showModal();
 	}
 
 </script>
@@ -64,7 +60,7 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 -->
 <dialog
-	use:dialog
+	use:dialog_action
 	class="dialog"
 	class:blur
 	class:scale-in={scale === 'in' || scale === 'both'}
@@ -78,7 +74,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 	class:slide-out-to-top={slide_out_to === 'top' && (slide === 'out' || slide === 'both')}
 	class:slide-out-to-bottom={slide_out_to === 'bottom' && (slide === 'out' || slide === 'both')}
 	data-mode={mode}
-	bind:this={modal}
+	bind:this={dialog}
 	style:--blur={typeof blur === 'number' ? `${blur}px` : `0`}
 	{...attributes}
 	>	

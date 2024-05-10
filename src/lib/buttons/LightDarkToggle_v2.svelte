@@ -40,7 +40,6 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 -->
 
 <script lang="ts">
-	
 	type Theme = 'light' | 'dark';
 	const storage_key = 'theme-preference';
 
@@ -86,7 +85,7 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 
 <button
 	bind:this={toggle_button}
-	on:click={toggle}
+	onclick={toggle}
 	class="color-scheme-toggle"
 	id="color-scheme-toggle"
 	title="Toggles light & dark"

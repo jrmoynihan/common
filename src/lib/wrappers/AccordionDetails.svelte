@@ -1,33 +1,25 @@
-<script lang="ts">
-import {
-	tooltip,
-	type TooltipProps,
-} from "$actions/tooltip/tooltip.svelte.js";
-import type { IconDefinition } from "@fortawesome/fontawesome-common-types";
-import { Fa } from "@jrmoynihan/svelte-fa";
-import type { ComponentProps, Snippet } from "svelte";
-import TransitionNativeRunes from "./TransitionNative_Runes.svelte";
+<!--
+	@component
 
-type AccordionProps = {
+	AccordionDetails
+
+	AccordionDetails is a wrapper around the `<details>` element.  It allows for the display of content in an accordion-like fashion.
+	
+-->
+
+<script context="module" lang="ts">
+	export  interface AccordionProps extends HTMLDetailsAttributes {
 	/** How many degrees to rotate the icon when closed. Defaults to 0. */
 	closed_icon_rotation?: number;
-	/** The content of the accordion within the `<details>` element. */
-	content?: Snippet;
-	/** Pass in content as children */
-	children?: Snippet;
 	/** The icon to display. */
 	icon?: IconDefinition;
 	/** A custom icon snippet. */
 	custom_icon?: Snippet;
-	/** Custom styles for the `<summary>` element. */
-	summary_styles?: string;
-	/** Custom classes for the `<summary>` element. */
-	summary_classes?: string;
+	/** Attributes for the `<summary>` element. */
+	summary_attributes?: HTMLAttributes<HTMLElement>;
 	/** Text to display within the `<summary>` element. */
 	summary_text?: string;
-	/** Custom styles for the `<details>` element. */
-	details_styles?: string;
-	/** Classes to apply to the <details> element. */
+	/** Classes to apply to the `<details>` element. */
 	details_classes?: string;
 	/** The position of the expand icon. Defaults to `right`. */
 	expand_icon_position?: "left" | "right" | "none";
@@ -53,13 +45,24 @@ type AccordionProps = {
 	/** If only details in a group should open at a time, set a name for the group */
 	group_name?: string;
 };
+</script>
+
+<script lang="ts">
+import {
+	tooltip,
+	type TooltipProps,
+} from "$actions/tooltip/tooltip.svelte.js";
+import type { IconDefinition } from "@fortawesome/fontawesome-common-types";
+import { Fa } from "@jrmoynihan/svelte-fa";
+import type { ComponentProps, Snippet } from "svelte";
+import type { HTMLAttributes, HTMLDetailsAttributes } from "svelte/elements";
+import TransitionNativeRunes from "./TransitionNative_Runes.svelte";
+
 let {
 	closed_icon_rotation = 0,
-	content,
 	children,
-	icon: fa_icon,
+	icon,
 	custom_icon,
-	details_styles = "",
 	details_classes = "",
 	expand_icon_position = "right",
 	icon_class = "fa-CaretDown",
@@ -67,8 +70,8 @@ let {
 	max_height_open = "110%",
 	open = $bindable(false),
 	open_icon_rotation = 90,
-	summary_styles,
-	summary_classes,
+	summary_attributes: summary_styles,
+	summary_attributes,
 	summary_text,
 	summary_content,
 	transition_props = {
@@ -78,10 +81,11 @@ let {
 		disabled: true,
 	},
 	group_name,
+	...details_attributes
 } : AccordionProps = $props();
 
 const id = crypto.randomUUID();
-let toggle: HTMLInputElement | undefined = $state(undefined);
+let toggle: HTMLInputElement | undefined = $state();
 let transition: TransitionNativeRunes | undefined = $state();
 
 function toggle_accordion() {
@@ -136,23 +140,23 @@ $effect(() => {
 	style:--duration={max_duration ? `${max_duration}ms` : undefined}
 	style:--details-max-height-closed={max_height_closed}
 	style:--details-max-height-open={max_height_open}
-	style={details_styles}
-	on:click={toggle_accordion}
+	onclick={toggle_accordion}
 	onkeydown={(e)=> {if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle_accordion() } }}
+	{...details_attributes}
 	>
-	<summary on:click={toggle_accordion} class={summary_classes} style={summary_styles} use:tooltip={summary_tooltip_parameters} >
+	<summary onclick={toggle_accordion} use:tooltip={summary_tooltip_parameters} {...summary_attributes} >
 		{#if group_name}
 			<input class:open bind:this={toggle} type="radio" name={group_name} {id} value={id} />
 		{:else}
 			<input class:open bind:this={toggle} type="checkbox" name={id} {id} bind:checked={open}/>
 		{/if}
 
-		<label on:click={toggle_accordion} for={id} onkeydown={(e)=> {if(e.key === 'Enter' || e.key === ' '){ toggle_accordion() } }} >
+		<label onclick={toggle_accordion} for={id} onkeydown={(e)=> {if(e.key === 'Enter' || e.key === ' '){ toggle_accordion() } }} >
 			{#if expand_icon_position === 'left'}
 				{#if custom_icon}
 					{@render custom_icon()}
-				{:else if fa_icon}
-					{@render fa_icon_snippet(fa_icon)}
+				{:else if icon}
+					{@render fa_icon_snippet(icon)}
 				{:else}
 					{@render default_icon()}
 				{/if}
@@ -167,8 +171,8 @@ $effect(() => {
 			{#if expand_icon_position === 'right'}
 				{#if custom_icon}
 					{@render custom_icon()}
-				{:else if fa_icon}
-					{@render fa_icon_snippet(fa_icon)}
+				{:else if icon}
+					{@render fa_icon_snippet(icon)}
 				{:else}
 					{@render default_icon()}
 				{/if}
@@ -176,9 +180,7 @@ $effect(() => {
 		</label>
 	</summary>
 	<TransitionNativeRunes bind:this={transition} {...transition_props}>
-			{#if content}
-				{@render content()}
-			{:else if children}
+			{#if children}
 				{@render children()}
 			{/if}
 	</TransitionNativeRunes>

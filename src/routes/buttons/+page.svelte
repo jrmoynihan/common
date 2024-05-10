@@ -6,7 +6,7 @@ import { delay } from "$functions/helpers.svelte.js";
 import { Log, checkeredFlag } from "$functions/logging.js";
 import { defaultToast } from "$toasts/toasts.js";
 
-let position: TooltipDirections = $state("top");
+let position: TooltipDirections = $state<TooltipDirections>("top");
 let keep_visible: boolean = $state(false);
 
 async function testToastUpdate() {
@@ -45,6 +45,10 @@ $effect(() => {
 let step = $state(0);
 let heading_three: HTMLHeadingElement | undefined = $state(undefined);
 let high_button: HTMLButtonElement | undefined = $state(undefined);
+
+function onclick(){
+	keep_visible = !keep_visible;
+}
 </script>
 
 <section class="buttons">
@@ -52,8 +56,7 @@ let high_button: HTMLButtonElement | undefined = $state(undefined);
 		Click me!
 	{/snippet}
 	<ButtonRunes
-	attributes={{
-		onclick: () => {
+	onclick={() => {
 			step++;
 			Log({
 				msg: 'clicking with the low elevation button?',
@@ -61,7 +64,7 @@ let high_button: HTMLButtonElement | undefined = $state(undefined);
 				icon: checkeredFlag
 			})
 		}
-	}}
+	}
 		dynamic_styles={{styles: `;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`}}
 		tooltip_options={{ position, content: tooltip_one, keep_visible }}
 		--shadow-color={'350deg 50% 70%'}
@@ -69,12 +72,8 @@ let high_button: HTMLButtonElement | undefined = $state(undefined);
 		I'm a button with low elevation
 	</ButtonRunes>
 	<ButtonRunes
-	attributes={{
-		onclick: testToastUpdate
-	}}
-		dynamic_styles={{styles: `--shadow-color: 350deg 50% 70%;background-color: ${
-			position === 'top' ? 'hsla(195, 10%, 60%, 20%)' : `green`
-		};`}}
+		onclick={testToastUpdate}
+		style={`--shadow-color: 350deg 50% 70%;`}
 		tooltip_options={{ position, content: tooltip_one, keep_visible }}
 	>
 		I'm a button with medium elevation
@@ -98,23 +97,16 @@ let high_button: HTMLButtonElement | undefined = $state(undefined);
 	<ButtonRunes
 		bind:button={high_button}
 		classes='orange'
-		attributes={{ onclick: () => keep_visible = !keep_visible, unselectable: 'on' }}>
+		{onclick}>
 		I'm a button with high elevation!!
 	</ButtonRunes>
 
 	<ToggleSwitch
 		bind:checked={keep_visible}
-		label_text={`I'm a toggle switch!`}
-		button_props={{
-			dynamic_styles: {
-				styles:
-				'display: grid; transition: color 400ms ease; gap: 1rem; grid-auto-flow: column; padding: 1rem;',
-			hover_styles: 'background-color: green;'
-			}
-		}}
-		--toggle-button-background={`hsla(0,70%, 50%, 30%)`}
-		label_hover_styles={'color: yellow;'}
-	/>
+		button_props={{ style: 'display: grid; transition: background-color 250ms ease, color 250ms ease; gap: 1rem; grid-auto-flow: column; padding: 1rem;', dynamic_styles: { hover_styles: 'background-color: darkgreen; color: var(--accent);'}}}
+	>
+		<p>I'm a toggle switch!</p>
+	</ToggleSwitch>
 	<ButtonRunes dynamic_styles={{hover_styles: 'box-shadow: 0 0 10px yellow'}} />
 	<h3 
 	class="orange"
@@ -156,16 +148,10 @@ let high_button: HTMLButtonElement | undefined = $state(undefined);
 		grid: auto / repeat(2, 1fr);
 		gap: 2rem;
 	}
-	label {
-		display: flex;
-		gap: 1rem;
-		place-items: center;
-		place-self: center;
-	}
 	@layer button {
-		.button.orange {
+		/* .button.orange {
 			background-color: orange;
-		}
+		} */
 	}
 	button {
 		background-color: green;

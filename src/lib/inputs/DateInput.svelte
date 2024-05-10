@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles';
+	import { dynamicStyle } from '$actions/dynamic-styles.svelte';
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';

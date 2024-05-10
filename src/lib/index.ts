@@ -28,7 +28,11 @@ import Navigation from './navigation/Navigation.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 
 // Toasts
-import type { SvelteToastOptions } from '@zerodevx/svelte-toast';
+import type {
+	SvelteToastCustomComponent,
+	SvelteToastOnPopCallback,
+	SvelteToastOptions
+} from '@zerodevx/svelte-toast';
 import { SvelteToast, toast } from '@zerodevx/svelte-toast';
 import SeenToast from './toasts/SeenToast.svelte';
 
@@ -50,7 +54,7 @@ export {
 	type SpotlightStep
 } from '$actions/spotlight/spotlight.svelte.js';
 export { Temporal } from '@js-temporal/polyfill';
-export { dynamicStyle } from './actions/dynamic-styles.js';
+export { dynamicStyle } from './actions/dynamic-styles.svelte.js';
 export {
 	tooltip,
 	type TooltipDirections,
@@ -131,7 +135,6 @@ export {
 	SeenToast,
 	Select,
 	SvelteToast,
-	SvelteToastOptions,
 	Tabs,
 	TemporalDateInput,
 	TextInput,
@@ -140,5 +143,8 @@ export {
 	TransitionNative_Runes,
 	toast,
 	type DatalistOption,
+	type SvelteToastCustomComponent,
+	type SvelteToastOnPopCallback,
+	type SvelteToastOptions,
 	type TextInputTypes
 };

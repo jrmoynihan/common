@@ -132,14 +132,15 @@
     {#if typeof datum_0 === 'string'}
             <ButtonRunes
             classes={`sort-button ${orders[index]}`}
-            attributes={{onclick: () => sort_strings({key, index}), style: 'padding: 0.25rem;' }}
+            onclick={() => sort_strings({key, index})}
+            style={'padding: 0.25rem;'}
             icon_props={{icon: icons[index]}}
             tooltip_options={{ content: `Sort strings (current: ${orders[index] === 'desc' ? 'A-Z' : 'Z-A'})` }}
             />
     {:else if typeof datum_0 === 'number'}
         <ButtonRunes 
             classes={`sort-button ${orders[index]}`}
-            attributes={{onclick: () => sort_numbers_or_boolean_or_dates({key, index}) }}
+            onclick={() => sort_numbers_or_boolean_or_dates({key, index})}
             icon_props={{icon: icons[index]}}
             tooltip_options={{ content: `Sort numbers (current: ${orders[index] === 'desc' ? 'low-to-high' : 'high-to-low'})` }}
         />

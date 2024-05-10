@@ -1,14 +1,5 @@
-<script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
-	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
-	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
-	import { Fa } from '@jrmoynihan/svelte-fa';
-	import { type ComponentProps, type Snippet } from 'svelte';
-	import type { HTMLInputAttributes } from 'svelte/elements';
-	import InputLabel from './InputLabel.svelte';
-	import Placeholder from './Placeholder.svelte';
-
-	interface NumericInputProps {
+<script context="module" lang="ts">
+	export interface NumericInputProps extends HTMLInputAttributes {
 		numeric_input?: HTMLInputElement | null;
 		value?: string | number | string[] | null;
 		label_element?: HTMLLabelElement;
@@ -18,7 +9,6 @@
 		container_styles?: DynamicStyleParameters;
 		input_styles?: DynamicStyleParameters;
 		placeholder_props?: ComponentProps<Placeholder>;
-		input_attributes?: HTMLInputAttributes;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
 		label_props?: ComponentProps<InputLabel>;
 		/** A spinner button Snippet for both up and down buttons*/
@@ -31,31 +21,46 @@
 	// TODO: add a prop for a custom validity function?
 	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
 
+	interface SpinnerButtonAttributes extends HTMLButtonAttributes  {
+		classes?: string; // avoids the `class` keyword, but keeps the semantics
+	}
+	type SpinnerButton = SpinnerButtonAttributes & ComponentProps<Fa>
+</script>
+
+<script lang="ts">
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
+	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
+	import { Fa } from '@jrmoynihan/svelte-fa';
+	import { type ComponentProps, type Snippet } from 'svelte';
+	import type { HTMLButtonAttributes, HTMLInputAttributes } from 'svelte/elements';
+	import InputLabel from './InputLabel.svelte';
+	import Placeholder from './Placeholder.svelte';
 
 	let {
 		value = $bindable(0),
 		numeric_input = $bindable(),
 		label_element = $bindable(),
-		input_attributes,
 		show_spinner_buttons = true,
 		tooltip_options = null,
-		container_styles,
+		container_styles: dynamic_container_styles,
 		input_styles,
 		placeholder_props,
 		label_props,
 		spinner_button,
 		up_spinner_button,
-		down_spinner_button
+		down_spinner_button,
+		...input_attributes
 	} : NumericInputProps = $props();
 
 	export const is_valid = $derived(numeric_input?.checkValidity() ?? true);
 	
 </script>
 
-{#snippet default_spinner_button({classes, icon, size, callback})}
+{#snippet default_spinner_button({classes, icon, size, onclick}: SpinnerButton)}
 <button
 	class="spinner {classes}"
-	onclick={callback}
+	{onclick}
 >
 	<Fa {icon} {size} />
 </button>
@@ -64,12 +69,12 @@
 <InputLabel bind:label_element {...label_props} >
 	<div
 		use:tooltip={tooltip_options ? { ...tooltip_options } : { disabled: true, visible: false }}
-		use:dynamicStyle={container_styles}
-		title={input_attributes?.title ? input_attributes.title : input_attributes?.placeholder}
+		use:dynamicStyle={dynamic_container_styles}
 		class="numeric-input-container"
 		class:show-spinner-buttons={show_spinner_buttons}
 	>
 		<Placeholder {...placeholder_props} />
+		<!-- TODO: Replace with generic <Input> component or is passing the complex layout/styles too difficult? -->
 		<input
 			use:dynamicStyle={input_styles}
 			bind:this={numeric_input}
@@ -91,7 +96,7 @@
 			{:else if spinner_button}
 				{@render spinner_button()}
 			{:else}
-				{@render default_spinner_button({classes: 'plus', icon: faCaretUp, size: 'xs', callback: () => {
+				{@render default_spinner_button({classes: 'plus', icon: faCaretUp, size: 'xs', onclick: () => {
 					if(current + step <= max_num) {
 						value = Number(value) + step;
 					}
@@ -102,7 +107,7 @@
 			{:else if spinner_button}
 				{@render spinner_button()}
 			{:else}
-				{@render default_spinner_button({classes: 'minus', icon: faCaretDown, size: 'xs', callback: () => {
+				{@render default_spinner_button({classes: 'minus', icon: faCaretDown, size: 'xs', onclick: () => {
 					if(current - step >= min_num) {
 						value = Number(value) - step;
 					}
@@ -112,13 +117,13 @@
 	</div>
 </InputLabel>
 
-<style lang="scss">
+<style>
 	.numeric-input-container {
 		display: grid;
 		border-radius: 1rem;
 		position: relative;
 		width: var(--numeric-input-container-width, 100%);
-		isolation: isolate; // Contain the z-index stacking context for the buttons to this container.
+		isolation: isolate; /* Contain the z-index stacking context for the buttons to this container. */
 		&.show-spinner-buttons {
 			grid-template-columns: minmax(0, 1fr) minmax(0, 1.75rem);
 			grid-template-rows: repeat(2, minmax(0, 1fr));

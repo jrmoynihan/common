@@ -6,34 +6,33 @@
 
     let {
         children,
-        label_attributes,
+        dynamic_styles,
+        position = 'before',
         label_element = $bindable(),
-        label_text = $bindable(),
-        label_position = 'before',
-        label_snippet = default_label,
-        id = crypto?.randomUUID(),
+        text = $bindable(),
         invalid_text = $bindable(),
-        invalid_msg_transition_types = ['slide'],
-        invalid_msg_snippet = default_invalid_snippet,
         valid = $bindable(true),
-        tooltip_options = {
+        id = $bindable(crypto?.randomUUID()),
+        invalid_msg_transition_types = ['slide'],
+        tooltip_props: tooltip_options = {
             visible: false,
             disabled: true
         },
-        dynamic_styles,
-        placeholder_props = {},
-        title,
-        transition = fade,
         transition_parameters ={ duration: 0 },
+        label_snippet = default_label,
+        invalid_msg_snippet = default_invalid_snippet,
+        transition = fade,
+        ...label_attributes
     } :InputLabelProps = $props()
 
 </script>
 
-{#snippet default_invalid_snippet(message)}
-	{message}
+{#snippet default_invalid_snippet()}
+	{invalid_text}
 {/snippet}
-{#snippet default_label({label_text, label_position})}
-	<div class={label_position}>{label_text}</div>
+
+{#snippet default_label()}
+	<div class={position}>{text}</div>
 {/snippet}
 
 <label
@@ -42,27 +41,25 @@
 	class="text-input-container"
 	use:dynamicStyle={dynamic_styles}
 	use:tooltip={{ ...tooltip_options }}
-	title={title ? title : placeholder_props?.text}
 	transition:transition={transition_parameters}
     {...label_attributes}
 >
-    {#if label_position === 'before'}
-        {#if label_text && label_snippet}
-            {@const label_props = { label_text, label_position }}
-            {@render label_snippet(label_props)}
+    {#if position === 'before'}
+        {#if text && label_snippet}
+            {@render label_snippet()}
         {/if}
     {/if}
     {#if children}
-        {@render children({placeholder_props})}
+        {@render children()}
     {/if}
-    {#if label_position === 'after'}
-        {#if label_text && label_snippet}
-            {@render label_snippet({label_text, label_position})}
+    {#if position === 'after'}
+        {#if text && label_snippet}
+            {@render label_snippet()}
         {/if}
     {/if}
     <TransitionNativeRunes types={invalid_msg_transition_types} visible={!valid}>
         <invalid>
-            {@render invalid_msg_snippet(invalid_text)}
+            {@render invalid_msg_snippet()}
         </invalid>
     </TransitionNativeRunes>
 </label>
@@ -81,13 +78,13 @@
                 'before'
                 'input'
                 'after';
-            & > :is(.before, .after) {
+            & > :global(:is(.before, .after)) {
                 padding-block: 0.25em;
             }
-            & > .before {
+            & > :gloal(.before) {
                 grid-area: before;
             }
-            & > .after {
+            & > :global(.after) {
                 grid-area: after;
             }
             &:focus-within > :global(.placeholder) {

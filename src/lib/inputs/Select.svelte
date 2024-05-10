@@ -1,7 +1,7 @@
 <script lang=ts context=module>
-	export interface SelectProps {
+	export interface SelectProps extends HTMLSelectAttributes {
 		value?: unknown;
-		select_attributes? : HTMLSelectAttributes;
+		id?: string | null;
 		/** A snippet of HTML for the `<optgroup>` of the `<select>`.*/
 		group_snippet?: Snippet<[any]>,
 		/** A snippet for how to render a single `<option>` in the `<select>`.*/
@@ -15,7 +15,7 @@
 </script>
 
 <script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import type { SelectOption, SelectOptionGroup, SelectOptionList } from '$lib/lib_types';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import type { HTMLSelectAttributes } from 'svelte/elements';
@@ -24,15 +24,16 @@
 	
 	let {
 		value = $bindable(),
-		select_attributes,
 		options = [],
 		option_snippet = option,
 		group_snippet = group,
 		dynamic_select_styles,
 		input_label_props,
 		placeholder_props = {},
+		id = crypto.randomUUID(),
+		...select_attributes
 		
-	} : SelectProps = $props();
+	} : SelectProps  = $props();
 
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
@@ -55,13 +56,13 @@
 	{/if}
 {/snippet}
 
-<InputLabel {...input_label_props}>
+<InputLabel {id} {...input_label_props}>
 	<select
 	use:dynamicStyle={dynamic_select_styles}
 	bind:value
 		class="select"
 		class:value
-		id={crypto?.randomUUID()}
+		{id}
 		{...select_attributes}
 	>	
 		{#if group_snippet}

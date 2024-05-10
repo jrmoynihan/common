@@ -91,7 +91,9 @@ const content_text = `Hello from inside the accordion! Lorem ipsum dolor sit ame
 
 <div class="accordions">
 	{#each accordion_configs as accordion, i}
-		<AccordionDetails {...accordion} {details_styles} {summary_styles} {content} />
+		<AccordionDetails {...accordion} style={details_styles} summary_attributes={{style: summary_styles}}>
+			{@render content()}
+		</AccordionDetails>
 	{/each}
 </div>
 <AccordionJson {value}/>

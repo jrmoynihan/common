@@ -89,10 +89,10 @@ const node_1_4_items = [
 
 <TreeList node_to={''}>
     <TreeItem is_node="--node-1">
-        <AccordionDetails details_classes={"tree-item-details"} summary_classes={'tree-item-label'} summary_text={'CSS selectors'} transition_props={{ types: ['scale'] }}>
+        <AccordionDetails details_classes={"tree-item-details"} summary_attributes={{class: 'tree-item-label'}} summary_text={'CSS selectors'} transition_props={{ types: ['scale'] }}>
             <TreeList node_to="--node-1">
                 <TreeItem is_node="--node-1-1">
-                    <AccordionDetails details_classes={"tree-item-details"} summary_classes={'tree-item-label'} summary_text={'Basic selectors'} transition_props={{ types: ['fly'], slide_transition_parameters: { side: 'left'} }}>
+                    <AccordionDetails details_classes={"tree-item-details"} summary_attributes={{class: 'tree-item-label'}} summary_text={'Basic selectors'} transition_props={{ types: ['fly'], slide_transition_parameters: { side: 'left'} }}>
                         <TreeList node_to="--node-1-1">
                             {#each node_1_1_items as item, i}
                                 <TreeItem is_node="--node-1-1-{i+1}">
@@ -106,7 +106,7 @@ const node_1_4_items = [
                     {@render tree_item_label('Selector list', 'https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors')}
                 </TreeItem>
                 <TreeItem is_node="--node-1-3">
-                    <AccordionDetails details_classes={"tree-item-details"} summary_classes={'tree-item-label'} summary_text={'Combinators'} transition_props={{ types: ['slide'] }} >
+                    <AccordionDetails details_classes={"tree-item-details"} summary_attributes={{class: 'tree-item-label'}} summary_text={'Combinators'} transition_props={{ types: ['slide'] }} >
                         <TreeList node_to="--node-1-3">
                             {#each node_1_3_items as item, i}
                                 <TreeItem is_node="--node-1-3-{i+1}">
@@ -117,7 +117,7 @@ const node_1_4_items = [
                     </AccordionDetails>
                 </TreeItem>
                 <TreeItem is_node="--node-1-4">
-                    <AccordionDetails details_classes={"tree-item-details"} summary_classes={'tree-item-label'} summary_text={'Pseudos'} >
+                    <AccordionDetails details_classes={"tree-item-details"} summary_attributes={{class: 'tree-item-label'}} summary_text={'Pseudos'} >
                         <TreeList node_to="--node-1-4">
                             {#each node_1_4_items as item, i}
                                 <TreeItem is_node="--node-1-4-{i+1}">

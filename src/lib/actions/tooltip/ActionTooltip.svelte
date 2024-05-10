@@ -6,7 +6,7 @@ https://web.dev/building-a-tooltip-component/
 -->
 
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.js';
+	import { dynamicStyle } from '$actions/dynamic-styles.svelte.js';
 	import type { TooltipProps } from './tooltip.svelte';
 
 	let {
@@ -53,7 +53,8 @@ https://web.dev/building-a-tooltip-component/
 			{/if}
 
 			{#if show_arrow}
-				<tooltip-arrow class="arrow" data-tip-position={position} />
+				<tooltip-arrow class="arrow" data-tip-position={position}>
+				</tooltip-arrow>
 			{/if}
 		</tool-tip>
 

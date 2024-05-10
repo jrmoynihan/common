@@ -119,7 +119,7 @@
     </div>
   </div>  
 
-<style lang='scss'>
+<style>
   .tabs{
     max-width: var(--tabs-max-width, 100%);
   }
@@ -161,32 +161,13 @@
  background-color: var(--tab-background-color-selected);
 }
 
-[role="tab"] span.focus {
-  display: inline-block;
-  margin: 2px;
-  padding: 4px 6px;
-}
-
-[role="tab"]:hover span.focus,
-[role="tab"]:focus span.focus,
-[role="tab"]:active span.focus {
-  padding: 2px 4px;
-  // border: 2px solid rgb(36 116 214);
-  border-radius: 3px;
-}
-
 [role="tabpanel"] {
   z-index: -1;
   padding: 5px;
   border-radius: 0 5px 5px;
-  // background: hsl(220deg 43% 99%);
   min-height: 10em;
   width: 100%;
   overflow: auto;
-}
-
-[role="tabpanel"] p {
-  margin: 0;
 }
 
 .tab-content{

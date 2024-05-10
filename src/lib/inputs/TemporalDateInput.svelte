@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles';
+	import { dynamicStyle } from '$actions/dynamic-styles.svelte';
 	import type { DateInputProps } from '$lib/lib_types';
 	import { Temporal } from '@js-temporal/polyfill';
 	import InputLabel from './InputLabel.svelte';
@@ -12,22 +12,13 @@
 		min = date.subtract({ years: 100 }),
 		max = date.add({ years: 100 }),
 		label_props,
-		input_attributes = {
-			type: 'date',
-			id: crypto.randomUUID()
-		},
 		input_dynamic_styles,
 		is_valid = $bindable(false),
 		on_input,
 		date_input = $bindable(),
-		label_element = $bindable()
-	}: DateInputProps = $props();
-
-	input_attributes = {
-		type: 'date',
-		id: crypto.randomUUID(),
+		label_element = $bindable(),
 		...input_attributes
-	};
+	}: DateInputProps = $props();
 
 	const input_changed = (value: string) => {
 		date = stringToTemporalDate(value);
@@ -39,7 +30,7 @@
 		const time_string = `T${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}:${
 			second < 10 ? `0${second}` : second
 		}`;
-		switch (input_attributes.type) {
+		switch (input_attributes?.type) {
 			case 'date':
 				return date_string;
 			case 'datetime':
@@ -56,16 +47,8 @@
 		const yyyy_mm_dd = date_string.split('T')[0];
 		const [year, month, day] = yyyy_mm_dd.split('-');
 
-		switch (input_attributes.type) {
-			case 'date': {
-				const new_date = date.with({
-					year: Number.parseInt(year),
-					month: Number.parseInt(month),
-					day: Number.parseInt(day)
-				});
-				return new_date;
-			}
-			default: {
+		switch (input_attributes?.type) {
+			case 'datetime' || 'time' || 'datetime-local': {
 				const hh_mm_ss = date_string.split('T')?.[1];
 				const [hour, minute, second] = hh_mm_ss.split(':');
 				const new_date_with_time = date.with({
@@ -74,6 +57,14 @@
 					second: Number.parseInt(second)
 				});
 				return new_date_with_time;
+			}
+			default: {
+				const new_date = date.with({
+					year: Number.parseInt(year),
+					month: Number.parseInt(month),
+					day: Number.parseInt(day)
+				});
+				return new_date;
 			}
 		}
 	};
@@ -98,11 +89,12 @@
 
 <InputLabel bind:label_element {...label_props}>
 	<input
+		use:dynamicStyle={input_dynamic_styles}
 		bind:this={date_input}
 		bind:value={internal_string_date}
-		on:input={(e) => input_changed(e.currentTarget.value)}
-		use:dynamicStyle={input_dynamic_styles}
+		id={crypto.randomUUID()}
 		type="date"
+		oninput={(e) => input_changed(e.currentTarget.value)}
 		{...input_attributes}
 		max={max_internal_string_date}
 		min={min_internal_string_date}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type DynamicStyleParameters } from '$actions/dynamic-styles';
+	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import { faGripVertical } from '@fortawesome/free-solid-svg-icons/index';
 	import ButtonRunes from './Button_Runes.svelte';
 
@@ -37,13 +37,15 @@
 </button> -->
 
 <ButtonRunes
-	icon={faGripVertical}
+	icon_props={{ icon: faGripVertical }}
 	classes={`drag-anchor ${!hovered ? 'faded' : ''} ${grabbed ? 'grabbed' : ''}`}
 	dynamic_styles={{
 		hover_styles: 'color: oklch(from var(--text) l c h / 1);',
 		...dynamic_styles
 	}}
-	attributes={{ onmousedown: grab, onmouseup: release, onblur: release }}
+	onmousedown={grab}
+	onmouseup={release}
+	onblur={release}
 />
 
 <style lang="scss">

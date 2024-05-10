@@ -1,8 +1,7 @@
-import type { DynamicStyleParameters } from '$actions/dynamic-styles';
+import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 import type { TooltipProps } from '$actions/tooltip/tooltip.svelte';
-import type Placeholder from '$inputs/Placeholder.svelte';
 import type { Temporal } from '@js-temporal/polyfill';
-import type { ComponentProps, Snippet } from 'svelte';
+import type { Snippet } from 'svelte';
 import type { HTMLInputAttributes, HTMLLabelAttributes } from 'svelte/elements';
 import type {
 	BlurParams,
@@ -21,28 +20,34 @@ export interface SelectOptionGroup {
 	options: SelectOption[];
 	label?: string;
 }
-export interface InputLabelProps {
-	/** Anything rendered within the input label */
-	children?: Snippet<[any]>;
-	/**  Attributes on the `<label>` element that wraps the input. */
-	label_attributes?: HTMLLabelAttributes;
+export interface InputLabelProps extends HTMLLabelAttributes {
+	/** A binding to the <label> element */
 	label_element?: HTMLLabelElement;
-	label_text?: string;
-	label_position?: 'before' | 'after';
-	label_snippet?: Snippet<[any]>;
+	/** The text for the label */
+	text?: string;
+	/** The position of the label relative to the child element it labels. Defaults to `before`. */
+	position?: 'before' | 'after';
+	/** The text for the invalid message. */
 	invalid_text?: string;
-	id?: string;
+	/** The id of the element this labels with the `for` attribute. Defaults to `crypto.randomUUID()` */
+	id?: string | null;
+	/** The transition types to use for the invalid message.  Defaults to `[slide]` */
 	invalid_msg_transition_types?: TransitionTypes[];
-	invalid_msg_snippet?: Snippet<[any]>;
+	/** A binding to the validity of the input.  Changing this triggers the visibility of the invalid message. */
 	valid?: boolean;
-	placeholder_props?: ComponentProps<Placeholder>;
-	tooltip_options?: TooltipProps;
+	/** Props to pass to the tooltip action. */
+	tooltip_props?: TooltipProps;
+	/** Styles to apply to the label, including hover/focus/active styles. */
 	dynamic_styles?: DynamicStyleParameters;
-	title?: string;
-	transition?: SvelteTransition;
+	/** Parameters for the transition. */
 	transition_parameters?: SvelteTransitionParams;
+	invalid_msg_snippet?: Snippet;
+	/** A snippet for the content of the label. Defaults to a simple <div> that contains the `text` with a class to position it. */
+	label_snippet?: Snippet;
+	/** The Svelte transition to use for the label */
+	transition?: SvelteTransition;
 }
-export interface DateInputProps {
+export interface DateInputProps extends Omit<HTMLInputAttributes, 'date' | 'min' | 'max'> {
 	date?: Temporal.ZonedDateTime;
 	min?: Temporal.ZonedDateTime;
 	max?: Temporal.ZonedDateTime;

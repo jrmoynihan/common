@@ -22,7 +22,7 @@
 		bind:checked
 		label_position={'after'}
 		label_text={checked ? `Won't show this again` : `Don't show this next time?`}
-		button_props={{ styles: 'display: grid; grid-template-columns: auto 1fr; cursor: pointer;' }}
+		button_props={{ style: 'display: grid; grid-template-columns: auto 1fr; cursor: pointer;' }}
 	/>
 </div>
 

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
-	import { tooltip, type TooltipParameters } from '$actions/tooltip/tooltip.svelte.js';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Fa, FaLayers, FaLayersText } from '@jrmoynihan/svelte-fa';
@@ -12,7 +12,7 @@
 		/** The navigation link to display. */
 		nav_link: NavigationLink;
 		/** Tooltip options to apply to the nav links. */
-		tooltip_options?: TooltipParameters;
+		tooltip_options?: TooltipProps;
 		/** Attributes for an `<a>` element. */
 		anchor_attributes?: HTMLAnchorAttributes;
 		/** Classes to apply to the nav links. */

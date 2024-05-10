@@ -179,14 +179,12 @@
 	</div> -->
 </section>
 
-<style lang="scss">
+<style>
 	section {
 		display: flex;
 		gap: 1rem;
 		flex-wrap: wrap;
 		place-items: center;
-		// max-width: 80%;
-		// justify-content: center;
 		margin: auto;
 	}
 	.settings {
@@ -220,14 +218,14 @@
 		&:active {
 			scale: 0.98, 0.98, 1;
 		}
-		// &.delete,
+		/* &.delete,
 		&.add {
 			border: initial;
 			border-radius: 1rem;
 		}
-		// &.delete {
-		// 	background-color: hsl(0, 41%, 41%);
-		// }
+		&.delete {
+			background-color: hsl(0, 41%, 41%);
+		}
 		&.add {
 			background-color: darkcyan;
 			grid-column: 1 / span 2;
@@ -235,18 +233,18 @@
 			gap: 1rem;
 			place-items: center;
 			place-content: center;
-		}
+		} */
 	}
-	h4 {
+	/* h4 {
 		text-align: center;
-	}
+	} */
 	input {
 		box-sizing: border-box;
 		padding: 1rem;
 		border-radius: 1rem;
 		margin: auto;
 	}
-	.tooltip-text-input {
+	/* .tooltip-text-input {
 		width: 100%;
-	}
+	} */
 </style>

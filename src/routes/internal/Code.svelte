@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { use_dark_theme } from '$routes/stores.js';
 </script>
 
-<code class="my-code" class:dark={$use_dark_theme}>
+<code class="my-code">
 	<slot />
 </code>
 
@@ -16,8 +15,8 @@
 		font-size: 0.85em;
 		line-height: 1.6em;
 		color: white;
-		&.dark {
-			background-color: hsla(195, 81%, 24%, 90%);
-		}
+	}
+	:global([data-theme='dark']) .my-code {
+		background-color: hsla(195, 85%, 20%, 90%);
 	}
 </style>

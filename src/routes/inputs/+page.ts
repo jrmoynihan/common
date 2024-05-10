@@ -44,7 +44,7 @@ export async function load({}: PageLoadEvent) {
 			min: date.subtract({ days: 7 }),
 			max: date.add({ days: 7 }),
 			label_props: {
-				label_text: 'A standard date input with min/max dates'
+				text: 'A standard date input with min/max dates'
 			}
 		},
 		{
@@ -53,7 +53,7 @@ export async function load({}: PageLoadEvent) {
 			min: date.subtract({ days: 7 }),
 			max: date.add({ days: 7 }),
 			label_props: {
-				label_text: 'A datetime-local input with min/max dates'
+				text: 'A datetime-local input with min/max dates'
 			}
 		},
 		{
@@ -61,7 +61,7 @@ export async function load({}: PageLoadEvent) {
 			min: date.subtract({ days: 7 }),
 			max: date.add({ days: 7 }),
 			label_props: {
-				label_text: 'A datetime input with min/max dates'
+				text: 'A datetime input with min/max dates'
 			}
 		},
 		{
@@ -69,7 +69,7 @@ export async function load({}: PageLoadEvent) {
 			min: date.subtract({ hours: 12 }),
 			max: date.add({ hours: 12 }),
 			label_props: {
-				label_text: 'A time input with min/max times'
+				text: 'A time input with min/max times'
 			}
 		}
 	];

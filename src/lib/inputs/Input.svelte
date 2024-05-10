@@ -1,45 +1,43 @@
 <script lang="ts" context="module">
-	import type { DynamicStyleParameters } from '$actions/dynamic-styles';
+	import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 
-	export interface InputProps {
+	export interface InputProps extends HTMLInputAttributes {
+		/** A binding to the `<input>` element. */
 		input_element?: HTMLInputElement;
+		/** A binding to the value of the input. */
 		value?: unknown;
+		/** A binding to Whether the input is valid. Defaults to `true`. */
 		valid?: boolean;
-		allow_enter_to_confirm?: boolean;
+		/** Styles to apply to the input element including hover, focus, and active styles. */
 		dynamic_input_styles?: DynamicStyleParameters;
-		id?: string;
-		input_attributes?: HTMLInputAttributes;
-		invalid_msg_visible?: boolean;
-		oninput?: FormEventHandler<HTMLInputElement> | undefined | null;
-		/** A callback that runs when the confirm button is clicked */
-		onconfirm?: EventHandler;
+		/** The key used to confirm the input. Defaults to `Enter`.  Set to `null` to disable `onkeypress` confirmations. */
+		confirm_key?: string;
+		/** A callback that runs when the `confirm_key` is pressed.  If an `onkeypress` event handler is provided, this will be ignored. */
+		onconfirm?: FormEventHandler<HTMLInputElement>;
 	}
 </script>
 
 <script lang="ts">
 	import { dynamicStyle } from '$lib';
-	import type { EventHandler, FormEventHandler, HTMLInputAttributes } from 'svelte/elements';
+	import type { FormEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
 	let {
 		input_element = $bindable(),
 		value = $bindable(),
 		valid = $bindable(true),
-		allow_enter_to_confirm = true,
 		dynamic_input_styles = $bindable(),
-		input_attributes,
-		oninput,
-		onconfirm = () => input_element?.blur()
+		confirm_key = 'Enter',
+		onconfirm,
+		...input_attributes
 	}: InputProps = $props();
 
 	function confirm(e: any) {
 		onconfirm?.(e);
+		input_element?.blur();
 	}
 
 	function handle_keypress(e: KeyboardEvent) {
-		if (e.key === 'Enter' && allow_enter_to_confirm) confirm(e);
-	}
-	function handle_input(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-		oninput?.(e);
+		if (confirm_key && e.key === confirm_key) confirm(e);
 	}
 
 	$effect(() => {
@@ -55,8 +53,7 @@
 	bind:value
 	class:value
 	onkeypress={handle_keypress}
-	oninput={handle_input}
-	id="{crypto?.randomUUID()},"
+	id={crypto?.randomUUID()}
 	{...input_attributes}
 />
 

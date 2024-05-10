@@ -64,19 +64,19 @@
 	{/await} -->
 </aside>
 
-<style lang="scss">
-	ul {
+<style>
+	/* ul {
 		display: grid;
 		gap: 0.5rem;
 		margin: 1rem 0.5rem;
 		padding-left: 1.5rem;
-	}
+	} 
 	li {
 		list-style: none;
 		display: flex;
 		flex-wrap: wrap;
 		max-width: 15ch;
-	}
+	} */
 	aside {
 		box-sizing: border-box;
 		background-color: hsla(0, 0%, 0%, 15%);

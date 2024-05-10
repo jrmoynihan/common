@@ -84,9 +84,7 @@
 
 	<Dialog
 		bind:this={dialog}
-		attributes={{onclose: () => {
-			selected_image = null;
-		}}}
+		onclose={() => {selected_image = null}}
 		scale='none'
 		slide='both'
 		--dialog-background="transparent"

@@ -56,16 +56,18 @@
 <svelte:window bind:scrollY on:scroll={checkScrollProgress} />
 {#if meets_visibility_threshold}
 	{#if show_return_to_top_button}
-		<ButtonRunes {...button_props} attributes={{onclick}}>
+		<ButtonRunes {...button_props} {onclick} >
 			{#if children}
 				{@render children()}
 			{/if}
 		</ButtonRunes>
 	{/if}
 	{#if show_progress_bar}
-		<progress-indicator style="width:{($progress * 100).toString()}%;" />
+		<progress-indicator style="width:{($progress * 100).toString()}%;">
+		</progress-indicator>
 	{:else if show_progress_radial}
-		<progress-indicator-radial style="--radii:{($progress * 100).toString()}%" />
+		<progress-indicator-radial style="--radii:{($progress * 100).toString()}%">
+		</progress-indicator-radial>
 	{/if}
 {/if}
 

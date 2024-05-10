@@ -22,11 +22,13 @@
 			show_confirm={false}
 			label_props={{
 				invalid_text: "Please enter text between 3-16 characters.",
-				label_text: "Labels for Inputs",
-				tooltip_options: { content: `I'm a plain text input with a cancel button!`, position: 'top'},
+				text: "Labels for Inputs",
+				tooltip_props: { content: `I'm a plain text input with a cancel button!`, position: 'top'},
 				valid: false
 			}}
-			input_attributes={{ autocomplete: 'off', required: true, pattern: "[a-z]{3,16}" }}
+			autocomplete='off'
+			required={true}
+			pattern={"[a-z]{3,16}"}
 			--input-invalid-outline="var(--accent) 2px solid"
 			/>
 		<TextInput
@@ -34,10 +36,12 @@
 			placeholder_props={{ text: 'john@example.com' }}
 			label_props={{
 				invalid_text: "Invalid email address.",
-				label_text: "Email address:",
-				tooltip_options: { content: `I'm an email input that hides the confirm button when the email is invalid!`}
+				text: "Email address:",
+				tooltip_props: { content: `I'm an email input that hides the confirm button when the email is invalid!`}
 			}}
-			input_attributes={{type: 'email', autocomplete: 'email', required: true }}
+			type='email'
+			autocomplete='email'
+			required={true}
 			onconfirm={() => {
 				alert(`Email confirmed!  ${valid_email}`);
 			}}
@@ -47,12 +51,10 @@
 		<DatalistTextInput 
 			{datalist} 
 			bind:value={selected_fruit}
-			text_input_props={{
-				onconfirm: () => alert(`Selected fruit:  ${selected_fruit}, ${datalist.find(d => d.value === selected_fruit)?.label}`),
-				input_attributes: { required: true },
-				placeholder_props: {text: 'Pick a fruit'}, 
-				label_props: {label_text: "Datalist Text Input:"}
-			}}
+			required={true}
+			onconfirm={() => alert(`Selected fruit:  ${selected_fruit}, ${datalist.find(d => d.value === selected_fruit)?.label}`)}
+			placeholder_props={{text: 'Pick a fruit'}} 
+			label_props={{text: "Datalist Text Input:"}}
 			--input-invalid-outline="var(--accent) 2px solid"
 		/>
 		<span class="selected-fruit">{selected_fruit}</span>
@@ -65,19 +67,20 @@
 	</section>
 	<section class="numeric-inputs">
 		<h2>Numeric Inputs</h2>
-		<NumericInput input_attributes={{ placeholder: 'a placeholder that disappears'}} />
+		<NumericInput placeholder={'a placeholder that disappears'} />
 		<NumericInput
-			input_attributes={{ min: 0, max: 10 }}
+			min={0}
+			max={10}
 			tooltip_options={{ content: `Is it between 0 and 10?` }}
 			show_spinner_buttons={false}
 		/>
 	</section>
 	<section class="select-inputs">
 		<Select
-			input_label_props={{ label_text: "Select an option" }}
+			input_label_props={{ text: "Select an option" }}
 			options={select_options}
 			placeholder_props={{ text: 'pick one...' }}
-			select_attributes={{ required: true }}
+			required={true}
 		/>
 	</section>
 	<section class="checkbox-inputs">

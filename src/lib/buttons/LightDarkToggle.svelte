@@ -111,7 +111,7 @@
 			on:change={storeDarkThemePreference}
 		/>
 		<div>
-			<span />
+			<span></span>
 		</div>
 	</button>
 </label>

@@ -4,7 +4,7 @@ import { mount, unmount, type Snippet } from 'svelte';
 import ActionTooltip from './ActionTooltip.svelte';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
-export interface TooltipProps {
+export interface TooltipProps extends Record<string, unknown> {
 	/** The content of the tooltip, either a `string` or a {@link Snippet} */
 	content?: string | Snippet<[any]>;
 	/** Choose from top, bottom, right, left anchor positions for the tooltip. */
@@ -22,17 +22,17 @@ export interface TooltipProps {
 	/** Dynamic styles that can change on the tooltip.  Note: use '--tooltip'-prefixed CSS custom properties wherever possible (e.g. --tooltip-background: 'white' instead of background: 'white'). */
 	styles?: string;
 	/** The tooltip's distance from the anchor element. Numbers will be converted to `px`. Strings will be passed as CSS property values.
-	* @default 10 
-	*/
+	 * @default 10
+	 */
 	distance?: number | string;
 	/** If the tooltip should be inert or interactive.
-	* @default true
-	*/
+	 * @default true
+	 */
 	inert?: boolean;
 	/** The current step of the tooltip when used in a multi-step action */
 	step?: number;
 	/** The additional to move the tooltip to if used in a multi-step action */
-	steps?: TooltipStep[],
+	steps?: TooltipStep[];
 	/** Should the tooltip have a fallback position? */
 	fallback?: boolean;
 }
@@ -53,50 +53,48 @@ const default_parameters: TooltipProps = {
 	id: crypto.randomUUID(),
 	step: 0,
 	steps: [],
-	fallback: true,
+	fallback: true
 };
 
 export function tooltip(node: HTMLElement, parameters: TooltipProps = default_parameters) {
 	try {
 		// Either use existing id to anchor the tooltip, or create a new one and add it to the node
 		const id = node.id === '' ? crypto.randomUUID() : node.id;
-		
+
 		// Mark the node with an id so it can be targeted
 		node.setAttribute('id', id);
 		// Mark the node with a popovertarget so it can be targeted
 		node.setAttribute('popovertarget', `tooltip-${id}`);
 
-		let props : TooltipProps = $state({ ...default_parameters, ...parameters, id });
+		let props: TooltipProps = $state<TooltipProps>({ ...default_parameters, ...parameters, id });
 
-		let tooltip: ReturnType<typeof mount>	
-		
+		let tooltip: ReturnType<typeof mount>;
+
 		// Make the tooltip instance if it is enabled.
-		if(!props.disabled){
-
+		if (!props.disabled) {
 			// Determine if the tooltip will be within a <dialog> element
 			// const closest_dialog = node.closest('dialog')
-			const closest_dialog = null
+			const closest_dialog = null;
 			const within_dialog = closest_dialog !== null;
 
 			tooltip = mount(ActionTooltip, {
-				props : within_dialog ? { ...props, fallback: false } : props, // Don't use fallback position if tooltip is within dialog (it will often intersect the dialog edge, causing the fallback to trigger)
+				props: within_dialog ? { ...props, fallback: false } : props, // Don't use fallback position if tooltip is within dialog (it will often intersect the dialog edge, causing the fallback to trigger)
 				intro: true,
-				target: within_dialog ? closest_dialog : document.body, // If tooltip is within dialog, mount it to the dialog, otherwise mount it to the body
+				target: within_dialog ? closest_dialog : document.body // If tooltip is within dialog, mount it to the dialog, otherwise mount it to the body
 			});
 		}
 		// TODO: See if Popover API (top-layer promotion) is available yet https://chromestatus.com/feature/5463833265045504
 
 		/** Store the title attribute for re-use */
-		async function storeTitle() {
+		async function storeTitle() {}
+
+		async function pointerEnter(event: PointerEvent) {
+			if (props.disabled) return;
+			props.visible = true;
 		}
 
-		async function pointerEnter(event: PointerEvent){
-			if(props.disabled) return;
-			props.visible = true
-		}
-		
 		async function pointerLeave(event: PointerEvent) {
-			props.visible = false
+			props.visible = false;
 		}
 
 		/** Add event listeners and observers to the parent node */
@@ -106,14 +104,14 @@ export function tooltip(node: HTMLElement, parameters: TooltipProps = default_pa
 				node.addEventListener('pointerleave', pointerLeave);
 			}
 		}
-		
+
 		async function reassignNode(new_node: HTMLElement) {
 			// Remove the event listeners from the current node
 			await remove_event_listeners(node);
 			// Add the event listeners to the new node
 			await add_event_listeners(new_node);
 		}
-		
+
 		async function remove_event_listeners(node: HTMLElement) {
 			node.removeEventListener('pointerenter', pointerEnter);
 			node.removeEventListener('pointerleave', pointerLeave);
@@ -123,15 +121,15 @@ export function tooltip(node: HTMLElement, parameters: TooltipProps = default_pa
 
 		return {
 			async update(new_parameters: TooltipProps) {
-				for(const [key, value] of Object.entries(new_parameters)){
-					if(key in props){
-						props[key] = value
+				for (const [key, value] of Object.entries(new_parameters)) {
+					if (key in props) {
+						props[key] = value;
 					}
 				}
 			},
 			async destroy() {
 				await remove_event_listeners(node);
-				if(tooltip) unmount(tooltip);
+				if (tooltip) unmount(tooltip);
 			}
 			// async goToNextNode() {
 			// 	const { step, steps } = props;

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.js';
-	import type { TooltipParameters } from '$actions/tooltip/tooltip.svelte.js';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import type { TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { browser } from '$app/environment';
 	import { beforeNavigate } from '$app/navigation';
 	import NavLink from '$navigation/NavLink.svelte';
@@ -22,7 +22,7 @@
 		/** Styles to apply to the link if it is part of the current page path */
 		link_current_page_styles?: string,
 		/** The tooltip options for all parameters, or an array of tooltip options.  Each item of the options array will be passed into each respective nav item.*/
-		tooltip_options?: TooltipParameters | TooltipParameters[],
+		tooltip_options?: TooltipProps | TooltipProps[],
 		/** A snippet to render as the children of the <nav> element.*/
 		children?: Snippet
 	}

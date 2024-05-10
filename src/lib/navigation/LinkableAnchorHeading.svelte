@@ -43,9 +43,20 @@
 	onDestroy(() => clearTimeout(timeout));
 </script>
 
+{#snippet copy_link_button()}
+	<ButtonRunes 
+		icon_props={{ icon: faLink }}
+		aria-label="Copy Link"
+		aria-pressed={copied}
+		data-pressed={copied}
+		onpointerdown={copyLinkAddress}
+		{...button_props}
+	/>
+{/snippet}
+
 <div class="linkable-heading">
 	{#if button_position === 'before'}
-		<ButtonRunes icon_props={{ icon: faLink }} attributes={{ 'aria-label': 'Copy Link', 'aria-pressed': copied, 'data-pressed': copied, onpointerdown: copyLinkAddress}} {...button_props} />
+		{@render copy_link_button()}
 		{/if}
 		<AnchorHeading {...heading_props}>
 			{#if children}
@@ -53,7 +64,7 @@
 			{/if}
 		</AnchorHeading>
 		{#if button_position === 'after'}
-		<ButtonRunes icon_props={{ icon: faLink }} attributes={{ 'aria-label': 'Copy Link', 'aria-pressed': copied, 'data-pressed': copied, onpointerdown: copyLinkAddress}} {...button_props} />
+		{@render copy_link_button()}
 	{/if}
 </div>
 
