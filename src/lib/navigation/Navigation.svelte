@@ -13,8 +13,8 @@
 		dynamic_styles?: DynamicStyleParameters,
 		/** Dynamic styles to the individual nav links that will be applied on hover, focus, and active states, and base styles that will be re-applied when those states are lost. */
 		dynamic_link_styles?: DynamicStyleParameters | DynamicStyleParameters[],
-		/** An array of items to display within the nav wrapper element */
-		links: NavigationLink[],
+		/** An array of items to display within the nav wrapper element.  You can provide links here or manually create `<NavLink>` components and provide them to the `children` snippet.  */
+		links?: NavigationLink[],
 		/** Classes to apply to the <a> elements. */
 		link_classes?: string | string[],
 		/** Attributes to apply to the <a> elements. */
