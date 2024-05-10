@@ -1,19 +1,32 @@
+<script context="module" lang="ts">
+	export interface SeenToastProps {
+		title: string;
+		msg: string;
+		local_storage_key: string;
+	}
+</script>
+
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
 	import { setLocalStorageItem } from '$functions/local-storage.js';
 	import DefaultToast from './DefaultToast.svelte';
 
-	export let title: string = '';
-	export let msg: string = '';
-	export let local_storage_key = browser ? crypto.randomUUID() : '';
-	let checked = false;
+	let {
+		title = '',
+		msg = '',
+		local_storage_key = browser ? crypto.randomUUID() : ''
+	}: SeenToastProps = $props();
 
-	$: if (checked) {
-		setLocalStorageItem(local_storage_key, 'true');
-	} else {
-		setLocalStorageItem(local_storage_key, 'false');
-	}
+	let checked = $state(false);
+
+	$effect(() => {
+		if (checked) {
+			setLocalStorageItem(local_storage_key, 'true');
+		} else {
+			setLocalStorageItem(local_storage_key, 'false');
+		}
+	});
 </script>
 
 <div class="grid">
@@ -22,7 +35,7 @@
 		bind:checked
 		label_position={'after'}
 		label_text={checked ? `Won't show this again` : `Don't show this next time?`}
-		button_props={{ style: 'display: grid; grid-template-columns: auto 1fr; cursor: pointer;' }}
+		style={'display: grid; grid-template-columns: auto 1fr; cursor: pointer;'}
 	/>
 </div>
 

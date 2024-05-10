@@ -1,23 +1,32 @@
+<script context="module" lang="ts">
+	export interface ToggleSwitchProps extends ComponentProps<ButtonRunes> {
+		/** The checked state of the toggle. Defaults to `false`. */
+		checked?: boolean;
+		/** The disabled state of the toggle. Defaults to `false`. */
+		disabled?: boolean;
+		/** The dynamic styles for the label. */
+		label_dynamic_styles?: DynamicStyleParameters;
+		/** The position of the label relative to the toggle. Defaults to `before`. */
+		label_position?: 'before' | 'after';
+		/** The text to display in the label. */
+		label_text?: string;
+		/** The text to display in the slider. */
+		slider_text?: string;
+		/** The attributes to apply to the `<input type="checkbox">` element. */
+		input_attributes?: HTMLInputAttributes;
+		/** The attributes to apply to the `<span class="round slider">` element. */
+		slider_attributes?: HTMLAttributes<HTMLSpanElement>;
+		/** A callback that is triggered when the toggle is toggled.  Defaults to `() => { checked = !checked }` which allows a simple binding to the `checked` prop. */
+		ontoggle?: () => void | Promise<void>;
+	}
+</script>
+
 <script lang="ts">
 	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import { type ComponentProps, type Snippet } from 'svelte';
+	import { type ComponentProps } from 'svelte';
 	import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
 	import ButtonRunes from './Button_Runes.svelte';
 
-	interface ToggleSwitchProps {
-		checked?: boolean;
-		disabled?: boolean;
-		label_dynamic_styles?: DynamicStyleParameters;
-		label_position?: 'before' | 'after';
-		label_text?: string;
-		slider_text?: string;
-		ontoggle?: () => void | Promise<void>;
-		input_attributes?: HTMLInputAttributes;
-		slider_attributes?: HTMLAttributes<HTMLSpanElement>;
-		/** Properties of the {@link Button} container.  This is also where you can add an icon. */
-		button_props?: ComponentProps<ButtonRunes>;
-		children?: Snippet;
-	}
 	let {
 		checked = $bindable(false),
 		disabled = false,
@@ -28,8 +37,8 @@
 		ontoggle = default_on_toggle,
 		input_attributes,
 		slider_attributes,
-		button_props,
-		children
+		children,
+		...button_props
 	} : ToggleSwitchProps = $props()
 
 	function default_on_toggle() {
@@ -53,7 +62,7 @@
 	onpointerdown={ontoggle}
 	role={'switch'}
 	style={`border: 0;
-		 	padding: 0.2rem; 
+			padding: 0.2rem; 
 			display: grid; 
 			gap: 0.5rem; 
 			scale: 1em;
@@ -91,23 +100,23 @@
 	{/if}
 </ButtonRunes>
 
-<style lang="scss">
-	$base-scale: var(--scale, 1rem);
-
+<style>
+	
 	/* The switch - the box around the slider */
 	.switch,
 	.label-text {
+		--toggle-scale: 1rem;
 		position: relative;
 		display: flex;
 		align-self: center;
-		width: calc(#{$base-scale} * 3);
+		width: calc(var(--toggle-scale) * 3);
 	}
 	.switch {
 		background: transparent;
 		box-shadow: none;
 		border: none;
 		border-radius: 1em;
-		height: var(--toggle-height, calc(#{$base-scale} * 1.7));
+		height: var(--toggle-height, calc(var(--toggle-scale) * 1.7));
 	}
 	/* The slider */
 	.slider {
@@ -128,8 +137,8 @@
 		place-content: center;
 		font-size: 0.9em;
 		/* These new responsive sizes allow for asymmetrical toggle sliders when resizing the window*/
-		height: var(--slider-height, #{$base-scale});
-		width: var(--slider-width, #{$base-scale});
+		height: var(--slider-height, var(--toggle-scale));
+		width: var(--slider-width, var(--toggle-scale));
 		left: 10%;
 		top: 20%;
 		background-color: var(--slider-color, white);
@@ -167,7 +176,7 @@
 
 	/* Rounded sliders */
 	.slider.round {
-		border-radius: var(--toggle-height, calc($base-scale * 1.7));
+		border-radius: var(--toggle-height, calc(var(--toggle-scale) * 1.7));
 		padding: 1px;
 	}
 	.slider.round:before {

@@ -1,7 +1,41 @@
+<script context="module" lang="ts">
+	import type { DynamicStyleParameters } from "$actions/dynamic-styles.svelte";
+
+    export interface InputLabelProps extends HTMLLabelAttributes {
+        /** A binding to the <label> element */
+        label_element?: HTMLLabelElement;
+        /** The text for the label */
+        text?: string;
+        /** The position of the label relative to the child element it labels. Defaults to `before`. */
+        position?: 'before' | 'after';
+        /** The text for the invalid message. */
+        invalid_text?: string;
+        /** The id of the element this labels with the `for` attribute. Defaults to `crypto.randomUUID()` */
+        id?: string | null;
+        /** The transition types to use for the invalid message.  Defaults to `[slide]` */
+        invalid_msg_transition_types?: TransitionTypes[];
+        /** A binding to the validity of the input.  Changing this triggers the visibility of the invalid message. */
+        valid?: boolean;
+        /** Props to pass to the tooltip action. */
+        tooltip_props?: TooltipProps;
+        /** Styles to apply to the label, including hover/focus/active styles. */
+        dynamic_styles?: DynamicStyleParameters;
+        /** Parameters for the transition. */
+        transition_parameters?: SvelteTransitionParams;
+        invalid_msg_snippet?: Snippet;
+        /** A snippet for the content of the label. Defaults to a simple <div> that contains the `text` with a class to position it. */
+        label_snippet?: Snippet;
+        /** The Svelte transition to use for the label */
+        transition?: SvelteTransition;
+    }   
+</script>
+
 <script lang='ts'>
-	import { dynamicStyle, tooltip } from "$lib";
-	import type { InputLabelProps } from "$lib/lib_types";
+	import { dynamicStyle, tooltip, type TooltipProps } from "$lib";
+	import type { SvelteTransition, SvelteTransitionParams, TransitionTypes } from "$lib/lib_types";
 	import TransitionNativeRunes from "$wrappers/TransitionNative_Runes.svelte";
+	import type { Snippet } from "svelte";
+	import type { HTMLLabelAttributes } from "svelte/elements";
 	import { fade } from "svelte/transition";
 
     let {

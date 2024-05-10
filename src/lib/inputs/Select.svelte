@@ -1,4 +1,17 @@
 <script lang=ts context=module>
+	export interface SelectOption {
+		value: unknown;
+		text?: string;
+		disabled?: boolean;
+	}
+
+	export interface SelectOptionGroup {
+		options: SelectOption[];
+		label?: string;
+	}
+
+	export type SelectOptionList = (SelectOption | SelectOptionGroup)[];
+
 	export interface SelectProps extends HTMLSelectAttributes {
 		value?: unknown;
 		id?: string | null;
@@ -16,7 +29,6 @@
 
 <script lang="ts">
 	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import type { SelectOption, SelectOptionGroup, SelectOptionList } from '$lib/lib_types';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import type { HTMLSelectAttributes } from 'svelte/elements';
 	import InputLabel from './InputLabel.svelte';

@@ -1,8 +1,23 @@
+<script context="module" lang="ts">
+	export interface DateInputProps extends Omit<HTMLInputAttributes, 'date' | 'min' | 'max'> {
+		date?: Temporal.ZonedDateTime;
+		min?: Temporal.ZonedDateTime;
+		max?: Temporal.ZonedDateTime;
+		label_props?: InputLabelProps;
+		input_attributes?: HTMLInputAttributes;
+		input_dynamic_styles?: DynamicStyleParameters;
+		is_valid?: boolean;
+		on_input?: () => void | Promise<void>;
+		date_input?: HTMLInputElement;
+		label_element?: HTMLLabelElement;
+	}
+</script>
+
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.svelte';
-	import type { DateInputProps } from '$lib/lib_types';
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import { Temporal } from '@js-temporal/polyfill';
-	import InputLabel from './InputLabel.svelte';
+	import type { HTMLInputAttributes } from 'svelte/elements';
+	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
 
 	// Temporal API proposal status:
 	// https://tc39.es/proposal-temporal/docs/cookbook.html#current-date-and-time
