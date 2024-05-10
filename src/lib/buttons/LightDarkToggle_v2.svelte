@@ -150,7 +150,7 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 
 		/* Large size on touch-only interfaces */
 		@media (hover: none) {
-			--size: 48px;
+			--size: 3rem;
 		}
 	}
 	:global([data-theme='light']) {
