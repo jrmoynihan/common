@@ -1,16 +1,32 @@
+<script context="module" lang="ts">
+	import type { HTMLAnchorAttributes } from "svelte/elements";
+
+	export interface ExternalLinkProps extends HTMLAnchorAttributes {
+		url: URL;
+		prefetch?: boolean
+	}
+</script>
 <script lang="ts">
-	export let url: URL;
-	export let prefetch = true;
+	let {
+		url,
+		prefetch = true,
+		children,
+		...anchor_attributes
+	} : ExternalLinkProps = $props();
 </script>
 
 <mark>
 	{#if prefetch}
 		<link rel="prefetch" href={url.href} />
 	{/if}
-	<a href={url.href}><slot /></a></mark
->
+	<a href={url.href} {...anchor_attributes}>
+		{#if children}
+			{@render children()}
+		{/if}
+	</a>
+</mark>
 
-<style lang="scss">
+<style>
 	mark {
 		background-color: transparent;
 		padding: 0 0.25rem;
