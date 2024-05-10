@@ -58,27 +58,28 @@ export class NavigationLink {
 	};
 }
 
-export async function get_subroutes(current_pathname: string) {
-	const match = `/src/routes${current_pathname === '/' ? '' : current_pathname}/`;
+export async function get_subroutes(url_pathname: string, exclude_paths?: string[]) {
+	const full_path = `/src/routes${url_pathname === '/' ? '' : url_pathname}/`;
 	const all_path_components = import.meta.glob('/src/routes/**/*.svelte');
 	const subdirectories = Object.entries(all_path_components)
 		.map(([key, value]) => {
-			const trimmed_key = key.replace(match, '').replace('/+page.svelte', '');
+			const trimmed_key = key.replace(full_path, '').replace('/+page.svelte', '');
 			return { path: key, name: trimmed_key };
 		})
-		.filter(({ path, name }) => {
-			if (
-				path.includes('+page.svelte') &&
-				path.includes(match) &&
-				path !== `${match}+page.svelte`
-			) {
-				// Retain only *direct* sub-routes
-				return !name.includes('/');
-			}
-		})
+		.filter((path) => filter_path(path, full_path))
 		.map(({ name }) => name);
 
 	return subdirectories;
+}
+function filter_path({ path, name }: { path: string; name: string }, full_path: string) {
+	if (
+		path.includes('+page.svelte') &&
+		path.includes(full_path) &&
+		path !== `${full_path}+page.svelte`
+	) {
+		// Retain only *direct* sub-routes
+		return !name.includes('/');
+	}
 }
 
 export async function make_subroute_nav_links(
