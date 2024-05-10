@@ -103,7 +103,8 @@ function onclick(){
 
 	<ToggleSwitch
 		bind:checked={keep_visible}
-		button_props={{ style: 'display: grid; transition: background-color 250ms ease, color 250ms ease; gap: 1rem; grid-auto-flow: column; padding: 1rem;', dynamic_styles: { hover_styles: 'background-color: darkgreen; color: var(--accent);'}}}
+		style={'display: grid; transition: background-color 250ms ease, color 250ms ease; gap: 1rem; grid-auto-flow: column; padding: 1rem;'}
+		dynamic_styles={{ hover_styles: 'background-color: darkgreen; color: var(--accent);'}}
 	>
 		<p>I'm a toggle switch!</p>
 	</ToggleSwitch>
@@ -142,7 +143,7 @@ function onclick(){
 	section {
 		display: flex;
 		flex-wrap: wrap;
-    	place-content: center;
+		place-content: center;
 		place-items: center;
 		margin: auto;
 		grid: auto / repeat(2, 1fr);
