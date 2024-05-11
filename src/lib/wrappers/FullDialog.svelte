@@ -1,10 +1,5 @@
-<script lang='ts'>
-
-	import ButtonRunes from '$buttons/Button_Runes.svelte';
-	import { type ComponentProps, type Snippet } from 'svelte';
-	import Dialog from './Dialog.svelte';
-
-    interface FullDialogProps {
+<script context="module" lang="ts">
+    export interface FullDialogProps extends Omit<DialogProps, 'dialog'> {
         /** Provide a simple text for the heading.  Defaults to an <h3> element within a <header> tag and a close ('X') button positioned at the top right. 
         
         For full control, provide a `header` snippet instead.   
@@ -32,9 +27,6 @@
         When explicitly set to `null` or left `undefined`, falls back to using `button_text` to provide content to the button. */
         button_content?: Snippet | null;
 
-        /** Provide a snippet for the dialog's content. */
-        children?: Snippet | null;
-
         /** A snippet for the dialog's header. Defaults to an <h3> element within a <header> tag and a close ('X') button positioned at the top right. */
         header?: Snippet | null;
 
@@ -54,29 +46,29 @@
 
         /** The number of pixels to blur the ::backdrop pseudo-element background when `mode: 'full'` (default: null) */
         blur?: number | null,
-
-        /** Props to pass to the dialog component. */
-        dialog_props?: ComponentProps<Dialog>
         
         /** A binding to the <dialog> element itself */
         dialog?: Dialog;
     }
+</script>
+
+<script lang='ts'>
+
+	import ButtonRunes from '$buttons/Button_Runes.svelte';
+	import { type ComponentProps, type Snippet } from 'svelte';
+	import Dialog, { type DialogProps } from './Dialog.svelte';
 
     let {
-        heading = undefined,
-        button_text = undefined,
-        button_props = undefined,
-        button = undefined,
-        button_content = undefined,
-        children = undefined,
-        header = undefined,
-        footer = undefined,
-        // open = $bindable(async() => dialog?.open()),
-        // close = $bindable(async() => dialog?.close()),
-        mode = 'full', 
+        heading,
+        button_props,
+        button_content,
+        children,
+        button = default_button,
+        header = default_header,
+        footer = default_footer,
         blur = 10,
-        dialog_props = undefined,
-        dialog = $bindable(undefined)
+        dialog = $bindable(),
+        ...dialog_props
     } : FullDialogProps = $props();
     
 
@@ -118,46 +110,38 @@
     <ButtonRunes {...button_props} onclick={open} >
         {#if button_content}
             {@render button_content()}
-        {:else if button_text}
-            {button_text}
         {/if}
     </ButtonRunes>
 {/snippet}
 
 {#if button}
     {@render button()}
-{:else if button !== null}
-    {@render default_button()}
 {/if}
 <Dialog
 bind:this={dialog} 
-{mode}
+mode='full'
 {blur}
 {...dialog_props}
 >
-    <!-- Explicit `null` removes the header entirely, but `undefined` will use the default -->
     {#if header}
         {@render header()}
-    {:else if header !== null}
-        {@render default_header()}
     {/if}
 
     {#if children}
-    <!-- TODO: add back to avoid tabbable while closed: style:display={attributes?.open ? 'block' : 'none'} -->
+    <!-- TODO: add back to avoid tabbable while closed: 
+        style:display={attributes?.open ? 'block' : 'none'}
+    -->
         <article>
             {@render children()}
         </article>
     {/if}
 
-    <!-- Explicit `null` removes the footer entirely, but `undefined` will use the default -->
     {#if footer}
         {@render footer()}
-    {:else if footer !== null}
-        {@render default_footer()}
     {/if}
 </Dialog>
 
-<style lang='scss'>
+<style>
     @layer full-dialog {
         article {
             overflow-y: auto;
@@ -166,9 +150,8 @@ bind:this={dialog}
             display: grid;
             justify-items: start;
             gap: var(--size-3);
-            // box-shadow: var(--shadow-2);
             padding-inline: var(--size-5);
-            // padding-block: var(--size-3);  /* caused grid overflow when too big */
+            /* padding-block: var(--size-3);  /* caused grid overflow when too big */
         }
 
         header {
@@ -188,7 +171,7 @@ bind:this={dialog}
             justify-content: space-between;
             align-items: flex-start;
             padding-inline: var(--size-5);
-            // padding-block: var(--size-3);
+            /* padding-block: var(--size-3); */
 
             &  > menu {
                 display: flex;
@@ -196,7 +179,7 @@ bind:this={dialog}
                 gap: var(--size-3);
                 padding-inline-start: 0;
                 &:only-child {
-                    margin-inline-start: auto;  // floats lone items to the right
+                    margin-inline-start: auto;  /* floats lone items to the right */
                 }
             }
         }

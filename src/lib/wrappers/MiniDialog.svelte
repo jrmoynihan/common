@@ -1,16 +1,15 @@
-<script lang='ts'>
-	import type { ComponentProps, Snippet } from 'svelte';
-	import FullDialog from './FullDialog.svelte';
+<script context='module' lang='ts'>
+    export interface MiniDialogProps extends FullDialogProps {}
+</script>
 
-    interface MegaModalProps {
-        children?: Snippet;
-        dialog_props?: ComponentProps<FullDialog>;
-    }
+<script lang='ts'>
+	import FullDialog, { type FullDialogProps } from './FullDialog.svelte';
+
 
     let {
         children = undefined,
-        dialog_props = undefined
-    } : MegaModalProps= $props();
+        ...dialog_props
+    } : MiniDialogProps = $props();
 
 </script>
 

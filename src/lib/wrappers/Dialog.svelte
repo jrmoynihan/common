@@ -2,7 +2,7 @@
 Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 -->
 <script context="module">
-	interface ModalProps extends HTMLDialogAttributes{
+	interface Props extends HTMLDialogAttributes{
 		/** A binding to the <dialog> element */
 		dialog?: HTMLDialogElement | undefined;
 		/** The type of modal to use.  (Default: 'full')
@@ -23,7 +23,7 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 		/** In which direction should the dialog slide out to? */
 		slide_out_to?: 'left' | 'right' | 'top' | 'bottom';
 		}
-	interface ExtendedDialog extends ModalProps {
+	export interface DialogProps extends Props {
         onopen?: () => void | Promise<void>;
 		onopening?: () => void | Promise<void>;
         onclose?: () => void | Promise<void>;
@@ -37,7 +37,7 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 
 	let { 
 		children,
-		dialog,
+		dialog = $bindable(),
 		mode = 'full',
 		blur = null,
 		scale = 'out',
@@ -45,7 +45,7 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 		slide_in_from = 'bottom',
 		slide_out_to = 'top',
 		...attributes
-	} : ExtendedDialog = $props();
+	} : DialogProps = $props();
 	
 	export const close = async () => {
 		dialog?.close()
@@ -60,6 +60,7 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 -->
 <dialog
+	bind:this={dialog}
 	use:dialog_action
 	class="dialog"
 	class:blur
@@ -74,7 +75,6 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 	class:slide-out-to-top={slide_out_to === 'top' && (slide === 'out' || slide === 'both')}
 	class:slide-out-to-bottom={slide_out_to === 'bottom' && (slide === 'out' || slide === 'both')}
 	data-mode={mode}
-	bind:this={dialog}
 	style:--blur={typeof blur === 'number' ? `${blur}px` : `0`}
 	{...attributes}
 	>	

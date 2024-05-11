@@ -16,23 +16,25 @@
 {@render lorem()}
 {@render lorem()}
 <section class="modals">
-	<MiniDialog 
-		dialog_props={{
-			button_text: 'Open the mini modal!',
-			button_props: {tooltip_options: {content: 'Really, open the mini modal!'}},
-			heading: "MiniModal",
-		}}
-	>
+	<MiniDialog
+		button_props={{tooltip_options: {content: 'Really, open the mini modal!'}}}
+		heading={"MiniModal"}
+	>	
+		{#snippet button_content()}
+			Open the mini modal!
+		{/snippet}
 		<p use:tooltip={{content: 'Hello again!'}}>Hello! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, tenetur nihil voluptate placeat quo delectus sunt consequatur tempore maiores aliquid consequuntur illum molestiae corrupti quaerat animi perferendis nesciunt nostrum optio!</p>
 	</MiniDialog>
 	
 	<FullDialog 
 		bind:this={dialog}
-		dialog_props={{onopening: () => console.log('opening!')}}
-		button_text={'Open the mega modal!'}
+		onopening={() => console.log('opening!')}
 		button_props={{tooltip_options: {content: 'Really, open the mega modal!'}}}
 		heading="MegaModal"
-	>	
+	>
+		{#snippet button_content()}
+			Open the mega modal!
+		{/snippet}
 		{#each {length: 10} as _}
 			{@render lorem()}
 		{/each}

@@ -1,68 +1,54 @@
-<script lang="ts">
-	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
-	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
-	import { Fa } from '@jrmoynihan/svelte-fa';
-	import type { ComponentProps, Snippet } from 'svelte';
-	import { cubicInOut } from 'svelte/easing';
-	import TransitionRunes from './Transition_Runes.svelte';
-
-
-	export const toggle = () => (open = !open);
-
-	type AccordionProps = {
+<script context='module' lang='ts'>
+	export interface AccordionProps extends HTMLAttributes<HTMLElement> {
 		/** A snippet to provide a custom summary section instead of just passing the `summary_text`. */
 		summary?: Snippet,
-		/** A snippet to provide content within the accordion. */
-		content?: Snippet,
+		/** The open state of the accordion. */
+		open?: boolean
 		/** The parameters of the transition. */
 		transition_props?: ComponentProps<TransitionRunes>,
 		/** The position of the expand icon. */
 		expand_icon_position?: 'left' | 'right' | 'none',
-		/** A custom expand icon. */
-		custom_expand_icon?: IconDefinition,
-		/** Classes to apply to the expand icon. */
-		icon_class?: string,
-		/** Custom styles to apply to the summary. */
-		custom_summary_styles?: string
-		/** Custom styles to apply to the accordion container. */
-		custom_accordion_container_styles?: string
-		/** The open state of the accordion. */
-		open?: boolean
+		/** Props to apply to the expand/collapse icon's `<Fa>` component. */
+		icon_props?: ComponentProps<Fa>,
+		/** Custom styles to apply to the summary's `<button>` element that toggles the accordion. */
+		summary_button_attributes?: HTMLButtonAttributes
 		/** The rotation of the open icon. */
 		closed_icon_rotation?: number
 		/** The rotation of the closed icon. */
 		open_icon_rotation?: number
-		/** The parameters of the tooltip. */
-		summary_tooltip_parameters?: TooltipProps,
-		/** The text of the summary. */
-		summary_text?: string
 	}
+</script>
+
+<script lang="ts">
+	import { Fa } from '@jrmoynihan/svelte-fa';
+	import type { ComponentProps, Snippet } from 'svelte';
+	import { cubicInOut } from 'svelte/easing';
+	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
+	import TransitionRunes from './Transition_Runes.svelte';
+
+	export const toggle = () => (open = !open);
+
 	let {
 		summary,
-		content,
+		children,
+		open = $bindable(false),
 		transition_props = {
 			slide_transition_parameters: { duration: 300, easing: cubicInOut },
 		},
 		expand_icon_position = 'right',
-		custom_expand_icon,
-		icon_class = 'fa-CaretDown',
-		custom_summary_styles,
-		custom_accordion_container_styles,
-		open = false,
+		icon_props,
+		summary_button_attributes,
 		closed_icon_rotation = 90,
 		open_icon_rotation = -90,
-		summary_tooltip_parameters = {
-			disabled: true
-		},
-		summary_text
+		...accordion_container_attributes
 	} : AccordionProps = $props()
 </script>
 
-{#snippet icon(custom_expand_icon)}
+{#snippet icon(icon_props)}
 	<Fa
-	icon={custom_expand_icon}
-	class={icon_class}
+	class={'fa-CaretDown'}
 	rotate={open ? open_icon_rotation : closed_icon_rotation}
+	{...icon_props}
 	/>
 {/snippet}
 
@@ -82,40 +68,37 @@
 
 <div
 	class="accordion-container"
-	style={custom_accordion_container_styles}
 	style:--icon-closed-rotation={`${closed_icon_rotation}deg`}
 	style:--icon-open-rotation={`${open_icon_rotation}deg`}
+	{...accordion_container_attributes}
 >
 	<button
 		onclick={toggle}
-		use:tooltip={summary_tooltip_parameters}
 		class:left-icon={expand_icon_position === 'left'}
 		class:right-icon={expand_icon_position === 'right'}
 		class:no-icon={expand_icon_position === 'none'}
 		aria-expanded={open}
-		style={custom_summary_styles}
+		{...summary_button_attributes}
 	>
-		{#if custom_expand_icon && expand_icon_position === 'left'}
-			{@render icon(custom_expand_icon)}
+		{#if icon_props && expand_icon_position === 'left'}
+			{@render icon(icon_props)}
 		{:else if expand_icon_position === 'left'}
 			{@render default_expand_icon()}
 		{/if}
 		
 		{#if summary}
 			{@render summary()}
-		{:else if summary_text}
-			{summary_text}
 		{/if}
 		
-		{#if custom_expand_icon && expand_icon_position === 'right'}
-			{@render icon(custom_expand_icon)}
+		{#if icon_props && expand_icon_position === 'right'}
+			{@render icon(icon_props)}
 		{:else if expand_icon_position === 'right'}
 			{@render default_expand_icon()}
 		{/if}
 	</button>
 	<TransitionRunes bind:trigger={open} {...transition_props} >
-		{#if content && open}
-			{@render content()}
+		{#if children && open}
+			{@render children()}
 		{/if}
 	</TransitionRunes>
 </div>
@@ -149,7 +132,7 @@
 		&[aria-expanded='true'] {
 			border-radius: 1rem 1rem 0 0;
 			transition: border-radius 0s ease-in-out;
-			& svg {
+			& :global( > svg) {
 				rotate: var(--icon-open-rotation);
 			}
 		}

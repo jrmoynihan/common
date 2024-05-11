@@ -1,14 +1,5 @@
-<script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import type { TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
-	import { browser } from '$app/environment';
-	import { beforeNavigate } from '$app/navigation';
-	import NavLink from '$navigation/NavLink.svelte';
-	import type { Snippet } from 'svelte';
-	import type { HTMLAnchorAttributes } from 'svelte/elements';
-	import type { NavigationLink } from './nav-functions.js';
-	
-	interface NavigationProps {
+<script context="module" lang="ts">
+	export interface NavigationProps extends HTMLAttributes<HTMLElement> {
 		/** Dynamic styles for the <nav> parent element that will be applied on hover, focus, and active states, and base styles that will be re-applied when those states are lost. */
 		dynamic_styles?: DynamicStyleParameters,
 		/** Dynamic styles to the individual nav links that will be applied on hover, focus, and active states, and base styles that will be re-applied when those states are lost. */
@@ -26,6 +17,18 @@
 		/** A snippet to render as the children of the <nav> element.*/
 		children?: Snippet
 	}
+</script>
+
+<script lang="ts">
+	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import type { TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
+	import { browser } from '$app/environment';
+	import { beforeNavigate } from '$app/navigation';
+	import NavLink from '$navigation/NavLink.svelte';
+	import type { Snippet } from 'svelte';
+	import type { HTMLAnchorAttributes, HTMLAttributes } from 'svelte/elements';
+	import type { NavigationLink } from './nav-functions.js';
+
 
 	let {
 		dynamic_styles,
@@ -35,7 +38,8 @@
 		link_attributes,
 		link_current_page_styles,
 		tooltip_options = { disabled: true },
-		children
+		children,
+		...nav_attributes
 	} : NavigationProps = $props()
 
 	// Close any open dialog elements before navigating.
@@ -55,6 +59,7 @@
 <nav 
 	role="navigation"
 	use:dynamicStyle={dynamic_styles}
+	{...nav_attributes}
 >
 	{#if links?.length > 0}
 		{#each links as nav_link, i}
