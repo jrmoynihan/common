@@ -1,35 +1,41 @@
+<script context='module' lang='ts'>
+  export interface TabProps {
+      tabs?: Tab<SvelteComponent>[],
+      /** A replacement Snippet for the default tab button */
+      tab_button?: Snippet,
+      /** A replacement Snippet for the default tab container title */
+      tab_container_title?: Snippet
+      /** The title of the default tab button */
+      title?: string,
+      /** The attributes of the default tab <button> element */
+      tab_button_attributes?: HTMLButtonAttributes,
+      /** The selected tab */
+      selected_tab?: Tab<SvelteComponent>,
+      /** The transition parameters of the tab content */
+      tab_content_transition_parameters?: ComponentProps<TransitionNativeRunes>
+  }
+  export interface Tab<T extends SvelteComponent> {
+      title: string,
+      content?: Snippet
+      component?: ComponentType<T>,
+      props?: ComponentProps<T>
+  }
+
+</script>
+
 <script lang='ts'>
 	import TransitionNativeRunes from '$wrappers/TransitionNative_Runes.svelte';
-	import type { ComponentProps, Snippet } from "svelte";
+	import type { ComponentProps, ComponentType, Snippet, SvelteComponent } from "svelte";
 	import type { HTMLButtonAttributes } from "svelte/elements";
 
-    interface TabProps {
-        tabs?: Tab[],
-        /** A replacement Snippet for the default tab button */
-        tab_button?: Snippet,
-        /** A replacement Snippet for the default tab container title */
-        tab_container_title?: Snippet
-        /** The title of the default tab button */
-        title?: string,
-        /** The attributes of the default tab <button> element */
-        tab_button_attributes?: HTMLButtonAttributes,
-        /** The selected tab */
-        selected_tab?: Tab,
-        /** The transition parameters of the tab content */
-        tab_content_transition_parameters?: ComponentProps<TransitionNativeRunes>
-    }
-    interface Tab {
-        title: string,
-        content: Snippet
-    }
 
     let {
         tabs = [],
+        selected_tab = $bindable(tabs?.length > 0 ? tabs[0] : undefined),
         tab_button ,
         tab_container_title,
         title,
         tab_button_attributes,
-        selected_tab = tabs?.length > 0 ? tabs[0] : undefined,
         tab_content_transition_parameters
     } : TabProps = $props();
 
@@ -64,11 +70,11 @@
           focus_tab.focus();
       }
     }
-    function get_index_of_tab(tab: Tab | undefined){
+    function get_index_of_tab(tab: Tab<SvelteComponent> | undefined){
         if(!tab) return 0;
         return tabs.indexOf(tab);
     }
-    function select_tab(tab: Tab){
+    function select_tab(tab: Tab<SvelteComponent>){
       if(selected_tab){
         const old_tab_index = get_index_of_tab(selected_tab);
         transitions[old_tab_index]?.toggle();
@@ -111,9 +117,15 @@
     </div>
     <div id={`tab-content-${id}`} class="tab-content">
       {#each tabs as tab, i}
-          {@const {content} = tab}
+          {@const {content, component, props} = tab}
           <div id={`tabpanel-${i}-${id}`} role="tabpanel" tabindex={selected_tab === tab ? 0 : -1} aria-labelledby={`tab-${i}-${id}`}>
+            {#if content}
             <TransitionNativeRunes bind:this={transitions[i]} visible={i === 0} children={content} {...tab_content_transition_parameters}/>
+            {:else if component}
+            <TransitionNativeRunes bind:this={transitions[i]} visible={i === 0} {...tab_content_transition_parameters}>
+                <svelte:component this={component} {...props} />
+            </TransitionNativeRunes>
+            {/if}
           </div>
       {/each}
     </div>
@@ -166,7 +178,6 @@
   padding: 5px;
   border-radius: 0 5px 5px;
   min-height: 10em;
-  width: 100%;
   overflow: auto;
 }
 

@@ -1,12 +1,24 @@
 <script lang="ts">
-	export let text = `I'm a custom component thing!`;
+	import type { HTMLAttributes } from 'svelte/elements';
+
+	interface CustomComponentProps extends HTMLAttributes<HTMLElement> {
+		text: string;
+		background: string;
+		color: string;
+	}
+	let {
+		text = `I'm a custom component thing!`,
+		background = 'blue',
+		color = 'white',
+		...rest
+	}: CustomComponentProps = $props();
+	$inspect(text);
 </script>
 
-<div>{text}</div>
+<div style:background style:color {...rest}>{text}</div>
 
 <style lang="scss">
 	div {
-		background: blue;
 		color: white;
 	}
 </style>
