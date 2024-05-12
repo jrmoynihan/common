@@ -30,6 +30,7 @@
 	aria-autocomplete={'list'}
 	aria-haspopup={'listbox'}
 	aria-label={list}
+	{list}
 	{...text_input_props}
 >
 	<datalist id={list} tabindex="-1">
