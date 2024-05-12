@@ -82,9 +82,9 @@ export {
 	splitSnakeCase
 } from './functions/helpers.svelte.js';
 export {
-	deleteLocalStorageItem,
-	getLocalStorageItem,
-	setLocalStorageItem
+	delete_local_storage_item,
+	get_local_storage_item,
+	set_local_storage_item
 } from './functions/local-storage.js';
 export {
 	ErrorAndToast,
@@ -114,7 +114,7 @@ export {
 	shouldLayoutTransitionOnNavigation,
 	type IconLayer
 } from './navigation/nav-functions.js';
-export { defaultToast, errorToast, reminderToast, type ToastOptions } from './toasts/toasts.js';
+export { default_toast, error_toast, reminder_toast, type ToastOptions } from './toasts/toasts.js';
 export { type Tab } from './wrappers/Tabs_Runes.svelte';
 export {
 	Accordion,

@@ -1,7 +1,7 @@
-import { all_icons, policeCarLight } from '$functions/logging.js';
-import type { IconSize } from '../lib_types.js';
+import { all_icons, police_car_light } from '$functions/logging.js';
 import SeenToast from '$toasts/SeenToast.svelte';
 import { toast, type SvelteToastOptions } from '@zerodevx/svelte-toast';
+import type { IconSize } from '../lib_types.js';
 import DefaultToast from './DefaultToast.svelte';
 
 export interface ToastTheme {
@@ -15,21 +15,21 @@ export interface ToastOptions {
 	progress?: number;
 	next?: number;
 	initial?: number;
-	toastContainerTop?: string;
-	toastColor?: string;
-	toastBackground?: string;
-	toastProgressBackground?: string;
-	toastBoxShadow?: string;
-	toastBorderRadius?: string;
-	toastMsgPadding?: string;
-	useSeenToastComponent?: boolean;
+	toast_container_top?: string;
+	toast_color?: string;
+	toast_background?: string;
+	toast_progress_background?: string;
+	toast_box_shadow?: string;
+	toast_border_radius?: string;
+	toast_msg_padding?: string;
+	use_seen_toast_component?: boolean;
 	local_storage_key?: string;
 	text_styles?: string;
 	header_styles?: string;
-	toastBarLeft?: string;
-	toastBarHeight?: string;
-	toastBarWidth?: string;
-	toastProgressBorderRadius?: string;
+	toast_bar_left?: string;
+	toast_bar_height?: string;
+	toast_bar_width?: string;
+	toast_progress_border_radius?: string;
 	icon?: string | null;
 	icon_size?: IconSize;
 	icon_color?: string | null;
@@ -37,7 +37,7 @@ export interface ToastOptions {
 	pausable?: boolean | undefined;
 }
 
-export const defaultToast = async (input: ToastOptions) => {
+export const default_toast = async (input: ToastOptions) => {
 	const {
 		title = '',
 		msg = undefined,
@@ -45,37 +45,37 @@ export const defaultToast = async (input: ToastOptions) => {
 		progress = 0,
 		next = 0,
 		initial = 1,
-		toastContainerTop = '21rem',
-		toastColor = 'var(--background)',
-		toastBackground = 'var(--accent)',
-		toastProgressBackground = 'var(--text)',
-		toastBoxShadow = '0 0 4px 6px hsla(0,0,0,0.4)',
-		toastBorderRadius = '5vh',
-		toastMsgPadding = '0.75rem',
-		useSeenToastComponent = false,
+		toast_container_top = '21rem',
+		toast_color = 'var(--background)',
+		toast_background = 'var(--accent)',
+		toast_progress_background = 'var(--text)',
+		toast_box_shadow = '0 0 4px 6px hsla(0,0,0,0.4)',
+		toast_border_radius = '5vh',
+		toast_msg_padding = '0.75rem',
+		use_seen_toast_component = false,
 		local_storage_key = 'toast',
 		text_styles = '',
 		header_styles = '',
-		toastBarWidth = '90%',
-		toastBarLeft = '5%',
-		toastProgressBorderRadius = '5rem',
-		toastBarHeight = '4px',
+		toast_bar_width = '90%',
+		toast_bar_left = '5%',
+		toast_progress_border_radius = '5rem',
+		toast_bar_height = '4px',
 		icon = null,
 		icon_size = null,
 		icon_color = null,
 		pausable = true,
 		theme = {
-			'--toastContainerTop': `${toastContainerTop}`,
-			'--toastColor': `${toastColor}`,
-			'--toastBackground': `${toastBackground}`,
-			'--toastProgressBackground': `${toastProgressBackground}`,
-			'--toastBoxShadow': `${toastBoxShadow}`,
-			'--toastBorderRadius': `${toastBorderRadius}`,
-			'--toastMsgPadding': `${toastMsgPadding}`,
-			'--toastBarLeft': `${toastBarLeft}`,
-			'--toastBarWidth': `${toastBarWidth}`,
-			'--toastBarHeight': `${toastBarHeight}`,
-			'--toastProgressBorderRadius': `${toastProgressBorderRadius}`
+			'--toastContainerTop': `${toast_container_top}`,
+			'--toastColor': `${toast_color}`,
+			'--toastBackground': `${toast_background}`,
+			'--toastProgressBackground': `${toast_progress_background}`,
+			'--toastBoxShadow': `${toast_box_shadow}`,
+			'--toastBorderRadius': `${toast_border_radius}`,
+			'--toastMsgPadding': `${toast_msg_padding}`,
+			'--toastBarLeft': `${toast_bar_left}`,
+			'--toastBarWidth': `${toast_bar_width}`,
+			'--toastBarHeight': `${toast_bar_height}`,
+			'--toastProgressBorderRadius': `${toast_progress_border_radius}`
 		}
 	} = input;
 	let { id } = input;
@@ -92,8 +92,8 @@ export const defaultToast = async (input: ToastOptions) => {
 
 	const toastProps: SvelteToastOptions = {
 		component: {
-			src: useSeenToastComponent ? SeenToast : DefaultToast,
-			props: useSeenToastComponent ? seen_toast_props : toast_props
+			src: use_seen_toast_component ? SeenToast : DefaultToast,
+			props: use_seen_toast_component ? seen_toast_props : toast_props
 		},
 		duration,
 		progress,
@@ -116,25 +116,27 @@ export const defaultToast = async (input: ToastOptions) => {
 	return id;
 };
 
-export const errorToast = async (options: ToastOptions) => {
-	const id = await defaultToast({
+export const error_toast = async (options: ToastOptions) => {
+	const id = await default_toast({
 		title: 'Error!',
-		toastColor: 'white',
-		toastBackground: 'darkred',
-		icon: options.icon ?? all_icons.policeCarLight,
+		toast_color: 'white',
+		toast_background: 'darkred',
+		icon: options.icon ?? all_icons.police_car_light,
 		...options
 	});
 	return id;
 };
 
-export const reminderToast = async (input: ToastOptions) => {
+export const reminder_toast = async (input: ToastOptions) => {
 	const { title = 'Reminder', duration = 60_000 } = input;
-	const id = await defaultToast({
+	const id = await default_toast({
 		...input,
 		title,
 		duration
 	});
 	return id;
 };
-export const testErrorToast = async () =>
-	await errorToast({ msg: `${policeCarLight} This is a test error. Try to avoid the real thing.` });
+export const test_error_toast = async () =>
+	await error_toast({
+		msg: `${police_car_light} This is a test error. Try to avoid the real thing.`
+	});

@@ -27,7 +27,7 @@ export type LogAndToastOptions = ToastOptions & LogOptions;
 export type ErrorAndToastOptions = ToastOptions & ErrorLogOptions;
 
 export const ErrorLog = async (input: ErrorLogOptions): Promise<void> => {
-	const { error, msg, icon = all_icons.policeCarLight, additional_params } = input;
+	const { error, msg, icon = all_icons.police_car_light, additional_params } = input;
 	let str = icon ? `%c${icon} ` : '%c';
 	str += `\n ${msg}\ `;
 	let args = [str, default_log_style, error];
@@ -100,15 +100,15 @@ export const ErrorAndToast = async (options: ErrorAndToastOptions): Promise<numb
 	return toastId;
 };
 // CSS emoji for console logging (https://unicode.org/emoji/charts/full-emoji-list.html)
-export const airplaneDeparture = String.fromCodePoint(0x1f6eb);
+export const airplane_departure = String.fromCodePoint(0x1f6eb);
 export const bomb = String.fromCodePoint(0x1f4a3);
 export const butter = String.fromCodePoint(0x1f9c8);
 export const bread = String.fromCodePoint(0x1f35e);
 export const checkmark = String.fromCodePoint(0x2705);
-export const checkeredFlag = String.fromCodePoint(0x1f3c1);
+export const checkered_flag = String.fromCodePoint(0x1f3c1);
 export const detective = String.fromCodePoint(0x1f575);
 export const dog = String.fromCodePoint(0x1f415);
-export const dogFace = String.fromCodePoint(0x1f436);
+export const dog_face = String.fromCodePoint(0x1f436);
 export const football = String.fromCodePoint(0x1f3c8);
 export const home = String.fromCodePoint(0x1f3e0);
 export const hourglass = String.fromCodePoint(0x231b);
@@ -116,15 +116,15 @@ export const key = String.fromCodePoint(0x1f511);
 export const lock = String.fromCodePoint(0x1f512);
 export const wood_log = String.fromCodePoint(0x1fab5);
 export const necktie = String.fromCodePoint(0x1f454);
-export const okHand = String.fromCodePoint(0x1f44c);
+export const ok_hand = String.fromCodePoint(0x1f44c);
 export const pencil = String.fromCodePoint(0x270f);
 export const pick = String.fromCodePoint(0x26cf);
-export const policeCarLight = String.fromCodePoint(0x1f6a8);
-export const stopSign = String.fromCodePoint(0x1f6d1);
+export const police_car_light = String.fromCodePoint(0x1f6a8);
+export const stop_sign = String.fromCodePoint(0x1f6d1);
 export const unlock = String.fromCodePoint(0x1f513);
 export const all_icons = {
-	okHand,
-	policeCarLight,
+	ok_hand,
+	police_car_light,
 	pencil,
 	key,
 	lock,
@@ -132,13 +132,13 @@ export const all_icons = {
 	pick,
 	football,
 	checkmark,
-	checkeredFlag,
+	checkered_flag,
 	dog,
-	dogFace,
-	airplaneDeparture,
+	dog_face,
+	airplane_departure,
 	home,
 	hourglass,
-	stopSign,
+	stop_sign,
 	bread,
 	bomb,
 	detective,
