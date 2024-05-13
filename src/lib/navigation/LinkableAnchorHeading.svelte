@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import ButtonRunes from '$buttons/Button_Runes.svelte';
-	import { defaultToast } from '$toasts/toasts.js';
+	import { default_toast } from '$toasts/toasts.js';
 	import { faLink } from '@fortawesome/free-solid-svg-icons/index';
 	import { onDestroy, type ComponentProps, type Snippet } from 'svelte';
 	import AnchorHeading from './AnchorHeading.svelte';
@@ -30,7 +30,7 @@
 		const link = `${$page.url.origin}/${$page.route.id}#${id}`;
 		navigator.clipboard.writeText(link);
 		copied = true;
-		defaultToast({ msg: 'Copied Link!', duration: 2_000 });
+		default_toast({ msg: 'Copied Link!', duration: 2_000 });
 		timeout = setTimeout(() => (copied = false), 20_000);
 	}
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { setLocalStorageItem } from '$functions/local-storage.js';
+	import { set_local_storage_item } from '$functions/local-storage.js';
 
 	/** Bind this with your store that holds the state for light/dark theme selection */
 	export let use_dark_theme = false;
@@ -87,7 +87,7 @@
 	// };
 
 	const storeDarkThemePreference = async () => {
-		await setLocalStorageItem('useDarkTheme', use_dark_theme);
+		await set_local_storage_item('useDarkTheme', use_dark_theme);
 	};
 	// Update/set the CSS custom properties anytime the colors object changes
 	$: default_colors = use_dark_theme ? { ...dark_theme_colors } : { ...light_theme_colors };

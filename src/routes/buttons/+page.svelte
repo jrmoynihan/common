@@ -3,20 +3,20 @@ import type { TooltipDirections } from "$actions/tooltip/tooltip.svelte.js";
 import ButtonRunes from "$buttons/Button_Runes.svelte";
 import ToggleSwitch from "$buttons/ToggleSwitch.svelte";
 import { delay } from "$functions/helpers.svelte.js";
-import { Log, checkeredFlag } from "$functions/logging.js";
-import { defaultToast } from "$toasts/toasts.js";
+import { Log, checkered_flag } from "$functions/logging.js";
+import { default_toast } from "$toasts/toasts.js";
 
 let position: TooltipDirections = $state<TooltipDirections>("top");
 let keep_visible: boolean = $state(false);
 
 async function testToastUpdate() {
-	const id = await defaultToast({ duration: 5_000 });
+	const id = await default_toast({ duration: 5_000 });
 	await updateToasts(id);
-	await defaultToast({ id, msg: "finished", progress: 0 });
+	await default_toast({ id, msg: "finished", progress: 0 });
 }
 
 async function updateToast(id: number, i: number) {
-	await defaultToast({ id, msg: `updating ${i}`, next: i / 10 });
+	await default_toast({ id, msg: `updating ${i}`, next: i / 10 });
 }
 async function updateToasts(id: number) {
 	for (const i of Array.from({ length: 10 }) as number[]) {
@@ -61,7 +61,7 @@ function onclick(){
 			Log({
 				msg: 'clicking with the low elevation button?',
 				title: 'HEY YOU CLICKED ME!',
-				icon: checkeredFlag
+				icon: checkered_flag
 			})
 		}
 	}
