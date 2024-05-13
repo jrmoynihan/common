@@ -16,7 +16,7 @@
       tab_content_transition_parameters?: ComponentProps<TransitionNativeRunes>
   }
   
-  export interface Tab {
+  interface Tab {
     title: string
   }
   export interface ContentTab extends Tab {

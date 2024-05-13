@@ -115,7 +115,7 @@ export {
 	type IconLayer
 } from './navigation/nav-functions.js';
 export { default_toast, error_toast, reminder_toast, type ToastOptions } from './toasts/toasts.js';
-export { type Tab } from './wrappers/Tabs_Runes.svelte';
+export type { ComponentTab, ContentTab } from './wrappers/Tabs_Runes.svelte';
 export {
 	Accordion,
 	ActionTooltip,
