@@ -1,6 +1,7 @@
 <script context='module' lang='ts'>
+	
   export interface TabProps {
-      tabs?: Tab<SvelteComponent>[],
+      tabs?: (ContentTab | ComponentTab<SvelteComponent>)[],
       /** A replacement Snippet for the default tab button */
       tab_button?: Snippet,
       /** A replacement Snippet for the default tab container title */
@@ -10,15 +11,21 @@
       /** The attributes of the default tab <button> element */
       tab_button_attributes?: HTMLButtonAttributes,
       /** The selected tab */
-      selected_tab?: Tab<SvelteComponent>,
+      selected_tab?: ContentTab | ComponentTab<SvelteComponent>,
       /** The transition parameters of the tab content */
       tab_content_transition_parameters?: ComponentProps<TransitionNativeRunes>
   }
-  export interface Tab<T extends SvelteComponent> {
-      title: string,
-      content?: Snippet
-      component?: ComponentType<T>,
-      props?: ComponentProps<T>
+  
+  export interface Tab {
+    title: string
+  }
+  export interface ContentTab extends Tab {
+    content?: Snippet
+  }
+  
+  export interface ComponentTab<T extends SvelteComponent> extends Tab {
+    component?: ComponentType<T>
+    props?: ComponentProps<T>
   }
 
 </script>
@@ -70,11 +77,11 @@
           focus_tab.focus();
       }
     }
-    function get_index_of_tab(tab: Tab<SvelteComponent> | undefined){
+    function get_index_of_tab(tab: ContentTab | ComponentTab<SvelteComponent> | undefined){
         if(!tab) return 0;
         return tabs.indexOf(tab);
     }
-    function select_tab(tab: Tab<SvelteComponent>){
+    function select_tab(tab: ContentTab | ComponentTab<SvelteComponent>){
       if(selected_tab){
         const old_tab_index = get_index_of_tab(selected_tab);
         transitions[old_tab_index]?.toggle();
@@ -117,14 +124,13 @@
     </div>
     <div id={`tab-content-${id}`} class="tab-content">
       {#each tabs as tab, i}
-          {@const {content, component, props} = tab}
           <div id={`tabpanel-${i}-${id}`} role="tabpanel" tabindex={selected_tab === tab ? 0 : -1} aria-labelledby={`tab-${i}-${id}`}>
-            {#if content}
-            <TransitionNativeRunes bind:this={transitions[i]} visible={i === 0} children={content} {...tab_content_transition_parameters}/>
-            {:else if component}
-            <TransitionNativeRunes bind:this={transitions[i]} visible={i === 0} {...tab_content_transition_parameters}>
-                <svelte:component this={component} {...props} />
-            </TransitionNativeRunes>
+            {#if 'content' in tab}
+              <TransitionNativeRunes bind:this={transitions[i]} visible={i === 0} children={tab.content} {...tab_content_transition_parameters}/>
+            {:else if 'component' in tab && 'props' in tab}
+              <TransitionNativeRunes bind:this={transitions[i]} visible={i === 0} {...tab_content_transition_parameters}>
+                  <svelte:component this={tab.component} {...tab.props} />
+              </TransitionNativeRunes>
             {/if}
           </div>
       {/each}
