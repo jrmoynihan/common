@@ -2,6 +2,7 @@
 	import Checkbox from '$inputs/Checkbox.svelte';
 	import DatalistTextInput from '$inputs/DatalistTextInput.svelte';
 	import NumericInput from '$inputs/NumericInput.svelte';
+	import RadioGroup from '$inputs/RadioGroup.svelte';
 	import Select from '$inputs/Select.svelte';
 	import TemporalDateInput from '$inputs/TemporalDateInput.svelte';
 	import TextInput from '$inputs/TextInput.svelte';
@@ -9,22 +10,31 @@
 
 	let { data } = $props();
 	const { datalist, select_options, date_inputs } : PageData = data;
-	let selected_fruit: string = $state('');
+	let selected_fruit = $state();
+	let selected_number = $state<number>(1);
 	let valid_email: string = $state('');
-	
+
+	const number_options = [ 1, 2, 3]
+
 </script>
 
 <div class="inputs-container">
 	<section class="text-inputs">
 		<h2>Text Inputs</h2>
 		<TextInput
-			placeholder_props={{ text: "required" }}
+			placeholder_props={{ text: "required", dynamic_styles: {
+				invalid_styles: 'color: var(--text);',
+				valid_styles: 'color: var(--text);'
+			} }}
 			show_confirm={false}
 			label_props={{
 				invalid_text: "Please enter text between 3-16 characters.",
 				text: "Labels for Inputs",
 				tooltip_props: { content: `I'm a plain text input with a cancel button!`, position: 'top'},
-				valid: false
+			}}
+			dynamic_input_styles={{
+				invalid_styles: 'background: oklch(70% 0.1 30 / 0.4);',
+				valid_styles: 'background: oklch(70% 0.1 130 / 0.3);'
 			}}
 			autocomplete='off'
 			required={true}
@@ -49,15 +59,14 @@
 		/>
 
 		<DatalistTextInput 
-			{datalist} 
+			{datalist}
 			bind:value={selected_fruit}
 			required={true}
-			onconfirm={() => alert(`Selected fruit:  ${selected_fruit}, ${datalist.find(d => d.value === selected_fruit)?.label}`)}
+			onconfirm={() => alert(`Selected fruit:  ${selected_fruit} ${datalist.find(d => d.value === selected_fruit)?.label}`)}
 			placeholder_props={{text: 'Pick a fruit'}} 
-			label_props={{text: "Datalist Text Input:"}}
+			label_props={{text: "Datalist Text Input:", invalid_text: "Please enter a valid fruit."}}
 			--input-invalid-outline="var(--accent) 2px solid"
 		/>
-		<span class="selected-fruit">{selected_fruit}</span>
 	</section>
 	<section class="date-inputs">
 		<h2>Date Inputs</h2>
@@ -76,14 +85,24 @@
 		/>
 	</section>
 	<section class="select-inputs">
+		<h2>Select Inputs</h2>
 		<Select
 			input_label_props={{ text: "Select an option" }}
 			options={select_options}
 			placeholder_props={{ text: 'pick one...' }}
 			required={true}
 		/>
+		<Select
+			input_label_props={{ text: "Select an option" }}
+			options={number_options}
+			placeholder_props={{ text: 'pick one...' }}
+			required={true}
+			bind:value={selected_number}
+		/>
 	</section>
+
 	<section class="checkbox-inputs">
+		<h2>Checkbox Inputs</h2>
 		<Checkbox>
 			{#snippet label()}
 				<p>Labeled Checkbox</p>
@@ -93,7 +112,15 @@
 		<Checkbox disabled text={"Disabled Checkbox"}/>
 		<Checkbox />
 	</section>
-	<button class="orange">I'm a button</button>
+	<section class="radio-inputs">
+		<h2>Radio Inputs</h2>
+		<RadioGroup items={datalist} bind:group={selected_fruit}>
+			{#snippet children(item)}
+				<span class="selected-fruit">{item?.value}</span>
+			{/snippet}
+		</RadioGroup>
+		<RadioGroup items={number_options} bind:group={selected_number}/>
+	</section>
 </div>
 
 <style lang="scss">
@@ -120,6 +147,10 @@
 		flex-direction: column;
 		justify-content: center;
 		justify-self: center;
+		gap: 1rem;
+	}
+	.radio-inputs{
+		display: flex;
 		gap: 1rem;
 	}
 	.date-inputs{
