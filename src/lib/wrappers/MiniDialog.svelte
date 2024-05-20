@@ -1,5 +1,5 @@
 <script context='module' lang='ts'>
-    export interface MiniDialogProps extends FullDialogProps {}
+    // export interface MiniDialogProps extends FullDialogProps {}
 </script>
 
 <script lang='ts'>
@@ -9,7 +9,7 @@
     let {
         children = undefined,
         ...dialog_props
-    } : MiniDialogProps = $props();
+    } : FullDialogProps = $props();
 
 </script>
 

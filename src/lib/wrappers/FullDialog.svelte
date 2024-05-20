@@ -118,10 +118,10 @@
     {@render button()}
 {/if}
 <Dialog
-bind:this={dialog} 
-mode='full'
-{blur}
-{...dialog_props}
+    bind:this={dialog} 
+    mode='full'
+    {blur}
+    {...dialog_props}
 >
     {#if header}
         {@render header()}
