@@ -1,16 +1,5 @@
-<script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
-	import type {
-		SvelteTransition,
-		SvelteTransitionParams
-	} from '$lib/lib_types.js';
-	import { Fa } from '@jrmoynihan/svelte-fa';
-	import type { ComponentProps } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
-	import { fade } from 'svelte/transition';
-
-	interface ButtonProps extends HTMLButtonAttributes {
+<script context='module' lang='ts'>
+	export interface ButtonProps extends HTMLButtonAttributes {
 		/** Options to style the tooltip or modify its visible/disabled state */
 		tooltip_options?: TooltipProps,
 		/** Style the button, allowing dynamic updates */
@@ -28,6 +17,19 @@
 		/** A binding to the button element */
 		button?: HTMLButtonElement;
 	};
+</script>
+
+<script lang="ts">
+	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
+	import type {
+		SvelteTransition,
+		SvelteTransitionParams
+	} from '$lib/lib_types.js';
+	import { Fa } from '@jrmoynihan/svelte-fa';
+	import type { ComponentProps } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import { fade } from 'svelte/transition';
 
 	// TODO: box-shadow elevation options
 
@@ -54,7 +56,7 @@
 <button
 	bind:this={button}
 	transition:transition={transition_config}
-	use:dynamicStyle={dynamic_styles}
+	use:dynamic_style={dynamic_styles}
 	use:tooltip={{ ...tooltip_options }}
 	class={`button ${classes}`}
 	{...attributes}
@@ -76,7 +78,6 @@
 	@layer button {
 		.button {
 			cursor: pointer;
-			padding: 0.5rem 1rem;
 		}
 	}
 </style>
