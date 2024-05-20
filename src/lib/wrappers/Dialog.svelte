@@ -2,7 +2,7 @@
 Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 -->
 <script context="module">
-	interface Props extends HTMLDialogAttributes{
+	interface Props extends Omit<HTMLDialogAttributes, 'open'>{
 		/** A binding to the <dialog> element */
 		dialog?: HTMLDialogElement | undefined;
 		/** The type of modal to use.  (Default: 'full')
@@ -85,14 +85,14 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 	</form>
 </dialog>
 
-<style lang="scss">
+<style>
 	@layer modal {
 		:global(html:has(dialog[open][data-mode="full"])) {
- 	 		overflow: hidden;  // prevent body from scrolling
+ 	 		overflow: hidden;  /* prevent body from scrolling */
 		}
 		.dialog {
 
-			// May need to modify the `overflow` property to allow tooltips to escape the edges.
+			/* May need to modify the `overflow` property to allow tooltips to escape the edges. */
 			display: grid; 
 			scrollbar-width: thin;
 			border-radius: var(--radius-3);
@@ -101,7 +101,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 			color: var(--dialog-color, var(--color, inherit));
 			font-size: initial;
 			width: var(--dialog-width, max-content);
-			// height: var(--dialog-height, initial); // probably don't want to set this
+			/* height: var(--dialog-height, initial); // probably don't want to set this */
 			border: var(--dialog-border, initial);
 			place-self: var(--dialog-place-self, center);
 			align-content: start;
@@ -113,7 +113,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 			transition-behavior: allow-discrete;
 			animation-timing-function: var(--ease-squish-3);
 			animation-duration: var(--duration, 0.5s);
-			margin: auto; 	// centers the dialog for bad browser user-agent stylesheets that default to top-left
+			margin: auto; 	/* centers the dialog for bad browser user-agent stylesheets that default to top-left */
 			padding: 0;
 			position: fixed;
 			inset: 0;
@@ -128,7 +128,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 				opacity: 0;
 			}
 			&.scale-out {
-				animation: var(--animation-scale-down) forwards; // The 'out' transition
+				animation: var(--animation-scale-down) forwards; /* The 'out' transition */
 				
 			}
 
@@ -142,7 +142,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 						margin-block-end: 0;
 						border-end-end-radius: 0;
 						border-end-start-radius: 0;
-						// Mobile 'out' transition
+						/* Mobile 'out' transition */
 						animation: var(--animation-slide-out-down) forwards; 
 					}
 			}
@@ -154,7 +154,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 			&:not([open]){
 				pointer-events: none;
 				opacity: 0;
-				// Hide elements within the dialog from interaction when it is not open
+				/* Hide elements within the dialog from interaction when it is not open */
 				& * {
 					transition: visibility var(--duration, 0.5s) ease;
 					visibility: hidden;
@@ -164,10 +164,10 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 				display: grid;
 				pointer-events: initial;
 				&.slide-in-from-bottom {
-					animation: var(--animation-slide-in-up) forwards; // The 'in' transition
+					animation: var(--animation-slide-in-up) forwards;  /* The 'in' transition */
 				}
 			}
-			// &.scale{
+			/* &.scale{
 				// scale: 0;
 				// transition-property: scale, display, overlay;
 				// transition-duration: var(--transition-duration, 500ms);
@@ -180,7 +180,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 					// scale: 1;
 					// opacity: 1;
 				// }
-			// }
+			// } */
 			
 			&::backdrop {
 				background-color: hsla(0, 0%, 0%, 0.4);
