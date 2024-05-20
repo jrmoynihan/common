@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CustomComponent from '$routes/tooltips/CustomComponent.svelte';
-	import TabsRunes, { type Tab } from '$wrappers/Tabs_Runes.svelte';
+	import TabsRunes, { type ComponentTab } from '$wrappers/Tabs_Runes.svelte';
 	import { fly } from 'svelte/transition';
 
 	const tabs = [
@@ -26,14 +26,14 @@
 		{ title: 'Two', content: content_two },
 		{ title: 'Three', content: content_three },
 	]
-	const component_tabs: Tab<CustomComponent>[] = [
+	const component_tabs: ComponentTab<CustomComponent>[] = [
 		{
 			title: 'Custom 1',
 			component: CustomComponent,
 			props: { 
 				text: "I'm custom component #1!",
 				color: 'black',
-				background: 'orange'
+				background: 'orange',
 			}
 		},
 		{
