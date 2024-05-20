@@ -1,4 +1,4 @@
-import { defaultToast, errorToast, type ToastOptions } from '$toasts/toasts.js';
+import { default_toast, error_toast, type ToastOptions } from '$toasts/toasts.js';
 
 export interface LogOptions {
 	msg: string;
@@ -91,12 +91,12 @@ export const SuccessLog = async (input?: LogOptions): Promise<void> => {
 
 export const LogAndToast = async (options: LogAndToastOptions): Promise<number> => {
 	await Log({ ...options });
-	const toastId = await defaultToast({ ...options });
+	const toastId = await default_toast({ ...options });
 	return toastId;
 };
 export const ErrorAndToast = async (options: ErrorAndToastOptions): Promise<number> => {
 	await ErrorLog({ ...options });
-	const toastId = await errorToast({ ...options });
+	const toastId = await error_toast({ ...options });
 	return toastId;
 };
 // CSS emoji for console logging (https://unicode.org/emoji/charts/full-emoji-list.html)
