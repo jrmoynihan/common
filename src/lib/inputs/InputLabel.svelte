@@ -72,7 +72,7 @@
 <label
     bind:this={label_element}
 	for={id}
-	class="text-input-container"
+	class="label-container"
 	use:dynamicStyle={dynamic_styles}
 	use:tooltip={{ ...tooltip_options }}
 	transition:transition={transition_parameters}
@@ -101,7 +101,7 @@
 
 <style lang='scss'>
     @layer input_label{
-        label.text-input-container {
+        label.label-container {
             --text-input-padding: 1.25em;
             position: relative;
             display: grid;

@@ -14,6 +14,10 @@ import ToggleSwitch from './buttons/ToggleSwitch.svelte';
 import ActionTooltip from './actions/tooltip/ActionTooltip.svelte';
 
 // Inputs
+import Checkbox from '$inputs/Checkbox.svelte';
+import InputButton from '$inputs/InputButton.svelte';
+import InputLabel from '$inputs/InputLabel.svelte';
+import RadioGroup from '$inputs/RadioGroup.svelte';
 import NumericInput from './inputs/NumericInput.svelte';
 import Select from './inputs/Select.svelte';
 import TemporalDateInput from './inputs/TemporalDateInput.svelte';
@@ -121,9 +125,12 @@ export {
 	ActionTooltip,
 	AnchorHeading,
 	Button,
+	Checkbox,
 	Dialog,
 	DragAnchor,
 	FullDialog,
+	InputButton,
+	InputLabel,
 	LightDarkToggle,
 	LightDarkToggleV2,
 	LinkableAnchorHeading,
@@ -131,6 +138,7 @@ export {
 	NavLink,
 	Navigation,
 	NumericInput,
+	RadioGroup,
 	ScrollProgress,
 	SeenToast,
 	Select,
