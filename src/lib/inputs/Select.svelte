@@ -1,7 +1,7 @@
 <script lang=ts context=module>
 	export interface SelectOption {
 		value: unknown;
-		text?: string;
+		label?: string;
 		disabled?: boolean;
 	}
 
@@ -10,7 +10,7 @@
 		label?: string;
 	}
 
-	export type SelectOptionList = (SelectOption | SelectOptionGroup)[];
+	export type SelectOptionList = (SelectOption | SelectOptionGroup | unknown)[];
 
 	export interface SelectProps extends HTMLSelectAttributes {
 		value?: unknown;
@@ -21,18 +21,20 @@
 		option_snippet?: Snippet<[any]>,
 		options?: SelectOptionList,
 		dynamic_select_styles?: DynamicStyleParameters;
-		input_label_props: ComponentProps<InputLabel>;
+		input_label_props?: InputLabelProps;
+		value_key?: string;
+		label_key?: string;
 		label?: Snippet<[any]>;
-		placeholder_props?: ComponentProps<Placeholder>;
+		placeholder_props?: PlaceholderProps;
 	}
 </script>
 
 <script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import type { ComponentProps, Snippet } from 'svelte';
+	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import type { Snippet } from 'svelte';
 	import type { HTMLSelectAttributes } from 'svelte/elements';
-	import InputLabel from './InputLabel.svelte';
-	import Placeholder from './Placeholder.svelte';
+	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
+	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
 	
 	let {
 		value = $bindable(),
@@ -42,6 +44,8 @@
 		dynamic_select_styles,
 		input_label_props,
 		placeholder_props = {},
+		value_key = 'value',
+		label_key = 'label',
 		id = crypto.randomUUID(),
 		...select_attributes
 		
@@ -50,9 +54,13 @@
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
-{#snippet option({value, disabled, text}: SelectOption)}
+{#snippet option(item)}
+	{@const is_object = item instanceof Object}
+	{@const value = is_object && 'value' in item ? item.value : item}
+	{@const label = is_object && 'label' in item ? item.label : item}
+	{@const disabled = is_object && 'disabled' in item ? item.disabled : false}
 	<option {value} {disabled}>
-		{text ?? ''}
+		{label ?? value}
 	</option>
 {/snippet}
 
@@ -70,14 +78,14 @@
 
 <InputLabel {id} {...input_label_props}>
 	<select
-	use:dynamicStyle={dynamic_select_styles}
-	bind:value
+		use:dynamic_style={dynamic_select_styles}
+		bind:value
 		class="select"
 		class:value
 		{id}
 		{...select_attributes}
 	>	
-		{#if group_snippet}
+		{#if group_snippet && options[0] instanceof Object}
 			{#each options as opt}
 				{@render group_snippet(opt)}
 			{/each}
