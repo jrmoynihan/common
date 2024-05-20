@@ -43,6 +43,7 @@ import SeenToast from './toasts/SeenToast.svelte';
 // Wrappers
 import Dialog from '$wrappers/Dialog.svelte';
 import FullDialog from '$wrappers/FullDialog.svelte';
+import Grid from '$wrappers/Grid.svelte';
 import MiniDialog from '$wrappers/MiniDialog.svelte';
 import TransitionNative_Runes from '$wrappers/TransitionNative_Runes.svelte';
 import Accordion from './wrappers/Accordion.svelte';
@@ -129,6 +130,7 @@ export {
 	Dialog,
 	DragAnchor,
 	FullDialog,
+	Grid,
 	InputButton,
 	InputLabel,
 	LightDarkToggle,
