@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -78,7 +78,7 @@
 <a
 	data-sveltekit-preload-data="hover"
 	use:tooltip={tooltip_options}
-	use:dynamicStyle={{
+	use:dynamic_style={{
 		...dynamic_styles,
 		styles: is_current_page ? current_page_styles : dynamic_styles?.styles
 	}}

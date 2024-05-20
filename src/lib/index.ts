@@ -58,7 +58,7 @@ export {
 	type SpotlightStep
 } from '$actions/spotlight/spotlight.svelte.js';
 export { Temporal } from '@js-temporal/polyfill';
-export { dynamicStyle } from './actions/dynamic-styles.svelte.js';
+export { dynamic_style } from './actions/dynamic-styles.svelte.js';
 export {
 	tooltip,
 	type TooltipDirections,

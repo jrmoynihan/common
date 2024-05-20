@@ -20,7 +20,7 @@
 </script>
 
 <script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import type { TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { browser } from '$app/environment';
 	import { beforeNavigate } from '$app/navigation';
@@ -58,7 +58,7 @@
 <!-- svelte-ignore a11y-no-redundant-roles -->
 <nav 
 	role="navigation"
-	use:dynamicStyle={dynamic_styles}
+	use:dynamic_style={dynamic_styles}
 	{...nav_attributes}
 >
 	{#if links?.length > 0}

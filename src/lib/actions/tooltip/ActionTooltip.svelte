@@ -6,7 +6,7 @@ https://web.dev/building-a-tooltip-component/
 -->
 
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.svelte.js';
+	import { dynamic_style } from '$actions/dynamic-styles.svelte.js';
 	import type { TooltipProps } from './tooltip.svelte';
 
 	let {
@@ -28,7 +28,7 @@ https://web.dev/building-a-tooltip-component/
 		<!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. a 'toggle-tip' -->
 		<tool-tip
 		bind:this={tooltip}
-		use:dynamicStyle={{ styles }}
+		use:dynamic_style={{ styles }}
 		{inert}
 		role="tooltip"
 		class="tooltip"
@@ -58,7 +58,7 @@ https://web.dev/building-a-tooltip-component/
 			{/if}
 		</tool-tip>
 
-<style lang="scss">
+<style>
 	@layer tooltip {
 		.tooltip {
 			box-sizing: border-box;
@@ -90,6 +90,7 @@ https://web.dev/building-a-tooltip-component/
 			opacity: 0;
 			position: fixed;
 			overflow: visible;
+			margin: 0;
 	
 			&[data-tip-position='bottom'] {
 				transform-origin: center top;
@@ -97,7 +98,7 @@ https://web.dev/building-a-tooltip-component/
 				top: calc(anchor(bottom) + var(--distance));
 				bottom: auto;
 				&.fallback{
-					// position-try-options: --bottom-top-right-left;
+					/* position-try-options: --bottom-top-right-left; */
 					position-try-options: flip-block, flip-inline, flip-start;
 				}
 			}
@@ -107,7 +108,7 @@ https://web.dev/building-a-tooltip-component/
 				bottom: calc(anchor(top) + var(--distance));
 				top: auto;
 				&.fallback{
-					// position-try-options: --top-bottom-right-left;
+					/* position-try-options: --top-bottom-right-left; */
 					position-try-options: flip-block, flip-inline, flip-start;
 				}
 			}
@@ -117,7 +118,7 @@ https://web.dev/building-a-tooltip-component/
 				left: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
 				&.fallback{
-					// position-try-options: --left-right-top-bottom;
+					/* position-try-options: --left-right-top-bottom; */
 					position-try-options: flip-inline, flip-block, flip-start;
 				}
 			}
@@ -127,7 +128,7 @@ https://web.dev/building-a-tooltip-component/
 				right: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
 				&.fallback{
-					// position-try-options: --right-left-top-bottom;
+					/* position-try-options: --right-left-top-bottom; */
 					position-try-options: flip-inline, flip-block, flip-start;
 				}
 			}

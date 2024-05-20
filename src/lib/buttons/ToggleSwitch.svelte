@@ -22,7 +22,7 @@
 </script>
 
 <script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import { type ComponentProps } from 'svelte';
 	import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
 	import ButtonRunes from './Button_Runes.svelte';
@@ -49,7 +49,7 @@
 
 {#snippet label(label_text: string)}
 	<label
-		use:dynamicStyle={label_dynamic_styles}
+		use:dynamic_style={label_dynamic_styles}
 		class="label-text pointer"
 		for={'toggle'}
 	>	

@@ -14,7 +14,7 @@
 </script>
 
 <script lang="ts">
-	import { dynamicStyle, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
+	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import { Temporal } from '@js-temporal/polyfill';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
@@ -104,7 +104,7 @@
 
 <InputLabel bind:label_element {...label_props}>
 	<input
-		use:dynamicStyle={input_dynamic_styles}
+		use:dynamic_style={input_dynamic_styles}
 		bind:this={date_input}
 		bind:value={internal_string_date}
 		id={crypto.randomUUID()}

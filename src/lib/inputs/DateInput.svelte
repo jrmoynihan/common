@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dynamicStyle } from '$actions/dynamic-styles.svelte';
+	import { dynamic_style } from '$actions/dynamic-styles.svelte';
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';
@@ -73,7 +73,7 @@
 	for={name}
 	style={label_styles}
 	use:tooltip={{ ...tooltip_options }}
-	use:dynamicStyle={{
+	use:dynamic_style={{
 		styles: input_container_styles,
 		hover_styles: input_container_hover_styles,
 		focus_styles: input_container_focus_styles,
@@ -92,7 +92,7 @@
 		<slot name="label" />
 	{/if}
 	<input
-		use:dynamicStyle={{
+		use:dynamic_style={{
 			styles: input_styles,
 			hover_styles: input_hover_styles,
 			focus_styles: input_focus_styles,

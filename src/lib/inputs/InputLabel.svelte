@@ -31,7 +31,7 @@
 </script>
 
 <script lang='ts'>
-	import { dynamicStyle, tooltip, type TooltipProps } from "$lib";
+	import { dynamic_style, tooltip, type TooltipProps } from "$lib";
 	import type { SvelteTransition, SvelteTransitionParams, TransitionTypes } from "$lib/lib_types";
 	import TransitionNativeRunes from "$wrappers/TransitionNative_Runes.svelte";
 	import type { Snippet } from "svelte";
@@ -73,7 +73,7 @@
     bind:this={label_element}
 	for={id}
 	class="label-container"
-	use:dynamicStyle={dynamic_styles}
+	use:dynamic_style={dynamic_styles}
 	use:tooltip={{ ...tooltip_options }}
 	transition:transition={transition_parameters}
     {...label_attributes}
