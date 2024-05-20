@@ -35,7 +35,7 @@
 >
 	<datalist id={list} tabindex="-1">
 		{#each datalist as { value, label }}
-			<option {value}>{label}</option>
+			<option {value}>{label ?? value}</option>
 		{/each}
 	</datalist>
 </TextInput>

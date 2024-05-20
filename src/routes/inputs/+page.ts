@@ -25,14 +25,14 @@ export async function load({}: PageLoadEvent) {
 	];
 
 	const select_options: SelectOptionList = [
-		{ value: null },
-		{ value: null, disabled: true, text: 'a disabled option' },
+		{ value: null, label: null },
+		{ value: null, disabled: true, label: 'a disabled option' },
 		{
 			label: 'A Group Of Options',
 			options: [
-				{ value: 1, text: 'One' },
-				{ value: 2, text: 'Two' },
-				{ value: 3, text: 'Three' }
+				{ value: 1, label: 'One' },
+				{ value: 2, label: 'Two' },
+				{ value: 3, label: 'Three' }
 			]
 		}
 	];
