@@ -9,7 +9,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import { setLocalStorageItem } from '$functions/local-storage.js';
+	import { set_local_storage_item } from '$functions/local-storage.js';
 	import DefaultToast from './DefaultToast.svelte';
 
 	let {
@@ -22,9 +22,9 @@
 
 	$effect(() => {
 		if (checked) {
-			setLocalStorageItem(local_storage_key, 'true');
+			set_local_storage_item(local_storage_key, 'true');
 		} else {
-			setLocalStorageItem(local_storage_key, 'false');
+			set_local_storage_item(local_storage_key, 'false');
 		}
 	});
 </script>
