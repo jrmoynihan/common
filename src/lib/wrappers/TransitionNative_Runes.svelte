@@ -142,7 +142,7 @@ type EasingFunction =
 
 let leaving = $state(false);
 let entering = $state(false);
-let timeout: NodeJS.Timeout;
+let timeout : ReturnType<Window['setTimeout']> | undefined = $state();
 
 export function toggle() {
 	const { duration, delay } = get_duration_and_delay();
@@ -150,7 +150,7 @@ export function toggle() {
 	leaving = visible ? true : false;
 	// Set a timeout to reset the transition to entering
 	if (leaving) {
-		timeout = setTimeout(() => {
+		timeout = window.setTimeout(() => {
 			entering = true;
 			leaving = false;
 		}, duration + delay);

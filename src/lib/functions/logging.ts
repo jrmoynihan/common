@@ -1,4 +1,4 @@
-import { default_toast, error_toast, type ToastOptions } from '$toasts/toasts.js';
+// import { default_toast, error_toast, type ToastOptions } from '$toasts/toasts.js';
 
 export interface LogOptions {
 	msg: string;
@@ -23,8 +23,8 @@ export interface ErrorLogOptions {
 }
 
 // Creates a union of the two types for combined usage
-export type LogAndToastOptions = ToastOptions & LogOptions;
-export type ErrorAndToastOptions = ToastOptions & ErrorLogOptions;
+// export type LogAndToastOptions = ToastOptions & LogOptions;
+// export type ErrorAndToastOptions = ToastOptions & ErrorLogOptions;
 
 export const ErrorLog = async (input: ErrorLogOptions): Promise<void> => {
 	const { error, msg, icon = all_icons.police_car_light, additional_params } = input;
@@ -89,16 +89,16 @@ export const SuccessLog = async (input?: LogOptions): Promise<void> => {
 	await Log(success_input);
 };
 
-export const LogAndToast = async (options: LogAndToastOptions): Promise<number> => {
-	await Log({ ...options });
-	const toastId = await default_toast({ ...options });
-	return toastId;
-};
-export const ErrorAndToast = async (options: ErrorAndToastOptions): Promise<number> => {
-	await ErrorLog({ ...options });
-	const toastId = await error_toast({ ...options });
-	return toastId;
-};
+// export const LogAndToast = async (options: LogAndToastOptions): Promise<number> => {
+// 	await Log({ ...options });
+// 	const toastId = await default_toast({ ...options });
+// 	return toastId;
+// };
+// export const ErrorAndToast = async (options: ErrorAndToastOptions): Promise<number> => {
+// 	await ErrorLog({ ...options });
+// 	const toastId = await error_toast({ ...options });
+// 	return toastId;
+// };
 // CSS emoji for console logging (https://unicode.org/emoji/charts/full-emoji-list.html)
 export const airplane_departure = String.fromCodePoint(0x1f6eb);
 export const bomb = String.fromCodePoint(0x1f4a3);

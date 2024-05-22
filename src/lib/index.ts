@@ -32,12 +32,6 @@ import Navigation from './navigation/Navigation.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 
 // Toasts
-import type {
-	SvelteToastCustomComponent,
-	SvelteToastOnPopCallback,
-	SvelteToastOptions
-} from '@zerodevx/svelte-toast';
-import { SvelteToast, toast } from '@zerodevx/svelte-toast';
 import SeenToast from './toasts/SeenToast.svelte';
 
 // Wrappers
@@ -92,17 +86,17 @@ export {
 	set_local_storage_item
 } from './functions/local-storage.js';
 export {
-	ErrorAndToast,
+	// ErrorAndToast,
 	ErrorLog,
 	Log,
-	LogAndToast,
+	// LogAndToast,
 	SuccessLog,
 	WarningLog,
 	all_icons,
 	default_log_style,
-	type ErrorAndToastOptions,
+	// type ErrorAndToastOptions,
 	type ErrorLogOptions,
-	type LogAndToastOptions,
+	// type LogAndToastOptions,
 	type LogOptions
 } from './functions/logging.js';
 export {
@@ -119,7 +113,6 @@ export {
 	shouldLayoutTransitionOnNavigation,
 	type IconLayer
 } from './navigation/nav-functions.js';
-export { default_toast, error_toast, reminder_toast, type ToastOptions } from './toasts/toasts.js';
 export type { ComponentTab, ContentTab } from './wrappers/Tabs_Runes.svelte';
 export {
 	Accordion,
@@ -144,17 +137,12 @@ export {
 	ScrollProgress,
 	SeenToast,
 	Select,
-	SvelteToast,
 	Tabs,
 	TemporalDateInput,
 	TextInput,
 	ToggleSwitch,
 	Transition,
 	TransitionNative_Runes,
-	toast,
 	type DatalistOption,
-	type SvelteToastCustomComponent,
-	type SvelteToastOnPopCallback,
-	type SvelteToastOptions,
 	type TextInputTypes
 };

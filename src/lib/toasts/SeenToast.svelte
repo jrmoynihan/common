@@ -1,8 +1,8 @@
 <script context="module" lang="ts">
 	export interface SeenToastProps {
 		title: string;
-		msg: string;
 		local_storage_key: string;
+		children: Snippet;
 	}
 </script>
 
@@ -10,12 +10,13 @@
 	import { browser } from '$app/environment';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
 	import { set_local_storage_item } from '$functions/local-storage.js';
+	import type { Snippet } from 'svelte';
 	import DefaultToast from './DefaultToast.svelte';
 
 	let {
 		title = '',
-		msg = '',
-		local_storage_key = browser ? crypto.randomUUID() : ''
+		local_storage_key = browser ? crypto.randomUUID() : '',
+		children
 	}: SeenToastProps = $props();
 
 	let checked = $state(false);
@@ -30,7 +31,9 @@
 </script>
 
 <div class="grid">
-	<DefaultToast {msg} {title} />
+	<DefaultToast {title}>
+		{@render children()}
+	</DefaultToast>
 	<ToggleSwitch
 		bind:checked
 		label_position={'after'}
@@ -39,7 +42,7 @@
 	/>
 </div>
 
-<style lang="scss">
+<style>
 	.grid {
 		display: grid;
 		place-items: center;
