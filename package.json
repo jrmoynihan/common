@@ -50,13 +50,14 @@
   "dependencies": {
     "@fortawesome/fontawesome-common-types": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
-    "@jrmoynihan/svelte-fa": "^3.0.6",
+    "@jrmoynihan/svelte-fa": "^4.0.2",
     "@js-temporal/polyfill": "^0.4.4",
     "@sveltejs/kit": "2.5.4",
     "acorn": "^8.11.3",
     "mdsvexamples": "^0.4.1",
     "postcss-jit-props": "^1.0.14",
-    "svelte": "^5.0.0-next"
+    "svelte": "^5.0.0-next",
+    "svelte-fa": "^4.0.2"
   },
   "exports": {
     ".": {
