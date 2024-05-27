@@ -3,53 +3,56 @@ import AccordionDetails from "$wrappers/AccordionDetails.svelte";
 import TreeItem from "./TreeItem.svelte";
 import TreeList from "./TreeList.svelte";
 
+const base = new URL('https://developer.mozilla.org/en-US/docs/Web/CSS/');
+
+
 const node_1_1_items = [
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors",
+		href: new URL('Universal_selectors', base),
 		text: "Universal",
 	},
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors",
+		href: new URL('Type_selectors', base),
 		text: "Type",
 	},
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors",
+		href: new URL('Class_selectors', base),
 		text: "Class",
 	},
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors",
+		href: new URL('ID_selectors', base),
 		text: "ID",
 	},
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors",
+		href: new URL('Attribute_selectors', base),
 		text: "Attribute",
 	},
 ];
 const node_1_3_items = [
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_selectors",
+		href: new URL('Descendant_selectors', base),
 		text: "Descendant",
 	},
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/Child_selectors",
+		href: new URL('Child_selectors', base),
 		text: "Child",
 	},
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/Adjacent_sibling_selectors",
+		href: new URL('Adjacent_sibling_selectors', base),
 		text: "Adjacent",
 	},
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_selectors",
+		href: new URL('General_sibling_selectors', base),
 		text: "General",
 	},
 ];
 const node_1_4_items = [
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes",
+		href: new URL('Pseudo-classes', base),
 		text: "Pseudo-class",
 	},
 	{
-		href: "https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements",
+		href: new URL('Pseudo-elements', base),
 		text: "Pseudo-element",
 	},
 ];
