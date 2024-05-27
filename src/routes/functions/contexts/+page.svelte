@@ -7,10 +7,8 @@
 <a id="contexts"><h2>Contexts</h2></a>
 <section>
 	<LinkableAnchorHeading
-		heading_props={{
-			id: 'set-get-readable-context',
-			text: 'setReadableContext / getReadableContext'
-		}}
+		id="set-get-readable-context"
+		text="setReadableContext / getReadableContext"
 	/>
 	<p>
 		<Code>setReadableContext</Code> creates a Svelte
@@ -34,10 +32,8 @@
 </section>
 <section>
 	<LinkableAnchorHeading
-		heading_props={{
-			id: 'set-get-writable-context',
-			text: 'setWritableContext / getWritableContext'
-		}}
+		id="set-get-writable-context"
+		text="setWritableContext / getWritableContext"
 	/>
 	<p>
 		<Code>setWritableContext</Code> creates a Svelte
@@ -57,7 +53,8 @@
 </section>
 <section>
 	<LinkableAnchorHeading
-		heading_props={{ id: 'set-get-derived-context', text: 'setDerivedContext / getDerivedContext' }}
+		id="set-get-derived-context"
+		text="setDerivedContext / getDerivedContext"
 	/>
 	<p>
 		<Code>setDerivedContext</Code> creates a Svelte
