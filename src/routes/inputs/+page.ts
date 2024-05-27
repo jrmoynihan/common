@@ -14,14 +14,14 @@ export async function load({}: PageLoadEvent) {
 	const unicode_pineapple = '\u{1F34D}';
 
 	const datalist = [
-		{ value: unicode_apple, label: 'Apple' },
-		{ value: unicode_banana, label: 'Banana' },
-		{ value: unicode_orange, label: 'Orange' },
-		{ value: unicode_cherry, label: 'Cherry' },
-		{ value: unicode_grapes, label: 'Grape' },
-		{ value: unicode_lemon, label: 'Lemon' },
-		{ value: unicode_pear, label: 'Pear' },
-		{ value: unicode_pineapple, label: 'Pineapple' }
+		{ icon: unicode_apple, label: 'Apple' },
+		{ icon: unicode_banana, label: 'Banana' },
+		{ icon: unicode_orange, label: 'Orange' },
+		{ icon: unicode_cherry, label: 'Cherry' },
+		{ icon: unicode_grapes, label: 'Grape' },
+		{ icon: unicode_lemon, label: 'Lemon' },
+		{ icon: unicode_pear, label: 'Pear' },
+		{ icon: unicode_pineapple, label: 'Pineapple' }
 	];
 
 	const select_options: SelectOptionList = [
