@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { setDerivedContext } from '$functions/store.svelte';
 	import Checkbox from '$inputs/Checkbox.svelte';
 	import DatalistTextInput from '$inputs/DatalistTextInput.svelte';
 	import NumericInput from '$inputs/NumericInput.svelte';
@@ -10,11 +11,14 @@
 
 	let { data } = $props();
 	const { datalist, select_options, date_inputs } : PageData = data;
-	let selected_fruit = $state();
+	const name_list = datalist.map(d => d.label);
+	let selected_fruit: typeof datalist[0] | undefined = $state();
+	let selected_fruit_name: string | undefined = $state();
 	let selected_number = $state<number>(1);
 	let valid_email: string = $state('');
 
 	const number_options = [ 1, 2, 3]
+	const double_number_context = setDerivedContext('number', selected_number * 2);
 
 </script>
 
@@ -59,10 +63,11 @@
 		/>
 
 		<DatalistTextInput 
-			{datalist}
-			bind:value={selected_fruit}
+			datalist={datalist}
+			value_key={'icon'}
+			bind:value={selected_fruit_name}
 			required={true}
-			onconfirm={() => alert(`Selected fruit:  ${selected_fruit} ${datalist.find(d => d.value === selected_fruit)?.label}`)}
+			onconfirm={() => alert(`Selected fruit:  ${selected_fruit_name}`)}
 			placeholder_props={{text: 'Pick a fruit'}} 
 			label_props={{text: "Datalist Text Input:", invalid_text: "Please enter a valid fruit."}}
 			--input-invalid-outline="var(--accent) 2px solid"
@@ -99,6 +104,12 @@
 			required={true}
 			bind:value={selected_number}
 		/>
+		<Select
+			input_label_props={{ text: "Select a fruit" }}
+			options={datalist}
+			placeholder_props={{ text: 'pick a fruit...' }}
+			bind:value={selected_fruit}
+		/>
 	</section>
 
 	<section class="checkbox-inputs">
@@ -109,14 +120,14 @@
 				<strong style="display: grid; place-content: center; color: var(--background); background-color: var(--accent); padding: 0.5rem">with custom html!</strong>
 			{/snippet}
 		</Checkbox>
-		<Checkbox disabled text={"Disabled Checkbox"}/>
+		<Checkbox disabled label={"Disabled Checkbox"}/>
 		<Checkbox />
 	</section>
 	<section class="radio-inputs">
 		<h2>Radio Inputs</h2>
 		<RadioGroup items={datalist} bind:group={selected_fruit}>
 			{#snippet children(item)}
-				<span class="selected-fruit">{item?.value}</span>
+				<span class="selected-fruit">{item?.icon}</span>
 			{/snippet}
 		</RadioGroup>
 		<RadioGroup items={number_options} bind:group={selected_number}/>
