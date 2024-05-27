@@ -1,26 +1,36 @@
-<script lang='ts'>
-	import type { Snippet } from "svelte";
-
-    type CheckboxProps = {
-        /** Simple label text.  Will be used if no `label` prop is provided. */
-        text?: string;
-        /** The label snippet for the checkbox.  Will override any provided `text` prop. */
-        label?: Snippet;
+<script context='module' lang='ts'>
+    export interface CheckboxProps extends HTMLInputAttributes {
+        /** The label snippet for the checkbox. */
+        label?: string | Snippet;
+        /** The attributes to apply to the label. */
+        label_attributes?: HTMLLabelAttributes;
         /** Whether the checkbox is disabled. */
         disabled?: boolean;
         /** The id of the checkbox.  Ids the `<input>` element and provides the `for` attribute of the label. */
         id?: string;
     }
-    let { text = 'You should really use a label for form elements.', label, disabled, id = crypto?.randomUUID() } : CheckboxProps = $props();
 </script>
 
-<label for={id}>
-    {#if label}
+<script lang='ts'>
+	import type { Snippet } from "svelte";
+	import type { HTMLInputAttributes, HTMLLabelAttributes } from "svelte/elements";
+
+    let { 
+        label,
+        disabled,
+        id = crypto?.randomUUID(),
+        label_attributes,
+        ...input_attributes
+    } : CheckboxProps = $props();
+</script>
+
+<label for={id} {...label_attributes}>
+    {#if typeof label === 'string'}
+        {label}
+    {:else if label}
         {@render label()}
-    {:else if text}
-        {text}
     {/if}
-	<input {id} type="checkbox" {disabled} />
+	<input {id} type="checkbox" {disabled} {...input_attributes} />
 </label>
 
 <style lang="scss">

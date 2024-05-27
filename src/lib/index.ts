@@ -4,45 +4,51 @@
 // Reexport your entry components here
 
 // Buttons
-import Button from './buttons/Button_Runes.svelte';
-import DragAnchor from './buttons/DragAnchor.svelte';
-import LightDarkToggle from './buttons/LightDarkToggle.svelte';
-import LightDarkToggleV2 from './buttons/LightDarkToggle_v2.svelte';
-import ToggleSwitch from './buttons/ToggleSwitch.svelte';
+import Button, { type ButtonProps } from './buttons/Button_Runes.svelte';
+import DragAnchor, { type DragAnchorProps } from './buttons/DragAnchor.svelte';
+import LightDarkToggle, { type LightDarkToggleProps } from './buttons/LightDarkToggle_v2.svelte';
+import ToggleSwitch, { type ToggleSwitchProps } from './buttons/ToggleSwitch.svelte';
 
 // Tooltips
 import ActionTooltip from './actions/tooltip/ActionTooltip.svelte';
 
 // Inputs
-import Checkbox from '$inputs/Checkbox.svelte';
-import InputButton from '$inputs/InputButton.svelte';
-import InputLabel from '$inputs/InputLabel.svelte';
-import RadioGroup from '$inputs/RadioGroup.svelte';
-import NumericInput from './inputs/NumericInput.svelte';
-import Select from './inputs/Select.svelte';
-import TemporalDateInput from './inputs/TemporalDateInput.svelte';
-import TextInput from './inputs/TextInput.svelte';
+import Checkbox, { type CheckboxProps } from '$inputs/Checkbox.svelte';
+import InputButton, { type InputButtonProps } from '$inputs/InputButton.svelte';
+import InputLabel, { type InputLabelProps } from '$inputs/InputLabel.svelte';
+import RadioGroup, { type RadioGroupProps } from '$inputs/RadioGroup.svelte';
+import NumericInput, { type NumericInputProps } from './inputs/NumericInput.svelte';
+import Select, {
+	type SelectOption,
+	type SelectOptionGroup,
+	type SelectOptionList,
+	type SelectProps
+} from './inputs/Select.svelte';
+import DateInput, { type DateInputProps } from './inputs/TemporalDateInput.svelte';
+import TextInput, { type TextInputProps } from './inputs/TextInput.svelte';
 import type { DatalistOption, TextInputTypes } from './inputs/types.js';
 
 // Navigation
-import AnchorHeading from './navigation/AnchorHeading.svelte';
-import LinkableAnchorHeading from './navigation/LinkableAnchorHeading.svelte';
-import NavLink from './navigation/NavLink.svelte';
-import Navigation from './navigation/Navigation.svelte';
-import ScrollProgress from './navigation/ScrollProgress.svelte';
+import AnchorHeading, { type AnchorHeadingProps } from './navigation/AnchorHeading.svelte';
+import LinkableAnchorHeading, { type LinkableAnchorHeadingProps } from './navigation/LinkableAnchorHeading.svelte';
+import NavLink, { type NavLinkProps } from './navigation/NavLink.svelte';
+import Navigation, { type NavigationProps } from './navigation/Navigation.svelte';
+import ScrollProgress, { type ScrollProgressProps } from './navigation/ScrollProgress.svelte';
 
 // Toasts
 import SeenToast from './toasts/SeenToast.svelte';
 
 // Wrappers
-import Dialog from '$wrappers/Dialog.svelte';
-import FullDialog from '$wrappers/FullDialog.svelte';
-import Grid from '$wrappers/Grid.svelte';
-import MiniDialog from '$wrappers/MiniDialog.svelte';
-import TransitionNative_Runes from '$wrappers/TransitionNative_Runes.svelte';
+import AccordionDetails, { type AccordionDetailsProps } from '$wrappers/AccordionDetails.svelte';
+import AccordionJson, { type AccordionJsonProps } from '$wrappers/AccordionJSON.svelte';
+import Dialog, { type DialogProps } from '$wrappers/Dialog.svelte';
+import FullDialog, { type FullDialogProps } from '$wrappers/FullDialog.svelte';
+import Grid, { type GridProps } from '$wrappers/Grid.svelte';
+import MiniDialog, { type MiniDialogProps } from '$wrappers/MiniDialog.svelte';
+import TransitionNative_Runes, { type TransitionNativeProps } from '$wrappers/TransitionNative_Runes.svelte';
 import Accordion from './wrappers/Accordion.svelte';
-import Tabs from './wrappers/Tabs_Runes.svelte';
-import Transition from './wrappers/Transition_Runes.svelte';
+import Tabs, { type TabsProps, type ComponentTab, type ContentTab } from './wrappers/Tabs_Runes.svelte';
+import Transition, { type TransitionProps } from './wrappers/Transition_Runes.svelte';
 
 // Exports
 // Functions
@@ -100,13 +106,13 @@ export {
 	type LogOptions
 } from './functions/logging.js';
 export {
-	getDerivedContext,
-	getReadableContext,
-	getWritableContext,
-	setDerivedContext,
-	setReadableContext,
-	setWritableContext
-} from './functions/store.js';
+	getDerivedStoreContext as getDerivedContext,
+	getReadableStoreContext as getReadableContext,
+	getWritableStoreContext as getWritableContext,
+	setDerivedStoreContext as setDerivedContext,
+	setReadableStoreContext as setReadableContext,
+	setWritableStoreContext as setWritableContext
+} from './functions/store.svelte.js';
 export {
 	NavigationLink,
 	make_subroute_nav_links,
@@ -116,6 +122,8 @@ export {
 export type { ComponentTab, ContentTab } from './wrappers/Tabs_Runes.svelte';
 export {
 	Accordion,
+	AccordionDetails,
+	AccordionJson,
 	ActionTooltip,
 	AnchorHeading,
 	Button,
@@ -127,7 +135,6 @@ export {
 	InputButton,
 	InputLabel,
 	LightDarkToggle,
-	LightDarkToggleV2,
 	LinkableAnchorHeading,
 	MiniDialog,
 	NavLink,
@@ -138,11 +145,26 @@ export {
 	SeenToast,
 	Select,
 	Tabs,
-	TemporalDateInput,
+	DateInput as TemporalDateInput,
 	TextInput,
 	ToggleSwitch,
 	Transition,
 	TransitionNative_Runes,
+	type ButtonProps,
+	type CheckboxProps,
 	type DatalistOption,
-	type TextInputTypes
+	type DateInputProps,
+	type DragAnchorProps,
+	type InputButtonProps,
+	type InputLabelProps,
+	type LightDarkToggleProps,
+	type NumericInputProps,
+	type RadioGroupProps,
+	type SelectOption,
+	type SelectOptionGroup,
+	type SelectOptionList,
+	type SelectProps,
+	type TextInputProps,
+	type TextInputTypes,
+	type ToggleSwitchProps
 };

@@ -47,7 +47,7 @@
         /** The number of pixels to blur the ::backdrop pseudo-element background when `mode: 'full'` (default: null) */
         blur?: number | null,
         
-        /** A binding to the <dialog> element itself */
+        /** A binding to the <Dialog> component itself */
         dialog?: Dialog;
     }
 </script>
@@ -108,24 +108,19 @@
 
 {#snippet default_button()}
     <ButtonRunes {...button_props} onclick={open} >
-        {#if button_content}
-            {@render button_content()}
-        {/if}
+        {@render button_content?.()}
     </ButtonRunes>
 {/snippet}
 
-{#if button}
-    {@render button()}
-{/if}
+{@render button?.()}
 <Dialog
     bind:this={dialog} 
     mode='full'
     {blur}
     {...dialog_props}
 >
-    {#if header}
-        {@render header()}
-    {/if}
+
+    {@render header?.()}
 
     {#if children}
     <!-- TODO: add back to avoid tabbable while closed: 
@@ -136,9 +131,7 @@
         </article>
     {/if}
 
-    {#if footer}
-        {@render footer()}
-    {/if}
+    {@render footer?.()}
 </Dialog>
 
 <style>

@@ -65,9 +65,7 @@
 		{@render fa_icon(icon_props)}
 	{/if}
 	
-	{#if children}
-		{@render children()}
-	{/if}
+	{@render children?.()}
 
 	{#if icon_props && icon_position === 'after'}
 		{@render fa_icon(icon_props)}

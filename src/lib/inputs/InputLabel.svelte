@@ -79,17 +79,13 @@
     {...label_attributes}
 >
     {#if position === 'before'}
-        {#if text && label_snippet}
-            {@render label_snippet()}
-        {/if}
+        {@render label_snippet?.()}
     {/if}
-    {#if children}
-        {@render children()}
-    {/if}
+
+    {@render children?.()}
+
     {#if position === 'after'}
-        {#if text && label_snippet}
-            {@render label_snippet()}
-        {/if}
+        {@render label_snippet?.()}
     {/if}
     <TransitionNativeRunes types={invalid_msg_transition_types} visible={!valid}>
         <invalid>

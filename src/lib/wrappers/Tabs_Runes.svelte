@@ -1,11 +1,11 @@
 <script context='module' lang='ts'>
 	
-  export interface TabProps {
+  export interface TabsProps {
       tabs?: (ContentTab | ComponentTab<SvelteComponent>)[],
       /** A replacement Snippet for the default tab button */
-      tab_button?: Snippet,
+      tab_button?: Snippet<[tab: ContentTab | ComponentTab<SvelteComponent>]>,
       /** A replacement Snippet for the default tab container title */
-      tab_container_title?: Snippet
+      tab_container_title?: Snippet | null
       /** The title of the default tab button */
       title?: string,
       /** The attributes of the default tab <button> element */
@@ -39,12 +39,12 @@
     let {
         tabs = [],
         selected_tab = $bindable(tabs?.length > 0 ? tabs[0] : undefined),
-        tab_button ,
-        tab_container_title,
+        tab_button = default_tab_button,
+        tab_container_title = default_tab_container_title,
         title,
         tab_button_attributes,
         tab_content_transition_parameters
-    } : TabProps = $props();
+    } : TabsProps = $props();
 
     const id = crypto.randomUUID();
     let transitions : TransitionNativeRunes[] = $state([])
@@ -73,9 +73,7 @@
       if(new_tab) select_tab(new_tab);
       // Focus the new tab
       const focus_tab = document.getElementById(`tab-${new_i}-${id}`);
-      if(focus_tab){
-          focus_tab.focus();
-      }
+      focus_tab?.focus();
     }
     function get_index_of_tab(tab: ContentTab | ComponentTab<SvelteComponent> | undefined){
         if(!tab) return 0;
@@ -97,27 +95,18 @@
     <span>{title}</span>
 {/snippet}
 
-{#snippet default_tab_container_title(title)}
+{#snippet default_tab_container_title()}
     <h3 id={`tablist-${id}`}>{title}</h3>
 {/snippet}
 
-
-
 <div {id} class="tabs">
-    {#if tab_container_title}
-        {@render tab_container_title()}
-    {:else}
-        {@render default_tab_container_title(title)}
-    {/if}
+    {@render tab_container_title?.()}
+
     <div role="tablist" aria-labelledby={`tablist-${id}`} class="automatic">
         {#if tabs && tabs.length > 0}
             {#each tabs as tab, i}
                 <button id={`tab-${i}-${id}`} tabindex={selected_tab === tab ? 0 : -1} onkeydown={move_focus_to_tab} type="button" role="tab" aria-selected={selected_tab === tab} aria-controls={`tabpanel-${i}-${id}`} onclick={()=>select_tab(tab)} {...tab_button_attributes}>
-                  {#if tab_button}  
-                    {@render tab_button()}
-                  {:else}
-                    {@render default_tab_button({title: tab.title})}
-                  {/if}
+                    {@render tab_button?.(tab)}
                 </button>
             {/each}
         {/if}

@@ -1,51 +1,53 @@
+<script context='module' lang='ts'>
+	import type { Snippet } from "svelte";
+	import { cubicOut } from "svelte/easing";
+	import {
+		blur,
+		fade,
+		fly,
+		scale,
+		slide,
+		type BlurParams,
+		type FadeParams,
+		type FlyParams,
+		type ScaleParams,
+		type SlideParams,
+	} from "svelte/transition";
+
+	export interface TransitionProps {
+		/** Will trigger the transition via {#key} block when this value changes. */
+		trigger?: unknown;
+		/** Styles to apply to the inner container (parent of the transitioned content). */
+		inner_container_styles?: string;
+		/** Classes to apply to the inner container (parent of the transitioned content). */
+		inner_container_classes?: string;
+		/** Parameters to use with a fly transition. */
+		fly_transition_parameters?: FlyParams;
+		/** Parameters to use with a fade transition. */
+		fade_transition_parameters?: FadeParams;
+		/** Parameters to use with a blur transition. */
+		blur_transition_parameters?: BlurParams;
+		/** Parameters to use with a slide transition. */
+		slide_transition_parameters?: SlideParams;
+		/** Parameters to use with a scale transition. */
+		scale_transition_parameters?: ScaleParams;
+		/** A custom snippet for a fly transition. Be sure to add the `transition-inner` class to the outermost element within the snippet. */
+		fly_transition?: Snippet<[FlyParams]>;
+		/** A custom snippet for a fade transition. Be sure to add the `transition-inner` class to the outermost within the snippet. */
+		fade_transition?: Snippet<[FadeParams]>;
+		/** A custom snippet for a blur transition. Be sure to add the `transition-inner` class to the outermost within the snippet. */
+		blur_transition?: Snippet<[BlurParams]>;
+		/** A custom snippet for a slide transition. Be sure to add the `transition-inner` class to the outermost within the snippet. */
+		slide_transition?: Snippet<[SlideParams]>;
+		/** A custom snippet for a scale transition. Be sure to add the `transition-inner` class to the outermost within the snippet. */
+		scale_transition?: Snippet<[ScaleParams]>;
+		/** A snippet containing the transitioned content. */
+		children?: Snippet;
+	};
+</script>
+
 <script lang="ts">
 // Inspired by https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
-
-import type { Snippet } from "svelte";
-import { cubicOut } from "svelte/easing";
-import {
-	blur,
-	fade,
-	fly,
-	scale,
-	slide,
-	type BlurParams,
-	type FadeParams,
-	type FlyParams,
-	type ScaleParams,
-	type SlideParams,
-} from "svelte/transition";
-
-interface TransitionProps {
-	/** Will trigger the transition via {#key} block when this value changes. */
-	trigger?: unknown;
-	/** Styles to apply to the inner container (parent of the transitioned content). */
-	inner_container_styles?: string;
-	/** Classes to apply to the inner container (parent of the transitioned content). */
-	inner_container_classes?: string;
-	/** Parameters to use with a fly transition. */
-	fly_transition_parameters?: FlyParams;
-	/** Parameters to use with a fade transition. */
-	fade_transition_parameters?: FadeParams;
-	/** Parameters to use with a blur transition. */
-	blur_transition_parameters?: BlurParams;
-	/** Parameters to use with a slide transition. */
-	slide_transition_parameters?: SlideParams;
-	/** Parameters to use with a scale transition. */
-	scale_transition_parameters?: ScaleParams;
-	/** A custom snippet for a fly transition. Be sure to add the `transition-inner` class to the outermost element within the snippet. */
-	fly_transition?: Snippet<[FlyParams]>;
-	/** A custom snippet for a fade transition. Be sure to add the `transition-inner` class to the outermost within the snippet. */
-	fade_transition?: Snippet<[FadeParams]>;
-	/** A custom snippet for a blur transition. Be sure to add the `transition-inner` class to the outermost within the snippet. */
-	blur_transition?: Snippet<[BlurParams]>;
-	/** A custom snippet for a slide transition. Be sure to add the `transition-inner` class to the outermost within the snippet. */
-	slide_transition?: Snippet<[SlideParams]>;
-	/** A custom snippet for a scale transition. Be sure to add the `transition-inner` class to the outermost within the snippet. */
-	scale_transition?: Snippet<[ScaleParams]>;
-	/** A snippet containing the transitioned content. */
-	children?: Snippet;
-};
 
 let {
 	trigger = $bindable(false),
@@ -70,13 +72,6 @@ let {
 } : TransitionProps = $props();
 </script>
 
-{#snippet slot()}
-	{#if children}
-		{@render children()}
-	{/if}
-{/snippet}
-
-
 {#snippet default_fly_transition(params)}
 	{#key trigger}
 		<div
@@ -85,7 +80,7 @@ let {
 			in:fly={{ ...params } }
 			out:fly={ { ...params, x: params.x * -1} }
 		>	
-			{@render slot()}
+			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}
@@ -98,7 +93,7 @@ let {
 			in:fade={params}
 			out:fade={params}
 		>	
-			{@render slot()}
+			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}
@@ -111,7 +106,7 @@ let {
 			in:blur={params}
 			out:blur={params}
 		>	
-			{@render slot()}
+			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}
@@ -124,7 +119,7 @@ let {
 			in:slide={params}
 			out:slide={params}
 		>	
-			{@render slot()}
+			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}
@@ -137,7 +132,7 @@ let {
 			in:scale={params}
 			out:scale={params}
 		>	
-			{@render slot()}
+			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}

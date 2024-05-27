@@ -16,9 +16,7 @@
 </script>
 
 <Button {...button_attributes}>
-    {#if children}
-        {@render children()}
-    {/if}
+	{@render children?.()}
 </Button>
 
 <style>

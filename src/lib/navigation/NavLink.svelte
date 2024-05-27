@@ -1,14 +1,5 @@
-<script lang="ts">
-	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
-	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
-	import { page } from '$app/stores';
-	import { Fa, FaLayers, FaLayersText } from '@jrmoynihan/svelte-fa';
-	import type { ComponentProps } from 'svelte';
-	import type { HTMLAnchorAttributes } from 'svelte/elements';
-	import type { NavigationLink } from './nav-functions.js';
-
-	interface NavLinkProps {
+<script context="module" lang="ts">
+	export interface NavLinkProps {
 		/** The navigation link to display. */
 		nav_link: NavigationLink;
 		/** Tooltip options to apply to the nav links. */
@@ -24,6 +15,17 @@
 		/** Props for an `<FaLayers>` component */
 		fa_layers_props?: ComponentProps<FaLayers>;
 	}
+</script>
+
+<script lang="ts">
+	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
+	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { Fa, FaLayers, FaLayersText } from '@jrmoynihan/svelte-fa';
+	import type { ComponentProps } from 'svelte';
+	import type { HTMLAnchorAttributes } from 'svelte/elements';
+	import type { NavigationLink } from './nav-functions.js';
 
 	let {
 		nav_link,
@@ -89,11 +91,11 @@
 >
 	{#if Array.isArray(nav_link.icons) && nav_link.icons.length > 0}
 		<FaLayers {...fa_layers_props}>
-			{#each nav_link.icons as { icon, translateX, translateY, color, text, size, scale, style }}
+			{#each nav_link.icons as { icon, text, ...rest }}
 				{#if icon}
-					<Fa {icon} {size} {translateX} {translateY} {color} {scale} {style} />
+					<Fa {icon} {...rest} />
 				{:else if text}
-					<FaLayersText {translateX} {translateY} {color} {scale} {style}>
+					<FaLayersText {...rest}>
 						{text}
 					</FaLayersText>
 				{/if}

@@ -38,9 +38,8 @@
 	style:--gap={gap}
 	{...attributes}
 	>
-	{#if children}
-		{@render children()}
-	{/if}
+	
+	{@render children?.()}
 </div>
 
 <style>

@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface ToggleSwitchProps extends ComponentProps<ButtonRunes> {
+	export interface ToggleSwitchProps extends ButtonProps {
 		/** The checked state of the toggle. Defaults to `false`. */
 		checked?: boolean;
 		/** The disabled state of the toggle. Defaults to `false`. */
@@ -23,9 +23,8 @@
 
 <script lang="ts">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import { type ComponentProps } from 'svelte';
 	import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
-	import ButtonRunes from './Button_Runes.svelte';
+	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
 
 	let {
 		checked = $bindable(false),

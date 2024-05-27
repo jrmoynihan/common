@@ -1,3 +1,12 @@
+<script context='module' lang='ts'>
+	export interface LinkableAnchorHeadingProps extends ComponentProps<AnchorHeading> {
+		button_props?: ComponentProps<ButtonRunes>;
+		button_position?: 'before' | 'after'
+		children?: Snippet
+	}
+
+</script>
+
 <script lang="ts">
 	import { page } from '$app/stores';
 	import ButtonRunes from '$buttons/Button_Runes.svelte';
@@ -5,12 +14,6 @@
 	import { onDestroy, type ComponentProps, type Snippet } from 'svelte';
 	import AnchorHeading from './AnchorHeading.svelte';
 	
-	interface LinkableHeadingProps {
-		heading_props: ComponentProps<AnchorHeading>;
-		button_props?: ComponentProps<ButtonRunes>;
-		button_position?: 'before' | 'after'
-		children?: Snippet
-	}
 		
 	let styles = 'border: 0; --button-opacity: 0.5; padding: 0rem 0.5rem; max-height: max-content; margin: 0.25rem 0.5rem;'
 	let copied_styles = 'background: hsla(var(--link-background-value), 75%);';
@@ -18,11 +21,11 @@
 	let timeout: ReturnType<Window['setTimeout']> | undefined = $state();
 
 	let {
-		heading_props,
 		button_props = { dynamic_styles: { styles }},
 		button_position = 'after',
-		children
-	} : LinkableHeadingProps = $props();
+		children,
+		...heading_props
+	} : LinkableAnchorHeadingProps = $props();
 
 	function copyLinkAddress() {
 		const { id } = heading_props;
@@ -56,13 +59,13 @@
 <div class="linkable-heading">
 	{#if button_position === 'before'}
 		{@render copy_link_button()}
-		{/if}
-		<AnchorHeading {...heading_props}>
-			{#if children}
-			{@render children()}
-			{/if}
-		</AnchorHeading>
-		{#if button_position === 'after'}
+	{/if}
+
+	<AnchorHeading {...heading_props}>
+		{@render children?.()}
+	</AnchorHeading>
+	
+	{#if button_position === 'after'}
 		{@render copy_link_button()}
 	{/if}
 </div>

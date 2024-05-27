@@ -1,40 +1,33 @@
-<script lang="ts">
-	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
-	import { faGripVertical } from '@fortawesome/free-solid-svg-icons/index';
-	import ButtonRunes from './Button_Runes.svelte';
-
-	interface DragAnchorProps {
+<script lang="ts" context="module">
+	export interface DragAnchorProps extends ButtonProps {
 		grabbed?: boolean;
 		hovered?: boolean;
 		dynamic_styles?: DynamicStyleParameters;
 	}
+</script>
+
+<script lang="ts">
+	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
+	import { faGripVertical } from '@fortawesome/free-solid-svg-icons/index';
+	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
+
 	let {
 		hovered = $bindable(false),
 		grabbed = $bindable(false),
-		dynamic_styles
+		dynamic_styles,
+		children,
+		...button_props
 	}: DragAnchorProps = $props();
 
-	function release() {
+	export const release = () => {
 		if (!grabbed) return;
 		grabbed = false;
-	}
-	function grab() {
+	};
+	export const grab = () => {
 		if (grabbed) return;
 		grabbed = true;
-	}
+	};
 </script>
-
-<!-- <button
-	use:dynamicStyle={dynamic_styles}
-	class="drag-anchor"
-	class:faded={!hovered}
-	class:grabbed
-	on:mousedown={() => (grabbed ? null : (grabbed = true))}
-	on:mouseup={() => (grabbed ? (grabbed = false) : null)}
-	on:blur={() => (grabbed ? (grabbed = false) : null)}
->
-	<Fa icon={faGripVertical} />
-</button> -->
 
 <ButtonRunes
 	icon_props={{ icon: faGripVertical }}
@@ -46,7 +39,10 @@
 	onmousedown={grab}
 	onmouseup={release}
 	onblur={release}
-/>
+	{...button_props}
+>
+	{@render children?.()}
+</ButtonRunes>
 
 <style lang="scss">
 	@layer drag-anchor {

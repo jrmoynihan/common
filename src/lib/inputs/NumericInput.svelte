@@ -68,9 +68,7 @@
 <InputLabel bind:label_element bind:valid {...label_props}  >
 	<Input bind:dynamic_input_styles bind:input_element bind:value bind:valid type="number" inputmode="numeric" min={0} max={Infinity} step={1} {...input_attributes} />
 	<Placeholder {...placeholder_props} />
-	{#if children}
-		{@render children()}
-	{/if}
+	{@render children?.()}
 	{#if show_spinner_buttons}
 		{@const max_num = Number(input_attributes?.max ?? Infinity)}
 		{@const min_num = Number(input_attributes?.min ?? 0)}

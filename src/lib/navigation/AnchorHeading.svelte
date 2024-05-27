@@ -1,19 +1,23 @@
-<script lang="ts">
-	import type { Snippet } from 'svelte';
-
-	let {
-		href,
-		text,
-		type = 3,
-		id = crypto?.randomUUID(),
-		children
-	}: {
-		href?: string;
+<script context='module' lang='ts'>
+	export interface AnchorHeadingProps extends HTMLAnchorAttributes {
 		text?: string;
-		type?: 1 | 2 | 3 | 4 | 5 | 6;
+		heading_type?: 1 | 2 | 3 | 4 | 5 | 6;
 		id?: string;
 		children?: Snippet;
-	} = $props();
+	}
+</script>
+
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+	import type { HTMLAnchorAttributes } from 'svelte/elements';
+
+	let {
+		text,
+		heading_type = 3,
+		id = crypto?.randomUUID(),
+		children,
+		...anchor_attributes
+	} : AnchorHeadingProps = $props();
 </script>
 
 {#snippet header(type)}
@@ -52,6 +56,6 @@
 	{/if}
 {/snippet}
 
-<a {id} {href}>
-	{@render header(type)}
+<a {...anchor_attributes}>
+	{@render header(heading_type)}
 </a>

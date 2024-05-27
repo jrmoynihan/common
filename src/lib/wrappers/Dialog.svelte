@@ -2,9 +2,9 @@
 Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 -->
 <script context="module">
-	interface Props extends Omit<HTMLDialogAttributes, 'open'>{
+	export interface DialogProps extends Omit<HTMLDialogAttributes, 'open'>{
 		/** A binding to the <dialog> element */
-		dialog?: HTMLDialogElement | undefined;
+		dialog?: HTMLDialogElement;
 		/** The type of modal to use.  (Default: 'full')
 		
 		Full mode will provide a blurred backdrop and on small screens will be positioned at the bottom, and provide an additional slide-down animation when closing.
@@ -22,13 +22,11 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 		slide_in_from?: 'left' | 'right' | 'top' | 'bottom';
 		/** In which direction should the dialog slide out to? */
 		slide_out_to?: 'left' | 'right' | 'top' | 'bottom';
-		}
-	export interface DialogProps extends Props {
         onopen?: () => void | Promise<void>;
 		onopening?: () => void | Promise<void>;
         onclose?: () => void | Promise<void>;
 		onclosing?: () => void | Promise<void>;
-    }
+		}
 </script>
 
 <script lang="ts">
@@ -79,9 +77,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 	{...attributes}
 	>	
 	<form method="dialog" class="modal-foreground">
-		{#if children}
-			{@render children()}
-		{/if}
+		{@render children?.()}
 	</form>
 </dialog>
 

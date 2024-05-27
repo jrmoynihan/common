@@ -1,10 +1,5 @@
-<script lang="ts">
-	import { browser } from '$app/environment';
-	import ButtonRunes from '$buttons/Button_Runes.svelte';
-	import type { ComponentProps, Snippet } from 'svelte';
-	import { spring, type Spring } from 'svelte/motion';
-
-	interface ScrollProgressProps {
+<script context='module' lang='ts'>
+	export interface ScrollProgressProps {
 		children?: Snippet
 		button_props?: ComponentProps<ButtonRunes>
 		/** The percent at which the scroll-to-top button becomes visible.  E.g., 10% would be 10*/
@@ -18,6 +13,15 @@
 		/** Should a conical radial display the scroll progress on the page? */
 		show_progress_radial?: boolean
 	}
+
+</script>
+
+<script lang="ts">
+	import { browser } from '$app/environment';
+	import ButtonRunes from '$buttons/Button_Runes.svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
+	import { spring, type Spring } from 'svelte/motion';
+
 
 	let {
 		children,
@@ -57,9 +61,7 @@
 {#if meets_visibility_threshold}
 	{#if show_return_to_top_button}
 		<ButtonRunes {...button_props} {onclick} >
-			{#if children}
-				{@render children()}
-			{/if}
+			{@render children?.()}
 		</ButtonRunes>
 	{/if}
 	{#if show_progress_bar}

@@ -8,7 +8,7 @@
 -->
 
 <script context="module" lang="ts">
-	export  interface AccordionProps extends HTMLDetailsAttributes {
+	export  interface AccordionDetailsProps extends HTMLDetailsAttributes {
 	/** How many degrees to rotate the icon when closed. Defaults to 0. */
 	closed_icon_rotation?: number;
 	/** The icon to display. */
@@ -82,7 +82,7 @@ let {
 	},
 	group_name,
 	...details_attributes
-} : AccordionProps = $props();
+} : AccordionDetailsProps = $props();
 
 const id = crypto.randomUUID();
 let toggle: HTMLInputElement | undefined = $state();
@@ -133,7 +133,7 @@ $effect(() => {
 {/snippet}
 
 <!--The `open` attribute on the <details> element is assigned to `true` to enable the transition trick with `max-height` in the CSS -->
-<!--svelte-ignore a11y-no-noninteractive-element-interactions-->
+<!--svelte-ignore a11y_no_noninteractive_element_interactions-->
 <details 
 	class={`details ${details_classes}`}
 	open={true}
@@ -180,9 +180,7 @@ $effect(() => {
 		</label>
 	</summary>
 	<TransitionNativeRunes bind:this={transition} {...transition_props}>
-			{#if children}
-				{@render children()}
-			{/if}
+		{@render children?.()}
 	</TransitionNativeRunes>
 </details>
 

@@ -86,9 +86,7 @@
 			{@render default_expand_icon()}
 		{/if}
 		
-		{#if summary}
-			{@render summary()}
-		{/if}
+		{@render summary?.()}
 		
 		{#if icon_props && expand_icon_position === 'right'}
 			{@render icon(icon_props)}
@@ -97,9 +95,7 @@
 		{/if}
 	</button>
 	<TransitionRunes bind:trigger={open} {...transition_props} >
-		{#if children && open}
-			{@render children()}
-		{/if}
+			{@render children?.()}
 	</TransitionRunes>
 </div>
 

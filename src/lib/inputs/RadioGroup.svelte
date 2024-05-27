@@ -4,12 +4,18 @@
 	import type { Snippet } from "svelte";
 
     type InputWithLabelProps = InputProps & InputLabelProps
-    export interface RadioGroupProps<T> extends Omit<InputWithLabelProps, 'value' | 'children'>{
+    export interface RadioGroupProps<T> extends Omit<InputWithLabelProps, 'value' | 'children'> {
+        /** An array or iterable of items to display in the radio group. */
         items: ArrayLike<T> | Iterable<T>
+        /** Styles to apply to the label of the selected item */
         label_dynamic_styles?: DynamicStyleParameters
+        /** Styles to apply to the input of the selected item */
         input_dynamic_styles?: DynamicStyleParameters
+        /** The key to use for the label of the selected item. (Default: 'label') */
         label_key?: string
+        /** The key to use for the value of the selected item, which affects the group's binding. (Default: the item itself, which may be an object) */
         value_key?: string
+        /** A snippet to render within the label of each item, adjacent to the radio input.*/
         children?: Snippet<[T]>
     }
 </script>
@@ -24,8 +30,9 @@
         label_dynamic_styles = $bindable(),
         input_dynamic_styles = $bindable(),
         label_key = 'label',
-        value_key = 'value',
+        value_key,
         children,
+        name = crypto.randomUUID(),
         ...input_attributes
     }  : RadioGroupProps<T> = $props();
 
@@ -34,19 +41,18 @@
 {#snippet labeled_item(item)}
     {@const id = crypto.randomUUID()}
     {@const label = item instanceof Object ? item[label_key] : item}
-    {@const value = item instanceof Object ? item[value_key] : item}
+    {@const value = value_key && item instanceof Object ? item[value_key] : item}
     <InputLabel text={label} {id}>
         <Input
             bind:group
             {id}
             {value}
+            {name}
             type='radio'
-            data-checked={group === value}
+            data-checked={group === item}
             {...input_attributes}
         />
-        {#if children}
-            {@render children(item)}
-        {/if}
+        {@render children?.(item)}
     </InputLabel>
 {/snippet}
 

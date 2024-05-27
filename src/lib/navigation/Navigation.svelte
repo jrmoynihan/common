@@ -77,9 +77,7 @@
 			/>
 		{/each}
 	{/if}
-	{#if children}
-		{@render children()}
-	{/if}
+	{@render children?.()}
 </nav>
 
 <style lang="scss">

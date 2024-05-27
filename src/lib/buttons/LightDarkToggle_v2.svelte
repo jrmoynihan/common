@@ -38,48 +38,65 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 	</style>
 	```
 -->
+<script lang="ts" context="module">
+	import { browser } from '$app/environment';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+	type Theme = 'light' | 'dark';
+
+	export interface LightDarkToggleProps extends HTMLButtonAttributes {
+		theme?: Theme;
+		toggle_button?: HTMLButtonElement;
+	}
+</script>
 
 <script lang="ts">
-	type Theme = 'light' | 'dark';
 	const storage_key = 'theme-preference';
 
-	let toggle_button: HTMLButtonElement | null = $state(null);
-	let theme: Theme = 'light';
-
-	function get_color_preference(): Theme {
-		if (window.localStorage.getItem(storage_key))
-			return window.localStorage.getItem(storage_key) as Theme;
-		else return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	}
-	function set_preference(theme: Theme) {
-		window.localStorage.setItem(storage_key, theme);
+	export const get_color_preference = (): Theme => {
+		if (!browser) return 'light';
+		if (window?.localStorage?.getItem(storage_key))
+			return window?.localStorage?.getItem(storage_key) as Theme;
+		else return window?.matchMedia('(prefers-color-scheme: dark)')?.matches ? 'dark' : 'light';
+	};
+	export const set_preference = (theme: Theme) => {
+		if (!browser) return;
+		window?.localStorage?.setItem(storage_key, theme);
 		reflect_preference(theme);
-	}
+	};
 
-	function toggle() {
+	export const toggle = () => {
 		if (theme === 'light') {
 			theme = 'dark';
 		} else if (theme === 'dark') {
 			theme = 'light';
 		}
 		set_preference(theme);
-	}
+	};
 
-	function reflect_preference(theme: string) {
+	export const reflect_preference = (theme: string) => {
+		if (!browser) return;
 		document?.firstElementChild?.setAttribute('data-theme', theme);
 		toggle_button?.setAttribute('aria-label', theme);
-	}
+	};
+
+	let {
+		theme = get_color_preference(),
+		toggle_button = $bindable(),
+		...button_attributes
+	}: LightDarkToggleProps = $props();
 
 	// Set early so no page flashes / CSS is made aware
 	$effect(() => {
-		window
-			.matchMedia('(prefers-color-scheme: dark)')
-			.addEventListener('change', ({ matches: isDark }) => {
-				theme = isDark ? 'dark' : 'light';
-				set_preference(theme);
-			});
-		theme = get_color_preference();
-		reflect_preference(theme);
+		if (browser) {
+			window
+				?.matchMedia('(prefers-color-scheme: dark)')
+				.addEventListener('change', ({ matches: isDark }) => {
+					theme = isDark ? 'dark' : 'light';
+					set_preference(theme);
+				});
+			theme = get_color_preference();
+			reflect_preference(theme);
+		}
 	});
 </script>
 
@@ -91,6 +108,7 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 	title="Toggles light & dark"
 	aria-label="auto"
 	aria-live="polite"
+	{...button_attributes}
 >
 	<svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
 		<circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />

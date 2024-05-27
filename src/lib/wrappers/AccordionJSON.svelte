@@ -1,14 +1,18 @@
-<script lang="ts">
-	import type { ComponentProps } from "svelte";
-	import AccordionDetails, { type AccordionProps } from "./AccordionDetails.svelte";
-	import TransitionNativeRunes from "./TransitionNative_Runes.svelte";
-
-    interface AccordionJsonProps extends AccordionProps {
+<script context='module' lang='ts'>
+    export interface AccordionJsonProps extends AccordionDetailsProps {
         value: unknown,
         key?: string,
         open?: boolean,
         level?: number
     }
+
+</script>
+
+<script lang="ts">
+	import type { ComponentProps } from "svelte";
+	import AccordionDetails, { type AccordionDetailsProps } from "./AccordionDetails.svelte";
+	import TransitionNativeRunes from "./TransitionNative_Runes.svelte";
+
 
     let {
         value,

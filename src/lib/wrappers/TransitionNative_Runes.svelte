@@ -1,61 +1,99 @@
+<script context='module' lang='ts'>
+	export interface TransitionNativeProps {
+		/** Will trigger the CSS transition when this value changes. */
+		visible?: boolean;
+		inner_container_styles?: string;
+		inner_container_classes?: string;
+		/** The type of transition to use. */
+		types?: TransitionTypes[];
+		/** Should the outro transition return to the same initial state as the intro transition?  */
+		symmetrical?: boolean;
+		/** The origin of the transition transform. */
+		origin?: string;
+		fly_transition_parameters?: FlyCSSParams;
+		fade_transition_parameters?: FadeCSSParams;
+		blur_transition_parameters?: BlurCSSParams;
+		slide_transition_parameters?: SlideCSSParams;
+		scale_transition_parameters?: ScaleCSSParams;
+		/** A custom snippet for a fly transition. Be sure to add the `transition-inner` class to the outermost element. */
+		fly_transition?: Snippet<[FlyCSSParams]>;
+		fade_transition?: Snippet<[FadeCSSParams]>;
+		blur_transition?: Snippet<[BlurCSSParams]>;
+		slide_transition?: Snippet<[SlideCSSParams]>;
+		scale_transition?: Snippet<[ScaleCSSParams]>;
+		children?: Snippet;
+	};
+	interface CSSTransitionParams {
+		duration?: number;
+		delay?: number;
+		easing?: EasingFunction;
+	}
+	interface FlyCSSParams extends CSSTransitionParams {
+		x?: string;
+		y?: string;
+		outX?: string;
+		outY?: string;
+		opacity?: string;
+	}
+	interface FadeCSSParams extends CSSTransitionParams {}
+
+	interface SlideCSSParams extends CSSTransitionParams {
+		side?: SlideSide
+	}
+	interface ScaleCSSParams extends CSSTransitionParams {
+		initial?: number;
+		/** Used when `symmetrical` is set to `false` to allow the outro transition to scale differently than the initial scale. */
+		out_scale?: number;
+	}
+	interface BlurCSSParams extends CSSTransitionParams {
+		amount?: string | number;
+		opacity?: string;
+	}
+	/** A type union of all the easing function classes available */
+	type EasingFunction =
+		| "ease"
+		| "ease-in"
+		| "ease-out"
+		| "ease-in-out"
+		| "ease-in-back"
+		| "ease-out-back"
+		| "ease-in-out-back"
+		| "ease-in-elastic"
+		| "ease-out-elastic"
+		| "ease-in-out-elastic"
+		| "ease-in-bounce"
+		| "ease-out-bounce"
+		| "ease-in-out-bounce"
+		| "ease-in-circ"
+		| "ease-out-circ"
+		| "ease-in-out-circ"
+		| "ease-in-sine"
+		| "ease-out-sine"
+		| "ease-in-out-sine"
+		| "ease-in-expo"
+		| "ease-out-expo"
+		| "ease-in-out-expo"
+		| "ease-in-cubic"
+		| "ease-out-cubic"
+		| "ease-in-out-cubic"
+		| "ease-in-quad"
+		| "ease-out-quad"
+		| "ease-in-out-quad"
+		| "ease-in-quart"
+		| "ease-out-quart"
+		| "ease-in-out-quart"
+		| "ease-in-quint"
+		| "ease-out-quint"
+		| "ease-in-out-quint"
+		| "linear";
+</script>
+
 <script lang="ts">
 	import type { SlideSide, TransitionTypes } from "$lib/lib_types";
 
 // Inspired by https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
 
 import type { Snippet } from "svelte";
-	
-type TransitionProps = {
-	/** Will trigger the CSS transition when this value changes. */
-	visible?: boolean;
-	inner_container_styles?: string;
-	inner_container_classes?: string;
-	/** The type of transition to use. */
-	types?: TransitionTypes[];
-	/** Should the outro transition return to the same initial state as the intro transition?  */
-	symmetrical?: boolean;
-	/** The origin of the transition transform. */
-	origin?: string;
-	fly_transition_parameters?: FlyCSSParams;
-	fade_transition_parameters?: FadeCSSParams;
-	blur_transition_parameters?: BlurCSSParams;
-	slide_transition_parameters?: SlideCSSParams;
-	scale_transition_parameters?: ScaleCSSParams;
-	/** A custom snippet for a fly transition. Be sure to add the `transition-inner` class to the outermost element. */
-	fly_transition?: Snippet<[FlyCSSParams]>;
-	fade_transition?: Snippet<[FadeCSSParams]>;
-	blur_transition?: Snippet<[BlurCSSParams]>;
-	slide_transition?: Snippet<[SlideCSSParams]>;
-	scale_transition?: Snippet<[ScaleCSSParams]>;
-	children?: Snippet;
-};
-
-interface CSSTransitionParams {
-	duration?: number;
-	delay?: number;
-	easing?: EasingFunction;
-}
-interface FlyCSSParams extends CSSTransitionParams {
-	x?: string;
-	y?: string;
-	outX?: string;
-	outY?: string;
-	opacity?: string;
-}
-interface FadeCSSParams extends CSSTransitionParams {}
-
-interface SlideCSSParams extends CSSTransitionParams {
-	side?: SlideSide
-}
-interface ScaleCSSParams extends CSSTransitionParams {
-	initial?: number;
-	/** Used when `symmetrical` is set to `false` to allow the outro transition to scale differently than the initial scale. */
-	out_scale?: number;
-}
-interface BlurCSSParams extends CSSTransitionParams {
-	amount?: string | number;
-	opacity?: string;
-}
 
 let {
 	visible = $bindable(false),
@@ -100,45 +138,7 @@ let {
 	slide_transition,
 	scale_transition,
 	children,
-} : TransitionProps = $props();
-
-// A type union of all the easing function classes available
-type EasingFunction =
-	| "ease"
-	| "ease-in"
-	| "ease-out"
-	| "ease-in-out"
-	| "ease-in-back"
-	| "ease-out-back"
-	| "ease-in-out-back"
-	| "ease-in-elastic"
-	| "ease-out-elastic"
-	| "ease-in-out-elastic"
-	| "ease-in-bounce"
-	| "ease-out-bounce"
-	| "ease-in-out-bounce"
-	| "ease-in-circ"
-	| "ease-out-circ"
-	| "ease-in-out-circ"
-	| "ease-in-sine"
-	| "ease-out-sine"
-	| "ease-in-out-sine"
-	| "ease-in-expo"
-	| "ease-out-expo"
-	| "ease-in-out-expo"
-	| "ease-in-cubic"
-	| "ease-out-cubic"
-	| "ease-in-out-cubic"
-	| "ease-in-quad"
-	| "ease-out-quad"
-	| "ease-in-out-quad"
-	| "ease-in-quart"
-	| "ease-out-quart"
-	| "ease-in-out-quart"
-	| "ease-in-quint"
-	| "ease-out-quint"
-	| "ease-in-out-quint"
-	| "linear";
+} : TransitionNativeProps = $props();
 
 let leaving = $state(false);
 let entering = $state(false);
@@ -263,9 +263,7 @@ const sliding = $derived(types.includes('slide'));
 			style:--origin={origin}
 
 		>	
-			{#if children}
-				{@render children()}
-			{/if}
+			{@render children?.()}
 		</div>
 {/snippet}
 
