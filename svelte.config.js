@@ -25,7 +25,7 @@ const config = {
 	// ]})
 ]}}), 
 	vitePreprocess({style: {
-		// postcss: true,
+		postcss: true,
 		// css: {
 		// 	postcss: {
 		// 		plugins: [
