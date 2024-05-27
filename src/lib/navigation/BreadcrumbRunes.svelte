@@ -30,7 +30,7 @@
 {/snippet}
 
 
-<!-- svelte-ignore a11y-no-redundant-roles -->
+<!-- svelte-ignore a11y_no_redundant_roles -->
 <nav role="navigation" class="breadcrumbs" {...attributes} >
     <!--Or use SvelteFa component-->
     {#if Object.keys(crumbs).length > 0}
