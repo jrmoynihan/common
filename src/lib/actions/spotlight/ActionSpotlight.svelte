@@ -1,5 +1,3 @@
-<svelte:options accessors={true} />
-
 <script lang="ts">
 	import { cubicOut } from 'svelte/easing';
 	import { tweened } from 'svelte/motion';
