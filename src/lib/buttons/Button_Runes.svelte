@@ -59,6 +59,7 @@
 	use:dynamic_style={dynamic_styles}
 	use:tooltip={{ ...tooltip_options }}
 	class={`button ${classes}`}
+	type="button"
 	{...attributes}
 	>
 	{#if icon_props && icon_position === 'before'}

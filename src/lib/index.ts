@@ -4,6 +4,8 @@
 // Reexport your entry components here
 
 // Buttons
+import ResetButton from '$buttons/ResetButton.svelte';
+import SubmitButton from '$buttons/SubmitButton.svelte';
 import Button, { type ButtonProps } from './buttons/Button_Runes.svelte';
 import DragAnchor, { type DragAnchorProps } from './buttons/DragAnchor.svelte';
 import LightDarkToggle, { type LightDarkToggleProps } from './buttons/LightDarkToggle_v2.svelte';
@@ -29,26 +31,26 @@ import TextInput, { type TextInputProps } from './inputs/TextInput.svelte';
 import type { DatalistOption, TextInputTypes } from './inputs/types.js';
 
 // Navigation
-import AnchorHeading, { type AnchorHeadingProps } from './navigation/AnchorHeading.svelte';
-import LinkableAnchorHeading, { type LinkableAnchorHeadingProps } from './navigation/LinkableAnchorHeading.svelte';
-import NavLink, { type NavLinkProps } from './navigation/NavLink.svelte';
-import Navigation, { type NavigationProps } from './navigation/Navigation.svelte';
-import ScrollProgress, { type ScrollProgressProps } from './navigation/ScrollProgress.svelte';
+import AnchorHeading from './navigation/AnchorHeading.svelte';
+import LinkableAnchorHeading from './navigation/LinkableAnchorHeading.svelte';
+import NavLink from './navigation/NavLink.svelte';
+import Navigation from './navigation/Navigation.svelte';
+import ScrollProgress from './navigation/ScrollProgress.svelte';
 
 // Toasts
 import SeenToast from './toasts/SeenToast.svelte';
 
 // Wrappers
-import AccordionDetails, { type AccordionDetailsProps } from '$wrappers/AccordionDetails.svelte';
-import AccordionJson, { type AccordionJsonProps } from '$wrappers/AccordionJSON.svelte';
-import Dialog, { type DialogProps } from '$wrappers/Dialog.svelte';
-import FullDialog, { type FullDialogProps } from '$wrappers/FullDialog.svelte';
-import Grid, { type GridProps } from '$wrappers/Grid.svelte';
-import MiniDialog, { type MiniDialogProps } from '$wrappers/MiniDialog.svelte';
-import TransitionNative_Runes, { type TransitionNativeProps } from '$wrappers/TransitionNative_Runes.svelte';
+import AccordionDetails from '$wrappers/AccordionDetails.svelte';
+import AccordionJson from '$wrappers/AccordionJSON.svelte';
+import Dialog from '$wrappers/Dialog.svelte';
+import FullDialog from '$wrappers/FullDialog.svelte';
+import Grid from '$wrappers/Grid.svelte';
+import MiniDialog from '$wrappers/MiniDialog.svelte';
+import TransitionNative_Runes from '$wrappers/TransitionNative_Runes.svelte';
 import Accordion from './wrappers/Accordion.svelte';
-import Tabs, { type TabsProps, type ComponentTab, type ContentTab } from './wrappers/Tabs_Runes.svelte';
-import Transition, { type TransitionProps } from './wrappers/Transition_Runes.svelte';
+import Tabs from './wrappers/Tabs_Runes.svelte';
+import Transition from './wrappers/Transition_Runes.svelte';
 
 // Exports
 // Functions
@@ -141,9 +143,11 @@ export {
 	Navigation,
 	NumericInput,
 	RadioGroup,
+	ResetButton,
 	ScrollProgress,
 	SeenToast,
 	Select,
+	SubmitButton,
 	Tabs,
 	DateInput as TemporalDateInput,
 	TextInput,
