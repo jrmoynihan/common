@@ -6,6 +6,17 @@
         */
         heading?: string;
 
+        article_attributes?: HTMLAttributes<HTMLElement>;
+
+        /** Modify the default `<header>` element that contains an <h3> element and the close ('X') button. */
+        header_attributes?: HTMLAttributes<HTMLElement>;
+
+        heading_attributes?: HTMLAttributes<HTMLHeadingElement>;
+
+        close_button_attributes?: ButtonProps;
+
+        close_x_attributes?: ButtonProps;
+
         /** Simple text within the button.
         
         For more complex text, use the `button_content` snippet, which avoids the need to reimplement the `onclick: ()=> dialog.open()` handler provided by the default button snippet
@@ -21,6 +32,8 @@
         
         When explicitly set to `null`, no button is shown. */
         button?: Snippet | null;
+        
+        footer_children?: Snippet | null;
 
         /** Provide complex child content to the button.
         
@@ -54,14 +67,21 @@
 
 <script lang='ts'>
 
-	import ButtonRunes from '$buttons/Button_Runes.svelte';
+	import ButtonRunes, { type ButtonProps } from '$buttons/Button_Runes.svelte';
 	import { type ComponentProps, type Snippet } from 'svelte';
+	import type { HTMLAttributes } from 'svelte/elements';
 	import Dialog, { type DialogProps } from './Dialog.svelte';
 
     let {
         heading,
+        article_attributes,
+        header_attributes,
+        heading_attributes,
+        close_x_attributes,
+        close_button_attributes,
         button_props,
         button_content,
+        footer_children,
         children,
         button = default_button,
         header = default_header,
@@ -86,8 +106,12 @@
 {#snippet default_footer()}
     <footer>
         <menu>
+            {@render footer_children?.()}
             <ButtonRunes
+                onclick={close}
                 classes={`close-button`}
+                style={'aspect-ratio: 1.5 / 1'}
+                {...close_button_attributes}
                 >
                 Close
             </ButtonRunes>
@@ -96,11 +120,11 @@
 {/snippet}
 
 {#snippet default_header()}
-    <header>
-        <h3>
+    <header {...header_attributes}>
+        <h3 {...heading_attributes}>
             {heading}
         </h3>
-        <ButtonRunes classes="close-button absolute" >
+        <ButtonRunes onclick={close} classes="close-button" {...close_x_attributes} >
             X
         </ButtonRunes>
     </header>
@@ -122,14 +146,12 @@
 
     {@render header?.()}
 
-    {#if children}
     <!-- TODO: add back to avoid tabbable while closed: 
         style:display={attributes?.open ? 'block' : 'none'}
     -->
-        <article>
-            {@render children()}
+        <article {...article_attributes}>
+            {@render children?.()}
         </article>
-    {/if}
 
     {@render footer?.()}
 </Dialog>
@@ -177,8 +199,9 @@
             }
         }
 
-        @layer button {:global(.button.close-button.absolute) {
-                position: absolute;
+        @layer button {:global(.button.close-button) {
+                /* position: absolute; */
+                
                 top: 0.5rem;
                 right: 0.5rem;
                 border-radius: var(--radius-round);
