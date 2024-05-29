@@ -5,6 +5,7 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 	export interface DialogProps extends Omit<HTMLDialogAttributes, 'open'>{
 		/** A binding to the <dialog> element */
 		dialog?: HTMLDialogElement;
+		form_attributes?: HTMLFormAttributes;
 		/** The type of modal to use.  (Default: 'full')
 		
 		Full mode will provide a blurred backdrop and on small screens will be positioned at the bottom, and provide an additional slide-down animation when closing.
@@ -31,11 +32,12 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 
 <script lang="ts">
 	import { dialog as dialog_action } from '$actions/dialog/dialog';
-	import type { HTMLDialogAttributes } from 'svelte/elements';
+	import type { HTMLDialogAttributes, HTMLFormAttributes } from 'svelte/elements';
 
 	let { 
 		children,
 		dialog = $bindable(),
+		form_attributes,
 		mode = 'full',
 		blur = null,
 		scale = 'out',
@@ -76,7 +78,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 	style:--blur={typeof blur === 'number' ? `${blur}px` : `0`}
 	{...attributes}
 	>	
-	<form method="dialog" class="modal-foreground">
+	<form method="dialog" class="modal-foreground" {...form_attributes}>
 		{@render children?.()}
 	</form>
 </dialog>
