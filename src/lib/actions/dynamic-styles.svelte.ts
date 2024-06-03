@@ -29,11 +29,11 @@ export function dynamic_style(
 	// Cache the existing styles on the element in a store
 	let store = $state<DynamicStyleParameters>(parameters);
 	let cached_styles = $state(element.style);
-	let split_static_rules = $derived(splitStyleRules(store.styles));
-	let split_hover_rules = $derived(splitStyleRules(store.hover_styles));
-	let split_active_rules = $derived(splitStyleRules(store.active_styles));
-	let split_valid_rules = $derived(splitStyleRules(store.valid_styles));
-	let split_invalid_rules = $derived(splitStyleRules(store.invalid_styles));
+	let split_static_rules = $derived(splitStyleRules(store?.styles));
+	let split_hover_rules = $derived(splitStyleRules(store?.hover_styles));
+	let split_active_rules = $derived(splitStyleRules(store?.active_styles));
+	let split_valid_rules = $derived(splitStyleRules(store?.valid_styles));
+	let split_invalid_rules = $derived(splitStyleRules(store?.invalid_styles));
 	let split_focus_rules = $derived.by(() => {
 		if (!store.focus_styles && store.hover_styles) {
 			store.focus_styles = store.hover_styles;
@@ -149,7 +149,9 @@ export function dynamic_style(
 
 	return {
 		update(new_parameters: DynamicStyleParameters) {
-			store = new_parameters;
+			if (new_parameters) {
+				store = new_parameters;
+			}
 			addStaticStyles();
 		},
 		destroy() {
