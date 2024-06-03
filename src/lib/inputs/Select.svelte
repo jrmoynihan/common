@@ -38,10 +38,10 @@
 	
 	let {
 		value = $bindable(),
+		dynamic_select_styles = $bindable(),
 		options = [],
 		option_snippet = option,
 		group_snippet = group,
-		dynamic_select_styles,
 		input_label_props,
 		placeholder_props = {},
 		value_key = 'value',
@@ -111,7 +111,6 @@
 		background-color: var(--text-input-background, revert);
 		width: 100%;
 		margin: 0;
-		padding-bottom: 0.5rem;
 		border-radius: var(--text-input-border-radius, 1rem);
 		border: var(--text-input-border, inset);
 		min-height: 3ch;
