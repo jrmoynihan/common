@@ -25,7 +25,7 @@
 	});
 </script>
 
-<Navigation links={links} dynamic_link_styles={{ styles: `color: white` }} />
+<Navigation {links} dynamic_link_styles={{ styles: `color: white` }} />
 
 <TransitionRunes
 	bind:trigger
