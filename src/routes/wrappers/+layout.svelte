@@ -4,38 +4,30 @@
 	import { shouldLayoutTransitionOnNavigation } from '$navigation/nav-functions.js';
 	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
 	import type { Snippet } from 'svelte';
-	import type { LayoutData } from '../$types';
+	import type { LayoutData } from './$types';
 
 	let { data, children }: { data: LayoutData, children: Snippet } = $props();
+	const { links } = data;  // This is required, otherwise data.links can change as new routes are loaded??l
 	let trigger = $state(false);
 
 	beforeNavigate(async (nav) => {
-		const layout_parent_path = 'wrappers';
 		const { from, to } = nav;
-		if (
-			from &&
-			to &&
-			(await shouldLayoutTransitionOnNavigation({
-				from,
-				to,
-				layout_parent_path
-			}))
-		)
+		if (from && to && (await shouldLayoutTransitionOnNavigation({from, to, layout_parent_path: 'wrappers'}))
+		) {
 			trigger = !trigger;
+		}
 	});
 </script>
 
 <section>
 	<Navigation
-		links={data.nav_links}
+		{links}
 		link_current_page_styles="color: white"
 		dynamic_link_styles={{ styles: `color: white` }}
 	/>
 
 	<TransitionRunes bind:trigger>
-		{#if children}
-			{@render children()}
-		{/if}
+		{@render children?.()}
 	</TransitionRunes>
 </section>
 
