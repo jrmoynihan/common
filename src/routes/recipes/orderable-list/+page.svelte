@@ -56,8 +56,8 @@
 			aria-grabbed={grabbed}
 			onmouseover={() => draggingStart(i)}
 			onfocus={() => draggingStart(i)}
-			on:dragover|preventDefault={() => draggingOver(i)}
-			on:drop|preventDefault={() => dropped(dragContent, dragTo, dragFrom)}
+			ondragover={(e) => {e.preventDefault(); draggingOver(i)}}
+			ondrop={(e) => { e.preventDefault(); dropped(dragContent, dragTo, dragFrom)}}
 		>
 			{item.name}
 			<div class="right">
