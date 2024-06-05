@@ -1,6 +1,7 @@
 <script lang="ts">
 import AccordionDetails from "$wrappers/AccordionDetails.svelte";
 import AccordionJson from "$wrappers/AccordionJSON.svelte";
+import JsonView from "$wrappers/JSONView.svelte";
 import type { ComponentProps } from "svelte";
 import Treecordion from "./Treecordion.svelte";
 
@@ -11,7 +12,8 @@ const value = {
 	things: [
 		'one',
 		2,
-		'three'
+		'three',
+		'https://svelte.dev'
 	],
 	other_object: {
 		nested: true,
@@ -96,6 +98,7 @@ const content_text = `Hello from inside the accordion! Lorem ipsum dolor sit ame
 		</AccordionDetails>
 	{/each}
 </div>
+<JsonView obj={value} />
 <AccordionJson {value}/>
 <Treecordion />
 

@@ -46,7 +46,9 @@ import AccordionJson from '$wrappers/AccordionJSON.svelte';
 import Dialog from '$wrappers/Dialog.svelte';
 import FullDialog from '$wrappers/FullDialog.svelte';
 import Grid from '$wrappers/Grid.svelte';
+import JsonView from '$wrappers/JSONView.svelte';
 import MiniDialog from '$wrappers/MiniDialog.svelte';
+import Table from '$wrappers/Table.svelte';
 import TransitionNative_Runes from '$wrappers/TransitionNative_Runes.svelte';
 import Accordion from './wrappers/Accordion.svelte';
 import Tabs from './wrappers/Tabs_Runes.svelte';
@@ -136,6 +138,7 @@ export {
 	Grid,
 	InputButton,
 	InputLabel,
+	JsonView,
 	LightDarkToggle,
 	LinkableAnchorHeading,
 	MiniDialog,
@@ -148,6 +151,7 @@ export {
 	SeenToast,
 	Select,
 	SubmitButton,
+	Table,
 	Tabs,
 	DateInput as TemporalDateInput,
 	TextInput,
@@ -172,3 +176,4 @@ export {
 	type TextInputTypes,
 	type ToggleSwitchProps
 };
+
