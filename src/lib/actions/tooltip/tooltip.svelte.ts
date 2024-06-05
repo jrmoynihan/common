@@ -4,9 +4,7 @@ import { mount, unmount, type Snippet } from 'svelte';
 import ActionTooltip from './ActionTooltip.svelte';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
-export interface TooltipProps extends Record<string, unknown> {
-	/** The content of the tooltip, either a `string` or a {@link Snippet} */
-	content?: string | Snippet<[any]>;
+interface BaseTooltipProps extends Record<string, unknown> {
 	/** Choose from top, bottom, right, left anchor positions for the tooltip. */
 	position?: TooltipDirections;
 	/** The element id to anchor the tooltip to. */
@@ -36,11 +34,22 @@ export interface TooltipProps extends Record<string, unknown> {
 	/** Should the tooltip have a fallback position? */
 	fallback?: boolean;
 }
+export interface TooltipProps extends BaseTooltipProps {
+	/** The content of the tooltip. */
+	content?: string;
+}
+
+export interface TooltipWithContentProps<T> extends BaseTooltipProps {
+	/** The content of the tooltip, as a {@link Snippet} */
+	content?: Snippet<[T]>;
+	/** Arguments to pass to the content when it is a {@link Snippet} */
+	content_args?: T;
+}
 
 /** Each additional step takes the same parameters as the action itself, but you must also provide a node to move the tooltips to at each step. */
 export type TooltipStep = {
 	node: HTMLElement;
-} & Omit<TooltipProps, 'steps'>;
+} & Omit<TooltipProps | TooltipWithContentProps<any>, 'steps'>;
 
 const default_parameters: TooltipProps = {
 	disabled: false,
@@ -56,7 +65,10 @@ const default_parameters: TooltipProps = {
 	fallback: true
 };
 
-export function tooltip(node: HTMLElement, parameters: TooltipProps = default_parameters) {
+export function tooltip<T>(
+	node: HTMLElement,
+	parameters: TooltipProps | TooltipWithContentProps<T> = default_parameters
+) {
 	try {
 		// Either use existing id to anchor the tooltip, or create a new one and add it to the node
 		const id = node.id === '' ? crypto.randomUUID() : node.id;
@@ -66,7 +78,16 @@ export function tooltip(node: HTMLElement, parameters: TooltipProps = default_pa
 		// Mark the node with a popovertarget so it can be targeted
 		node.setAttribute('popovertarget', `tooltip-${id}`);
 
-		let props: TooltipProps = $state<TooltipProps>({ ...default_parameters, ...parameters, id });
+		let props = $state<BaseTooltipProps>({});
+
+		// Get some nice type-safety for the props
+		if (typeof parameters.content === 'string') {
+			const { content, ...rest } = parameters;
+			props = { ...default_parameters, content, ...rest, id } as TooltipProps;
+		} else if (typeof parameters.content === 'function') {
+			const { content, ...rest } = parameters;
+			props = { ...default_parameters, content, ...rest, id } as TooltipWithContentProps<T>;
+		}
 
 		let tooltip: ReturnType<typeof mount>;
 
@@ -120,7 +141,7 @@ export function tooltip(node: HTMLElement, parameters: TooltipProps = default_pa
 		add_event_listeners(node);
 
 		return {
-			async update(new_parameters: TooltipProps) {
+			async update(new_parameters: TooltipProps | TooltipWithContentProps<T>) {
 				for (const [key, value] of Object.entries(new_parameters)) {
 					if (key in props) {
 						props[key] = value;

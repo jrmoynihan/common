@@ -1,16 +1,15 @@
-<svelte:options accessors={true} />
-
 <!--
 @component
 https://web.dev/building-a-tooltip-component/
 -->
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { dynamic_style } from '$actions/dynamic-styles.svelte.js';
-	import type { TooltipProps } from './tooltip.svelte';
+	import type { TooltipProps, TooltipWithContentProps } from './tooltip.svelte';
 
 	let {
-		content, 
+		content,
+		content_args,
 		position = 'top',
 		id = '',
 		visible = false,
@@ -21,7 +20,7 @@ https://web.dev/building-a-tooltip-component/
 		inert = true,
 		disabled = false,
 		fallback = true,
-	} : TooltipProps = $props();
+	} : TooltipProps | TooltipWithContentProps<T> = $props();
 	
 	let tooltip : HTMLElement | undefined = $state(undefined);
 </script>
@@ -48,7 +47,8 @@ https://web.dev/building-a-tooltip-component/
 				{#if typeof content === 'string'}
 					{content}
 				{:else}
-					{@render content([])}
+					{@const asserted_args = content_args as T}
+					{@render content?.(asserted_args)}
 				{/if}
 			{/if}
 
