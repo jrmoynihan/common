@@ -66,8 +66,8 @@ let {
 	details_classes = "",
 	expand_icon_position = "right",
 	icon_class = "fa-CaretDown",
-	max_height_closed = "2.5ch",
-	max_height_open = "110%",
+	max_height_closed = "calc(3ch + 0.5rem)",
+	max_height_open = "calc(100% + 1rem)",
 	open = $bindable(false),
 	open_icon_rotation = 90,
 	summary_attributes: summary_styles,
@@ -140,7 +140,6 @@ $effect(() => {
 	style:--duration={max_duration ? `${max_duration}ms` : undefined}
 	style:--details-max-height-closed={max_height_closed}
 	style:--details-max-height-open={max_height_open}
-	onclick={toggle_accordion}
 	onkeydown={(e)=> {if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle_accordion() } }}
 	{...details_attributes}
 	>
@@ -186,6 +185,12 @@ $effect(() => {
 
 <style lang="scss">
 	@layer accordiondetails {
+		details, summary {
+			box-sizing: border-box;
+		}
+		summary, summary > * {
+			cursor: pointer;
+		}
 		.details {
 			max-height: var(--details-max-height-closed, 1.5rem);
 			overflow: hidden;
@@ -196,7 +201,7 @@ $effect(() => {
 			padding: var(--details-padding, 0.25rem 0.5rem);
 			margin: -0.5rem;
 			cursor: pointer;
-			overflow: auto;
+			// overflow: auto;
 			&:hover{
 				outline: var(--details-hover-outline, 
 				ridge oklch(from var(--details-hover-outline-color, white) l c h / var(--details-hover-outline-opacity, 0.5)));
