@@ -79,7 +79,7 @@
 			{#if typeof value === 'string' && isValidUrl(value?.toString())}
 				<a href={value.toString()}>{value}</a>
 			{:else}
-				{value}
+				<em>{`<${typeof value}>`}</em> {value}
 			{/if}
 		</span>
 	{/if}
@@ -117,8 +117,8 @@
 	}
 	a {
 		font-weight: 600;
-		color: var(--background);
-		background-color: hsla(var(--accent) h s l / 50%);
+		background-color: var(--link-background-color, var(--background, inherit));
+		color: var(--link-color, var(--accent, initial));
 		border-radius: 1rem;
 		padding: 0 0.5rem;
 		text-decoration: underline;
