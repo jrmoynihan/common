@@ -1,10 +1,10 @@
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { tooltip } from '$actions/tooltip/tooltip.svelte';
 	
 	
-    interface JSONViewProps {
+    interface JSONViewProps<T> {
         /**  object or array to display */
-        obj: Record<string, unknown>
+        obj: Object | Array<T>
         /** initial expansion depth */
         depth?: number
         /** show tooltips on object and array items? */
@@ -12,11 +12,11 @@
         _current_depth?: number
         _is_last_item_or_key?: boolean
     }
-    let { obj, depth = 1, use_tooltips = true, _current_depth = 0, _is_last_item_or_key = false } : JSONViewProps = $props();
+    let { obj, depth = 1, use_tooltips = true, _current_depth = 0, _is_last_item_or_key = false } : JSONViewProps<T> = $props();
     
-    const items = $derived(getType(obj) === 'object' ? Object.keys(obj) : [])
-    const array = $derived(Array.isArray(obj))
-    const brackets = $derived(array ? ['[', ']'] : ['{', '}'])
+    const keys = $derived(getType(obj) === 'object' ? Object.keys(obj) : [])
+    const is_array = $derived(Array.isArray(obj))
+    const brackets = $derived(is_array ? ['[', ']'] : ['{', '}'])
     let collapsed = $state(false);
     
     /** Get the type of an item */
@@ -69,7 +69,7 @@
         <button
             class="_jsonBkt"
             class:empty
-            class:array
+            class:is_array
             tabindex="0"
             onclick={clicked}
             onkeydown={pressed}
@@ -79,7 +79,7 @@
                 {brackets[0]}
             {/if}
             {#if collapsed}
-                {items.length} {array ? ' items' : ' keys'}
+                {keys.length} {is_array ? ' items' : ' keys'}
             {/if}
             {#if position === 'end' || position === 'both'}
                 {brackets[1]}
@@ -109,7 +109,7 @@
     {/snippet}
     
     <!-- JSON --->
-    {#if !items.length}
+    {#if !keys.length}
         {@render bracket('both', true, false)}
         
         {#if !_is_last_item_or_key}
@@ -126,28 +126,35 @@
     {:else}
         {@render bracket('start', false, false)}
             <ul class="_jsonList">
-                {#each items as item, index}
-                    {@const value = obj[item]}
-                    {@const type = getType(value)}
-                    
-                    <li>
-                        {#if !array}
-                            <span class="_jsonKey">
-                                {JSON.stringify(item)}
-                            </span>
-                            {@render separator(':')}
-                        {/if}
-                        {#if type === 'object'}
-                            <svelte:self obj={value} {depth} _cur={_current_depth + 1} _last={index === items.length - 1} />
-                        {:else}
-                            <span class="_jsonVal {type}" use:tooltip={use_tooltips ? { content, content_args: {index, type}, position: 'right'} : {disabled: true}}>
-                                {@render formatted_value(value)}
-                            </span>
-                            {#if index < items.length - 1}
-                                {@render separator(',')}
+                {#each keys as key, index}
+                    <!-- Make TS happy about string index lookups on the object-->
+                    {@const record = obj as Record<string, unknown>}
+                    {#if key in record}
+                        {@const value = record[key]}
+                        {@const type = getType(value)}
+                        <li>
+                            {#if !is_array}
+                                <span class="_jsonKey">
+                                    {JSON.stringify(key)}
+                                </span>
+                                {@render separator(':')}
                             {/if}
-                        {/if}
-                    </li>
+
+                            {#if type === 'object'}
+                                    <svelte:self obj={value} {depth} _cur={_current_depth + 1} _last={index === keys.length - 1} />
+                                {:else}
+                                
+                                    <span class="_jsonVal {type}" use:tooltip={use_tooltips ? { content, content_args: {index, type}, position: 'right'} : {disabled: true}}>
+                                        {@render formatted_value(value)}
+                                    </span>
+
+                                    {#if index < keys.length - 1}
+                                        {@render separator(',')}
+                                    {/if}
+
+                                {/if}
+                        </li>
+                    {/if}
                 {/each}
         </ul>
         
