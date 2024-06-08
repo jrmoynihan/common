@@ -21,6 +21,7 @@ const value = {
 		items: ['a', 'b', 'c']
 	}
 }
+const test_promise = fetch("https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/401671786?lang=en&region=us");
 
 const accordion_configs: ComponentProps<AccordionDetails>[] = [
 	{
@@ -98,7 +99,15 @@ const content_text = `Hello from inside the accordion! Lorem ipsum dolor sit ame
 		</AccordionDetails>
 	{/each}
 </div>
-<JsonView obj={value} />
+{#await test_promise}
+	<p>Loading test data...</p>
+{:then response}
+	{#await response.json() then value}
+		<JsonView obj={value} depth={0} />
+	{/await}
+{:catch error}
+	<p>{error.message}</p>
+{/await}
 <AccordionJson {value}/>
 <Treecordion />
 

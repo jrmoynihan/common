@@ -1,6 +1,5 @@
 <script lang="ts" generics="T">
-	import { tooltip } from '$actions/tooltip/tooltip.svelte';
-	
+		
 	
     interface JSONViewProps<T> {
         /**  object or array to display */
@@ -144,7 +143,7 @@
                                     <svelte:self obj={value} {depth} _cur={_current_depth + 1} _last={index === keys.length - 1} />
                                 {:else}
                                 
-                                    <span class="_jsonVal {type}" use:tooltip={use_tooltips ? { content, content_args: {index, type}, position: 'right'} : {disabled: true}}>
+                                    <span class="_jsonVal {type}">
                                         {@render formatted_value(value)}
                                     </span>
 
