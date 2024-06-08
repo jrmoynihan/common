@@ -16,7 +16,7 @@
     const keys = $derived(getType(obj) === 'object' ? Object.keys(obj) : [])
     const is_array = $derived(Array.isArray(obj))
     const brackets = $derived(is_array ? ['[', ']'] : ['{', '}'])
-    let collapsed = $state(false);
+    let collapsed = $state(depth < _current_depth);
     
     /** Get the type of an item */
     function getType(item: unknown) {
@@ -58,9 +58,9 @@
 		}
 	};
     
-    $effect(()=>{
-        collapsed = depth < _current_depth
-    })
+    // $effect(()=>{
+    //     collapsed = depth < _current_depth
+    // })
 
     </script>
 
@@ -140,7 +140,7 @@
                             {/if}
 
                             {#if type === 'object'}
-                                    <svelte:self obj={value} {depth} _cur={_current_depth + 1} _last={index === keys.length - 1} />
+                                    <svelte:self obj={value} {depth} _current_depth={_current_depth + 1} _is_last_item_or_key={index === keys.length - 1} />
                                 {:else}
                                 
                                     <span class="_jsonVal {type}">
