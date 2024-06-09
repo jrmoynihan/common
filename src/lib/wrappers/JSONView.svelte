@@ -1,4 +1,6 @@
 <script lang="ts" generics="T">
+	import type { HTMLAnchorAttributes, HTMLAttributes, HTMLLiAttributes } from 'svelte/elements';
+
 		
 	
     interface JSONViewProps<T> {
@@ -6,12 +8,36 @@
         obj: Object | Array<T>
         /** initial expansion depth */
         depth?: number
-        /** show tooltips on object and array items? */
-        use_tooltips?: boolean
+        /** separator character between keys and values */
+        key_value_separator?: string
+        /** separator character between items */
+        item_separator?: string
+        /** attributes to apply to the `<ul>` element */
+        ul_attributes?: HTMLAttributes<HTMLUListElement>;
+        /** attributes to apply to the `<li>` element */
+        li_attributes?: HTMLLiAttributes;
+        /** attributes to apply to the `<a>` element for links */
+        link_attributes?: HTMLAnchorAttributes;
+        /** attributes to apply to the `<span>` element for keys */
+        key_span_attributes?: HTMLAttributes<HTMLSpanElement>;
+        /** attributes to apply to the `<span>` element for values */
+        value_span_attributes?: HTMLAttributes<HTMLSpanElement>;
         _current_depth?: number
         _is_last_item_or_key?: boolean
     }
-    let { obj, depth = 1, use_tooltips = true, _current_depth = 0, _is_last_item_or_key = false } : JSONViewProps<T> = $props();
+    let { 
+        obj, 
+        depth = 1, 
+        key_value_separator = ': ',
+        item_separator = '',
+        ul_attributes,
+        li_attributes,
+        link_attributes,
+        key_span_attributes,
+        value_span_attributes,
+        _current_depth = 0,
+        _is_last_item_or_key = false
+    } : JSONViewProps<T> = $props();
     
     const keys = $derived(getType(obj) === 'object' ? Object.keys(obj) : [])
     const is_array = $derived(Array.isArray(obj))
@@ -101,7 +127,7 @@
 
     {#snippet formatted_value(value)}
         {#if is_valid_URL(value)}
-            <a href={value} rel="noopener noreferrer" target="_blank">{value}</a>
+            <a href={value} rel="noopener noreferrer" target="_blank" {...link_attributes}>{value}</a>
         {:else}
             {format(value)}
         {/if}
@@ -124,31 +150,31 @@
 
     {:else}
         {@render bracket('start', false, false)}
-            <ul class="_jsonList">
+            <ul class="_jsonList" {...ul_attributes}>
                 {#each keys as key, index}
                     <!-- Make TS happy about string index lookups on the object-->
                     {@const record = obj as Record<string, unknown>}
                     {#if key in record}
                         {@const value = record[key]}
                         {@const type = getType(value)}
-                        <li>
+                        <li class="_jsonListItem" {...li_attributes}>
                             {#if !is_array}
-                                <span class="_jsonKey">
+                                <span class="_jsonKey" {...key_span_attributes}>
                                     {JSON.stringify(key)}
                                 </span>
-                                {@render separator(':')}
+                                {@render separator(key_value_separator)}
                             {/if}
 
                             {#if type === 'object'}
                                     <svelte:self obj={value} {depth} _current_depth={_current_depth + 1} _is_last_item_or_key={index === keys.length - 1} />
                                 {:else}
                                 
-                                    <span class="_jsonVal {type}">
+                                    <span class="_jsonVal {type}" {...value_span_attributes}>
                                         {@render formatted_value(value)}
                                     </span>
 
                                     {#if index < keys.length - 1}
-                                        {@render separator(',')}
+                                        {@render separator(item_separator)}
                                     {/if}
 
                                 {/if}
@@ -160,7 +186,7 @@
         {@render bracket('end', false, false)}
 
         {#if !_is_last_item_or_key}
-            {@render separator(',')}
+            {@render separator(item_separator)}
         {/if}
     {/if}
     
@@ -171,6 +197,9 @@
         padding: 0;
         padding-left: var(--jsonPaddingLeft, 1rem);
         border-left: var(--jsonBorderLeft, 1px dotted);
+    }
+    :where(._jsonListItem) {
+        text-align: justify;
     }
     :where(._jsonBkt) {
         appearance: none;
