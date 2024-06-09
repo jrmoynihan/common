@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-	import type { HTMLAnchorAttributes, HTMLAttributes, HTMLLiAttributes } from 'svelte/elements';
+	import type { HTMLAnchorAttributes, HTMLAttributes, HTMLButtonAttributes, HTMLLiAttributes } from 'svelte/elements';
     interface JSONViewProps<T> {
         /**  object or array to display */
         obj: Object | Array<T>
@@ -19,6 +19,8 @@
         key_span_attributes?: HTMLAttributes<HTMLSpanElement>;
         /** attributes to apply to the `<span>` element for values */
         value_span_attributes?: HTMLAttributes<HTMLSpanElement>;
+        /** attributes to apply to the `<button>` element for brackets */
+        bracket_button_attributes?: HTMLButtonAttributes;
         _current_depth?: number
         _is_last_item_or_key?: boolean
     }
@@ -32,6 +34,7 @@
         link_attributes,
         key_span_attributes,
         value_span_attributes,
+        bracket_button_attributes,
         _current_depth = 0,
         _is_last_item_or_key = false
     } : JSONViewProps<T> = $props();
@@ -92,6 +95,7 @@
             onclick={clicked}
             onkeydown={pressed}
             disabled={empty}
+            {...bracket_button_attributes}
         >
             {#if position === 'start' || position === 'both'}
                 {brackets[0]}
