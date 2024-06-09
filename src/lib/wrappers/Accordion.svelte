@@ -4,6 +4,8 @@
 		summary?: Snippet | string,
 		/** The parameters of the `<summary>` tooltip. */
 		summary_tooltip_props?: TooltipProps,
+		/** Attributes to apply to the `<summary>` element. */
+		summary_attributes?: HTMLAttributes<HTMLElement>,
 		/** (Bindable) The open state of the accordion. */
 		open?: boolean
 		/** The parameters of the transition. */
@@ -12,8 +14,6 @@
 		expand_icon_position?: 'left' | 'right' | 'none',
 		/** Props to apply to the expand/collapse icon's `<Fa>` component. */
 		icon_props?: ComponentProps<Fa>,
-		/** Custom styles to apply to the summary's `<button>` element that toggles the accordion. */
-		button_attributes?: HTMLButtonAttributes
 		/** The rotation of the open icon. */
 		closed_icon_rotation?: number
 		/** The rotation of the closed icon. */
@@ -26,7 +26,7 @@
 	import { Fa } from '@jrmoynihan/svelte-fa';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import { cubicInOut } from 'svelte/easing';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	import TransitionRunes from './Transition_Runes.svelte';
 
 	export const toggle = () => {open = !open};
@@ -34,6 +34,7 @@
 	let {
 		summary,
 		summary_tooltip_props = { disabled: true },
+		summary_attributes,
 		children,
 		open = $bindable(false),
 		transition_props = {
@@ -82,6 +83,7 @@
 	class:left-icon={expand_icon_position === 'left'}
 	class:right-icon={expand_icon_position === 'right'}
 	class:no-icon={expand_icon_position === 'none'}
+	{...summary_attributes}
 		>
 		{#if expand_icon_position === 'left'}
 			{#if icon_props}
