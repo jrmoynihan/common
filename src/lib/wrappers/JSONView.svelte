@@ -1,8 +1,5 @@
 <script lang="ts" generics="T">
 	import type { HTMLAnchorAttributes, HTMLAttributes, HTMLLiAttributes } from 'svelte/elements';
-
-		
-	
     interface JSONViewProps<T> {
         /**  object or array to display */
         obj: Object | Array<T>
@@ -83,10 +80,6 @@
 			return false;
 		}
 	};
-    
-    // $effect(()=>{
-    //     collapsed = depth < _current_depth
-    // })
 
     </script>
 
@@ -118,13 +111,6 @@
         </span>
     {/snippet}
 
-    {#snippet content({index, type}: {index: number, type: string})}
-        <ul class="tooltip-content">
-            <li class="tooltip-item">index: {index}</li> 
-            <li class="tooltip-item">type: {type}</li>
-        </ul>
-    {/snippet}
-
     {#snippet formatted_value(value)}
         {#if is_valid_URL(value)}
             <a href={value} rel="noopener noreferrer" target="_blank" {...link_attributes}>{value}</a>
@@ -138,14 +124,14 @@
         {@render bracket('both', true, false)}
         
         {#if !_is_last_item_or_key}
-            {@render separator(',')}
+            {@render separator(item_separator)}
         {/if}
 
     {:else if collapsed}
         {@render bracket('both', false, true)}
 
         {#if !_is_last_item_or_key && collapsed}
-            {@render separator(',')}
+            {@render separator(item_separator)}
         {/if}
 
     {:else}
@@ -190,7 +176,7 @@
         {/if}
     {/if}
     
-    <style>
+<style>
     :where(._jsonList) {
         list-style: none;
         margin: 0;
@@ -230,14 +216,4 @@
     :where(._jsonVal).boolean {
         color: var(--jsonValBooleanColor, #2563eb);
     }
-    li.tooltip-item {
-        list-style: none;
-        display: grid;
-        grid-auto-rows: auto;
-        grid-template-columns: auto 1fr;
-    }
-    ul.tooltip-content {
-        margin: none;
-        padding: 0;
-    }
-    </style>
+</style>
