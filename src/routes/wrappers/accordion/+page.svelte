@@ -1,4 +1,5 @@
 <script lang="ts">
+import Accordion from "$wrappers/Accordion.svelte";
 import AccordionDetails from "$wrappers/AccordionDetails.svelte";
 import AccordionJson from "$wrappers/AccordionJSON.svelte";
 import JsonView from "$wrappers/JSONView.svelte";
@@ -103,7 +104,9 @@ const content_text = `Hello from inside the accordion! Lorem ipsum dolor sit ame
 	<p>Loading test data...</p>
 {:then response}
 	{#await response.json() then value}
+	<Accordion summary='A brief summary'>
 		<JsonView obj={value} depth={0} />
+	</Accordion>
 	{/await}
 {:catch error}
 	<p>{error.message}</p>

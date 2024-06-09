@@ -1,8 +1,10 @@
 <script context='module' lang='ts'>
-	export interface AccordionProps extends HTMLAttributes<HTMLElement> {
+	export interface AccordionProps extends HTMLButtonAttributes {
 		/** A snippet to provide a custom summary section instead of just passing the `summary_text`. */
-		summary?: Snippet,
-		/** The open state of the accordion. */
+		summary?: Snippet | string,
+		/** The parameters of the `<summary>` tooltip. */
+		summary_tooltip_props?: TooltipProps,
+		/** (Bindable) The open state of the accordion. */
 		open?: boolean
 		/** The parameters of the transition. */
 		transition_props?: ComponentProps<TransitionRunes>,
@@ -11,7 +13,7 @@
 		/** Props to apply to the expand/collapse icon's `<Fa>` component. */
 		icon_props?: ComponentProps<Fa>,
 		/** Custom styles to apply to the summary's `<button>` element that toggles the accordion. */
-		summary_button_attributes?: HTMLButtonAttributes
+		button_attributes?: HTMLButtonAttributes
 		/** The rotation of the open icon. */
 		closed_icon_rotation?: number
 		/** The rotation of the closed icon. */
@@ -20,16 +22,18 @@
 </script>
 
 <script lang="ts">
+	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte';
 	import { Fa } from '@jrmoynihan/svelte-fa';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import { cubicInOut } from 'svelte/easing';
-	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import TransitionRunes from './Transition_Runes.svelte';
 
-	export const toggle = () => (open = !open);
+	export const toggle = () => {open = !open};
 
 	let {
 		summary,
+		summary_tooltip_props,
 		children,
 		open = $bindable(false),
 		transition_props = {
@@ -37,10 +41,9 @@
 		},
 		expand_icon_position = 'right',
 		icon_props,
-		summary_button_attributes,
 		closed_icon_rotation = 90,
 		open_icon_rotation = -90,
-		...accordion_container_attributes
+		...button_attributes
 	} : AccordionProps = $props()
 </script>
 
@@ -54,6 +57,7 @@
 
 {#snippet default_expand_icon()}
 	<svg
+	class:open
 	style="tran"
 	width="20"
 	height="20"
@@ -66,76 +70,102 @@
 	>
 {/snippet}
 
-<div
+<button
 	class="accordion-container"
-	style:--icon-closed-rotation={`${closed_icon_rotation}deg`}
-	style:--icon-open-rotation={`${open_icon_rotation}deg`}
-	{...accordion_container_attributes}
->
-	<button
-		onclick={toggle}
-		class:left-icon={expand_icon_position === 'left'}
-		class:right-icon={expand_icon_position === 'right'}
-		class:no-icon={expand_icon_position === 'none'}
-		aria-expanded={open}
-		{...summary_button_attributes}
-	>
-		{#if icon_props && expand_icon_position === 'left'}
-			{@render icon(icon_props)}
-		{:else if expand_icon_position === 'left'}
-			{@render default_expand_icon()}
+	aria-roledescription="accordion"
+	onclick={toggle}
+	aria-expanded={open}
+	{...button_attributes}
+>	
+	<summary
+	use:tooltip={summary_tooltip_props}
+	class:left-icon={expand_icon_position === 'left'}
+	class:right-icon={expand_icon_position === 'right'}
+	class:no-icon={expand_icon_position === 'none'}
+		>
+		{#if expand_icon_position === 'left'}
+			{#if icon_props}
+				{@render icon(icon_props)}
+			{:else}
+				{@render default_expand_icon()}
+			{/if}
 		{/if}
-		
-		{@render summary?.()}
-		
-		{#if icon_props && expand_icon_position === 'right'}
-			{@render icon(icon_props)}
-		{:else if expand_icon_position === 'right'}
-			{@render default_expand_icon()}
-		{/if}
-	</button>
-	<TransitionRunes bind:trigger={open} {...transition_props} >
-			{@render children?.()}
-	</TransitionRunes>
-</div>
 
-<style lang="scss">
-	button {
-		box-sizing: border-box;
-		background: none;
-		display: grid;
-		color: inherit;
-		font: inherit;
-		cursor: pointer;
-		margin: 0;
-		padding: 0.5em;
-		gap: 0.5rem;
-		justify-items: center;
-		align-items: center;
-		transition: border-radius 800ms ease-in-out;
-		border-radius: 1rem;
-		width: 100%;
-		border: var(--accordion-button-border, none);
-		&.right-icon {
-			grid-template-columns: 1fr auto;
-		}
-		&.left-icon {
-			grid-template-columns: auto 1fr;
-		}
-		&.no-icon {
-			grid-template-columns: 1fr;
-		}
-		&[aria-expanded='true'] {
-			border-radius: 1rem 1rem 0 0;
-			transition: border-radius 0s ease-in-out;
-			& :global( > svg) {
-				rotate: var(--icon-open-rotation);
+		{#if typeof summary !== 'string'}
+			{@render summary?.()}
+		{:else}
+			{summary}
+		{/if}
+	
+		{#if expand_icon_position === 'right'}
+			{#if icon_props}
+				{@render icon(icon_props)}
+			{:else}
+				{@render default_expand_icon()}
+			{/if}
+		{/if}
+</summary>
+
+	<!--This prevents the accordion from closing when the button's content is clicked, similar to a <details> element-->
+	<!--svelte-ignore a11y_no_static_element_interactions -->
+	<!--svelte-ignore a11y_click_events_have_key_events-->
+	<div class="content" onclick={(e)=>{e.stopPropagation()}}>
+		{@render children?.()}
+	</div>
+</button>
+
+<style>
+	@layer accordion{
+		.accordion-container {
+			--duration: 400ms;
+			appearance: none;
+			box-sizing: border-box;
+			background: oklch(40% 0.2 270);
+			display: grid;
+			grid-template-rows: max-content 0fr;
+			color: inherit;
+			font: inherit;
+			cursor: pointer;
+			margin: 1rem;
+			padding: 1rem;
+			border-radius: 1rem;
+			transition: grid-template-rows 400ms;
+			border: var(--accordion-button-border, none);
+			align-items: unset;
+				box-sizing: border-box;
+			&[aria-expanded='true'] {
+				border-radius: 1rem 1rem 0 0;
+				grid-template-rows: max-content 1fr;
+			}
+			& > .content {
+				overflow: hidden;
+				grid-row: 2 / span 2;
 			}
 		}
+		summary {
+			display:grid ;
+			align-items: center;
+			grid-row: 1;
+			
+			&.right-icon {
+				grid-template-columns: 1fr auto;
+			}
+			&.left-icon {
+				grid-template-columns: auto 1fr;
+			}
+		
+			&.no-icon {
+				grid-template-columns: 1fr;
+			}
+		}
+		svg {
+			transition: rotate var(--duration, 400ms) var(--transition-speed, ease);
+			rotate: var(--icon-closed-rotation, 0deg);
+			&.open{
+				rotate: var(--icon-open-rotation, 90deg);
+			}
+		}
+
 	}
 
-	svg {
-		transition: rotate 0.2s ease-in;
-		rotate: var(--icon-closed-rotation);
-	}
 </style>
