@@ -183,7 +183,7 @@ $effect(() => {
 	</TransitionNativeRunes>
 </details>
 
-<style lang="scss">
+<style>
 	@layer accordiondetails {
 		details, summary {
 			box-sizing: border-box;
@@ -201,7 +201,7 @@ $effect(() => {
 			padding: var(--details-padding, 0.25rem 0.5rem);
 			margin: -0.5rem;
 			cursor: pointer;
-			// overflow: auto;
+			/* overflow: auto; */
 			&:hover{
 				outline: var(--details-hover-outline, 
 				ridge oklch(from var(--details-hover-outline-color, white) l c h / var(--details-hover-outline-opacity, 0.5)));
@@ -226,7 +226,7 @@ $effect(() => {
 	
 			/* Remove the default triangle arrow */
 			& > summary {
-				// width: 100%;
+				/* width: 100%; */
 				cursor: pointer;
 				list-style: none;
 				&:focus-visible{
@@ -238,7 +238,7 @@ $effect(() => {
 				/* Customize the summary styles */
 				& > label {
 					display: flex;
-					// width: 100%;
+					/* width: 100%; */
 					justify-content: space-between;
 				}
 				/* Hide the checkbox */
