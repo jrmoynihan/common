@@ -33,7 +33,7 @@
 
 	let {
 		summary,
-		summary_tooltip_props,
+		summary_tooltip_props = { disabled: true },
 		children,
 		open = $bindable(false),
 		transition_props = {
