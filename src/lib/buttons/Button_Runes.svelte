@@ -1,5 +1,5 @@
 <script context='module' lang='ts'>
-	export interface ButtonProps extends HTMLButtonAttributes {
+	export interface ButtonProps extends Omit<HTMLButtonAttributes, 'class'> {
 		/** Options to style the tooltip or modify its visible/disabled state */
 		tooltip_options?: TooltipProps,
 		/** Style the button, allowing dynamic updates */
