@@ -58,7 +58,7 @@
 	transition:transition={transition_config}
 	use:dynamic_style={dynamic_styles}
 	use:tooltip={{ ...tooltip_options }}
-	class={`button ${classes}`}
+	class={`_button ${classes}`}
 	type="button"
 	{...attributes}
 	>
@@ -75,7 +75,7 @@
 
 <style lang="scss">
 	@layer button {
-		.button {
+		._button {
 			cursor: pointer;
 		}
 	}
