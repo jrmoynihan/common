@@ -17,13 +17,6 @@
 
         close_x_attributes?: ButtonProps;
 
-        /** Simple text within the button.
-        
-        For more complex text, use the `button_content` snippet, which avoids the need to reimplement the `onclick: ()=> dialog.open()` handler provided by the default button snippet
-        
-        For full control, provide a `button` snippet instead. */
-        button_text?: string;
-
         /** Props to pass to the button component that toggles the dialog. */
         button_props?: ComponentProps<ButtonRunes>;
         /** Provide an entire button snippet.
@@ -37,8 +30,8 @@
 
         /** Provide complex child content to the button.
         
-        When explicitly set to `null` or left `undefined`, falls back to using `button_text` to provide content to the button. */
-        button_content?: Snippet | null;
+        Content to render inside the opening/closing button. */
+        button_content?: Snippet | string |null;
 
         /** A snippet for the dialog's header. Defaults to an <h3> element within a <header> tag and a close ('X') button positioned at the top right. */
         header?: Snippet | null;
@@ -132,7 +125,11 @@
 
 {#snippet default_button()}
     <ButtonRunes {...button_props} onclick={open} >
-        {@render button_content?.()}
+        {#if typeof button_content === 'string'}
+            {button_content}
+        {:else if button_content}
+            {@render button_content?.()}
+        {/if}
     </ButtonRunes>
 {/snippet}
 
