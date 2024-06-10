@@ -2,12 +2,19 @@
 	import type { HTMLAttributes } from "svelte/elements";
 
     export interface GridProps extends HTMLAttributes<HTMLDivElement> {
-        min_column_size?: string
+        /** The min column size of the grid for a `minmax()` function. */
+		min_column_size?: string
+		/** The max column size of the grid for a `minmax()` function. */
         max_column_size?: string
+		/** The min row size of the grid for a `minmax()` function. */
         min_row_size?: string
+		/** The max row size of the grid for a `minmax()` function. */
         max_row_size?: string
-        columns?: number
-        rows?: number
+		/** (Default: 1) The number of columns in the grid, or an `auto-fit` or `auto-fill` algorithm. */
+        columns?: number | 'auto-fit' | 'auto-fill'
+		/** (Default: 1) The number of rows in the grid, or an `auto-fit` or `auto-fill` algorithm. */
+        rows?: number | 'auto-fit' | 'auto-fill'
+		/** (Default: 1rem) The gap between grid items. */
         gap?: string
     }
 </script>
