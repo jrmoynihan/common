@@ -1,15 +1,15 @@
 <script context='module' lang='ts'>
-    export interface MiniDialogProps extends FullDialogProps {}
+    export interface MiniDialogProps<T> extends FullDialogProps<T> {}
 </script>
 
-<script lang='ts'>
+<script lang='ts' generics="T">
 	import FullDialog, { type FullDialogProps } from './FullDialog.svelte';
 
 
     let {
         children = undefined,
         ...dialog_props
-    } : MiniDialogProps = $props();
+    } : MiniDialogProps<T> = $props();
 
 </script>
 

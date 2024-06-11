@@ -1,12 +1,12 @@
 <script lang="ts" context="module">
-	export interface DragAnchorProps extends ButtonProps {
+	export interface DragAnchorProps<T> extends ButtonProps<T> {
 		grabbed?: boolean;
 		hovered?: boolean;
 		dynamic_styles?: DynamicStyleParameters;
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import { faGripVertical } from '@fortawesome/free-solid-svg-icons/index';
 	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
@@ -18,7 +18,7 @@
 		dynamic_styles,
 		children,
 		...button_props
-	}: DragAnchorProps = $props();
+	}: DragAnchorProps<T> = $props();
 
 	export const release = () => {
 		if (!grabbed) return;

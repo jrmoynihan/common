@@ -1,7 +1,7 @@
 <script context='module' lang='ts'>
-	export interface ScrollProgressProps {
+	export interface ScrollProgressProps<T> {
 		children?: Snippet
-		button_props?: ComponentProps<ButtonRunes>
+		button_props?: ComponentProps<ButtonRunes<T>>
 		/** The percent at which the scroll-to-top button becomes visible.  E.g., 10% would be 10*/
 		threshold?: number
 		/** The scroll progess up and down the page, expressed as a percent. */
@@ -16,7 +16,7 @@
 
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { browser } from '$app/environment';
 	import ButtonRunes from '$buttons/Button_Runes.svelte';
 	import type { ComponentProps, Snippet } from 'svelte';
@@ -32,7 +32,7 @@
 		show_progress_bar = false,
 		show_progress_radial = false
 
-	} : ScrollProgressProps = $props();
+	} : ScrollProgressProps<T> = $props();
 
 	/** The scroll distance donw the page */
 	let scrollY: number = $state(0);

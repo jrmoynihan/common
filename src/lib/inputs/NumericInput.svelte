@@ -23,10 +23,10 @@
 	// TODO: add a prop for a custom validity function?
 	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
 
-	type SpinnerButton = InputButtonProps & ComponentProps<Fa>
+	type SpinnerButton<T> = InputButtonProps<T> & ComponentProps<Fa>
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import { type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
@@ -59,7 +59,7 @@
 	
 </script>
 
-{#snippet default_spinner_button({icon, size, ...button_props}: SpinnerButton)}
+{#snippet default_spinner_button({icon, size, ...button_props}: SpinnerButton<T>)}
 	<InputButton {...button_props}>
 		<Fa {icon} {size} color="var(--text-input-button-color, buttontext)" class="spinner-button-icon" />
 	</InputButton>

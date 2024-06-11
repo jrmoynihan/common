@@ -1,9 +1,4 @@
-<script lang="ts">
-	import type { ComponentProps } from 'svelte';
-	import InputLabel from './InputLabel.svelte';
-	import TextInput, { type TextInputProps } from './TextInput.svelte';
-	// import type { DatalistOption } from './types';
-
+<script context="module" lang="ts">
 	export interface DatalistTextInputProps extends TextInputProps {
 		datalist: string[] | number[] | Record<string, unknown>[];
 		value?: unknown;
@@ -12,6 +7,13 @@
 		label_props?: ComponentProps<InputLabel>;
 		label_element?: HTMLLabelElement;
 	}
+</script>
+
+<script lang="ts">
+	import type { ComponentProps } from 'svelte';
+	import InputLabel from './InputLabel.svelte';
+	import TextInput, { type TextInputProps } from './TextInput.svelte';
+
 	let list: string = crypto?.randomUUID();
 
 	let {

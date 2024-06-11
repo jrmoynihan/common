@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	export interface ToggleSwitchProps extends ButtonProps {
+	export interface ToggleSwitchProps<T> extends ButtonProps<T> {
 		/** The checked state of the toggle. Defaults to `false`. */
 		checked?: boolean;
 		/** The disabled state of the toggle. Defaults to `false`. */
@@ -21,7 +21,7 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
 	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
@@ -38,7 +38,7 @@
 		slider_attributes,
 		children,
 		...button_props
-	} : ToggleSwitchProps = $props()
+	} : ToggleSwitchProps<T> = $props()
 
 	function default_on_toggle() {
 		checked = !checked;
@@ -74,9 +74,9 @@
 >
 	{#if label_position === 'before'}
 		{#if children}
-			{@render children()}
+			{@render children?.()}
 		{:else if label_text}
-			{@render label(label_text)}
+			{@render label?.(label_text)}
 		{/if}
 	{/if}
 	<span class="switch">
@@ -93,9 +93,9 @@
 	</span>
 	{#if label_position === 'after'}
 		{#if children}
-			{@render children()}
+			{@render children?.()}
 		{:else if label_text}
-			{@render label(label_text)}
+			{@render label?.(label_text)}
 		{/if}
 	{/if}
 </ButtonRunes>

@@ -1,13 +1,13 @@
 <script context='module' lang='ts'>
-	export interface LinkableAnchorHeadingProps extends ComponentProps<AnchorHeading> {
-		button_props?: ComponentProps<ButtonRunes>;
+	export interface LinkableAnchorHeadingProps<T> extends ComponentProps<AnchorHeading> {
+		button_props?: ComponentProps<ButtonRunes<T>>;
 		button_position?: 'before' | 'after'
 		children?: Snippet
 	}
 
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { page } from '$app/stores';
 	import ButtonRunes from '$buttons/Button_Runes.svelte';
 	import { faLink } from '@fortawesome/free-solid-svg-icons/index';
@@ -25,7 +25,7 @@
 		button_position = 'after',
 		children,
 		...heading_props
-	} : LinkableAnchorHeadingProps = $props();
+	} : LinkableAnchorHeadingProps<T> = $props();
 
 	function copyLinkAddress() {
 		const { id } = heading_props;

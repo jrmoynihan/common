@@ -10,6 +10,7 @@ let position: TooltipDirections = $state<TooltipDirections>("top");
 let keep_visible: boolean = $state(false);
 
 async function testToastUpdate() {
+	disabled = false;
 	// const id = await default_toast({ duration: 5_000 });
 	// await updateToasts(id);
 	// await default_toast({ id, msg: "finished", progress: 0 });
@@ -45,6 +46,7 @@ $effect(() => {
 let step = $state(0);
 let heading_three: HTMLHeadingElement | undefined = $state(undefined);
 let high_button: HTMLButtonElement | undefined = $state(undefined);
+let disabled = $state(false)
 
 function onclick(){
 	keep_visible = !keep_visible;
@@ -56,7 +58,9 @@ function onclick(){
 		Click me!
 	{/snippet}
 	<ButtonRunes
+	bind:disabled
 	onclick={() => {
+			disabled = !disabled;
 			step++;
 			Log({
 				msg: 'clicking with the low elevation button?',

@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-    export interface FullDialogProps extends Omit<DialogProps, 'dialog'> {
+    export interface FullDialogProps<T> extends Omit<DialogProps, 'dialog'> {
         /** Provide a simple text for the heading.  Defaults to an <h3> element within a <header> tag and a close ('X') button positioned at the top right. 
         
         For full control, provide a `header` snippet instead.   
@@ -13,12 +13,12 @@
 
         heading_attributes?: HTMLAttributes<HTMLHeadingElement>;
 
-        close_button_attributes?: ButtonProps;
+        close_button_attributes?: ButtonProps<T>;
 
-        close_x_attributes?: ButtonProps;
+        close_x_attributes?: ButtonProps<T>;
 
         /** Props to pass to the button component that toggles the dialog. */
-        button_props?: ComponentProps<ButtonRunes>;
+        button_props?: ComponentProps<ButtonRunes<T>>;
         /** Provide an entire button snippet.
         
         When `undefined`, the default button snippet is used, which takes the `button_content` prop for its content and falls back to the `button_text` prop when no `button_content` is provided.
@@ -58,7 +58,7 @@
     }
 </script>
 
-<script lang='ts'>
+<script lang='ts' generics="T">
 
 	import ButtonRunes, { type ButtonProps } from '$buttons/Button_Runes.svelte';
 	import { type ComponentProps, type Snippet } from 'svelte';
@@ -82,7 +82,7 @@
         blur = 10,
         dialog = $bindable(),
         ...dialog_props
-    } : FullDialogProps = $props();
+    } : FullDialogProps<T> = $props();
     
 
     export function open() {

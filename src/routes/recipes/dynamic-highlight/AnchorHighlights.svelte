@@ -3,32 +3,32 @@
 	const base = new URL('https://developer.mozilla.org/en-US/docs/Web/CSS/');
 	const links = [
 		{
-			href: new URL('Universal_selectors', base),
+			url: new URL('Universal_selectors', base),
 			text: 'Universal'
 		},
 		{
-			href: new URL('Type_selectors', base),
+			url: new URL('Type_selectors', base),
 			text: 'Type'
 		},
 		{
-			href: new URL('Class_selectors', base),
+			url: new URL('Class_selectors', base),
 			text: 'Class'
 		},
 		{
-			href: new URL('ID_selectors', base),
+			url: new URL('ID_selectors', base),
 			text: 'ID'
 		},
 		{
-			href: new URL('Attribute_selectors', base),
+			url: new URL('Attribute_selectors', base),
 			text: 'Attribute'
 		}
 	];
 </script>
 
 <ul class="slider">
-	{#each links as { href, text }, i}
+	{#each links as { url, text }, i}
 		<li class="slider-item" style:--i={`--${i}`}>
-			<a class="slider-link" {href} target="_blank">{text}</a>
+			<a class="slider-link" href={url.href} target="_blank">{text}</a>
 		</li>
 	{/each}
 </ul>

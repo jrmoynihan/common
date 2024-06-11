@@ -1,7 +1,7 @@
 <script context='module' lang='ts'>
-	export interface ButtonProps extends Omit<HTMLButtonAttributes, 'class'> {
+	export interface ButtonProps<T> extends Omit<HTMLButtonAttributes, 'class'> {
 		/** Options to style the tooltip or modify its visible/disabled state */
-		tooltip_options?: TooltipProps,
+		tooltip_options?: TooltipProps | TooltipWithContentProps<T>,
 		/** Style the button, allowing dynamic updates */
 		dynamic_styles?: DynamicStyleParameters,
 		/** External classes to add to the button. */
@@ -16,12 +16,14 @@
 		transition_config?: SvelteTransitionParams;
 		/** A binding to the button element */
 		button?: HTMLButtonElement;
+		/** Is the button disabled? */
+		disabled?: boolean | null | undefined;
 	};
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
+	import { tooltip, type TooltipProps, type TooltipWithContentProps } from '$actions/tooltip/tooltip.svelte.js';
 	import type {
 		SvelteTransition,
 		SvelteTransitionParams
@@ -47,7 +49,7 @@
 		button = $bindable(),
 		disabled = $bindable(),
 		...attributes
-	} : ButtonProps = $props();
+	} : ButtonProps<T> = $props();
 </script>
 
 {#snippet fa_icon(icon_props: ComponentProps<Fa>)}
@@ -61,6 +63,7 @@
 	use:tooltip={{ ...tooltip_options }}
 	class={`_button ${classes}`}
 	type="button"
+	{disabled}
 	{...attributes}
 	>
 	{#if icon_props && icon_position === 'before'}
@@ -78,6 +81,9 @@
 	@layer button {
 		._button {
 			cursor: pointer;
+			&:disabled{
+				cursor: not-allowed;
+			}
 		}
 	}
 </style>

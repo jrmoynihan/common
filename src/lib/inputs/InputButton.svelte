@@ -1,19 +1,19 @@
 <script context="module" lang="ts">
 	import type { ButtonProps } from '$buttons/Button_Runes.svelte';
 
-    export interface InputButtonProps extends ButtonProps {
+    export interface InputButtonProps<T> extends ButtonProps<T> {
         
     }
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { Button } from '$lib';
 
     let {
         children,
 		disabled = $bindable(false),
         ...button_attributes
-    } : InputButtonProps = $props()
+	} : InputButtonProps<T> = $props()
 </script>
 
 <Button type="button" bind:disabled {...button_attributes}>
