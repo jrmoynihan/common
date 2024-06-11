@@ -14,6 +14,7 @@
 	let {
 		hovered = $bindable(false),
 		grabbed = $bindable(false),
+		disabled = $bindable(),
 		dynamic_styles,
 		children,
 		...button_props
@@ -30,6 +31,7 @@
 </script>
 
 <ButtonRunes
+	bind:disabled
 	icon_props={{ icon: faGripVertical }}
 	classes={`drag-anchor ${!hovered ? 'faded' : ''} ${grabbed ? 'grabbed' : ''}`}
 	dynamic_styles={{

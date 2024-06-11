@@ -28,7 +28,7 @@
 
 	let {
 		checked = $bindable(false),
-		disabled = false,
+		disabled = $bindable(false),
 		label_dynamic_styles,
 		label_position = 'before',
 		label_text,
@@ -57,6 +57,7 @@
 {/snippet}
 
 <ButtonRunes
+	bind:disabled
 	--button-hover-background={'var(--toggle-button-hover-background, inherit)'}
 	onpointerdown={ontoggle}
 	role={'switch'}

@@ -45,6 +45,7 @@
 		transition = fade,
 		transition_config = {},
 		button = $bindable(),
+		disabled = $bindable(),
 		...attributes
 	} : ButtonProps = $props();
 </script>
