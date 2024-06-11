@@ -1,9 +1,9 @@
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { tooltip } from '$lib';
 	import FullDialog from '$wrappers/FullDialog.svelte';
 	import MiniDialog from '$wrappers/MiniDialog.svelte';
 
-	let dialog: FullDialog | undefined = $state();
+	let dialog = $state<FullDialog<unknown>>()
 </script>
 
 {#snippet lorem()}
@@ -17,8 +17,13 @@
 {@render lorem()}
 <section class="modals">
 	<MiniDialog
-		button_props={{tooltip_options: {content: 'Really, open the mini modal!'}}}
-		heading={"MiniModal"}
+		button_props={{
+			tooltip_options: {
+				content: 'Really, open the mini modal!'
+			}
+		}}
+		heading="MiniModal"
+	
 	>	
 		{#snippet button_content()}
 			Open the mini modal!
@@ -40,12 +45,12 @@
 		{/each}
 	</FullDialog>
 
-	<button onclick={dialog.open}>You can open the dialog externally, too!</button>
+	<button onclick={()=>dialog?.open()}>You can open the dialog externally, too!</button>
 	
 	<!-- TODO: replace with mdsvex snippet -->
 	<code>
 		<pre>
-&lt;button onclick=&#123;dialog.open&#125;&gt;
+&lt;button onclick=&#123;()=>dialog?.open()&#125;&gt;
 	You can open the dialog externally, too!
 &lt;button/&gt;
 		</pre>

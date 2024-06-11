@@ -23,19 +23,38 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 		slide_in_from?: 'left' | 'right' | 'top' | 'bottom';
 		/** In which direction should the dialog slide out to? */
 		slide_out_to?: 'left' | 'right' | 'top' | 'bottom';
-        onopen?: () => void | Promise<void>;
+		/** A callback to run *after* the dialog opens. */
+        onopened?: () => void | Promise<void>;
+		/** A callback to run *before* the dialog opens. */
 		onopening?: () => void | Promise<void>;
-        onclose?: () => void | Promise<void>;
+		/** A callback to run *after* the dialog closes. */
+        onclosed?: () => void | Promise<void>;
+		/** A callback to run *before* the dialog closes. */
 		onclosing?: () => void | Promise<void>;
-		}
+	}
 </script>
 
 <script lang="ts">
 	import { dialog as dialog_action } from '$actions/dialog/dialog';
 	import type { HTMLDialogAttributes, HTMLFormAttributes } from 'svelte/elements';
 
+	export const close = async () => {
+		onclosing?.();
+		dialog?.close()
+		onclosed?.();
+	}
+	export const open = async () => {
+		onopening?.();
+		dialog?.showModal();
+		onopened?.();
+	}
+
 	let { 
 		children,
+		onopening,
+		onclosing,
+		onopened,
+		onclosed,
 		dialog = $bindable(),
 		form_attributes,
 		mode = 'full',
@@ -46,13 +65,6 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 		slide_out_to = 'top',
 		...attributes
 	} : DialogProps = $props();
-	
-	export const close = async () => {
-		dialog?.close()
-	}
-	export const open = async () => {
-		dialog?.showModal();
-	}
 
 </script>
 

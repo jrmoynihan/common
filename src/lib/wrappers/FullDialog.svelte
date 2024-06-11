@@ -39,9 +39,6 @@
         /** A snippet for the dialog's footer. Defaults to a <footer> tag containing a <menu> element with a 'Close' button. */
         footer?: Snippet | null;
 
-        onclosing?: () => void | Promise<void>;
-        onopening?: () => void | Promise<void>;
-            
         /** The type of modal to use.  (Default: 'full')
 		
 		Full mode will provide a blurred backdrop and on small screens will be positioned at the bottom, and provide an additional slide-down animation when closing.
@@ -64,6 +61,13 @@
 	import { type ComponentProps, type Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import Dialog, { type DialogProps } from './Dialog.svelte';
+    
+    export const open = () => {
+        dialog?.open();
+    }
+    export const close = () => {
+        dialog?.close();
+    }
 
     let {
         heading,
@@ -83,16 +87,6 @@
         dialog = $bindable(),
         ...dialog_props
     } : FullDialogProps<T> = $props();
-    
-
-    export function open() {
-        dialog?.onopening?.();
-        dialog?.open();
-    }
-    export function close() {
-        dialog?.onclosing?.();
-        dialog?.close();
-    }
 
 </script>
 
@@ -101,7 +95,7 @@
         <menu>
             {@render footer_children?.()}
             <ButtonRunes
-                onclick={close}
+                onclick={dialog?.close}
                 classes={`close-button`}
                 style={'aspect-ratio: 1.5 / 1'}
                 {...close_button_attributes}
@@ -117,14 +111,14 @@
         <h3 {...heading_attributes}>
             {heading}
         </h3>
-        <ButtonRunes onclick={close} classes="close-button" {...close_x_attributes} >
+        <ButtonRunes onclick={dialog?.close} classes="close-button" {...close_x_attributes} >
             X
         </ButtonRunes>
     </header>
 {/snippet}
 
 {#snippet default_button()}
-    <ButtonRunes {...button_props} onclick={open} >
+    <ButtonRunes {...button_props} onclick={dialog?.open} >
         {#if typeof button_content === 'string'}
             {button_content}
         {:else if button_content}
@@ -135,7 +129,7 @@
 
 {@render button?.()}
 <Dialog
-    bind:this={dialog} 
+    bind:this={dialog}
     mode='full'
     {blur}
     {...dialog_props}

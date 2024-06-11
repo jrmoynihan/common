@@ -1,5 +1,7 @@
 <script context='module' lang='ts'>
-    export interface MiniDialogProps<T> extends FullDialogProps<T> {}
+    export interface MiniDialogProps<T> extends Omit<FullDialogProps<T>, 'dialog'> {
+        dialog?: FullDialog<T>;
+    }
 </script>
 
 <script lang='ts' generics="T">
@@ -8,12 +10,19 @@
 
     let {
         children = undefined,
+        dialog = $bindable(),
         ...dialog_props
     } : MiniDialogProps<T> = $props();
 
+    export const open = () =>{
+        dialog?.open();
+    }
+    export const close = () => {
+        dialog?.close();
+    }
 </script>
 
 
-<FullDialog {...dialog_props} mode={'mini'} blur={null}>
+<FullDialog bind:this={dialog} {...dialog_props} mode={'mini'} blur={null}>
     {@render children?.()}
 </FullDialog>
