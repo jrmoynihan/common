@@ -37,7 +37,6 @@
 			| 'space-evenly';
 		align_items?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
 		align_self?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
-
 		gap?: string;
 		overflow?: 'hidden' | 'scroll' | 'auto' | 'visible';
 		classes?: string;
@@ -64,15 +63,15 @@
 
 <div
 	class="_flex {classes}"
-	style:--direction={direction}
-	style:--wrap={wrap}
-	style:--justify-content={justify_content}
-	style:--justify-self={justify_self}
-	style:--align-content={align_content}
-	style:--align-items={align_items}
-	style:--align-self={align_self}
-	style:--gap={gap}
-	style:overflow
+	style:--flex-direction={direction}
+	style:--flex-wrap={wrap}
+	style:--flex-justify-content={justify_content}
+	style:--flex-justify-self={justify_self}
+	style:--flex-align-content={align_content}
+	style:--flex-align-items={align_items}
+	style:--flex-align-self={align_self}
+	style:--flex-gap={gap}
+	style:--overflow={overflow}
 	{...attributes}
 >
 	{@render children?.()}
@@ -82,18 +81,16 @@
 	@layer flex {
 		._flex {
 			display: flex;
-			flex-direction: var(--direction);
-			flex-wrap: var(--wrap);
-			flex-basis: var(--basis);
-			justify-content: var(--justify-content);
-			justify-self: var(--justify-self);
-			align-content: var(--align-content);
-			align-items: var(--align-items);
-			align-self: var(--align-self);
-			gap: var(--gap);
-			order: var(--order);
-			flex-grow: var(--grow);
-			flex-shrink: var(--shrink);
+			flex-direction: var(--flex-direction);
+			flex-wrap: var(--flex-wrap);
+			flex-basis: var(--flex-basis);
+			justify-content: var(--flex-justify-content);
+			justify-self: var(--flex-justify-self);
+			align-content: var(--flex-align-content);
+			align-items: var(--align-flex-items);
+			align-self: var(--align-flex-self);
+			gap: var(--flex-gap);
+			overflow: var(--overflow);
 		}
 	}
 </style>

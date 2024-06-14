@@ -10,14 +10,62 @@
 		min_row_size?: string;
 		/** The max row size of the grid for a `minmax()` function. */
 		max_row_size?: string;
-		/** (Default: 1) The number of columns in the grid, or an `auto-fit` or `auto-fill` algorithm. */
+		/** The number of columns in the grid, or an `auto-fit` or `auto-fill` algorithm (default: 1). */
 		columns?: number | 'auto-fit' | 'auto-fill';
-		/** (Default: 1) The number of rows in the grid, or an `auto-fit` or `auto-fill` algorithm. */
+		/** The number of rows in the grid, or an `auto-fit` or `auto-fill` algorithm (default: 1). */
 		rows?: number | 'auto-fit' | 'auto-fill';
-		/** (Default: 1rem) The gap between grid items. */
+		/** The gap between grid items (default: 1rem. */
 		gap?: string;
-		/** (Default: hidden) The overflow of the grid. */
+		/** The overflow of the grid (default: hidden).  */
 		overflow?: 'hidden' | 'scroll' | 'auto' | 'visible';
+		/** The inline alignment of the grid's content (default: normal). */
+		justify_content?:
+			| 'normal'
+			| 'start'
+			| 'end'
+			| 'left'
+			| 'right'
+			| 'center'
+			| 'space-between'
+			| 'space-around'
+			| 'space-evenly';
+		/** The inline alignment of the grid items (default: normal). */
+		justify_items?:
+			| 'auto'
+			| 'normal'
+			| 'stretch'
+			| 'start'
+			| 'end'
+			| 'left'
+			| 'right'
+			| 'center'
+			| 'baseline';
+		/** The inline alignment of the grid element itself (default: normal). */
+		justify_self?:
+			| 'auto'
+			| 'normal'
+			| 'stretch'
+			| 'start'
+			| 'end'
+			| 'left'
+			| 'right'
+			| 'center'
+			| 'baseline';
+		/** The block alignment of the grid's content (default: normal). */
+		align_content?:
+			| 'normal'
+			| 'start'
+			| 'end'
+			| 'center'
+			| 'stretch'
+			| 'baseline'
+			| 'space-between'
+			| 'space-around'
+			| 'space-evenly';
+		/** The block alignment of the grid items (default: normal). */
+		align_items?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
+		/** The block alignment of the grid element itself (default: normal). */
+		align_self?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
 	}
 </script>
 
@@ -31,6 +79,12 @@
 		rows = 1,
 		gap = '1rem',
 		overflow,
+		justify_content,
+		justify_items,
+		justify_self,
+		align_content,
+		align_items,
+		align_self,
 		children,
 		...attributes
 	}: GridProps = $props();
@@ -38,14 +92,20 @@
 
 <div
 	class="grid-parent"
-	style:--min-column-size={min_column_size}
-	style:--max-column-size={max_column_size}
-	style:--min-row-size={min_row_size}
-	style:--max-row-size={max_row_size}
-	style:--columns={columns}
-	style:--rows={rows}
-	style:--gap={gap}
-	style:overflow
+	style:--grid-min-column-size={min_column_size}
+	style:--grid-max-column-size={max_column_size}
+	style:--grid-min-row-size={min_row_size}
+	style:--grid-max-row-size={max_row_size}
+	style:--grid-columns={columns}
+	style:--grid-rows={rows}
+	style:--grid-gap={gap}
+	style:--grid-justify-content={justify_content}
+	style:--grid-justify-items={justify_items}
+	style:--grid-justify-self={justify_self}
+	style:--grid-align-content={align_content}
+	style:--grid-align-items={align_items}
+	style:--grid-align-self={align_self}
+	style:--grid-overflow={overflow}
 	{...attributes}
 >
 	{@render children?.()}
@@ -56,11 +116,21 @@
 		.grid-parent {
 			display: grid;
 			grid-template-columns: repeat(
-				var(--columns),
-				minmax(var(--min-column-size), var(--max-column-size))
+				var(--grid-columns),
+				minmax(var(--grid-min-column-size), var(--grid-max-column-size))
 			);
-			grid-template-rows: repeat(var(--rows), minmax(var(--min-row-size), var(--max-row-size)));
-			gap: var(--gap);
+			grid-template-rows: repeat(
+				var(--grid-rows),
+				minmax(var(--grid-min-row-size), var(--grid-max-row-size))
+			);
+			gap: var(--grid-gap);
+			justify-content: var(--grid-justify-content);
+			justify-items: var(--grid-justify-items);
+			justify-self: var(--grid-justify-self);
+			align-content: var(--grid-align-content);
+			align-items: var(--grid-align-items);
+			align-self: var(--grid-align-self);
+			overflow: var(--grid-overflow);
 		}
 	}
 </style>
