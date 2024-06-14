@@ -80,6 +80,11 @@ export function dynamic_style(
 			applyStyles(element, split_static_rules);
 		}
 	}
+	function removeStaticStyles(): void {
+		if (split_static_rules) {
+			removeStyles(element, split_static_rules);
+		}
+	}
 	function add_valid_styles(): void {
 		if (split_valid_rules) {
 			applyStyles(element, split_valid_rules);
@@ -150,6 +155,7 @@ export function dynamic_style(
 	return {
 		update(new_parameters: DynamicStyleParameters) {
 			if (new_parameters) {
+				removeStaticStyles();
 				store = new_parameters;
 			}
 			addStaticStyles();
