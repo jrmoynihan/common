@@ -83,7 +83,6 @@
 			display: flex;
 			flex-direction: var(--flex-direction);
 			flex-wrap: var(--flex-wrap);
-			flex-basis: var(--flex-basis);
 			justify-content: var(--flex-justify-content);
 			justify-self: var(--flex-justify-self);
 			align-content: var(--flex-align-content);
