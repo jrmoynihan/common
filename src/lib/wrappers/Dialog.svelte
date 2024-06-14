@@ -2,7 +2,7 @@
 Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 -->
 <script context="module">
-	export interface DialogProps extends Omit<HTMLDialogAttributes, 'open'>{
+	export interface DialogProps extends Omit<HTMLDialogAttributes, 'open'> {
 		/** A binding to the <dialog> element */
 		dialog?: HTMLDialogElement;
 		form_attributes?: HTMLFormAttributes;
@@ -24,11 +24,11 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 		/** In which direction should the dialog slide out to? */
 		slide_out_to?: 'left' | 'right' | 'top' | 'bottom';
 		/** A callback to run *after* the dialog opens. */
-        onopened?: () => void | Promise<void>;
+		onopened?: () => void | Promise<void>;
 		/** A callback to run *before* the dialog opens. */
 		onopening?: () => void | Promise<void>;
 		/** A callback to run *after* the dialog closes. */
-        onclosed?: () => void | Promise<void>;
+		onclosed?: () => void | Promise<void>;
 		/** A callback to run *before* the dialog closes. */
 		onclosing?: () => void | Promise<void>;
 	}
@@ -40,16 +40,16 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 
 	export const close = async () => {
 		onclosing?.();
-		dialog?.close()
+		dialog?.close();
 		onclosed?.();
-	}
+	};
 	export const open = async () => {
 		onopening?.();
 		dialog?.showModal();
 		onopened?.();
-	}
+	};
 
-	let { 
+	let {
 		children,
 		onopening,
 		onclosing,
@@ -64,8 +64,7 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 		slide_in_from = 'bottom',
 		slide_out_to = 'top',
 		...attributes
-	} : DialogProps = $props();
-
+	}: DialogProps = $props();
 </script>
 
 <!-- Could use this to use custom events, instead of the `dialog.ts` action?
@@ -89,7 +88,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 	data-mode={mode}
 	style:--blur={typeof blur === 'number' ? `${blur}px` : `0`}
 	{...attributes}
-	>	
+>
 	<form method="dialog" class="modal-foreground" {...form_attributes}>
 		{@render children?.()}
 	</form>
@@ -97,13 +96,12 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 
 <style>
 	@layer modal {
-		:global(html:has(dialog[open][data-mode="full"])) {
- 	 		overflow: hidden;  /* prevent body from scrolling */
+		:global(html:has(dialog[open][data-mode='full'])) {
+			overflow: hidden; /* prevent body from scrolling */
 		}
 		.dialog {
-
 			/* May need to modify the `overflow` property to allow tooltips to escape the edges. */
-			display: grid; 
+			display: grid;
 			scrollbar-width: thin;
 			border-radius: var(--radius-3);
 			box-shadow: var(--shadow-2);
@@ -123,45 +121,48 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 			transition-behavior: allow-discrete;
 			animation-timing-function: var(--ease-squish-3);
 			animation-duration: var(--duration, 0.5s);
-			margin: auto; 	/* centers the dialog for bad browser user-agent stylesheets that default to top-left */
+			margin: auto; /* centers the dialog for bad browser user-agent stylesheets that default to top-left */
 			padding: 0;
 			position: fixed;
 			inset: 0;
 
 			/** Future CSS */
-			&, &::backdrop {
-				transition: opacity 0.5s, display 0.5s allow-discrete, overlay 0.5s allow-discrete, backdrop-filter var(--duration, 0.5s);
+			&,
+			&::backdrop {
+				transition:
+					opacity 0.5s,
+					display 0.5s allow-discrete,
+					overlay 0.5s allow-discrete,
+					backdrop-filter var(--duration, 0.5s);
 			}
 
-			&::backdrop{
+			&::backdrop {
 				backdrop-filter: none;
 				opacity: 0;
 			}
 			&.scale-out {
 				animation: var(--animation-scale-down) forwards; /* The 'out' transition */
-				
 			}
 
 			/** Full-screen mode */
-			&[data-mode="full"] {
+			&[data-mode='full'] {
 				&.blur[open]::backdrop {
 					backdrop-filter: blur(var(--blur));
 					opacity: 1;
 				}
 				@media (width < 768px) {
-						margin-block-end: 0;
-						border-end-end-radius: 0;
-						border-end-start-radius: 0;
-						/* Mobile 'out' transition */
-						animation: var(--animation-slide-out-down) forwards; 
-					}
+					margin-block-end: 0;
+					border-end-end-radius: 0;
+					border-end-start-radius: 0;
+					/* Mobile 'out' transition */
+					animation: var(--animation-slide-out-down) forwards;
+				}
 			}
 
-			
-			&:has( .tooltip){
+			&:has(.tooltip) {
 				overflow: visible;
 			}
-			&:not([open]){
+			&:not([open]) {
 				pointer-events: none;
 				opacity: 0;
 				/* Hide elements within the dialog from interaction when it is not open */
@@ -174,7 +175,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 				display: grid;
 				pointer-events: initial;
 				&.slide-in-from-bottom {
-					animation: var(--animation-slide-in-up) forwards;  /* The 'in' transition */
+					animation: var(--animation-slide-in-up) forwards; /* The 'in' transition */
 				}
 			}
 			/* &.scale{
@@ -191,15 +192,15 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 					// opacity: 1;
 				// }
 			// } */
-			
+
 			&::backdrop {
 				background-color: hsla(0, 0%, 0%, 0.4);
 				padding: 10rem;
-				&.blur{
+				&.blur {
 					backdrop-filter: blur(10px);
 				}
 			}
-			& *:focus-visible{
+			& *:focus-visible {
 				outline: red 1px solid !important;
 			}
 			& > form {
@@ -232,6 +233,4 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 			}
 		}
 	}
-
-	
 </style>
