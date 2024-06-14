@@ -82,11 +82,14 @@
 		position: relative;
 		display: flex;
 		align-self: center;
+		align-items: center;
 		width: calc(var(--toggle-scale) * 3);
 	}
 	.label-text{
 		padding-inline: 0.25rem;
 		width: auto;
+		gap: 0.2rem;
+		flex-wrap: wrap;
 		&:has(input:focus-visible){
 			outline: solid 1px var(--toggle-button-focus-color, var(--toggleBgColorActive, -webkit-focus-ring-color));
 		}
