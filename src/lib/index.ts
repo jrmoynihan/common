@@ -44,6 +44,8 @@ import SeenToast from './toasts/SeenToast.svelte';
 import AccordionDetails from '$wrappers/AccordionDetails.svelte';
 import AccordionJson from '$wrappers/AccordionJSON.svelte';
 import Dialog from '$wrappers/Dialog.svelte';
+import Flex from '$wrappers/Flex.svelte';
+import FlexItem from '$wrappers/FlexItem.svelte';
 import FullDialog from '$wrappers/FullDialog.svelte';
 import Grid from '$wrappers/Grid.svelte';
 import JsonView from '$wrappers/JSONView.svelte';
@@ -134,6 +136,8 @@ export {
 	Checkbox,
 	Dialog,
 	DragAnchor,
+	Flex,
+	FlexItem,
 	FullDialog,
 	Grid,
 	InputButton,
@@ -176,4 +180,3 @@ export {
 	type TextInputTypes,
 	type ToggleSwitchProps
 };
-
