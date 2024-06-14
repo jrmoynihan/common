@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ScrollToTopButton from '$navigation/ScrollProgress.svelte';
-	import { aside_visible } from '$routes/stores.js';
+	import { aside_visible } from '$routes/stores.svelte.js';
 	import { onDestroy, onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 

@@ -4,6 +4,7 @@ import ButtonRunes from "$buttons/Button_Runes.svelte";
 import ToggleSwitch from "$buttons/ToggleSwitch.svelte";
 import { delay } from "$functions/helpers.svelte.js";
 import { Log, checkered_flag } from "$functions/logging.js";
+import { complex_state } from "$routes/stores.svelte";
 // import { default_toast } from "$toasts/toasts.js";
 
 let position: TooltipDirections = $state<TooltipDirections>("top");
@@ -106,12 +107,13 @@ function onclick(){
 	</ButtonRunes>
 
 	<ToggleSwitch
-		bind:checked={keep_visible}
+		bind:checked={complex_state.toggled}
 		style={'display: grid; transition: background-color 250ms ease, color 250ms ease; gap: 1rem; grid-auto-flow: column; padding: 1rem;'}
 		dynamic_styles={{ hover_styles: 'background-color: darkgreen; color: var(--accent);'}}
 	>
 		<p>I'm a toggle switch!</p>
 	</ToggleSwitch>
+	{complex_state.toggled}
 	<ButtonRunes dynamic_styles={{hover_styles: 'box-shadow: 0 0 10px yellow'}} />
 	<h3 
 	class="orange"

@@ -12,7 +12,7 @@
 	import '../../src/app.css';
 	import '../../src/mdsvex.css';
 	import type { LayoutData } from './$types';
-	import { aside_visible } from './stores.js';
+	import { aside_visible } from './stores.svelte.js';
 
 	type LayoutProps = {
 		data: LayoutData;
