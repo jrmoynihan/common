@@ -122,7 +122,6 @@
 			--duration: 400ms;
 			appearance: none;
 			box-sizing: border-box;
-			background: oklch(40% 0.2 270);
 			display: grid;
 			grid-template-rows: max-content 0fr;
 			color: inherit;
