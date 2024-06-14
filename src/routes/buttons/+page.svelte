@@ -107,13 +107,13 @@ function onclick(){
 	</ButtonRunes>
 
 	<ToggleSwitch
-		bind:checked={complex_state.toggled}
+		bind:checked={complex_state.player.toggled}
 		style={'display: grid; transition: background-color 250ms ease, color 250ms ease; gap: 1rem; grid-auto-flow: column; padding: 1rem;'}
-		dynamic_styles={{ hover_styles: 'background-color: darkgreen; color: var(--accent);'}}
+		label_dynamic_styles={{ hover_styles: 'background-color: darkgreen;',	styles: `text-transform: capitalize; ${complex_state.player.toggled === true ? '' : 'text-decoration: line-through'}`}}
 	>
 		<p>I'm a toggle switch!</p>
 	</ToggleSwitch>
-	{complex_state.toggled}
+	{complex_state.player.toggled}
 	<ButtonRunes dynamic_styles={{hover_styles: 'box-shadow: 0 0 10px yellow'}} />
 	<h3 
 	class="orange"
