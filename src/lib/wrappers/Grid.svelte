@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	export interface GridProps extends HTMLAttributes<HTMLDivElement> {
+	export interface GridProps extends Omit<HTMLAttributes<HTMLDivElement>, 'class'> {
 		/** The min column size of the grid for a `minmax()` function. */
 		min_column_size?: string;
 		/** The max column size of the grid for a `minmax()` function. */
@@ -66,6 +66,8 @@
 		align_items?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
 		/** The block alignment of the grid element itself (default: normal). */
 		align_self?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
+		/** The additional classes to apply to the grid element. */
+		classes?: string;
 	}
 </script>
 
@@ -85,13 +87,14 @@
 		align_content,
 		align_items,
 		align_self,
+		classes = '',
 		children,
 		...attributes
 	}: GridProps = $props();
 </script>
 
 <div
-	class="grid-parent"
+	class="grid-parent {classes}"
 	style:--grid-min-column-size={min_column_size}
 	style:--grid-max-column-size={max_column_size}
 	style:--grid-min-row-size={min_row_size}
