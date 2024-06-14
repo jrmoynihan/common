@@ -7,7 +7,6 @@
 	import type { LayoutData } from './$types';
 
 	let { data, children }: { data: LayoutData, children: Snippet } = $props();
-	const { links } = data;  // This is required, otherwise data.links can change as new routes are loaded??l
 	let trigger = $state(false);
 
 	beforeNavigate(async (nav) => {
@@ -21,7 +20,7 @@
 
 <section>
 	<Navigation
-		{links}
+		links={data.links}
 		link_current_page_styles="color: white"
 		dynamic_link_styles={{ styles: `color: white` }}
 	/>

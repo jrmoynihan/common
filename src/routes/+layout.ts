@@ -1,3 +1,4 @@
+import { route } from '$lib/ROUTES';
 import { IconLayer, make_subroute_nav_links } from '$navigation/nav-functions';
 import {
 	faCalculator,
@@ -19,7 +20,7 @@ export async function load({ url }: LayoutLoadEvent) {
 		['wrappers', new IconLayer({ icon: faGifts })]
 	]);
 
-	const nav_links = await make_subroute_nav_links(url, icon_map);
+	const nav_links = await make_subroute_nav_links(new URL(route('/'), url.origin), icon_map);
 
 	return {
 		nav_links

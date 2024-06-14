@@ -15,7 +15,7 @@
 	}
 
 	let { data, children }: LayoutProps = $props();
-	const { links } = data;
+
 	let trigger: boolean = $state(false);
 	beforeNavigate(async (nav) => {
 		const { from, to } = nav;
@@ -25,13 +25,13 @@
 	});
 </script>
 
-<Navigation {links} dynamic_link_styles={{ styles: `color: white` }} />
+<section>
+	<Navigation links={data.links} dynamic_link_styles={{ styles: `color: white` }} />
 
-<TransitionRunes
-	bind:trigger
->
-	{@render children()}
-</TransitionRunes>
+	<TransitionRunes bind:trigger>
+		{@render children()}
+	</TransitionRunes>
+</section>
 
 <style lang="scss">
 </style>
