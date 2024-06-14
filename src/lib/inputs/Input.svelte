@@ -33,6 +33,7 @@
 		valid = $bindable(true),
 		hidden = $bindable(false),
 		dynamic_input_styles = $bindable(),
+		checked = $bindable(),
 		confirm_key = 'Enter',
 		onconfirm,
 		onvalid,
