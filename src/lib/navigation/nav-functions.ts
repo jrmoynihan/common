@@ -130,7 +130,6 @@ export async function shouldLayoutTransitionOnNavigation({
 				// console.log('returning false because lengths are different');
 				return false;
 			}
-			console.log(to_routeID[to_routeID.length - 2]);
 			if (
 				to_routeID[to_routeID.length - 2] &&
 				to_routeID[to_routeID.length - 2] === layout_parent_path &&
