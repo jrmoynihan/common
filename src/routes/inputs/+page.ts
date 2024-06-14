@@ -24,7 +24,7 @@ export async function load({}: PageLoadEvent) {
 		{ icon: unicode_pineapple, label: 'Pineapple' }
 	];
 
-	const select_options: SelectOptionList = [
+	const select_options: SelectOptionList<{ value: number | null; label?: string | null }> = [
 		{ value: null, label: null },
 		{ value: null, disabled: true, label: 'a disabled option' },
 		{

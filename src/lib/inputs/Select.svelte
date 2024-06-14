@@ -1,35 +1,36 @@
 <script lang=ts context=module>
 	export interface SelectOption {
 		value: unknown;
-		label?: string;
+		label?: string | null;
 		disabled?: boolean;
 	}
 
 	export interface SelectOptionGroup {
 		options: SelectOption[];
-		label?: string;
+		label?: string | null;
 	}
 
-	export type SelectOptionList = (SelectOption | SelectOptionGroup | unknown)[];
+	export type SelectOptionList<T> = (SelectOption | SelectOptionGroup | T)[];
 
-	export interface SelectProps extends HTMLSelectAttributes {
-		value?: unknown;
+	export interface SelectProps<T> extends HTMLSelectAttributes {
+		value?: T;
 		id?: string | null;
 		/** A snippet of HTML for the `<optgroup>` of the `<select>`.*/
 		group_snippet?: Snippet<[any]>,
 		/** A snippet for how to render a single `<option>` in the `<select>`.*/
-		option_snippet?: Snippet<[any]>,
-		options?: SelectOptionList,
+		option_snippet?: Snippet<[T]>,
+		options?: SelectOptionList<T>,
 		dynamic_select_styles?: DynamicStyleParameters;
 		input_label_props?: InputLabelProps;
 		value_key?: string;
 		label_key?: string;
 		label?: Snippet<[any]>;
+		children?: Snippet,
 		placeholder_props?: PlaceholderProps;
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import type { Snippet } from 'svelte';
 	import type { HTMLSelectAttributes } from 'svelte/elements';
@@ -42,6 +43,7 @@
 		options = [],
 		option_snippet = option,
 		group_snippet = group,
+		children,
 		input_label_props,
 		placeholder_props = {},
 		value_key = 'value',
@@ -49,12 +51,12 @@
 		id = crypto.randomUUID(),
 		...select_attributes
 		
-	} : SelectProps  = $props();
+	} : SelectProps<T>  = $props();
 
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
-{#snippet option(item)}
+{#snippet option(item : SelectOption | T)}
 	{@const is_object = item instanceof Object}
 	{@const value = is_object && 'value' in item ? item.value : item}
 	{@const label = is_object && 'label' in item ? item.label : item}
@@ -85,12 +87,15 @@
 		{id}
 		{...select_attributes}
 	>	
-		{#if group_snippet && options[0] instanceof Object}
+		{#if children}
+			{@render children()}
+		{:else if group_snippet && options[0] instanceof Object}
 			{#each options as opt}
 				{@render group_snippet(opt)}
 			{/each}
 		{:else if option_snippet}
-			{#each options as opt}
+			{@const opts = options as T[]}
+			{#each opts as opt}
 				{@render option_snippet(opt)}
 			{/each}
 		{/if}

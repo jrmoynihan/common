@@ -13,11 +13,11 @@
 	const { datalist, select_options, date_inputs } : PageData = data;
 	const name_list = datalist.map(d => d.label);
 	let selected_fruit: typeof datalist[0] | undefined = $state();
+	let selected_option: typeof select_options[0] | undefined = $state();
 	let selected_fruit_name: string | undefined = $state();
 	let selected_number = $state<number>(1);
 	let valid_email: string = $state('');
-
-	const number_options = [ 1, 2, 3]
+	const numeric_options = [ 1, 2, 3]
 	const double_number_context = setDerivedContext('number', selected_number * 2);
 
 </script>
@@ -99,10 +99,10 @@
 		/>
 		<Select
 			input_label_props={{ text: "Select an option" }}
-			options={number_options}
+			options={select_options}
 			placeholder_props={{ text: 'pick one...' }}
 			required={true}
-			bind:value={selected_number}
+			bind:value={selected_option}
 		/>
 		<Select
 			input_label_props={{ text: "Select a fruit" }}
@@ -110,6 +110,11 @@
 			placeholder_props={{ text: 'pick a fruit...' }}
 			bind:value={selected_fruit}
 		/>
+		<Select bind:value={selected_number} options={select_options}>
+			{#snippet option_snippet(item)}
+				<option value={item}>{item}</option>
+			{/snippet}
+		</Select>
 	</section>
 
 	<section class="checkbox-inputs">
@@ -130,7 +135,7 @@
 				<span class="selected-fruit">{item?.icon}</span>
 			{/snippet}
 		</RadioGroup>
-		<RadioGroup items={number_options} bind:group={selected_number}/>
+		<RadioGroup items={select_options} bind:group={selected_number}/>
 	</section>
 </div>
 
