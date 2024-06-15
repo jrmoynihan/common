@@ -1,28 +1,26 @@
 <script context="module" lang="ts">
 	import type { ButtonProps } from '$buttons/Button_Runes.svelte';
 
-    export interface InputButtonProps<T> extends ButtonProps<T> {
-        
-    }
+	export interface InputButtonProps<T> extends ButtonProps<T> {}
 </script>
 
 <script lang="ts" generics="T">
 	import { Button } from '$lib';
 
-    let {
-        children,
+	let {
+		children,
 		disabled = $bindable(false),
-        ...button_attributes
-	} : InputButtonProps<T> = $props()
+		...button_attributes
+	}: InputButtonProps<T> = $props();
 </script>
 
-<Button type="button" bind:disabled {...button_attributes}>
+<Button classes="_input_button" type="button" bind:disabled {...button_attributes}>
 	{@render children?.()}
 </Button>
 
 <style>
 	@layer button {
-		:global(button[type="button"]._button) {
+		:global(._input_button) {
 			--max-width: 1.75rem;
 			display: grid;
 			place-items: center;
@@ -30,7 +28,7 @@
 			max-height: var(--max-height, auto);
 			background-color: field;
 			appearance: textfield;
-            text-align: center;
+			text-align: center;
 			color: var(--text-input-color, fieldtext);
 			border: var(--text-input-button-border, 1px inset buttonborder);
 			padding: var(--text-input-button-padding, calc(var(--max-width) / 3.5));
@@ -39,11 +37,11 @@
 			outline-offset: -1px;
 			border: 0px;
 		}
-		:global(button[type="button"]._button:active) {
+		:global(button[type='button']._button:active) {
 			background-color: oklch(from var(--text, currentColor) l c h / 0.5);
 			outline: 2px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) inset;
 		}
-		:global(button[type="button"]._button:focus) {
+		:global(button[type='button']._button:focus) {
 			outline: 2px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) outset;
 		}
 	}
