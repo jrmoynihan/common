@@ -10,11 +10,12 @@
 	let {
 		children,
 		disabled = $bindable(false),
+		classes,
 		...button_attributes
 	}: InputButtonProps<T> = $props();
 </script>
 
-<Button classes="_input_button" type="button" bind:disabled {...button_attributes}>
+<Button classes={`_input_button ${classes}`} type="button" bind:disabled {...button_attributes}>
 	{@render children?.()}
 </Button>
 
