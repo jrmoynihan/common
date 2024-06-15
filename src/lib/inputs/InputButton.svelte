@@ -38,11 +38,11 @@
 			outline-offset: -1px;
 			border: 0px;
 		}
-		:global(button[type='button']._button:active) {
+		:global(._input_button:active) {
 			background-color: oklch(from var(--text, currentColor) l c h / 0.5);
 			outline: 2px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) inset;
 		}
-		:global(button[type='button']._button:focus) {
+		:global(._input_button:focus) {
 			outline: 2px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) outset;
 		}
 	}
