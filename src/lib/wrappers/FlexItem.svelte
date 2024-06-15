@@ -15,8 +15,8 @@
 <script lang="ts">
 	let {
 		order,
-		grow,
-		shrink,
+		grow = 1,
+		shrink = 1,
 		basis,
 		classes = '',
 		children,
