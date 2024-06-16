@@ -31,30 +31,34 @@ import TextInput, { type TextInputProps } from './inputs/TextInput.svelte';
 import type { DatalistOption, TextInputTypes } from './inputs/types.js';
 
 // Navigation
-import AnchorHeading from './navigation/AnchorHeading.svelte';
-import LinkableAnchorHeading from './navigation/LinkableAnchorHeading.svelte';
-import NavLink from './navigation/NavLink.svelte';
-import Navigation from './navigation/Navigation.svelte';
-import ScrollProgress from './navigation/ScrollProgress.svelte';
+import AnchorHeading, { type AnchorHeadingProps } from './navigation/AnchorHeading.svelte';
+import LinkableAnchorHeading, {
+	type LinkableAnchorHeadingProps
+} from './navigation/LinkableAnchorHeading.svelte';
+import NavLink, { type NavLinkProps } from './navigation/NavLink.svelte';
+import Navigation, { type NavigationProps } from './navigation/Navigation.svelte';
+import ScrollProgress, { type ScrollProgressProps } from './navigation/ScrollProgress.svelte';
 
 // Toasts
 import SeenToast from './toasts/SeenToast.svelte';
 
 // Wrappers
-import AccordionDetails from '$wrappers/AccordionDetails.svelte';
-import AccordionJson from '$wrappers/AccordionJSON.svelte';
-import Dialog from '$wrappers/Dialog.svelte';
-import Flex from '$wrappers/Flex.svelte';
-import FlexItem from '$wrappers/FlexItem.svelte';
-import FullDialog from '$wrappers/FullDialog.svelte';
-import Grid from '$wrappers/Grid.svelte';
-import JsonView from '$wrappers/JSONView.svelte';
-import MiniDialog from '$wrappers/MiniDialog.svelte';
-import Table from '$wrappers/Table.svelte';
-import TransitionNative_Runes from '$wrappers/TransitionNative_Runes.svelte';
-import Accordion from './wrappers/Accordion.svelte';
-import Tabs from './wrappers/Tabs_Runes.svelte';
-import Transition from './wrappers/Transition_Runes.svelte';
+import AccordionDetails, { type AccordionDetailsProps } from '$wrappers/AccordionDetails.svelte';
+import AccordionJson, { type AccordionJsonProps } from '$wrappers/AccordionJSON.svelte';
+import Dialog, { type DialogProps } from '$wrappers/Dialog.svelte';
+import Flex, { type FlexProps } from '$wrappers/Flex.svelte';
+import FlexItem, { type FlexItemProps } from '$wrappers/FlexItem.svelte';
+import FullDialog, { type FullDialogProps } from '$wrappers/FullDialog.svelte';
+import Grid, { type GridProps } from '$wrappers/Grid.svelte';
+import JsonView, { type JSONViewProps } from '$wrappers/JSONView.svelte';
+import MiniDialog, { type MiniDialogProps } from '$wrappers/MiniDialog.svelte';
+import Table, { type TableProps } from '$wrappers/Table.svelte';
+import TransitionNative_Runes, {
+	type TransitionNativeProps
+} from '$wrappers/TransitionNative_Runes.svelte';
+import Accordion, { type AccordionProps } from './wrappers/Accordion.svelte';
+import Tabs, { type TabsProps } from './wrappers/Tabs_Runes.svelte';
+import Transition, { type TransitionProps } from './wrappers/Transition_Runes.svelte';
 
 // Exports
 // Functions
@@ -162,21 +166,40 @@ export {
 	ToggleSwitch,
 	Transition,
 	TransitionNative_Runes,
+	type AccordionDetailsProps,
+	type AccordionJsonProps,
+	type AccordionProps,
+	type AnchorHeadingProps,
 	type ButtonProps,
 	type CheckboxProps,
 	type DatalistOption,
 	type DateInputProps,
+	type DialogProps,
 	type DragAnchorProps,
+	type FlexItemProps,
+	type FlexProps,
+	type FullDialogProps,
+	type GridProps,
 	type InputButtonProps,
 	type InputLabelProps,
+	type JSONViewProps,
 	type LightDarkToggleProps,
+	type LinkableAnchorHeadingProps,
+	type MiniDialogProps,
+	type NavLinkProps,
+	type NavigationProps,
 	type NumericInputProps,
 	type RadioGroupProps,
+	type ScrollProgressProps,
 	type SelectOption,
 	type SelectOptionGroup,
 	type SelectOptionList,
 	type SelectProps,
+	type TableProps,
+	type TabsProps,
 	type TextInputProps,
 	type TextInputTypes,
-	type ToggleSwitchProps
+	type ToggleSwitchProps,
+	type TransitionNativeProps,
+	type TransitionProps
 };
