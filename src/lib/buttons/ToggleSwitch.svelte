@@ -75,12 +75,13 @@
 	.label-text {
 		--toggle-scale: 1rem;
 		position: relative;
-		/* display: flex; */
+		display: flex;
 		align-self: center;
 		align-items: center;
 		width: calc(var(--toggle-scale) * 3);
 	}
 	.label-text {
+		justify-content: center;
 		padding-inline: 0.25rem;
 		width: auto;
 		gap: 0.2rem;
