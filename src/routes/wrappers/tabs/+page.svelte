@@ -24,37 +24,37 @@
 		{ title: 'Three', content: content_three },
 		{ title: 'One', content: content_one },
 		{ title: 'Two', content: content_two },
-		{ title: 'Three', content: content_three },
-	]
+		{ title: 'Three', content: content_three }
+	];
 	const component_tabs: ComponentTab<CustomComponent>[] = [
 		{
 			title: 'Custom 1',
 			component: CustomComponent,
-			props: { 
+			props: {
 				text: "I'm custom component #1!",
 				color: 'black',
-				background: 'orange',
+				background: 'orange'
 			}
 		},
 		{
-			title: 'Custom 2', 
+			title: 'Custom 2',
 			component: CustomComponent,
-			props: { 
+			props: {
 				text: "I'm custom component #2!",
 				color: 'var(--text)',
 				background: 'darkblue'
 			}
 		},
 		{
-			title: 'Custom 3', 
+			title: 'Custom 3',
 			component: CustomComponent,
-			props: { 
+			props: {
 				text: "I'm custom component #3!",
 				color: 'var(--text)',
 				background: 'darkseagreen'
 			}
 		}
-	]
+	];
 </script>
 
 {#snippet content_one()}
@@ -62,8 +62,14 @@
 {/snippet}
 
 {#snippet content_two()}
-	<p>Snippet content #2:
-		<em>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur delectus minus dolor nesciunt hic culpa accusamus odit voluptatem in quod voluptatibus, eos beatae magnam, facere eveniet porro odio ea error.</em></p>
+	<p>
+		Snippet content #2:
+		<em
+			>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur delectus minus dolor
+			nesciunt hic culpa accusamus odit voluptatem in quod voluptatibus, eos beatae magnam, facere
+			eveniet porro odio ea error.</em
+		>
+	</p>
 {/snippet}
 
 {#snippet content_three()}
@@ -72,8 +78,16 @@
 
 <!-- <TabsExample /> -->
 
-<TabsRunes {tabs} tab_content_transition_parameters={{ types: ['fly'], symmetrical: false }} --tab-border-radius="0.5rem" --tab-border-radius-bottom="0" --tab-border-radius-left="0" --tabs-max-width="95vw" />
+<TabsRunes
+	{tabs}
+	tab_content_transition_parameters={{ types: ['fly'], symmetrical: false }}
+	--tab-border-radius="0.5rem"
+	--tab-border-radius-bottom="0"
+	--tab-border-radius-left="0"
+	--tabs-max-width="95vw"
+/>
 
-<TabsRunes tabs={component_tabs}
+<TabsRunes
+	tabs={component_tabs}
 	tab_content_transition_parameters={{ types: ['fly'], symmetrical: false }}
 />
