@@ -1,11 +1,9 @@
 <script context="module" lang="ts">
-	export interface NavLinkProps {
+	export interface NavLinkProps extends HTMLAnchorAttributes {
 		/** The navigation link to display. */
 		nav_link: NavigationLink;
 		/** Tooltip options to apply to the nav links. */
 		tooltip_options?: TooltipProps;
-		/** Attributes for an `<a>` element. */
-		anchor_attributes?: HTMLAnchorAttributes;
 		/** Classes to apply to the nav links. */
 		classes?: string;
 		/** Styles to apply to a link when it is the _currently active_ page URL. */
@@ -14,6 +12,8 @@
 		dynamic_styles?: DynamicStyleParameters;
 		/** Props for an `<FaLayers>` component */
 		fa_layers_props?: ComponentProps<FaLayers>;
+		/** The children snippet to render. */
+		children?: Snippet;
 	}
 </script>
 
@@ -23,18 +23,19 @@
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Fa, FaLayers, FaLayersText } from '@jrmoynihan/svelte-fa';
-	import type { ComponentProps } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
 	import type { NavigationLink } from './nav-functions.js';
 
 	let {
 		nav_link,
 		tooltip_options = { disabled: true, visible: false },
-		anchor_attributes,
 		classes,
 		current_page_styles,
 		dynamic_styles,
-		fa_layers_props
+		fa_layers_props,
+		children,
+		...anchor_attributes
 	}: NavLinkProps = $props();
 
 	let is_current_page = $derived(nav_link.isCurrentPage($page));
@@ -102,6 +103,7 @@
 			{/each}
 		</FaLayers>
 	{/if}
+	{@render children?.()}
 	{nav_link.link_text}
 </a>
 
