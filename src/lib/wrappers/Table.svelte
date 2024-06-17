@@ -113,7 +113,7 @@
 {#snippet default_headers(d)}
 	<tr>
 		{#each Object.keys(d) as header, index}
-			{#if !omitted_keys.includes(header)}
+			{#if !omitted_keys.includes(header) && typeof d[header] !== 'function'}
 				{#if capitalize_headers}
 					{#if header === 'id'}
 						<th>
@@ -170,7 +170,7 @@
 					{@render data_cell({ datum, key })}
 				{:else if omitted_keys.length > 0 && !omitted_keys.includes(key)}
 					{@render data_cell({ datum, key })}
-				{:else if visible_keys.length === 0 && omitted_keys.length === 0}
+				{:else if visible_keys.length === 0 && omitted_keys.length === 0 && typeof datum !== 'function'}
 					{@render data_cell({ datum, key })}
 				{/if}
 			{/each}
