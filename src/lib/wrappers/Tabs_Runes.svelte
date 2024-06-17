@@ -191,7 +191,6 @@
 	}
 
 	[role='tabpanel'] {
-		z-index: -1;
 		padding: 5px;
 		border-radius: 0 5px 5px;
 		min-height: 10em;
