@@ -171,7 +171,7 @@
 				{@render data_cell({ datum, key, value, index })}
 			{:else if omitted_keys.length > 0 && !omitted_keys.includes(key)}
 				{@render data_cell({ datum, key, value, index })}
-			{:else if visible_keys.length === 0 && omitted_keys.length === 0 && typeof datum !== 'function'}
+			{:else if visible_keys.length === 0 && omitted_keys.length === 0 && typeof value !== 'function'}
 				{@render data_cell({ datum, key, value, index })}
 			{/if}
 		{/each}
