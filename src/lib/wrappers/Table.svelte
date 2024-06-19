@@ -1,10 +1,12 @@
 <script context="module" lang="ts">
 	export interface TableProps<T> {
 		data?: T[];
-		/** An snippet representing the table header row(s) */
-		headers?: Snippet<[any]>;
+		/** An snippet representing the table header row(s) (a <tr> element to be rendered within <thead>) */
+		header_row?: Snippet<[any]>;
+		/** A snippet representing the table header cells (`<th>` elements within `<thead>` `<tr>` rows) */
+		header_cell?: Snippet<[any]>;
 		/** An snippet representing the table data row(s) */
-		rows?: Snippet<[T]>;
+		data_row?: Snippet<[T]>;
 		/** A snippet representing the table data cells (`<td>` elements within `<tbody>` `<tr>` rows)*/
 		data_cell?: Snippet<[T]>;
 		/** An snippet representing the table caption */
@@ -23,6 +25,8 @@
 		omitted_keys?: string[];
 		/** Should the headers be capitalized? */
 		capitalize_headers?: boolean;
+		/** Should the sort buttons be shown? */
+		show_sort_buttons?: boolean;
 	}
 </script>
 
@@ -41,8 +45,9 @@
 
 	let {
 		data = $bindable([]),
-		headers = default_headers,
-		rows = default_rows,
+		header_row = default_header_row,
+		header_cell = default_header_cell,
+		data_row = default_data_rows,
 		data_cell = default_data_cell,
 		caption = default_caption,
 		caption_text,
@@ -51,7 +56,8 @@
 		footer_text,
 		visible_keys = $bindable([]),
 		omitted_keys = $bindable([]),
-		capitalize_headers = true
+		capitalize_headers = true,
+		show_sort_buttons = true
 	}: TableProps<any> = $props();
 	type Ordering = 'asc' | 'desc' | null;
 	let orders: Ordering[] = $state(Object.keys(data[0]).map((d) => 'desc'));
@@ -110,29 +116,10 @@
 	<caption><h3>{text}</h3></caption>
 {/snippet}
 
-{#snippet default_headers(d)}
+{#snippet default_header_row(datum)}
 	<tr>
-		{#each Object.keys(d) as header, index}
-			{#if !omitted_keys.includes(header) && typeof d[header] !== 'function'}
-				{#if capitalize_headers}
-					{#if header === 'id'}
-						<th>
-							ID
-							{@render sort_button('id', index)}
-						</th>
-					{:else}
-						<th>
-							{capitalize_all_words(header)}
-							{@render sort_button(header, index)}
-						</th>
-					{/if}
-				{:else}
-					<th>
-						{header}
-						{@render sort_button(header, index)}
-					</th>
-				{/if}
-			{/if}
+		{#each Object.keys(datum) as key, index}
+			{@render header_cell({ key, index })}
 		{/each}
 	</tr>
 {/snippet}
@@ -162,7 +149,7 @@
 	{/if}
 {/snippet}
 
-{#snippet default_rows()}
+{#snippet default_data_rows()}
 	{#each data as datum, index (datum)}
 		<tr>
 			{#each Object.entries(datum) as [key, value]}
@@ -181,6 +168,36 @@
 {#snippet default_data_cell({ datum, key, value, index })}
 	<td>{value}</td>
 {/snippet}
+{#snippet default_header_cell({ datum, key, index })}
+	{#if !omitted_keys.includes(key) && typeof datum[key] !== 'function'}
+		{#if capitalize_headers}
+			{#if key === 'id'}
+				<th>
+					ID
+
+					{#if show_sort_buttons}
+						{@render sort_button('id', index)}
+					{/if}
+				</th>
+			{:else}
+				<th>
+					{capitalize_all_words(key)}
+
+					{#if show_sort_buttons}
+						{@render sort_button(key, index)}
+					{/if}
+				</th>
+			{/if}
+		{:else}
+			<th>
+				{key}
+				{#if show_sort_buttons}
+					{@render sort_button(key, index)}
+				{/if}
+			</th>
+		{/if}
+	{/if}
+{/snippet}
 
 {#snippet default_footer(text)}
 	<tfoot>
@@ -191,23 +208,21 @@
 {/snippet}
 
 <table style:--caption-side={caption_side}>
-	{#if caption && caption_text}
-		{@render caption(caption_text)}
+	{#if caption_text}
+		{@render caption?.(caption_text)}
 	{/if}
 
-	{#if data.length > 0 && headers}
+	{#if data.length > 0}
 		<thead>
-			{@render headers(data[0])}
+			{@render header_row?.(data[0])}
 		</thead>
 	{/if}
-	{#if rows}
-		<!-- TODO: Add support for virtual list -->
-		<tbody>
-			{@render rows(data)}
-		</tbody>
-	{/if}
-	{#if footer && footer_text}
-		{@render footer(footer_text)}
+	<!-- TODO: Add support for virtual list -->
+	<tbody>
+		{@render data_row?.(data)}
+	</tbody>
+	{#if footer_text}
+		{@render footer?.(footer_text)}
 	{/if}
 </table>
 
