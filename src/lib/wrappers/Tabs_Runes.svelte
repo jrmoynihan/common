@@ -220,6 +220,10 @@
 		display: grid;
 		grid-template-columns: 1fr;
 		grid-template-rows: 1fr;
+		border-radius: var(--tab-content-border-radius-top, var(--tab-content-border-radius, 0))
+			var(--tab-content-border-radius-right, var(--tab-content-border-radius, 0))
+			var(--tab-content-border-radius-bottom, var(--tab-content-border-radius, 0))
+			var(--tab-content-border-radius-left, var(--tab-content-border-radius, 0));
 		& > * {
 			grid-area: 1 / 1;
 		}
