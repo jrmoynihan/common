@@ -2,13 +2,13 @@
 	export interface TableProps<T> {
 		data?: T[];
 		/** An snippet representing the table header row(s) (a <tr> element to be rendered within <thead>) */
-		header_row?: Snippet<[any]>;
+		header_row?: Snippet<[T]>;
 		/** A snippet representing the table header cells (`<th>` elements within `<thead>` `<tr>` rows) */
-		header_cell?: Snippet<[any]>;
+		header_cell?: Snippet<[{ datum: T; key: string; index: number }]>;
 		/** An snippet representing the table data row(s) */
-		data_row?: Snippet<[T]>;
+		data_row?: Snippet<[{ datum: T; index: number }]>;
 		/** A snippet representing the table data cells (`<td>` elements within `<tbody>` `<tr>` rows)*/
-		data_cell?: Snippet<[T]>;
+		data_cell?: Snippet<[{ datum: T; key: string; value: any; index: number }]>;
 		/** An snippet representing the table caption */
 		caption?: Snippet<[any]> | null;
 		/** The text of the table caption */
@@ -26,15 +26,15 @@
 		/** Should the headers be capitalized? */
 		capitalize_headers?: boolean;
 		/** A snippet representing the button to sort the table column */
-		sort_button?: Snippet<[any]> | null;
+		sort_button?: Snippet<[{ key: string; index: number }]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, before the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
 		preceding_header_cells?: Snippet | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, after the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
 		subsequent_header_cells?: Snippet | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<tbody>`, before the keys of the `data` array.  Wrap your items in a `<td>` within the snippet.  Each item will have access to the `datum` and `index` properties. */
-		preceding_data_cells?: Snippet<[any]> | null;
+		preceding_data_cells?: Snippet<[{ datum: T; index: number }]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<tbody>`, after the keys of the `data` array.  Wrap your items in a `<td>` within the snippet.  Each item will have access to the `datum` and `index` properties. */
-		subsequent_data_cells?: Snippet<[any]> | null;
+		subsequent_data_cells?: Snippet<[{ datum: T; index: number }]> | null;
 	}
 </script>
 
@@ -55,7 +55,7 @@
 		data = $bindable([]),
 		header_row = default_header_row,
 		header_cell = default_header_cell,
-		data_row = default_data_rows,
+		data_row = default_data_row,
 		data_cell = default_data_cell,
 		caption = default_caption,
 		caption_text,
@@ -163,22 +163,20 @@
 	{/if}
 {/snippet}
 
-{#snippet default_data_rows()}
-	{#each data as datum, index (datum)}
-		<tr>
-			{@render preceding_data_cells?.({ datum, index })}
-			{#each Object.entries(datum) as [key, value]}
-				{#if visible_keys.length > 0 && visible_keys.includes(key)}
-					{@render data_cell({ datum, key, value, index })}
-				{:else if omitted_keys.length > 0 && !omitted_keys.includes(key)}
-					{@render data_cell({ datum, key, value, index })}
-				{:else if visible_keys.length === 0 && omitted_keys.length === 0 && typeof datum !== 'function'}
-					{@render data_cell({ datum, key, value, index })}
-				{/if}
-			{/each}
-			{@render subsequent_data_cells?.({ datum, index })}
-		</tr>
-	{/each}
+{#snippet default_data_row({ datum, index })}
+	<tr>
+		{@render preceding_data_cells?.({ datum, index })}
+		{#each Object.entries(datum) as [key, value]}
+			{#if visible_keys.length > 0 && visible_keys.includes(key)}
+				{@render data_cell({ datum, key, value, index })}
+			{:else if omitted_keys.length > 0 && !omitted_keys.includes(key)}
+				{@render data_cell({ datum, key, value, index })}
+			{:else if visible_keys.length === 0 && omitted_keys.length === 0 && typeof datum !== 'function'}
+				{@render data_cell({ datum, key, value, index })}
+			{/if}
+		{/each}
+		{@render subsequent_data_cells?.({ datum, index })}
+	</tr>
 {/snippet}
 
 {#snippet default_data_cell({ datum, key, value, index })}
@@ -227,7 +225,9 @@
 	{/if}
 	<!-- TODO: Add support for virtual list -->
 	<tbody>
-		{@render data_row?.(data)}
+		{#each data as datum, index (datum)}
+			{@render data_row?.({ datum, index })}
+		{/each}
 	</tbody>
 	{#if footer_text}
 		{@render footer?.(footer_text)}
