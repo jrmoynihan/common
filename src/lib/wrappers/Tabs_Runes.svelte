@@ -7,6 +7,14 @@
 		tab_container_title?: Snippet | null;
 		/** The title of the default tab button */
 		title?: string;
+		/** The attributes of the outermost tab container <div> element */
+		tab_container_attributes?: HTMLAttributes<HTMLDivElement>;
+		/** The attributes of the tab button container <div> element */
+		tab_button_container_attributes?: HTMLAttributes<HTMLDivElement>;
+		/** The attributes of the tab content container <div> element that holds all the tab content panels */
+		tab_content_container_attributes?: HTMLAttributes<HTMLDivElement>;
+		/** The attributes of the tab panel contaner element that holds the tab content for an individual tab */
+		tab_panel_attributes?: HTMLAttributes<HTMLDivElement>;
 		/** The attributes of the default tab <button> element */
 		tab_button_attributes?: HTMLButtonAttributes;
 		/** The selected tab */
@@ -31,13 +39,17 @@
 <script lang="ts">
 	import TransitionNativeRunes from '$wrappers/TransitionNative_Runes.svelte';
 	import type { ComponentProps, Snippet, SvelteComponent } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	let {
 		tabs = [],
 		tab_button = default_tab_button,
 		tab_container_title = default_tab_container_title,
 		title,
+		tab_container_attributes,
+		tab_button_container_attributes,
+		tab_content_container_attributes,
+		tab_panel_attributes,
 		tab_button_attributes,
 		tab_content_transition_parameters
 	}: TabsProps = $props();
@@ -98,10 +110,15 @@
 	<h3 id={`tablist-${id}`}>{title}</h3>
 {/snippet}
 
-<div {id} class="tabs">
+<div {id} class="tabs" {...tab_container_attributes}>
 	{@render tab_container_title?.()}
 
-	<div role="tablist" aria-labelledby={`tablist-${id}`} class="automatic">
+	<div
+		role="tablist"
+		aria-labelledby={`tablist-${id}`}
+		class="automatic"
+		{...tab_button_container_attributes}
+	>
 		{#if tabs && tabs.length > 0}
 			{#each tabs as tab, i (tab)}
 				<button
@@ -120,13 +137,14 @@
 			{/each}
 		{/if}
 	</div>
-	<div id={`tab-content-${id}`} class="tab-content">
+	<div id={`tab-content-${id}`} class="tab-content" {...tab_content_container_attributes}>
 		{#each tabs as tab, i (tab)}
 			<div
 				id={`tabpanel-${i}-${id}`}
 				role="tabpanel"
 				tabindex={selected_tab === tab ? 0 : -1}
 				aria-labelledby={`tab-${i}-${id}`}
+				{...tab_panel_attributes}
 			>
 				{#if 'content' in tab}
 					<TransitionNativeRunes
