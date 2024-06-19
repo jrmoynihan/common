@@ -132,7 +132,7 @@
 	<tr>
 		{@render preceding_header_cells?.()}
 		{#each Object.keys(datum) as key, index}
-			{@render header_cell({ key, index })}
+			{@render header_cell({ datum, key, index })}
 		{/each}
 		{@render subsequent_header_cells?.()}
 	</tr>
