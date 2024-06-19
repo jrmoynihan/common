@@ -167,19 +167,19 @@
 		<tr>
 			{#each Object.entries(datum) as [key, value]}
 				{#if visible_keys.length > 0 && visible_keys.includes(key)}
-					{@render data_cell({ datum, key })}
+					{@render data_cell({ datum, key, value, index })}
 				{:else if omitted_keys.length > 0 && !omitted_keys.includes(key)}
-					{@render data_cell({ datum, key })}
+					{@render data_cell({ datum, key, value, index })}
 				{:else if visible_keys.length === 0 && omitted_keys.length === 0 && typeof datum !== 'function'}
-					{@render data_cell({ datum, key })}
+					{@render data_cell({ datum, key, value, index })}
 				{/if}
 			{/each}
 		</tr>
 	{/each}
 {/snippet}
 
-{#snippet default_data_cell({ datum, key })}
-	<td>{datum[key]}</td>
+{#snippet default_data_cell({ datum, key, value, index })}
+	<td>{value}</td>
 {/snippet}
 
 {#snippet default_footer(text)}
