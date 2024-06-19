@@ -256,14 +256,14 @@ export function createMediaQuery(query: string) {
 	};
 }
 /** Add this to a class constructor to make all non-static properties enumerable.  Allows access to runed properties by index lookups (e.g. `obj[key]`). */
-export function enumerate_runed_properties(obj: unknown) {
-	const prototype = Object.getPrototypeOf(obj);
+export function enumerate_runed_properties(this_obj: Object) {
+	const prototype = Object.getPrototypeOf(this_obj);
 	const prototype_property_descriptors = Object.getOwnPropertyDescriptors(prototype);
 	for (const [property, descriptor] of Object.entries(prototype_property_descriptors)) {
 		const is_nonstatic_getter = typeof descriptor.get === 'function';
 		if (is_nonstatic_getter) {
 			descriptor.enumerable = true;
-			Object.defineProperty(obj, property, descriptor);
+			Object.defineProperty(this_obj, property, descriptor);
 		}
 	}
 }
