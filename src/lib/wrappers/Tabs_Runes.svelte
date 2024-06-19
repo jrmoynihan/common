@@ -210,7 +210,10 @@
 
 	[role='tabpanel'] {
 		padding: 5px;
-		border-radius: 0 5px 5px;
+		border-radius: var(--tab-panel-border-radius-top, var(--tab-panel-border-radius, 0))
+			var(--tab-panel-border-radius-right, var(--tab-panel-border-radius, 0))
+			var(--tab-panel-border-radius-bottom, var(--tab-panel-border-radius, 0))
+			var(--tab-panel-border-radius-left, var(--tab-panel-border-radius, 0));
 		min-height: 10em;
 		overflow: hidden; /* Is there a good reason to have overflow auto instead? */
 	}
