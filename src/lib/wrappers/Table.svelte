@@ -10,13 +10,13 @@
 		/** A snippet representing the table data cells (`<td>` elements within `<tbody>` `<tr>` rows)*/
 		data_cell?: Snippet<[T]>;
 		/** An snippet representing the table caption */
-		caption?: Snippet<[any]>;
+		caption?: Snippet<[any]> | null;
 		/** The text of the table caption */
 		caption_text?: string;
 		/** The side of the table caption, with respect to the table */
 		caption_side?: 'top' | 'bottom';
 		/** An snippet representing the table footer */
-		footer?: Snippet<[any]>;
+		footer?: Snippet<[any]> | null;
 		/** The text of the table footer */
 		footer_text?: string;
 		/** A list of keys to include from the objects in the `data` array.  If left empty and `omitted_keys` is also left empty, all keys will be included */
@@ -25,8 +25,16 @@
 		omitted_keys?: string[];
 		/** Should the headers be capitalized? */
 		capitalize_headers?: boolean;
-		/** Should the sort buttons be shown? */
-		show_sort_buttons?: boolean;
+		/** A snippet representing the button to sort the table column */
+		sort_button?: Snippet<[any]> | null;
+		/** A snippet of items that will be rendered in the <tr> element within the <thead>, before the keys of the `data` array. Wrap your items in a <th> within the snippet. */
+		preceding_header_cells?: Snippet | null;
+		/** A snippet of items that will be rendered in the <tr> element within the <thead>, after the keys of the `data` array. Wrap your items in a <th> within the snippet. */
+		subsequent_header_cells?: Snippet | null;
+		/** A snippet of items that will be rendered in the <tr> element within the <tbody>, before the keys of the `data` array.  Wrap your items in a <td> within the snippet.  Each item will have access to the `datum` and `index` properties. */
+		preceding_data_cells?: Snippet<[any]> | null;
+		/** A snippet of items that will be rendered in the <tr> element within the <tbody>, after the keys of the `data` array.  Wrap your items in a <td> within the snippet.  Each item will have access to the `datum` and `index` properties. */
+		subsequent_data_cells?: Snippet<[any]> | null;
 	}
 </script>
 
@@ -57,7 +65,11 @@
 		visible_keys = $bindable([]),
 		omitted_keys = $bindable([]),
 		capitalize_headers = true,
-		show_sort_buttons = true
+		sort_button = default_sort_button,
+		preceding_header_cells = null,
+		subsequent_header_cells = null,
+		preceding_data_cells = null,
+		subsequent_data_cells = null
 	}: TableProps<any> = $props();
 	type Ordering = 'asc' | 'desc' | null;
 	let orders: Ordering[] = $state(Object.keys(data[0]).map((d) => 'desc'));
@@ -118,13 +130,15 @@
 
 {#snippet default_header_row(datum)}
 	<tr>
+		{@render preceding_header_cells?.()}
 		{#each Object.keys(datum) as key, index}
 			{@render header_cell({ key, index })}
 		{/each}
+		{@render subsequent_header_cells?.()}
 	</tr>
 {/snippet}
 
-{#snippet sort_button(key: string, index: number)}
+{#snippet default_sort_button({key, index } : {key: string, index: number})}
 	{@const datum_0 = data[0][key]}
 	{#if typeof datum_0 === 'string'}
 		<ButtonRunes
@@ -152,6 +166,7 @@
 {#snippet default_data_rows()}
 	{#each data as datum, index (datum)}
 		<tr>
+			{@render preceding_data_cells?.({ datum, index })}
 			{#each Object.entries(datum) as [key, value]}
 				{#if visible_keys.length > 0 && visible_keys.includes(key)}
 					{@render data_cell({ datum, key, value, index })}
@@ -161,6 +176,7 @@
 					{@render data_cell({ datum, key, value, index })}
 				{/if}
 			{/each}
+			{@render subsequent_data_cells?.({ datum, index })}
 		</tr>
 	{/each}
 {/snippet}
@@ -174,26 +190,18 @@
 			{#if key === 'id'}
 				<th>
 					ID
-
-					{#if show_sort_buttons}
-						{@render sort_button('id', index)}
-					{/if}
+					{@render sort_button?.({ key: 'id', index })}
 				</th>
 			{:else}
 				<th>
 					{capitalize_all_words(key)}
-
-					{#if show_sort_buttons}
-						{@render sort_button(key, index)}
-					{/if}
+					{@render sort_button?.({ key, index })}
 				</th>
 			{/if}
 		{:else}
 			<th>
 				{key}
-				{#if show_sort_buttons}
-					{@render sort_button(key, index)}
-				{/if}
+				{@render sort_button?.({ key, index })}
 			</th>
 		{/if}
 	{/if}
