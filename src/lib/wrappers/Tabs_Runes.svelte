@@ -123,11 +123,11 @@
 			{#each tabs as tab, i (tab)}
 				<button
 					id={`tab-${i}-${id}`}
-					tabindex={selected_tab === tab ? 0 : -1}
+					tabindex={$state.is(tab, selected_tab) ? 0 : -1}
 					onkeydown={move_focus_to_tab}
 					type="button"
 					role="tab"
-					aria-selected={selected_tab === tab}
+					aria-selected={$state.is(tab, selected_tab)}
 					aria-controls={`tabpanel-${i}-${id}`}
 					onclick={() => select_tab(tab)}
 					{...tab_button_attributes}
