@@ -27,13 +27,13 @@
 		capitalize_headers?: boolean;
 		/** A snippet representing the button to sort the table column */
 		sort_button?: Snippet<[any]> | null;
-		/** A snippet of items that will be rendered in the <tr> element within the <thead>, before the keys of the `data` array. Wrap your items in a <th> within the snippet. */
+		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, before the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
 		preceding_header_cells?: Snippet | null;
-		/** A snippet of items that will be rendered in the <tr> element within the <thead>, after the keys of the `data` array. Wrap your items in a <th> within the snippet. */
+		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, after the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
 		subsequent_header_cells?: Snippet | null;
-		/** A snippet of items that will be rendered in the <tr> element within the <tbody>, before the keys of the `data` array.  Wrap your items in a <td> within the snippet.  Each item will have access to the `datum` and `index` properties. */
+		/** A snippet of items that will be rendered in the `<tr>` element within the `<tbody>`, before the keys of the `data` array.  Wrap your items in a `<td>` within the snippet.  Each item will have access to the `datum` and `index` properties. */
 		preceding_data_cells?: Snippet<[any]> | null;
-		/** A snippet of items that will be rendered in the <tr> element within the <tbody>, after the keys of the `data` array.  Wrap your items in a <td> within the snippet.  Each item will have access to the `datum` and `index` properties. */
+		/** A snippet of items that will be rendered in the `<tr>` element within the `<tbody>`, after the keys of the `data` array.  Wrap your items in a `<td>` within the snippet.  Each item will have access to the `datum` and `index` properties. */
 		subsequent_data_cells?: Snippet<[any]> | null;
 	}
 </script>
