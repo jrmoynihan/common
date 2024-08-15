@@ -206,6 +206,7 @@
 		border-top-color: var(--tab-border-top-color-selected, hsl(219deg 1% 72%));
 		border-bottom: var(--tab-border-bottom-selected, none);
 		background-color: var(--tab-background-color-selected);
+		color: var(--tab-color-selected, inherit);
 	}
 
 	[role='tabpanel'] {

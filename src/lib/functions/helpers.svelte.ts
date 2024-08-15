@@ -1,6 +1,24 @@
 import { Temporal } from '@js-temporal/polyfill';
 import { ErrorLog } from './logging.js';
 
+/** Helps give better tooltips to intersection types
+* 
+@example
+```
+const obj_a : { a: number} = { a: 0 }
+const obj_b : { b: string } = { b: 'hello' }
+let obj_c : PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b : 'World'}
+// typeof obj_c is now inferred as `{ a: number, b: string }`, instead of the less readable `{ a: number } & { b: string }`
+```
+
+https://twitter.com/mattpocockuk/status/1622730173446557697
+*/
+export type PrettifyIntersection<T> = { [K in keyof T]: T[K] } & {};
+
+const obj_a: { a: number } = { a: 0 };
+const obj_b: { b: string } = { b: 'hello' };
+let obj_c: PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b: 'World' };
+
 /**
  * Capitalize the first letter of a string
  * @param str the string to capitalize

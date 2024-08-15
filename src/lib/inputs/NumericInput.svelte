@@ -23,7 +23,7 @@
 	// TODO: add a prop for a custom validity function?
 	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
 
-	type SpinnerButton<T> = InputButtonProps<T> & ComponentProps<Fa>
+	type SpinnerButton<T> = InputButtonProps<T> & ComponentProps<Fa>;
 </script>
 
 <script lang="ts" generics="T">
@@ -53,20 +53,33 @@
 		down_spinner_button,
 		children,
 		...input_attributes
-	} : NumericInputProps = $props();
-
-	export const is_valid = $derived(input_element?.checkValidity() ?? true);
-	
+	}: NumericInputProps = $props();
 </script>
 
 {#snippet default_spinner_button({icon, size, ...button_props}: SpinnerButton<T>)}
 	<InputButton {...button_props}>
-		<Fa {icon} {size} color="var(--text-input-button-color, buttontext)" class="spinner-button-icon" />
+		<Fa
+			{icon}
+			{size}
+			color="var(--text-input-button-color, buttontext)"
+			class="spinner-button-icon"
+		/>
 	</InputButton>
 {/snippet}
 
-<InputLabel bind:label_element bind:valid {...label_props}  >
-	<Input bind:dynamic_input_styles bind:input_element bind:value bind:valid type="number" inputmode="numeric" min={0} max={Infinity} step={1} {...input_attributes} />
+<InputLabel bind:label_element bind:valid {...label_props}>
+	<Input
+		bind:dynamic_input_styles
+		bind:input_element
+		bind:value
+		bind:valid
+		type="number"
+		inputmode="numeric"
+		min={0}
+		max={Infinity}
+		step={1}
+		{...input_attributes}
+	/>
 	<Placeholder {...placeholder_props} />
 	{@render children?.()}
 	{#if show_spinner_buttons}
@@ -75,17 +88,22 @@
 		{@const current = Number(value)}
 		{@const step = Number(input_attributes?.step ?? 1)}
 
-		<div class="btn-container" >
+		<div class="btn-container">
 			{#if up_spinner_button}
 				{@render up_spinner_button()}
 			{:else if spinner_button}
 				{@render spinner_button()}
 			{:else}
-				{@render default_spinner_button({classes: 'plus', icon: faCaretUp, size: 'xs', onclick: () => {
-					if(current + step <= max_num) {
-						value = Number(value) + step;
+				{@render default_spinner_button({
+					classes: 'plus',
+					icon: faCaretUp,
+					size: 'xs',
+					onclick: () => {
+						if (current + step <= max_num) {
+							value = Number(value) + step;
+						}
 					}
-				}})}
+				})}
 			{/if}
 
 			{#if down_spinner_button}
@@ -93,13 +111,17 @@
 			{:else if spinner_button}
 				{@render spinner_button()}
 			{:else}
-				{@render default_spinner_button({classes: 'minus', icon: faCaretDown, size: 'xs', onclick: () => {
-					if(current - step >= min_num) {
-						value = Number(value) - step;
+				{@render default_spinner_button({
+					classes: 'minus',
+					icon: faCaretDown,
+					size: 'xs',
+					onclick: () => {
+						if (current - step >= min_num) {
+							value = Number(value) - step;
+						}
 					}
-				}})}
+				})}
 			{/if}
-
 		</div>
 	{/if}
 </InputLabel>
@@ -111,7 +133,7 @@
 			--input-border-radius: 1rem;
 			display: grid;
 			grid-template-rows: repeat(auto-fit, minmax(0, 1fr));
-			grid-template-areas: 
+			grid-template-areas:
 				'plus'
 				'minus';
 			place-items: center;
@@ -134,12 +156,12 @@
 			scale: 1 1;
 			z-index: 0;
 			overflow: hidden;
-			isolation: isolate;  /* Contain the z-index stacking context for the buttons to this container. */
+			isolation: isolate; /* Contain the z-index stacking context for the buttons to this container. */
 		}
 	}
 
 	@layer input {
-		:global(input[type="number"]) {
+		:global(input[type='number']) {
 			appearance: textfield;
 			-moz-appearance: textfield;
 			text-align: center;
@@ -148,21 +170,21 @@
 			border-radius: var(--input-border-radius, 1rem);
 		}
 	}
-	:global([data-theme="light"] button.button:focus .spinner-button-icon path) {
+	:global([data-theme='light'] button.button:focus .spinner-button-icon path) {
 		fill: var(--button-outline-hover-or-focus, royalblue);
 	}
 
-	:global([data-theme="dark"] button.button:focus .spinner-button-icon path) {
+	:global([data-theme='dark'] button.button:focus .spinner-button-icon path) {
 		fill: var(--button-outline-hover-or-focus, lightskyblue);
 	}
 
-	@layer button{
-		:global(.plus){
+	@layer button {
+		:global(.plus) {
 			grid-area: plus;
 			border-top-right-radius: inherit;
 			transform-origin: top right;
 		}
-		:global(.minus){
+		:global(.minus) {
 			grid-area: minus;
 			border-bottom-right-radius: inherit;
 			transform-origin: top right;
