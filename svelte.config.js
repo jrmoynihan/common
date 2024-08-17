@@ -4,6 +4,7 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex } from 'mdsvex';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import mdsvexConfig from './mdsvex.config.js';
 
 const $filepath = dirname(fileURLToPath(import.meta.url)).replace(/\\/g, '/');
 const $src = path.resolve($filepath, './src');
