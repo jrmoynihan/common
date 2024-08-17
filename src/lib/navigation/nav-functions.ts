@@ -56,6 +56,9 @@ export class NavigationLink {
 		this.is_current_page = is_current;
 		return is_current;
 	};
+	is_page_within_path = (page: Page<Record<string, string>, string | null>): boolean => {
+		return page?.url?.pathname.startsWith(this.url?.pathname);
+	};
 }
 
 export async function get_subroutes(url_pathname: string, exclude_paths?: string[]) {

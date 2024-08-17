@@ -39,6 +39,7 @@
 	}: NavLinkProps = $props();
 
 	let is_current_page = $derived(nav_link.isCurrentPage($page));
+	let is_page_active = $derived(nav_link.is_page_within_path($page));
 	let anchor_path_to_scroll_to: string | undefined = $state();
 
 	beforeNavigate(({ from, to, cancel }) => {
@@ -87,6 +88,7 @@
 	}}
 	class={`link ${classes ?? ''}`}
 	class:current={is_current_page}
+	class:active-path={is_page_active}
 	href={nav_link.url.href}
 	{...anchor_attributes}
 >
@@ -125,6 +127,11 @@
 				box-shadow: var(--link-hover-box-shadow);
 			}
 			&.current {
+				box-shadow: var(--current-nav-page-box-shadow);
+				background-color: var(--current-nav-page-background-color);
+				color: var(--current-nav-page-color);
+			}
+			&.active-path {
 				box-shadow: var(--current-nav-page-box-shadow);
 				background-color: var(--current-nav-page-background-color);
 				color: var(--current-nav-page-color);
