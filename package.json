@@ -1,202 +1,202 @@
 {
-  "name": "@jrmoynihan/common",
-  "version": "10.3.15",
-  "repository": "github:jrmoynihan/common",
-  "author": "James Moynihan",
-  "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview",
-    "package": "svelte-kit sync && svelte-package",
-    "package-publish-patch": "pnpm run package && pnpm version patch && pnpm publish",
-    "package-publish-minor": "pnpm run package && pnpm version minor && pnpm publish",
-    "package-publish-major": "pnpm run package && pnpm version major && pnpm publish",
-    "publish": "pnpm publish",
-    "test": "playwright test",
-    "check": "svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "prettier --check --plugin-search-dir=. . && eslint .",
-    "format": "prettier --write --plugin-search-dir=. ."
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.8.1",
-    "@playwright/test": "^1.44.1",
-    "@sveltejs/adapter-auto": "^3.2.2",
-    "@sveltejs/adapter-vercel": "^5.3.2",
-    "@sveltejs/package": "^2.3.2",
-    "@sveltejs/vite-plugin-svelte": "^3.1.1",
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.13.1",
-    "eslint": "^9.5.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-svelte": "^2.40.0",
-    "mdsvex": "^0.11.2",
-    "open-props": "^1.7.4",
-    "postcss-easings": "^4.0.0",
-    "prettier": "^3.3.2",
-    "prettier-plugin-svelte": "^3.2.4",
-    "remark-codesandbox": "^0.10.1",
-    "sass": "^1.77.6",
-    "svelte-check": "^3.8.1",
-    "svelte-preprocess": "^6.0.1",
-    "svelte2tsx": "^0.7.10",
-    "tslib": "^2.6.3",
-    "typescript": "^5.4.5",
-    "vite": "^5.3.1",
-    "vite-plugin-kit-routes": "^0.6.2",
-    "vite-plugin-mkcert": "^1.17.5"
-  },
-  "type": "module",
-  "dependencies": {
-    "@fortawesome/fontawesome-common-types": "^6.5.2",
-    "@fortawesome/free-solid-svg-icons": "^6.5.2",
-    "@jrmoynihan/svelte-fa": "^4.0.2",
-    "@js-temporal/polyfill": "^0.4.4",
-    "@sveltejs/kit": "^2.5.17",
-    "acorn": "^8.12.0",
-    "mdsvexamples": "^0.4.1",
-    "postcss-jit-props": "^1.0.14",
-    "svelte": "^5.0.0-next.158",
-    "svelte-fa": "^4.0.2"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "svelte": "./dist/index.js",
-      "default": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist"
-  ],
-  "typesVersions": {
-    ">4.0": {
-      "actions/drag-action": [
-        "./dist/actions/drag-action.d.ts"
-      ],
-      "actions/dynamic-styles": [
-        "./dist/actions/dynamic-styles.d.ts"
-      ],
-      "actions/general": [
-        "./dist/actions/general.d.ts"
-      ],
-      "actions/spotlight/ActionSpotlight.svelte": [
-        "./dist/actions/spotlight/ActionSpotlight.svelte.d.ts"
-      ],
-      "actions/spotlight/spotlight": [
-        "./dist/actions/spotlight/spotlight.d.ts"
-      ],
-      "actions/tooltip/ActionTooltip.svelte": [
-        "./dist/actions/tooltip/ActionTooltip.svelte.d.ts"
-      ],
-      "actions/tooltip/tooltip": [
-        "./dist/actions/tooltip/tooltip.d.ts"
-      ],
-      "actions/will-change": [
-        "./dist/actions/will-change.d.ts"
-      ],
-      "buttons/Button.svelte": [
-        "./dist/buttons/Button.svelte.d.ts"
-      ],
-      "buttons/DragAnchor.svelte": [
-        "./dist/buttons/DragAnchor.svelte.d.ts"
-      ],
-      "buttons/LightDarkToggle.svelte": [
-        "./dist/buttons/LightDarkToggle.svelte.d.ts"
-      ],
-      "buttons/ToggleSwitch.svelte": [
-        "./dist/buttons/ToggleSwitch.svelte.d.ts"
-      ],
-      "functions/helpers": [
-        "./dist/functions/helpers.d.ts"
-      ],
-      "functions/local-storage": [
-        "./dist/functions/local-storage.d.ts"
-      ],
-      "functions/logging": [
-        "./dist/functions/logging.d.ts"
-      ],
-      "functions/store": [
-        "./dist/functions/store.d.ts"
-      ],
-      "index": [
-        "./dist/index.d.ts"
-      ],
-      "inputs/DateInput.svelte": [
-        "./dist/inputs/DateInput.svelte.d.ts"
-      ],
-      "inputs/NumericInput.svelte": [
-        "./dist/inputs/NumericInput.svelte.d.ts"
-      ],
-      "inputs/OptionOrGroup.svelte": [
-        "./dist/inputs/OptionOrGroup.svelte.d.ts"
-      ],
-      "inputs/Placeholder.svelte": [
-        "./dist/inputs/Placeholder.svelte.d.ts"
-      ],
-      "inputs/Select.svelte": [
-        "./dist/inputs/Select.svelte.d.ts"
-      ],
-      "inputs/TemporalDateInput.svelte": [
-        "./dist/inputs/TemporalDateInput.svelte.d.ts"
-      ],
-      "inputs/TextInput.svelte": [
-        "./dist/inputs/TextInput.svelte.d.ts"
-      ],
-      "lib_types": [
-        "./dist/lib_types.d.ts"
-      ],
-      "navigation/AnchorHeading.svelte": [
-        "./dist/navigation/AnchorHeading.svelte.d.ts"
-      ],
-      "navigation/LinkableAnchorHeading.svelte": [
-        "./dist/navigation/LinkableAnchorHeading.svelte.d.ts"
-      ],
-      "navigation/NavLink.svelte": [
-        "./dist/navigation/NavLink.svelte.d.ts"
-      ],
-      "navigation/Navigation.svelte": [
-        "./dist/navigation/Navigation.svelte.d.ts"
-      ],
-      "navigation/ScrollProgress.svelte": [
-        "./dist/navigation/ScrollProgress.svelte.d.ts"
-      ],
-      "navigation/nav-functions": [
-        "./dist/navigation/nav-functions.d.ts"
-      ],
-      "styles/shadow": [
-        "./dist/styles/shadow.d.ts"
-      ],
-      "toasts/DefaultToast.svelte": [
-        "./dist/toasts/DefaultToast.svelte.d.ts"
-      ],
-      "toasts/SeenToast.svelte": [
-        "./dist/toasts/SeenToast.svelte.d.ts"
-      ],
-      "toasts/toasts": [
-        "./dist/toasts/toasts.d.ts"
-      ],
-      "wrappers/Accordion.svelte": [
-        "./dist/wrappers/Accordion.svelte.d.ts"
-      ],
-      "wrappers/ErrorModal.svelte": [
-        "./dist/wrappers/ErrorModal.svelte.d.ts"
-      ],
-      "wrappers/Modal.svelte": [
-        "./dist/wrappers/Modal.svelte.d.ts"
-      ],
-      "wrappers/ModalWithButton.svelte": [
-        "./dist/wrappers/ModalWithButton.svelte.d.ts"
-      ],
-      "wrappers/Tabs.svelte": [
-        "./dist/wrappers/Tabs.svelte.d.ts"
-      ],
-      "wrappers/Transition.svelte": [
-        "./dist/wrappers/Transition.svelte.d.ts"
-      ],
-      "wrappers/tab": [
-        "./dist/wrappers/tab.d.ts"
-      ]
-    }
-  }
+	"name": "@jrmoynihan/common",
+	"version": "10.3.15",
+	"repository": "github:jrmoynihan/common",
+	"author": "James Moynihan",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"package": "svelte-kit sync && svelte-package",
+		"package-publish-patch": "pnpm run package && pnpm version patch && pnpm publish",
+		"package-publish-minor": "pnpm run package && pnpm version minor && pnpm publish",
+		"package-publish-major": "pnpm run package && pnpm version major && pnpm publish",
+		"publish": "pnpm publish",
+		"test": "playwright test",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "prettier --check --plugin-search-dir=. . && eslint .",
+		"format": "prettier --write --plugin-search-dir=. ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@playwright/test": "^1.46.0",
+		"@sveltejs/adapter-auto": "^3.2.4",
+		"@sveltejs/adapter-vercel": "^5.4.3",
+		"@sveltejs/package": "^2.3.4",
+		"@sveltejs/vite-plugin-svelte": "next",
+		"@typescript-eslint/eslint-plugin": "^8.1.0",
+		"@typescript-eslint/parser": "^8.1.0",
+		"eslint": "^9.9.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-svelte": "^2.43.0",
+		"mdsvex": "^0.12.2",
+		"open-props": "^1.7.5",
+		"postcss-easings": "^4.0.0",
+		"prettier": "^3.3.3",
+		"prettier-plugin-svelte": "^3.2.6",
+		"remark-codesandbox": "^0.10.1",
+		"sass": "^1.77.8",
+		"svelte-check": "^3.8.5",
+		"svelte-preprocess": "^6.0.2",
+		"svelte2tsx": "^0.7.15",
+		"tslib": "^2.6.3",
+		"typescript": "^5.5.4",
+		"vite": "^5.4.1",
+		"vite-plugin-kit-routes": "^0.6.5",
+		"vite-plugin-mkcert": "^1.17.6"
+	},
+	"type": "module",
+	"dependencies": {
+		"@fortawesome/fontawesome-common-types": "^6.6.0",
+		"@fortawesome/free-solid-svg-icons": "^6.6.0",
+		"@jrmoynihan/svelte-fa": "^4.0.2",
+		"@js-temporal/polyfill": "^0.4.4",
+		"@sveltejs/kit": "^2.5.22",
+		"acorn": "^8.12.1",
+		"mdsvexamples": "^0.4.1",
+		"postcss-jit-props": "^1.0.14",
+		"svelte": "^5.0.0-next.222",
+		"svelte-fa": "^4.0.2"
+	},
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"typesVersions": {
+		">4.0": {
+			"actions/drag-action": [
+				"./dist/actions/drag-action.d.ts"
+			],
+			"actions/dynamic-styles": [
+				"./dist/actions/dynamic-styles.d.ts"
+			],
+			"actions/general": [
+				"./dist/actions/general.d.ts"
+			],
+			"actions/spotlight/ActionSpotlight.svelte": [
+				"./dist/actions/spotlight/ActionSpotlight.svelte.d.ts"
+			],
+			"actions/spotlight/spotlight": [
+				"./dist/actions/spotlight/spotlight.d.ts"
+			],
+			"actions/tooltip/ActionTooltip.svelte": [
+				"./dist/actions/tooltip/ActionTooltip.svelte.d.ts"
+			],
+			"actions/tooltip/tooltip": [
+				"./dist/actions/tooltip/tooltip.d.ts"
+			],
+			"actions/will-change": [
+				"./dist/actions/will-change.d.ts"
+			],
+			"buttons/Button.svelte": [
+				"./dist/buttons/Button.svelte.d.ts"
+			],
+			"buttons/DragAnchor.svelte": [
+				"./dist/buttons/DragAnchor.svelte.d.ts"
+			],
+			"buttons/LightDarkToggle.svelte": [
+				"./dist/buttons/LightDarkToggle.svelte.d.ts"
+			],
+			"buttons/ToggleSwitch.svelte": [
+				"./dist/buttons/ToggleSwitch.svelte.d.ts"
+			],
+			"functions/helpers": [
+				"./dist/functions/helpers.d.ts"
+			],
+			"functions/local-storage": [
+				"./dist/functions/local-storage.d.ts"
+			],
+			"functions/logging": [
+				"./dist/functions/logging.d.ts"
+			],
+			"functions/store": [
+				"./dist/functions/store.d.ts"
+			],
+			"index": [
+				"./dist/index.d.ts"
+			],
+			"inputs/DateInput.svelte": [
+				"./dist/inputs/DateInput.svelte.d.ts"
+			],
+			"inputs/NumericInput.svelte": [
+				"./dist/inputs/NumericInput.svelte.d.ts"
+			],
+			"inputs/OptionOrGroup.svelte": [
+				"./dist/inputs/OptionOrGroup.svelte.d.ts"
+			],
+			"inputs/Placeholder.svelte": [
+				"./dist/inputs/Placeholder.svelte.d.ts"
+			],
+			"inputs/Select.svelte": [
+				"./dist/inputs/Select.svelte.d.ts"
+			],
+			"inputs/TemporalDateInput.svelte": [
+				"./dist/inputs/TemporalDateInput.svelte.d.ts"
+			],
+			"inputs/TextInput.svelte": [
+				"./dist/inputs/TextInput.svelte.d.ts"
+			],
+			"lib_types": [
+				"./dist/lib_types.d.ts"
+			],
+			"navigation/AnchorHeading.svelte": [
+				"./dist/navigation/AnchorHeading.svelte.d.ts"
+			],
+			"navigation/LinkableAnchorHeading.svelte": [
+				"./dist/navigation/LinkableAnchorHeading.svelte.d.ts"
+			],
+			"navigation/NavLink.svelte": [
+				"./dist/navigation/NavLink.svelte.d.ts"
+			],
+			"navigation/Navigation.svelte": [
+				"./dist/navigation/Navigation.svelte.d.ts"
+			],
+			"navigation/ScrollProgress.svelte": [
+				"./dist/navigation/ScrollProgress.svelte.d.ts"
+			],
+			"navigation/nav-functions": [
+				"./dist/navigation/nav-functions.d.ts"
+			],
+			"styles/shadow": [
+				"./dist/styles/shadow.d.ts"
+			],
+			"toasts/DefaultToast.svelte": [
+				"./dist/toasts/DefaultToast.svelte.d.ts"
+			],
+			"toasts/SeenToast.svelte": [
+				"./dist/toasts/SeenToast.svelte.d.ts"
+			],
+			"toasts/toasts": [
+				"./dist/toasts/toasts.d.ts"
+			],
+			"wrappers/Accordion.svelte": [
+				"./dist/wrappers/Accordion.svelte.d.ts"
+			],
+			"wrappers/ErrorModal.svelte": [
+				"./dist/wrappers/ErrorModal.svelte.d.ts"
+			],
+			"wrappers/Modal.svelte": [
+				"./dist/wrappers/Modal.svelte.d.ts"
+			],
+			"wrappers/ModalWithButton.svelte": [
+				"./dist/wrappers/ModalWithButton.svelte.d.ts"
+			],
+			"wrappers/Tabs.svelte": [
+				"./dist/wrappers/Tabs.svelte.d.ts"
+			],
+			"wrappers/Transition.svelte": [
+				"./dist/wrappers/Transition.svelte.d.ts"
+			],
+			"wrappers/tab": [
+				"./dist/wrappers/tab.d.ts"
+			]
+		}
+	}
 }

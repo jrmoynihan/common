@@ -4,9 +4,6 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { mdsvex } from 'mdsvex';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-// import postcssJitProps from 'postcss-jit-props';
-import preprocess from 'svelte-preprocess';
-import mdsvexConfig from './mdsvex.config.js';
 
 const $filepath = dirname(fileURLToPath(import.meta.url)).replace(/\\/g, '/');
 const $src = path.resolve($filepath, './src');
@@ -19,24 +16,17 @@ const config = {
 
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
-	preprocess: [mdsvex(mdsvexConfig), preprocess({postcss:{plugins:[
-	// 	postcssJitProps({files: [
-	// 	path.resolve($filepath, 'node_modules/open-props/open-props.min.css')
-	// ]})
-]}}), 
-	vitePreprocess({style: {
-		postcss: true,
-		// css: {
-		// 	postcss: {
-		// 		plugins: [
-		// 			postcssEasings
-		// 		]
-		// 	}
-		// }
-	}})],
+	preprocess: [
+		mdsvex(mdsvexConfig),
+		vitePreprocess({
+			style: {
+				postcss: true
+			}
+		})
+	],
 
 	kit: {
-		adapter: vercel({runtime: 'nodejs20.x'}),
+		adapter: vercel({ runtime: 'nodejs20.x' }),
 		alias: {
 			$routes,
 			$actions: path.resolve($lib, './actions'),
@@ -48,11 +38,11 @@ const config = {
 			$tooltip: path.resolve($lib, './tooltip'),
 			$wrappers: path.resolve($lib, './wrappers')
 		}
-	},
-
-	vitePlugin: {
-		inspector: true
 	}
+
+	// vitePlugin: {
+	// 	inspector: true
+	// }
 };
 
 export default config;
