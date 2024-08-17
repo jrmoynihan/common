@@ -102,7 +102,7 @@
 	}
 </script>
 
-{#snippet default_tab_button({ title })}
+{#snippet default_tab_button({ title }: { title: string })}
 	<span>{title}</span>
 {/snippet}
 
@@ -154,12 +154,14 @@
 						{...tab_content_transition_parameters}
 					/>
 				{:else if 'component' in tab && 'props' in tab}
+					{@const { component: C } = tab}
 					<TransitionNativeRunes
 						bind:this={transitions[i]}
 						visible={i === 0}
 						{...tab_content_transition_parameters}
 					>
-						<svelte:component this={tab.component} {...tab.props} />
+						<!-- <svelte:component this={tab.component} {...tab.props} /> -->
+						<C {...tab.props}></C>
 					</TransitionNativeRunes>
 				{/if}
 			</div>
