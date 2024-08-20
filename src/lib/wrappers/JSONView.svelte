@@ -94,7 +94,7 @@
 	}
 </script>
 
-{#snippet bracket(position: 'start' | 'end' | 'both', empty : boolean, collapsed: boolean)}
+{#snippet bracket(position: 'start' | 'end' | 'both', empty: boolean, collapsed: boolean)}
 	<button
 		class="_jsonBkt"
 		class:empty
@@ -198,7 +198,8 @@
 		border-left: var(--jsonBorderLeft, 1px dotted);
 	}
 	:where(._jsonListItem) {
-		text-align: justify;
+		overflow: auto;
+		padding: 2px;
 	}
 	:where(._jsonBkt) {
 		appearance: none;
