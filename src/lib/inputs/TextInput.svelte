@@ -19,15 +19,13 @@
 		oncancel?: FormEventHandler<HTMLInputElement>;
 		/** A callback that runs when the input is changed */
 		oninput?: FormEventHandler<HTMLInputElement>;
-	};
+	}
 </script>
 
 <script lang="ts">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
-	import type {
-		FormEventHandler
-	} from 'svelte/elements';
+	import type { FormEventHandler } from 'svelte/elements';
 	import Input, { type InputProps } from './Input.svelte';
 	import InputButton from './InputButton.svelte';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
@@ -100,13 +98,12 @@
 	}
 
 	let valid = $state(true);
-	
 
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
-<InputLabel bind:label_element bind:valid {id} {...label_props} >
-	<Input 
+<InputLabel bind:label_element bind:valid {id} {...label_props}>
+	<Input
 		bind:dynamic_input_styles
 		bind:input_element
 		bind:value
@@ -120,45 +117,34 @@
 		type={'text'}
 		{...input_attributes}
 	/>
-		{#key placeholder_props}
-			<Placeholder bind:placeholder_element {...placeholder_props} />
-		{/key}
-		{#if children}
-			{@render children()}
-		{/if}
+	{#key placeholder_props}
+		<Placeholder bind:placeholder_element {...placeholder_props} />
+	{/key}
+	{#if children}
+		{@render children()}
+	{/if}
 	<div class="btn-container" class:valid class:show_confirm class:value>
 		{#if show_confirm}
-			<InputButton dynamic_styles={dynamic_button_styles} classes={`confirm-btn ${valid ? 'valid': ''} ${value ? 'value' : ''}`} tabindex={value && valid ? 0 : -1} onclick={handle_click} disabled={!value} icon_props={{icon: faCheck, color: 'var(--text-input-button-color, buttontext)'}}></InputButton>
-			<!-- <button
-				use:dynamicStyle={dynamic_button_styles}
-				class="confirm-btn"
-				class:valid
+			<InputButton
+				dynamic_styles={dynamic_button_styles}
+				classes={`confirm-btn ${valid ? 'valid' : ''} ${value ? 'value' : ''}`}
 				tabindex={value && valid ? 0 : -1}
-				class:value
 				onclick={handle_click}
 				disabled={!value}
-			>
-				<Fa icon={faCheck} color="var(--text-input-button-color, buttontext)" />
-			</button> -->
+				icon_props={{ icon: faCheck, color: 'var(--text-input-button-color, buttontext)' }}
+			></InputButton>
 		{/if}
 		{#if show_cancel}
-			<InputButton dynamic_styles={dynamic_button_styles} classes={`cancel-btn ${valid ? 'valid': ''} ${value ? 'value' : ''}`} tabindex={value ? 0 : -1} onclick={cancel} disabled={!value} icon_props={{icon: faX, color: 'var(--text-input-button-color, buttontext)'}}></InputButton>
-			<!-- <button
-				use:dynamicStyle={dynamic_button_styles}
-				class="cancel-btn"
-				class:no-confirm={!show_confirm || !valid}
+			<InputButton
+				dynamic_styles={dynamic_button_styles}
+				classes={`cancel-btn ${valid ? 'valid' : ''} ${value ? 'value' : ''}`}
 				tabindex={value ? 0 : -1}
-				class:value
 				onclick={cancel}
 				disabled={!value}
-			>
-				<Fa icon={faX} color="var(--text-input-button-color, buttontext)" />
-			</button> -->
+				icon_props={{ icon: faX, color: 'var(--text-input-button-color, buttontext)' }}
+			></InputButton>
 		{/if}
 	</div>
-	<!-- {#if invalid_msg_visible && invalid_msg}
-		<span transition:slide class="invalid-msg">{invalid_msg}</span>
-	{/if} -->
 </InputLabel>
 
 <style>
@@ -177,7 +163,7 @@
 		place-self: center end;
 		height: 100%;
 		grid-template-rows: repeat(auto-fit, minmax(0, 1fr));
-		grid-template-areas: 
+		grid-template-areas:
 			'confirm'
 			'cancel';
 		transition: all 300ms ease;
@@ -233,9 +219,8 @@
 			justify-self: end;
 			margin-right: 0;
 			aspect-ratio: unset;
-
 		}
-		
+
 		:global(.confirm-btn) {
 			grid-area: confirm;
 			transform-origin: top right;
@@ -247,8 +232,6 @@
 			scale: 1 0;
 			padding: 0;
 			height: 0;
-			
 		}
-
 	}
 </style>
