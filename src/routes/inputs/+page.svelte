@@ -10,51 +10,55 @@
 	import type { PageData } from './$types';
 
 	let { data } = $props();
-	const { datalist, select_options, date_inputs } : PageData = data;
-	const name_list = datalist.map(d => d.label);
-	let selected_fruit: typeof datalist[0] | undefined = $state();
-	let selected_option: typeof select_options[0] | undefined = $state();
+	const { datalist, select_options, date_inputs }: PageData = data;
+	const name_list = datalist.map((d) => d.label);
+	let selected_fruit: (typeof datalist)[0] | undefined = $state();
+	let selected_option: (typeof select_options)[0] | undefined = $state();
 	let selected_fruit_name: string | undefined = $state();
 	let selected_number = $state<number>(1);
 	let valid_email: string = $state('');
-	const numeric_options = [ 1, 2, 3]
+	const numeric_options = [1, 2, 3];
 	const double_number_context = setDerivedContext('number', selected_number * 2);
-
 </script>
 
 <div class="inputs-container">
 	<section class="text-inputs">
 		<h2>Text Inputs</h2>
 		<TextInput
-			placeholder_props={{ text: "required", dynamic_styles: {
-				invalid_styles: 'color: var(--text);',
-				valid_styles: 'color: var(--text);'
-			} }}
+			placeholder_props={{
+				text: 'required',
+				dynamic_styles: {
+					invalid_styles: 'color: var(--text);',
+					valid_styles: 'color: var(--text);'
+				}
+			}}
 			show_confirm={false}
 			label_props={{
-				invalid_text: "Please enter text between 3-16 characters.",
-				text: "Labels for Inputs",
-				tooltip_props: { content: `I'm a plain text input with a cancel button!`, position: 'top'},
+				invalid_text: 'Please enter text between 3-16 characters.',
+				text: 'Labels for Inputs',
+				tooltip_props: { content: `I'm a plain text input with a cancel button!`, position: 'top' }
 			}}
 			dynamic_input_styles={{
 				invalid_styles: 'background: oklch(70% 0.1 30 / 0.4);',
 				valid_styles: 'background: oklch(70% 0.1 130 / 0.3);'
 			}}
-			autocomplete='off'
+			autocomplete="off"
 			required={true}
-			pattern={"[a-z]{3,16}"}
+			pattern={'[a-z]{3,16}'}
 			--input-invalid-outline="var(--accent) 2px solid"
-			/>
+		/>
 		<TextInput
 			bind:value={valid_email}
 			placeholder_props={{ text: 'john@example.com' }}
 			label_props={{
-				invalid_text: "Invalid email address.",
-				text: "Email address:",
-				tooltip_props: { content: `I'm an email input that hides the confirm button when the email is invalid!`}
+				invalid_text: 'Invalid email address.',
+				text: 'Email address:',
+				tooltip_props: {
+					content: `I'm an email input that hides the confirm button when the email is invalid!`
+				}
 			}}
-			type='email'
-			autocomplete='email'
+			type="email"
+			autocomplete="email"
 			required={true}
 			onconfirm={() => {
 				alert(`Email confirmed!  ${valid_email}`);
@@ -62,14 +66,14 @@
 			--input-invalid-outline="var(--accent) 2px solid"
 		/>
 
-		<DatalistTextInput 
-			datalist={datalist}
+		<DatalistTextInput
+			{datalist}
 			value_key={'icon'}
 			bind:value={selected_fruit_name}
 			required={true}
 			onconfirm={() => alert(`Selected fruit:  ${selected_fruit_name}`)}
-			placeholder_props={{text: 'Pick a fruit'}} 
-			label_props={{text: "Datalist Text Input:", invalid_text: "Please enter a valid fruit."}}
+			placeholder_props={{ text: 'Pick a fruit' }}
+			label_props={{ text: 'Datalist Text Input:', invalid_text: 'Please enter a valid fruit.' }}
 			--input-invalid-outline="var(--accent) 2px solid"
 		/>
 	</section>
@@ -92,20 +96,20 @@
 	<section class="select-inputs">
 		<h2>Select Inputs</h2>
 		<Select
-			input_label_props={{ text: "Select an option" }}
+			input_label_props={{ text: 'Select an option' }}
 			options={select_options}
 			placeholder_props={{ text: 'pick one...' }}
 			required={true}
 		/>
 		<Select
-			input_label_props={{ text: "Select an option" }}
+			input_label_props={{ text: 'Select an option' }}
 			options={select_options}
 			placeholder_props={{ text: 'pick one...' }}
 			required={true}
 			bind:value={selected_option}
 		/>
 		<Select
-			input_label_props={{ text: "Select a fruit" }}
+			input_label_props={{ text: 'Select a fruit' }}
 			options={datalist}
 			placeholder_props={{ text: 'pick a fruit...' }}
 			bind:value={selected_fruit}
@@ -115,6 +119,11 @@
 				<option value={item}>{item}</option>
 			{/snippet}
 		</Select>
+		<Select bind:value={selected_fruit} options={datalist}>
+			{#snippet option_snippet(fruit)}
+				<option value={fruit}>{fruit.label}</option>
+			{/snippet}
+		</Select>
 	</section>
 
 	<section class="checkbox-inputs">
@@ -122,10 +131,13 @@
 		<Checkbox>
 			{#snippet label()}
 				<p>Labeled Checkbox</p>
-				<strong style="display: grid; place-content: center; color: var(--background); background-color: var(--accent); padding: 0.5rem">with custom html!</strong>
+				<strong
+					style="display: grid; place-content: center; color: var(--background); background-color: var(--accent); padding: 0.5rem"
+					>with custom html!</strong
+				>
 			{/snippet}
 		</Checkbox>
-		<Checkbox disabled label={"Disabled Checkbox"}/>
+		<Checkbox disabled label={'Disabled Checkbox'} />
 		<Checkbox />
 	</section>
 	<section class="radio-inputs">
@@ -135,7 +147,7 @@
 				<span class="selected-fruit">{item?.icon}</span>
 			{/snippet}
 		</RadioGroup>
-		<RadioGroup items={select_options} bind:group={selected_number}/>
+		<RadioGroup items={select_options} bind:group={selected_number} />
 	</section>
 </div>
 
@@ -165,11 +177,11 @@
 		justify-self: center;
 		gap: 1rem;
 	}
-	.radio-inputs{
+	.radio-inputs {
 		display: flex;
 		gap: 1rem;
 	}
-	.date-inputs{
+	.date-inputs {
 		@layer input_label {
 			:global(label) {
 				max-width: 14em;
