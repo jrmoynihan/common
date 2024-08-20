@@ -107,7 +107,7 @@
 			margin: 0;
 			border-radius: var(--input-border-radius, 1em);
 			border-radius: var(--input-border-radius, 1rem);
-			border: var(--input-border, initial);
+			border: var(--input-border, inset light-dark(rgb(118, 118, 118), rgb(133, 133, 133)));
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
@@ -125,10 +125,10 @@
 			/* max-height: max-content;  // causes issues on Safari */
 
 			/** Moved some of the placeholder styling from the input to the TextLabel component */
-			&:invalid {
+			&:user-invalid {
 				outline: var(--input-invalid-outline, intitial);
 			}
-			&:valid:focus-visible {
+			&:user-valid:focus-visible {
 				outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
 			}
 
