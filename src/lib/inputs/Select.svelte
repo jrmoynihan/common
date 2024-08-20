@@ -1,4 +1,4 @@
-<script lang=ts context=module>
+<script lang="ts" context="module">
 	export interface SelectOption {
 		value: unknown;
 		label?: string | null;
@@ -6,7 +6,7 @@
 	}
 
 	export interface SelectOptionGroup {
-		options: SelectOption[];
+		options: SelectOption[] | SelectOptionGroup[];
 		label?: string | null;
 	}
 
@@ -15,17 +15,17 @@
 	export interface SelectProps<T> extends HTMLSelectAttributes {
 		value?: T;
 		id?: string | null;
-		/** A snippet of HTML for the `<optgroup>` of the `<select>`.*/
-		group_snippet?: Snippet<[any]>,
+		/** A snippet of HTML for the `<optgroup>` of the `<select>`.  This should also include logic for how to render a single `<option>` vs subgroups. */
+		group_snippet?: Snippet<[any]>;
 		/** A snippet for how to render a single `<option>` in the `<select>`.*/
-		option_snippet?: Snippet<[T]>,
-		options?: SelectOptionList<T>,
+		option_snippet?: Snippet<[SelectOption | T]>;
+		options?: SelectOptionList<T>;
 		dynamic_select_styles?: DynamicStyleParameters;
 		input_label_props?: InputLabelProps;
 		value_key?: string;
 		label_key?: string;
 		label?: Snippet<[any]>;
-		children?: Snippet,
+		children?: Snippet;
 		placeholder_props?: PlaceholderProps;
 	}
 </script>
@@ -36,13 +36,13 @@
 	import type { HTMLSelectAttributes } from 'svelte/elements';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
 	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
-	
+
 	let {
 		value = $bindable(),
 		dynamic_select_styles = $bindable(),
 		options = [],
-		option_snippet = option,
-		group_snippet = group,
+		option_snippet = default_option,
+		group_snippet = default_group,
 		children,
 		input_label_props,
 		placeholder_props = {},
@@ -50,13 +50,12 @@
 		label_key = 'label',
 		id = crypto.randomUUID(),
 		...select_attributes
-		
-	} : SelectProps<T>  = $props();
+	}: SelectProps<T> = $props();
 
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
-{#snippet option(item : SelectOption | T)}
+{#snippet default_option(item: SelectOption | T)}
 	{@const is_object = item instanceof Object}
 	{@const value = is_object && 'value' in item ? item.value : item}
 	{@const label = is_object && 'label' in item ? item.label : item}
@@ -66,16 +65,16 @@
 	</option>
 {/snippet}
 
-{#snippet group(o: SelectOptionGroup | SelectOption)}
-	{#if 'options' in o}
-		<optgroup label={o.label}>
+{#snippet default_group(o: SelectOptionGroup | SelectOption)}
+	<optgroup label={o.label}>
+		{#if 'options' in o}
 			{#each o.options as suboption}
-				{@render group(suboption)}
+				{@render default_group(suboption)}
 			{/each}
-		</optgroup>
-	{:else}
-		{@render option(o)}
-	{/if}
+		{:else}
+			{@render option_snippet(o)}
+		{/if}
+	</optgroup>
 {/snippet}
 
 <InputLabel {id} {...input_label_props}>
@@ -86,10 +85,10 @@
 		class:value
 		{id}
 		{...select_attributes}
-	>	
+	>
 		{#if children}
 			{@render children()}
-		{:else if group_snippet && options[0] instanceof Object}
+		{:else if group_snippet && options[0] instanceof Object && 'options' in options[0]}
 			{#each options as opt}
 				{@render group_snippet(opt)}
 			{/each}
@@ -122,12 +121,12 @@
 		// -webkit-appearance: initial;
 		// height: 100%;
 		// max-height: max-content;  /** Causes issues on Safari */
-		
+
 		// Different rules that only get applied to Safari:
-		
+
 		background-color: var(--text-input-background, revert);
 
-		&:focus-visible{
+		&:focus-visible {
 			outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
 		}
 
@@ -135,5 +134,4 @@
 			outline: var(--input-invalid-outline, initial);
 		}
 	}
-
 </style>
