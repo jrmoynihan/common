@@ -56,7 +56,7 @@
 
 	const id = crypto.randomUUID();
 	let transitions = $state<TransitionNativeRunes[]>([]);
-	let selected_tab = $state(tabs[0]);
+	let selected_tab = $state.raw(tabs[0]);
 
 	function move_focus_to_tab(e: KeyboardEvent) {
 		const i = get_index_of_tab(selected_tab);
@@ -84,10 +84,12 @@
 		const focus_tab = document.getElementById(`tab-${new_i}-${id}`);
 		focus_tab?.focus();
 	}
+
 	function get_index_of_tab(tab: ContentTab | ComponentTab<SvelteComponent> | undefined) {
 		if (!tab) return 0;
-		return tabs.findIndex((t) => $state.is(t, tab));
+		return tabs.findIndex((t) => t === tab);
 	}
+
 	function select_tab(tab: ContentTab | ComponentTab<SvelteComponent>) {
 		if (selected_tab) {
 			// Toggle off/out the old tab
@@ -123,11 +125,11 @@
 			{#each tabs as tab, i (tab)}
 				<button
 					id={`tab-${i}-${id}`}
-					tabindex={$state.is(tab, selected_tab) ? 0 : -1}
+					tabindex={tab === selected_tab ? 0 : -1}
 					onkeydown={move_focus_to_tab}
 					type="button"
 					role="tab"
-					aria-selected={$state.is(tab, selected_tab)}
+					aria-selected={tab === selected_tab}
 					aria-controls={`tabpanel-${i}-${id}`}
 					onclick={() => select_tab(tab)}
 					{...tab_button_attributes}
@@ -142,7 +144,7 @@
 			<div
 				id={`tabpanel-${i}-${id}`}
 				role="tabpanel"
-				tabindex={selected_tab === tab ? 0 : -1}
+				tabindex={tab === selected_tab ? 0 : -1}
 				aria-labelledby={`tab-${i}-${id}`}
 				{...tab_panel_attributes}
 			>
