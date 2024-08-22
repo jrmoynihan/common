@@ -7,7 +7,7 @@ import { ErrorLog } from './logging.js';
 ```
 const obj_a : { a: number} = { a: 0 }
 const obj_b : { b: string } = { b: 'hello' }
-let obj_c : PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b : 'World'}
+const obj_c : PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b : 'World'}
 // typeof obj_c is now inferred as `{ a: number, b: string }`, instead of the less readable `{ a: number } & { b: string }`
 ```
 
@@ -15,9 +15,41 @@ https://twitter.com/mattpocockuk/status/1622730173446557697
 */
 export type PrettifyIntersection<T> = { [K in keyof T]: T[K] } & {};
 
+/** From `T`, makes all properties within union `K` optional
+* 
+@example
+```
+const obj_a : { a: number, b: string} = { a: 0, b: 'one' }
+const obj_b : PartiallyOptional<typeof obj_a, 'a'> = { b : 'World'}
+// typeof obj_b is now inferred as `{ a?: number | undefined, b: string }`
+```
+*/
+export type PartiallyOptional<T, K extends keyof T> = PrettifyIntersection<
+	Pick<Partial<T>, K> & Omit<T, K>
+>;
+
+/** From `T`, makes all properties within union `K` required, but all others optional
+* 
+@example
+```
+const obj_a : { a: number, b: string } = { a: 0, b: 'one' }
+const obj_b : PartiallyRequired<typeof obj_a, 'a'> = { a: 1 }
+// typeof obj_b is now inferred as `{ a: number, b?: string | undefined }`
+```
+*/
+export type PartiallyRequired<T, K extends keyof T> = PrettifyIntersection<
+	Pick<T, K> & Partial<Omit<T, K>>
+>;
+
 const obj_a: { a: number } = { a: 0 };
 const obj_b: { b: string } = { b: 'hello' };
-let obj_c: PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b: 'World' };
+const obj_c: PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b: 'World' };
+const obj_d: PartiallyRequired<typeof obj_c, 'a'> = {
+	a: 1
+};
+const obj_e: PartiallyOptional<typeof obj_c, 'a'> = {
+	b: 'one'
+};
 
 /**
  * Capitalize the first letter of a string
