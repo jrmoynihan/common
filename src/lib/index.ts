@@ -79,8 +79,10 @@ export { willChange } from './actions/will-change.js';
 export {
 	capitalize,
 	clamp,
+	createMediaQuery,
 	deKebab,
 	delay,
+	enumerate_runed_properties,
 	flattenObjectRecursively,
 	getAncestors,
 	getMax,
@@ -94,7 +96,10 @@ export {
 	modulo,
 	removeSpecialCharacters,
 	splitCamelCase,
-	splitSnakeCase
+	splitSnakeCase,
+	type PartiallyOptional,
+	type PartiallyRequired,
+	type PrettifyIntersection
 } from './functions/helpers.svelte.js';
 export {
 	delete_local_storage_item,
@@ -102,14 +107,14 @@ export {
 	set_local_storage_item
 } from './functions/local-storage.js';
 export {
+	all_icons,
+	default_log_style,
 	// ErrorAndToast,
 	ErrorLog,
 	Log,
 	// LogAndToast,
 	SuccessLog,
 	WarningLog,
-	all_icons,
-	default_log_style,
 	// type ErrorAndToastOptions,
 	type ErrorLogOptions,
 	// type LogAndToastOptions,
@@ -124,8 +129,8 @@ export {
 	setWritableStoreContext as setWritableContext
 } from './functions/store.svelte.js';
 export {
-	NavigationLink,
 	make_subroute_nav_links,
+	NavigationLink,
 	shouldLayoutTransitionOnNavigation,
 	type IconLayer
 } from './navigation/nav-functions.js';
@@ -150,8 +155,8 @@ export {
 	LightDarkToggle,
 	LinkableAnchorHeading,
 	MiniDialog,
-	NavLink,
 	Navigation,
+	NavLink,
 	NumericInput,
 	RadioGroup,
 	ResetButton,
@@ -186,8 +191,8 @@ export {
 	type LightDarkToggleProps,
 	type LinkableAnchorHeadingProps,
 	type MiniDialogProps,
-	type NavLinkProps,
 	type NavigationProps,
+	type NavLinkProps,
 	type NumericInputProps,
 	type RadioGroupProps,
 	type ScrollProgressProps,
