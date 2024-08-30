@@ -108,22 +108,18 @@
 		box-sizing: border-box;
 	}
 	select {
+		// appearance: base-select; // New CSS if you want custom selects
 		box-sizing: border-box;
 		grid-area: input;
 		padding: var(--text-input-padding, 1.25em);
 		color: var(--text-input-color, inherit);
-		background-color: var(--text-input-background, revert);
 		width: 100%;
 		margin: 0;
 		border-radius: var(--text-input-border-radius, 1rem);
 		border: var(--text-input-border, inset);
 		min-height: 3ch;
-		// -webkit-appearance: initial;
-		// height: 100%;
-		// max-height: max-content;  /** Causes issues on Safari */
 
 		// Different rules that only get applied to Safari:
-
 		background-color: var(--text-input-background, revert);
 
 		&:focus-visible {
