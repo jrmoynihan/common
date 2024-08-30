@@ -43,13 +43,15 @@ export type PartiallyRequired<T, K extends keyof T> = PrettifyIntersection<
 
 const obj_a: { a: number } = { a: 0 };
 const obj_b: { b: string } = { b: 'hello' };
-const obj_c: PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b: 'World' };
-const obj_d: PartiallyRequired<typeof obj_c, 'a'> = {
+const intersected: PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b: 'World' };
+const partially_required: PartiallyRequired<typeof intersected, 'a'> = {
 	a: 1
 };
-const obj_e: PartiallyOptional<typeof obj_c, 'a'> = {
+const not_required_from_parent: PartiallyOptional<typeof intersected, 'a'> = {
 	b: 'one'
 };
+const totally_optional: { a?: number; b?: string } = {};
+const required_by_union: PartiallyRequired<typeof totally_optional & { a: number }, 'a'> = { a: 0 };
 
 /**
  * Capitalize the first letter of a string
