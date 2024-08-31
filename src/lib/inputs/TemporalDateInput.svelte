@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface DateInputProps extends Omit<HTMLInputAttributes, 'date' | 'min' | 'max'> {
 		date?: Temporal.ZonedDateTime;
 		min?: Temporal.ZonedDateTime;

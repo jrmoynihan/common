@@ -1,14 +1,11 @@
-<script context="module" lang="ts">
-	import type { HTMLAttributes } from "svelte/elements";
+<script module lang="ts">
+	import type { HTMLAttributes } from 'svelte/elements';
 
-	export interface CodeProps extends HTMLAttributes<HTMLElement> {
-		
-	}
+	export interface CodeProps extends HTMLAttributes<HTMLElement> {}
 </script>
+
 <script lang="ts">
-	let {
-		children
-	} : CodeProps = $props();
+	let { children }: CodeProps = $props();
 </script>
 
 <code class="my-code">

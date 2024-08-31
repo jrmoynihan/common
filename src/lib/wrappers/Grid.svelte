@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	export interface GridProps extends Omit<HTMLAttributes<HTMLDivElement>, 'class'> {

@@ -1,4 +1,4 @@
-<script context='module' lang='ts'>
+<script module lang='ts'>
     export interface MiniDialogProps<T> extends Omit<FullDialogProps<T>, 'dialog'> {
         dialog?: FullDialog<T>;
     }

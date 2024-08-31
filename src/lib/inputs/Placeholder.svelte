@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface PlaceholderProps {
 		text?: string;
 		dynamic_styles?: DynamicStyleParameters;

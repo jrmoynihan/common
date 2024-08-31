@@ -1,18 +1,14 @@
-<script context="module" lang="ts">
-	import type { HTMLAnchorAttributes } from "svelte/elements";
+<script module lang="ts">
+	import type { HTMLAnchorAttributes } from 'svelte/elements';
 
 	export interface ExternalLinkProps extends HTMLAnchorAttributes {
 		url: URL;
-		prefetch?: boolean
+		prefetch?: boolean;
 	}
 </script>
+
 <script lang="ts">
-	let {
-		url,
-		prefetch = true,
-		children,
-		...anchor_attributes
-	} : ExternalLinkProps = $props();
+	let { url, prefetch = true, children, ...anchor_attributes }: ExternalLinkProps = $props();
 </script>
 
 <mark>

@@ -38,7 +38,7 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 	</style>
 	```
 -->
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import { browser } from '$app/environment';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	type Theme = 'light' | 'dark';

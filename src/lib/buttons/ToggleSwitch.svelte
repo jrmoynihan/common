@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface ToggleSwitchProps extends HTMLInputAttributes {
 		/** The checked state of the toggle. Defaults to `false`. */
 		checked?: boolean;

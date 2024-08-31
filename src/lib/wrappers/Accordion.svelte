@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface AccordionProps extends HTMLButtonAttributes {
 		/** A snippet to provide a custom summary section instead of just passing the `summary_text`. */
 		summary?: Snippet | string;

@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface NumericInputProps extends InputProps {
 		input_element?: HTMLInputElement;
 		value?: string | number | string[] | null;
@@ -56,7 +56,7 @@
 	}: NumericInputProps = $props();
 </script>
 
-{#snippet default_spinner_button({icon, size, ...button_props}: SpinnerButton<T>)}
+{#snippet default_spinner_button({ icon, size, ...button_props }: SpinnerButton<T>)}
 	<InputButton {...button_props}>
 		<Fa
 			{icon}

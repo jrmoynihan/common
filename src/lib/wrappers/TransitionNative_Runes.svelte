@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface TransitionNativeProps {
 		/** Will trigger the CSS transition when this value changes. */
 		visible?: boolean;

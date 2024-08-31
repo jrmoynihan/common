@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface NavLinkProps extends HTMLAnchorAttributes {
 		/** The navigation link to display. */
 		nav_link: NavigationLink;

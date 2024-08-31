@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface TextInputProps extends InputProps {
 		input_element?: HTMLInputElement;
 		value?: unknown;

@@ -16,7 +16,7 @@ export function getReadableContext<T>(key: string): Readable<T> {
 
 ```svelte
 <!-- ParentComponent.svelte -->
-<script lang="ts" context="module">
+<script lang="ts" module>
 	export interface Pet {
 		name: string;
 		type: string;

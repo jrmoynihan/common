@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface DatalistTextInputProps extends TextInputProps {
 		datalist: string[] | number[] | Record<string, unknown>[];
 		value?: unknown;

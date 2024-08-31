@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface TabsProps {
 		tabs?: (ContentTab | ComponentTab<SvelteComponent>)[];
 		/** A replacement Snippet for the default tab button */

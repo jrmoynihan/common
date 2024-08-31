@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
 	import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 
 	export interface InputProps extends HTMLInputAttributes {

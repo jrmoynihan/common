@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	export interface JSONViewProps<T> {
 		/**  object or array to display */
 		obj: Object | Array<T>;
