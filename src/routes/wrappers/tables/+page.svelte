@@ -88,10 +88,16 @@
 		};
 	};
 
-	let data = $state(names.map((name) => new Person(name)));
+	let data = $state<Person[]>(names.map((name) => new Person(name)));
+	interface PersonDataCell<T> {
+		datum: T;
+		key: keyof T;
+		value: any;
+		index: number;
+	}
 </script>
 
-{#snippet custom_data_cell({datum, key}: {datum: Person, key: string})}
+{#snippet custom_data_cell({ datum, key }: PersonDataCell<Person>)}
 	{#if key === 'birthday'}
 		<td>
 			<input
@@ -126,6 +132,13 @@
 		</td>
 	{/if}
 {/snippet}
+{#snippet footer()}
+	<tfoot>
+		<tr>
+			<td colspan="5">This is a long footer row!</td>
+		</tr>
+	</tfoot>
+{/snippet}
 
 <div class="tables">
 	<Table
@@ -134,6 +147,7 @@
 		--table-border-radius={'1rem'}
 		data_cell={custom_data_cell}
 		omitted_keys={['id']}
+		{footer}
 	/>
 </div>
 
