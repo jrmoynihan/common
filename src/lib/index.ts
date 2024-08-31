@@ -52,7 +52,13 @@ import FullDialog, { type FullDialogProps } from '$wrappers/FullDialog.svelte';
 import Grid, { type GridProps } from '$wrappers/Grid.svelte';
 import JsonView, { type JSONViewProps } from '$wrappers/JSONView.svelte';
 import MiniDialog, { type MiniDialogProps } from '$wrappers/MiniDialog.svelte';
-import Table, { type TableProps } from '$wrappers/Table.svelte';
+import Table, {
+	type DataCell,
+	type DataRow,
+	type HeaderCell,
+	type SortColumn,
+	type TableProps
+} from '$wrappers/Table.svelte';
 import TransitionNative_Runes, {
 	type TransitionNativeProps
 } from '$wrappers/TransitionNative_Runes.svelte';
@@ -177,7 +183,9 @@ export {
 	type AnchorHeadingProps,
 	type ButtonProps,
 	type CheckboxProps,
+	type DataCell,
 	type DatalistOption,
+	type DataRow,
 	type DateInputProps,
 	type DialogProps,
 	type DragAnchorProps,
@@ -185,6 +193,7 @@ export {
 	type FlexProps,
 	type FullDialogProps,
 	type GridProps,
+	type HeaderCell,
 	type InputButtonProps,
 	type InputLabelProps,
 	type JSONViewProps,
@@ -200,6 +209,7 @@ export {
 	type SelectOptionGroup,
 	type SelectOptionList,
 	type SelectProps,
+	type SortColumn,
 	type TableProps,
 	type TabsProps,
 	type TextInputProps,
