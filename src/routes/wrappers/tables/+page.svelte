@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enumerate_runed_properties } from '$functions/helpers.svelte';
-	import Table from '$wrappers/Table.svelte';
+	import Table, { type DataCell } from '$wrappers/Table.svelte';
 	import { fly } from 'svelte/transition';
 
 	// import { Date } from 'svelte/reactivity';
@@ -89,15 +89,9 @@
 	};
 
 	let data = $state<Person[]>(names.map((name) => new Person(name)));
-	interface PersonDataCell<T> {
-		datum: T;
-		key: keyof T;
-		value: any;
-		index: number;
-	}
 </script>
 
-{#snippet custom_data_cell({ datum, key }: PersonDataCell<Person>)}
+{#snippet custom_data_cell({ datum, key }: DataCell<Person>)}
 	{#if key === 'birthday'}
 		<td>
 			<input

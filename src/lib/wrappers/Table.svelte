@@ -1,4 +1,6 @@
 <script module lang="ts">
+	import type { HTMLAttributes, HTMLTableAttributes } from 'svelte/elements';
+
 	export interface DataRow<T> {
 		datum: T;
 		index: number;
@@ -13,11 +15,11 @@
 	export interface DataCell<T> extends HeaderCell<T> {
 		value: any;
 	}
-	export interface TableProps<T> {
+	export interface TableProps<T> extends HTMLTableAttributes {
 		data?: T[];
-		/** An snippet representing the table header row(s) (a <tr> element to be rendered within <thead>) */
+		/** An snippet representing the table header row(s) (e.g. a `<tr>` element to be rendered within `<thead>`) */
 		header_row?: Snippet<[T]>;
-		/** A snippet representing the table header cells (`<th>` elements within `<thead>` `<tr>` rows) */
+		/** A snippet representing the table header cells and how they should be rendered (`<th>` elements within `<thead>` `<tr>` rows).  The default excludes properties on the object that are `typeof === 'function'` and allows capitalization of headers, and then renders the `th` snippet.  */
 		header_cell?: Snippet<[HeaderCell<T>]>;
 		/** An snippet representing the table data row(s) */
 		data_row?: Snippet<[DataRow<T>]>;
@@ -49,6 +51,14 @@
 		preceding_data_cells?: Snippet<[DataRow<T>]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<tbody>`, after the keys of the `data` array.  Wrap your items in a `<td>` within the snippet.  Each item will have access to the `datum` and `index` properties. */
 		subsequent_data_cells?: Snippet<[DataRow<T>]> | null;
+		/** A snippet that will render an `<th>` within the `<thead>` and any snippets passed to it.  This element will receive the `table_header_cell_attributes` spread prop. */
+		th?: Snippet<[any]>;
+		/** The attributes to be applied to the `<tbody>` element */
+		table_body_attributes?: HTMLAttributes<HTMLTableSectionElement>;
+		/** The attributes to be applied to the `<thead>` element */
+		table_header_attributes?: HTMLAttributes<HTMLTableSectionElement>;
+		/** The attributes to be applied to `<th>` elements */
+		table_header_cell_attributes?: HTMLAttributes<HTMLTableCellElement>;
 	}
 </script>
 
@@ -82,7 +92,12 @@
 		preceding_header_cells = null,
 		subsequent_header_cells = null,
 		preceding_data_cells = null,
-		subsequent_data_cells = null
+		subsequent_data_cells = null,
+		th = default_th,
+		table_body_attributes,
+		table_header_attributes,
+		table_header_cell_attributes,
+		...rest
 	}: TableProps<T> = $props();
 
 	// Assign icons for sorting; A-Z icons for strings, 1-9 icons for numbers, arrow icons for everything else
@@ -208,6 +223,24 @@
 	</tr>
 {/snippet}
 
+{#snippet default_th(content: Snippet)}
+	<th scope="col" {...table_header_cell_attributes}>
+		{@render content()}
+	</th>
+{/snippet}
+{#snippet normal_th_content(key: string, index: number)}
+	{key}
+	{@render sort_button?.({ key, index })}
+{/snippet}
+{#snippet capital_id_th_content(key: string, index: number)}
+	{key}
+	{@render sort_button?.({ key: 'id' as keyof T, index })}
+{/snippet}
+{#snippet capitalized_th_content(key: string, index: number)}
+	{capitalize_all_words(key)}
+	{@render sort_button?.({ key, index })}
+{/snippet}
+
 {#snippet default_data_cell({ datum, key, value, index }: DataCell<T>)}
 	<td>{value}</td>
 {/snippet}
@@ -215,21 +248,24 @@
 	{#if typeof key === 'string' && !omitted_keys?.includes(key) && typeof datum[key] !== 'function'}
 		{#if capitalize_headers}
 			{#if key === 'id'}
-				<th scope="col">
+				{@render th(capital_id_th_content(key, index))}
+				<!-- <th scope="col">
 					ID
 					{@render sort_button?.({ key: 'id' as keyof T, index })}
-				</th>
+				</th> -->
 			{:else}
-				<th scope="col">
+				{@render th(capitalized_th_content(key, index))}
+				<!-- <th scope="col">
 					{capitalize_all_words(key)}
 					{@render sort_button?.({ key, index })}
-				</th>
+				</th> -->
 			{/if}
 		{:else}
-			<th scope="col">
+			{@render th(normal_th_content(key, index))}
+			<!-- <th scope="col">
 				{key}
 				{@render sort_button?.({ key, index })}
-			</th>
+			</th> -->
 		{/if}
 	{/if}
 {/snippet}
@@ -242,18 +278,18 @@
 	</tfoot>
 {/snippet}
 
-<table style:--caption-side={caption_side}>
+<table style:--caption-side={caption_side} {...rest}>
 	{#if caption_text}
 		{@render caption?.(caption_text)}
 	{/if}
 
 	{#if data.length > 0}
-		<thead>
+		<thead {...table_header_attributes}>
 			{@render header_row?.(data[0])}
 		</thead>
 	{/if}
 	<!-- TODO: Add support for virtual list -->
-	<tbody>
+	<tbody {...table_body_attributes}>
 		{#each data as datum, index (datum)}
 			{@render data_row?.({ datum, index })}
 		{/each}
