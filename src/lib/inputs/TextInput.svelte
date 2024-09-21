@@ -33,6 +33,7 @@
 
 	let {
 		input_element = $bindable(),
+		valid = $bindable(true),
 		value = $bindable(),
 		id = crypto?.randomUUID(),
 		show_confirm = true,
@@ -96,8 +97,6 @@
 		onblur?.(e);
 		placeholder_element?.dispatchEvent(new Event('blur'));
 	}
-
-	let valid = $state(true);
 
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
