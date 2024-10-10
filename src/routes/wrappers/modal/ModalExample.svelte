@@ -15,7 +15,7 @@
 	</div>
 </div>
 
-<style lang="scss">
+<style>
 	.two-columns {
 		display: grid;
 		grid-template-columns: minmax(0, 35%) minmax(0, 65%);

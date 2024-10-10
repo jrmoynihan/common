@@ -3,13 +3,15 @@
 	import FullDialog from '$wrappers/FullDialog.svelte';
 	import MiniDialog from '$wrappers/MiniDialog.svelte';
 
-	let dialog = $state<FullDialog<unknown>>()
+	let dialog = $state<FullDialog<unknown>>();
 </script>
 
 {#snippet lorem()}
-<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
-	Deleniti, tenetur nihil voluptate placeat quo delectus sunt consequatur tempore maiores aliquid consequuntur illum molestiae corrupti quaerat animi perferendis 
-	nesciunt nostrum optio!</p>
+	<p>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, tenetur nihil voluptate
+		placeat quo delectus sunt consequatur tempore maiores aliquid consequuntur illum molestiae
+		corrupti quaerat animi perferendis nesciunt nostrum optio!
+	</p>
 {/snippet}
 
 {@render lorem()}
@@ -23,30 +25,33 @@
 			}
 		}}
 		heading="MiniModal"
-	
-	>	
+	>
 		{#snippet button_content()}
 			Open the mini modal!
 		{/snippet}
-		<p use:tooltip={{content: 'Hello again!'}}>Hello! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, tenetur nihil voluptate placeat quo delectus sunt consequatur tempore maiores aliquid consequuntur illum molestiae corrupti quaerat animi perferendis nesciunt nostrum optio!</p>
+		<p use:tooltip={{ content: 'Hello again!' }}>
+			Hello! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, tenetur nihil
+			voluptate placeat quo delectus sunt consequatur tempore maiores aliquid consequuntur illum
+			molestiae corrupti quaerat animi perferendis nesciunt nostrum optio!
+		</p>
 	</MiniDialog>
-	
-	<FullDialog 
+
+	<FullDialog
 		bind:this={dialog}
 		onopening={() => console.log('opening!')}
-		button_props={{tooltip_options: {content: 'Really, open the mega modal!'}}}
+		button_props={{ tooltip_options: { content: 'Really, open the mega modal!' } }}
 		heading="MegaModal"
 	>
 		{#snippet button_content()}
 			Open the mega modal!
 		{/snippet}
-		{#each {length: 10} as _}
+		{#each { length: 10 } as _}
 			{@render lorem()}
 		{/each}
 	</FullDialog>
 
-	<button onclick={()=>dialog?.open()}>You can open the dialog externally, too!</button>
-	
+	<button onclick={() => dialog?.open()}>You can open the dialog externally, too!</button>
+
 	<!-- TODO: replace with mdsvex snippet -->
 	<code>
 		<pre>
@@ -57,7 +62,7 @@
 	</code>
 </section>
 
-<style lang="scss">
+<style>
 	.modals {
 		display: grid;
 		gap: 1rem;

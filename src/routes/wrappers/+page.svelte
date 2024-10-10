@@ -165,7 +165,7 @@
 	</fieldset>
 </Grid>
 
-<style lang="scss">
+<style>
 	.item {
 		aspect-ratio: 3 / 2;
 		border: 1px solid var(--accent);

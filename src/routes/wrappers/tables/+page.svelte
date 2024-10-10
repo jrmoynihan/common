@@ -3,8 +3,6 @@
 	import Table, { type DataCell } from '$wrappers/Table.svelte';
 	import { fly } from 'svelte/transition';
 
-	// import { Date } from 'svelte/reactivity';
-
 	function get_random_date() {
 		const start = new Date(1950, 0, 1);
 		const end = new Date();
@@ -126,13 +124,6 @@
 		</td>
 	{/if}
 {/snippet}
-{#snippet footer()}
-	<tfoot>
-		<tr>
-			<td colspan="5">This is a long footer row!</td>
-		</tr>
-	</tfoot>
-{/snippet}
 
 <div class="tables">
 	<Table
@@ -141,11 +132,18 @@
 		--table-border-radius={'1rem'}
 		data_cell={custom_data_cell}
 		omitted_keys={['id']}
-		{footer}
-	/>
+	>
+		{#snippet footer()}
+			<tfoot>
+				<tr>
+					<td colspan="5">This is a long footer row!</td>
+				</tr>
+			</tfoot>
+		{/snippet}
+	</Table>
 </div>
 
-<style lang="scss">
+<style>
 	.tables {
 		justify-self: center;
 	}

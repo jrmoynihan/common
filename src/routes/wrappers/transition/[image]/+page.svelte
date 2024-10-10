@@ -9,7 +9,7 @@
 <h2>{image?.text}</h2>
 <img src={image?.href} alt={image?.text} />
 
-<style lang="scss">
+<style>
 	h2 {
 		margin: auto;
 	}
