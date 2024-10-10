@@ -1,9 +1,9 @@
-<script context='module' lang='ts'>
+<script module lang="ts">
 	export interface ButtonProps<T> extends Omit<HTMLButtonAttributes, 'class'> {
 		/** Options to style the tooltip or modify its visible/disabled state */
-		tooltip_options?: TooltipProps | TooltipWithContentProps<T>,
+		tooltip_options?: TooltipProps | TooltipWithContentProps<T>;
 		/** Style the button, allowing dynamic updates */
-		dynamic_styles?: DynamicStyleParameters,
+		dynamic_styles?: DynamicStyleParameters;
 		/** External classes to add to the button. */
 		classes?: string;
 		/** The position of the icon relative to the children/content of the button */
@@ -18,16 +18,17 @@
 		button?: HTMLButtonElement;
 		/** Is the button disabled? */
 		disabled?: boolean | null | undefined;
-	};
+	}
 </script>
 
 <script lang="ts" generics="T">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import { tooltip, type TooltipProps, type TooltipWithContentProps } from '$actions/tooltip/tooltip.svelte.js';
-	import type {
-		SvelteTransition,
-		SvelteTransitionParams
-	} from '$lib/lib_types.js';
+	import {
+		tooltip,
+		type TooltipProps,
+		type TooltipWithContentProps
+	} from '$actions/tooltip/tooltip.svelte.js';
+	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
 	import { Fa } from '@jrmoynihan/svelte-fa';
 	import type { ComponentProps } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
@@ -49,11 +50,11 @@
 		button = $bindable(),
 		disabled = $bindable(),
 		...attributes
-	} : ButtonProps<T> = $props();
+	}: ButtonProps<T> = $props();
 </script>
 
 {#snippet fa_icon(icon_props: ComponentProps<Fa>)}
-	<Fa {...icon_props}/>
+	<Fa {...icon_props} />
 {/snippet}
 
 <button
@@ -65,11 +66,11 @@
 	type="button"
 	{disabled}
 	{...attributes}
-	>
+>
 	{#if icon_props && icon_position === 'before'}
 		{@render fa_icon(icon_props)}
 	{/if}
-	
+
 	{@render children?.()}
 
 	{#if icon_props && icon_position === 'after'}
@@ -81,7 +82,7 @@
 	@layer button {
 		._button {
 			cursor: pointer;
-			&:disabled{
+			&:disabled {
 				cursor: not-allowed;
 			}
 		}

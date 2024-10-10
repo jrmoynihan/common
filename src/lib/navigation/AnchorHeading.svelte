@@ -1,4 +1,4 @@
-<script context='module' lang='ts'>
+<script module lang="ts">
 	export interface AnchorHeadingProps extends HTMLAnchorAttributes {
 		text?: string;
 		heading_type?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -17,10 +17,10 @@
 		id = crypto?.randomUUID(),
 		children,
 		...anchor_attributes
-	} : AnchorHeadingProps = $props();
+	}: AnchorHeadingProps = $props();
 </script>
 
-{#snippet header(type)}
+{#snippet header(type: number)}
 	{#if type === 1}
 		<h1>
 			{@render content()}

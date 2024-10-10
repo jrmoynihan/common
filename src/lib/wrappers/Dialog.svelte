@@ -1,7 +1,7 @@
 <!-- @component
 Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 -->
-<script module>
+<script module lang="ts">
 	export interface DialogProps extends Omit<HTMLDialogAttributes, 'open'> {
 		/** A binding to the <dialog> element */
 		dialog?: HTMLDialogElement;

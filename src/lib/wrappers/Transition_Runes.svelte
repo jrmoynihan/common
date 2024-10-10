@@ -1,6 +1,6 @@
-<script context='module' lang='ts'>
-	import type { Snippet } from "svelte";
-	import { cubicOut } from "svelte/easing";
+<script module lang="ts">
+	import type { Snippet } from 'svelte';
+	import { cubicOut } from 'svelte/easing';
 	import {
 		blur,
 		fade,
@@ -11,8 +11,8 @@
 		type FadeParams,
 		type FlyParams,
 		type ScaleParams,
-		type SlideParams,
-	} from "svelte/transition";
+		type SlideParams
+	} from 'svelte/transition';
 
 	export interface TransitionProps {
 		/** Will trigger the transition via {#key} block when this value changes. */
@@ -43,100 +43,99 @@
 		scale_transition?: Snippet<[ScaleParams]>;
 		/** A snippet containing the transitioned content. */
 		children?: Snippet;
-	};
+	}
 </script>
 
 <script lang="ts">
-// Inspired by https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
+	// Inspired by https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
 
-let {
-	trigger = $bindable(false),
-	inner_container_styles = "",
-	inner_container_classes = "",
-	fly_transition_parameters = {
-		x: -150,
-		duration: 300,
-		delay: 0,
-		easing: cubicOut,
-	},
-	fade_transition_parameters,
-	blur_transition_parameters,
-	slide_transition_parameters,
-	scale_transition_parameters,
-	fly_transition,
-	fade_transition,
-	blur_transition,
-	slide_transition,
-	scale_transition,
-	children,
-} : TransitionProps = $props();
+	let {
+		trigger = $bindable(false),
+		inner_container_styles = '',
+		inner_container_classes = '',
+		fly_transition_parameters = {
+			x: -150,
+			duration: 300,
+			delay: 0,
+			easing: cubicOut
+		},
+		fade_transition_parameters,
+		blur_transition_parameters,
+		slide_transition_parameters,
+		scale_transition_parameters,
+		fly_transition,
+		fade_transition,
+		blur_transition,
+		slide_transition,
+		scale_transition,
+		children
+	}: TransitionProps = $props();
 </script>
 
-{#snippet default_fly_transition(params)}
+{#snippet default_fly_transition(params: FlyParams)}
 	{#key trigger}
 		<div
 			class="transition-inner fly {inner_container_classes}"
 			style={inner_container_styles}
-			in:fly={{ ...params } }
-			out:fly={ { ...params, x: params.x * -1} }
-		>	
+			in:fly={{ ...params }}
+			out:fly={{ ...params, x: Number(params.x) * -1 }}
+		>
 			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}
 
-{#snippet default_fade_transition(params)}
+{#snippet default_fade_transition(params: FadeParams)}
 	{#key trigger}
 		<div
 			class="transition-inner fade {inner_container_classes}"
 			style={inner_container_styles}
 			in:fade={params}
 			out:fade={params}
-		>	
+		>
 			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}
 
-{#snippet default_blur_transition(params)}
+{#snippet default_blur_transition(params: BlurParams)}
 	{#key trigger}
 		<div
 			class="transition-inner blur {inner_container_classes}"
 			style={inner_container_styles}
 			in:blur={params}
 			out:blur={params}
-		>	
+		>
 			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}
 
-{#snippet default_slide_transition(params)}
+{#snippet default_slide_transition(params: SlideParams)}
 	{#key trigger}
 		<div
 			class="transition-inner slide {inner_container_classes}"
 			style={inner_container_styles}
 			in:slide={params}
 			out:slide={params}
-		>	
+		>
 			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}
 
-{#snippet default_scale_transition(params)}
+{#snippet default_scale_transition(params: ScaleParams)}
 	{#key trigger}
 		<div
 			class="transition-inner scale {inner_container_classes}"
 			style={inner_container_styles}
 			in:scale={params}
 			out:scale={params}
-		>	
+		>
 			{@render children?.()}
 		</div>
 	{/key}
 {/snippet}
-
 
 <div class="transition-outer">
 	{#if fade_transition && fade_transition_parameters}
