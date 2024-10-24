@@ -208,16 +208,28 @@
 	<tr>
 		{@render preceding_data_cells?.({ datum, index })}
 		{#if datum instanceof Object}
-			{#each Object.entries(datum) as [k, value]}
-				{@const key = k as keyof T}
-				{#if visible_keys.length > 0 && visible_keys.includes(key)}
+			{#if visible_keys.length > 0}
+				<!-- Visible keys can the provide the order of the columns, since you're already providing a finite set -->
+				{#each visible_keys as k}
+					{@const key = k as keyof T}
+					{@const value = datum[k]}
 					{@render data_cell({ datum, key, value, index })}
-				{:else if omitted_keys.length > 0 && !omitted_keys.includes(key)}
+				{/each}
+			{:else if omitted_keys.length > 0}
+				{#each Object.keys(datum) as k}
+					{@const key = k as keyof T}
+					{@const value = datum[k]}
+					{#if !omitted_keys.includes(key)}
+						{@render data_cell({ datum, key, value, index })}
+					{/if}
+				{/each}
+			{:else if visible_keys.length === 0 && omitted_keys.length === 0}
+				{#each Object.keys(datum) as k}
+					{@const key = k as keyof T}
+					{@const value = datum[k]}
 					{@render data_cell({ datum, key, value, index })}
-				{:else if visible_keys.length === 0 && omitted_keys.length === 0 && typeof value !== 'function'}
-					{@render data_cell({ datum, key, value, index })}
-				{/if}
-			{/each}
+				{/each}
+			{/if}
 		{/if}
 		{@render subsequent_data_cells?.({ datum, index })}
 	</tr>
