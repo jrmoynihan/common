@@ -26,6 +26,8 @@
 </script>
 
 <script lang="ts" generics="T">
+	import { JsonView } from '$lib';
+
 	import type {
 		HTMLAnchorAttributes,
 		HTMLAttributes,
@@ -48,20 +50,19 @@
 		_is_last_item_or_key = false
 	}: JSONViewProps<T> = $props();
 
-	const keys = $derived(getType(obj) === 'object' ? Object.keys(obj) : []);
+	const keys = $derived(typeof obj === 'object' ? Object.keys(obj) : []);
 	const is_array = $derived(Array.isArray(obj));
 	const brackets = $derived(is_array ? ['[', ']'] : ['{', '}']);
 	let collapsed = $state(depth < _current_depth);
 
 	/** Get the type of an item */
-	function getType(item: unknown) {
-		if (item === null) return 'null';
-		return typeof item;
+	function isObject(item: unknown): item is object {
+		return typeof item === 'object' && item !== null;
 	}
 
 	/** Format an item */
 	function format(item: unknown) {
-		switch (getType(item)) {
+		switch (typeof item) {
 			case 'function':
 				return 'f () {...}';
 			case 'symbol':
@@ -123,7 +124,7 @@
 	</span>
 {/snippet}
 
-{#snippet formatted_value(value)}
+{#snippet formatted_value(value: any)}
 	{#if is_valid_URL(value)}
 		<a href={value} rel="noopener noreferrer" target="_blank" {...link_attributes}>{value}</a>
 	{:else}
@@ -152,7 +153,7 @@
 			{@const record = obj as Record<string, unknown>}
 			{#if key in record}
 				{@const value = record[key]}
-				{@const type = getType(value)}
+				{@const is_object = isObject(value)}
 				<li class="_jsonListItem" {...li_attributes}>
 					{#if !is_array}
 						<span class="_jsonKey" {...key_span_attributes}>
@@ -161,15 +162,15 @@
 						{@render separator(key_value_separator)}
 					{/if}
 
-					{#if type === 'object'}
-						<svelte:self
+					{#if is_object}
+						<JsonView
 							obj={value}
 							{depth}
 							_current_depth={_current_depth + 1}
 							_is_last_item_or_key={index === keys.length - 1}
 						/>
 					{:else}
-						<span class="_jsonVal {type}" {...value_span_attributes}>
+						<span class="_jsonVal {typeof value}" {...value_span_attributes}>
 							{@render formatted_value(value)}
 						</span>
 
