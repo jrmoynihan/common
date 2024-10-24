@@ -106,7 +106,7 @@
 	});
 </script>
 
-{#snippet fa_icon_snippet(icon)}
+{#snippet fa_icon_snippet(icon: IconDefinition)}
 	<Fa {icon} class={icon_class} rotate={open ? open_icon_rotation : closed_icon_rotation} />
 {/snippet}
 
