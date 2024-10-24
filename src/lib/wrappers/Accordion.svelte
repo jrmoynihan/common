@@ -9,7 +9,7 @@
 		/** (Bindable) The open state of the accordion. */
 		open?: boolean;
 		/** The parameters of the transition. */
-		transition_props?: ComponentProps<TransitionRunes>;
+		transition_props?: ComponentProps<typeof TransitionRunes>;
 		/** The position of the expand icon. */
 		expand_icon_position?: 'left' | 'right' | 'none';
 		/** Props to apply to the expand/collapse icon's `<Fa>` component. */
@@ -50,7 +50,7 @@
 	}: AccordionProps = $props();
 </script>
 
-{#snippet icon(icon_props)}
+{#snippet icon(icon_props: ComponentProps<Fa>)}
 	<Fa
 		class={'fa-CaretDown'}
 		rotate={open ? open_icon_rotation : closed_icon_rotation}

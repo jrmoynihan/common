@@ -4,7 +4,7 @@
 		value?: unknown;
 		value_key?: string;
 		label_key?: string;
-		label_props?: ComponentProps<InputLabel>;
+		label_props?: ComponentProps<typeof InputLabel>;
 		label_element?: HTMLLabelElement;
 	}
 </script>

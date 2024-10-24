@@ -26,7 +26,7 @@
 		{ title: 'Two', content: content_two },
 		{ title: 'Three', content: content_three }
 	];
-	const component_tabs: ComponentTab<CustomComponent>[] = [
+	const component_tabs: ComponentTab<typeof CustomComponent>[] = [
 		{
 			title: 'Custom 1',
 			component: CustomComponent,

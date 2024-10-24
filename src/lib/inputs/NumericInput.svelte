@@ -10,9 +10,9 @@
 		tooltip_options?: TooltipProps | null;
 		container_styles?: DynamicStyleParameters;
 		input_styles?: DynamicStyleParameters;
-		placeholder_props?: ComponentProps<Placeholder>;
+		placeholder_props?: ComponentProps<typeof Placeholder>;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
-		label_props?: ComponentProps<InputLabel>;
+		label_props?: ComponentProps<typeof InputLabel>;
 		/** A spinner button Snippet for both up and down buttons*/
 		spinner_button?: Snippet;
 		/** A spinner button Snippet for the up button */
@@ -73,12 +73,12 @@
 		bind:input_element
 		bind:value
 		bind:valid
-		type="number"
 		inputmode="numeric"
 		min={0}
 		max={Infinity}
 		step={1}
 		{...input_attributes}
+		type="number"
 	/>
 	<Placeholder {...placeholder_props} />
 	{@render children?.()}
