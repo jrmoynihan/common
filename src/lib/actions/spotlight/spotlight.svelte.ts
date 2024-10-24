@@ -12,7 +12,7 @@ import ActionSpotlight from './ActionSpotlight.svelte';
 /** Each additional step takes the same parameters as the action itself, but you must also provide a node to move the spotlight to at each step. */
 export type SpotlightStep = {
 	node: HTMLElement;
-} & Omit<ComponentProps<ActionSpotlight>, 'steps'>;
+} & Omit<ComponentProps<typeof ActionSpotlight>, 'steps'>;
 
 export type SpotlightParameters = Omit<SpotlightStep, 'node'> & { steps?: SpotlightStep[] };
 
