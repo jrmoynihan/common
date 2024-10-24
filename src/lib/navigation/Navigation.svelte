@@ -54,7 +54,7 @@
 	});
 </script>
 
-<!-- svelte-ignore a11y-no-redundant-roles -->
+<!-- svelte-ignore a11y_no_redundant_roles -->
 <nav role="navigation" use:dynamic_style={dynamic_styles} {...nav_attributes}>
 	{#if links?.length > 0}
 		{#each links as nav_link, i}
@@ -72,7 +72,7 @@
 				tooltip_options={link_tooltip_options}
 				dynamic_styles={link_dynamic_styles}
 				classes={link_class}
-				anchor_attributes={attributes}
+				{...attributes}
 			/>
 		{/each}
 	{/if}
