@@ -95,6 +95,8 @@
 </script>
 
 <label for="light-dark-toggle">
+	<!-- This component will be replaced by the Runes version -->
+	<!--svelte-ignore a11y_consider_explicit_label-->
 	<button
 		class="switch"
 		style={button_switch_styles}
