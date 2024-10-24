@@ -15,13 +15,17 @@
 	let {
 		title = '',
 		header_attributes,
-		icon_attributes = { icon: faBreadSlice, size: 'lg', color: 'inherit'},
+		icon_attributes = { icon: faBreadSlice, size: 'lg', color: 'inherit' },
 		header = default_header,
-		children,
-	} : DefaultToastProps = $props()
+		children
+	}: DefaultToastProps = $props();
 </script>
 
-{#snippet default_header(title, header_attributes, icon_attributes)}
+{#snippet default_header(
+	title: string,
+	header_attributes?: HTMLAttributes<HTMLHeadingElement>,
+	icon_attributes?: ComponentProps<Fa>
+)}
 	<h3 {...header_attributes}>
 		{#if icon_attributes}
 			<Fa {...icon_attributes} />
