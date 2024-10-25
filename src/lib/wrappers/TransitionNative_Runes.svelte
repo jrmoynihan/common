@@ -1,4 +1,6 @@
 <script module lang="ts">
+	import type { PrettifyIntersection } from '$functions/helpers.svelte';
+
 	export interface TransitionNativeProps {
 		/** Will trigger the CSS transition when this value changes. */
 		visible?: boolean;
@@ -23,17 +25,24 @@
 		scale_transition?: Snippet<[ScaleCSSParams]>;
 		children?: Snippet;
 	}
-	interface CSSTransitionParams {
+	interface Opacity {
+		opacity?: string | number;
+	}
+	interface Duration {
 		duration?: number;
+	}
+	interface Delay {
 		delay?: number;
+	}
+	interface Easing {
 		easing?: EasingFunction;
 	}
-	interface FlyCSSParams extends CSSTransitionParams {
+	interface CSSTransitionParams extends PrettifyIntersection<Delay & Duration & Easing> {}
+	interface FlyCSSParams extends PrettifyIntersection<CSSTransitionParams & Opacity> {
 		x?: string;
 		y?: string;
 		outX?: string;
 		outY?: string;
-		opacity?: string;
 	}
 	interface FadeCSSParams extends CSSTransitionParams {}
 
@@ -45,9 +54,8 @@
 		/** Used when `symmetrical` is set to `false` to allow the outro transition to scale differently than the initial scale. */
 		out_scale?: number;
 	}
-	interface BlurCSSParams extends CSSTransitionParams {
+	interface BlurCSSParams extends PrettifyIntersection<CSSTransitionParams & Opacity> {
 		amount?: string | number;
-		opacity?: string;
 	}
 	/** A type union of all the easing function classes available */
 	type EasingFunction =
@@ -191,15 +199,18 @@
 	types = [],
 	amount,
 	side,
-	initial_scale,
+	initial,
 	out_scale,
-	initial_opacity,
-	visible_opacity,
+	opacity,
 	x,
 	y,
 	outX,
 	outY
-})}
+}: BlurCSSParams &
+	FlyCSSParams &
+	SlideCSSParams &
+	ScaleCSSParams &
+	FadeCSSParams & { types: TransitionTypes[] })}
 	<div
 		class={`transition-inner ${types.length > 1 ? types.join(' ') : types} ${inner_container_classes}`}
 		class:visible
@@ -253,10 +264,9 @@
 		style:--duration={`${duration}ms`}
 		style:--delay={`${delay}ms`}
 		style:--easing={easing}
-		style:--initial-opacity={initial_opacity}
-		style:--visible-opacity={visible_opacity}
+		style:--visible-opacity={opacity}
 		style:--blur={typeof amount === 'number' ? `${amount}px` : amount}
-		style:--initial-scale={initial_scale}
+		style:--initial-scale={initial}
 		style:--out-scale={out_scale}
 		style:--origin={origin}
 	>
@@ -273,26 +283,32 @@
 	delay,
 	easing,
 	opacity = 0
-})}
+}: FlyCSSParams)}
 	{@render transition({ easing, x, y, outX, outY, duration, delay, opacity, types: ['fly'] })}
 {/snippet}
 
-{#snippet default_fade_transition({ duration, delay, easing = 'linear' })}
+{#snippet default_fade_transition({ duration, delay, easing = 'linear' }: FadeCSSParams)}
 	{@render transition({ duration, delay, easing, types: ['fade'] })}
 {/snippet}
 
-{#snippet default_blur_transition({ duration, delay, easing, opacity = 0, amount = '5px' })}
+{#snippet default_blur_transition({
+	duration,
+	delay,
+	easing,
+	opacity = 0,
+	amount = '5px'
+}: BlurCSSParams)}
 	{@render transition({
 		duration,
 		delay,
 		easing,
-		initial_opacity: opacity,
+		opacity,
 		amount,
 		types: ['blur']
 	})}
 {/snippet}
 
-{#snippet default_slide_transition({ duration, delay, easing, side = 'top' })}
+{#snippet default_slide_transition({ duration, delay, easing, side = 'top' }: SlideCSSParams)}
 	{@render transition({ duration, delay, easing, side, types: ['slide'] })}
 {/snippet}
 
@@ -300,17 +316,15 @@
 	duration,
 	delay,
 	easing,
-	initial_scale = 0,
-	out_scale,
-	opacity
-})}
+	initial = 0,
+	out_scale
+}: ScaleCSSParams)}
 	{@render transition({
 		duration,
 		delay,
 		easing,
-		initial_scale,
+		initial,
 		out_scale,
-		initial_opacity: opacity,
 		types: ['scale']
 	})}
 {/snippet}
