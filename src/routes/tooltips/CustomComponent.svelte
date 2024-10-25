@@ -12,7 +12,6 @@
 		color = 'white',
 		...rest
 	}: CustomComponentProps = $props();
-	$inspect(text);
 </script>
 
 <div style:background style:color {...rest}>{text}</div>
