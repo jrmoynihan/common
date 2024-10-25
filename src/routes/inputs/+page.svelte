@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { setDerivedContext } from '$functions/store.svelte';
 	import Checkbox from '$inputs/Checkbox.svelte';
 	import DatalistTextInput from '$inputs/DatalistTextInput.svelte';
 	import NumericInput from '$inputs/NumericInput.svelte';
@@ -17,8 +16,6 @@
 	let selected_fruit_name: string | undefined = $state();
 	let selected_number = $state<number>(1);
 	let valid_email: string = $state('');
-	const numeric_options = [1, 2, 3];
-	const double_number_context = setDerivedContext('number', selected_number * 2);
 </script>
 
 <div class="inputs-container">
