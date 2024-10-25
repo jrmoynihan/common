@@ -1,8 +1,8 @@
 <script module lang="ts">
-	export interface TabsProps {
-		tabs?: (ContentTab | ComponentTab<SvelteComponent>)[];
+	export interface TabsProps<T extends Component<any>> {
+		tabs?: (ContentTab | ComponentTab<T>)[];
 		/** A replacement Snippet for the default tab button */
-		tab_button?: Snippet<[tab: ContentTab | ComponentTab<SvelteComponent>]>;
+		tab_button?: Snippet<[tab: ContentTab | ComponentTab<T>]>;
 		/** A replacement Snippet for the default tab container title */
 		tab_container_title?: Snippet | null;
 		/** The title of the default tab button */
@@ -18,9 +18,9 @@
 		/** The attributes of the default tab <button> element */
 		tab_button_attributes?: HTMLButtonAttributes;
 		/** The selected tab */
-		selected_tab?: ContentTab | ComponentTab<SvelteComponent>;
+		selected_tab?: ContentTab | ComponentTab<T>;
 		/** The transition parameters of the tab content */
-		tab_content_transition_parameters?: ComponentProps<TransitionNativeRunes>;
+		tab_content_transition_parameters?: ComponentProps<typeof TransitionNativeRunes>;
 	}
 
 	interface Tab {
@@ -30,15 +30,15 @@
 		content?: Snippet;
 	}
 
-	export interface ComponentTab<T extends SvelteComponent> extends Tab {
-		component?: ConstructorOfATypedSvelteComponent;
+	export interface ComponentTab<T extends Component<any>> extends Tab {
+		component?: T;
 		props?: ComponentProps<T>;
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T extends Component<any>">
 	import TransitionNativeRunes from '$wrappers/TransitionNative_Runes.svelte';
-	import type { ComponentProps, Snippet, SvelteComponent } from 'svelte';
+	import type { Component, ComponentProps, Snippet } from 'svelte';
 	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	let {
@@ -52,10 +52,10 @@
 		tab_panel_attributes,
 		tab_button_attributes,
 		tab_content_transition_parameters
-	}: TabsProps = $props();
+	}: TabsProps<T> = $props();
 
 	const id = crypto.randomUUID();
-	let transitions = $state<TransitionNativeRunes[]>([]);
+	let transitions = $state<(typeof TransitionNativeRunes)[]>([]);
 	let selected_tab = $state.raw(tabs[0]);
 
 	function move_focus_to_tab(e: KeyboardEvent) {
@@ -85,12 +85,12 @@
 		focus_tab?.focus();
 	}
 
-	function get_index_of_tab(tab: ContentTab | ComponentTab<SvelteComponent> | undefined) {
+	function get_index_of_tab(tab: ContentTab | ComponentTab<T> | undefined) {
 		if (!tab) return 0;
 		return tabs.findIndex((t) => t === tab);
 	}
 
-	function select_tab(tab: ContentTab | ComponentTab<SvelteComponent>) {
+	function select_tab(tab: ContentTab | ComponentTab<T>) {
 		if (selected_tab) {
 			// Toggle off/out the old tab
 			const old_tab_index = get_index_of_tab(selected_tab);
@@ -162,7 +162,6 @@
 						visible={i === 0}
 						{...tab_content_transition_parameters}
 					>
-						<!-- <svelte:component this={tab.component} {...tab.props} /> -->
 						<C {...tab.props}></C>
 					</TransitionNativeRunes>
 				{/if}
