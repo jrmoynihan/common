@@ -6,7 +6,7 @@
 	import { crossfade } from 'svelte/transition';
 	import type { PageData } from './$types';
 
-	let { data } : { data: PageData } = $props();
+	let { data }: { data: PageData } = $props();
 
 	type Image = (typeof images)[0];
 	const { images } = data;
@@ -43,8 +43,15 @@
 	}
 </script>
 
-{#snippet img({ alt, src, width = '100%', height = 'auto', classes })}
-	<img class={classes} {alt} {src} {width} {height} />
+{#snippet img({
+	path,
+	text,
+	href,
+	width = '100%',
+	height = 'auto',
+	classes
+}: (typeof images)[0] & { width: string; height: string; classes?: string })}
+	<img class={classes} alt={text} src={href} {width} {height} />
 {/snippet}
 
 <svelte:window
@@ -72,11 +79,9 @@
 				animate:flip={{ duration: 500 }}
 			>
 				{@render img({
-					path: image.path,
-					alt: image.text,
-					src: image.href,
 					width: '100px',
-					height: 'auto'
+					height: 'auto',
+					...image
 				})}
 			</button>
 		{/each}
@@ -84,9 +89,11 @@
 
 	<Dialog
 		bind:this={dialog}
-		onclose={() => {selected_image = null}}
-		scale='none'
-		slide='both'
+		onclose={() => {
+			selected_image = null;
+		}}
+		scale="none"
+		slide="both"
 		--dialog-background="transparent"
 		--dialog-overflow="auto"
 		--dialog-max-inline-size="auto"
@@ -95,12 +102,10 @@
 		--dialog-place-self={use_full_size ? 'auto' : 'center'}
 		--dialog-form-padding="0"
 	>
-		{#each images?.filter((image) => image.uuid === selected_image?.uuid) as { path, text, href, uuid } (uuid)}
-			<button in:receive={{ key: uuid }} out:send={{ key: uuid }} animate:flip>
+		{#each images?.filter((image) => image.uuid === selected_image?.uuid) as image (image.uuid)}
+			<button in:receive={{ key: image.uuid }} out:send={{ key: image.uuid }} animate:flip>
 				{@render img({
-					path,
-					alt: text,
-					src: href,
+					...image,
 					width: use_full_size ? '100%' : 'auto',
 					height: '100%',
 					classes: use_full_size ? 'selected-image full-size' : 'selected-image'
