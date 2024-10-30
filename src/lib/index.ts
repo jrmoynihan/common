@@ -140,7 +140,7 @@ export {
 	shouldLayoutTransitionOnNavigation,
 	type IconLayer
 } from './navigation/nav-functions.js';
-export type { ComponentTab, ContentTab } from './wrappers/Tabs_Runes.svelte';
+export type { ComponentTab, SnippetTab } from './wrappers/Tabs_Runes.svelte';
 export {
 	Accordion,
 	AccordionDetails,

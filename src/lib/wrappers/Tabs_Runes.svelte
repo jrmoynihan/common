@@ -1,8 +1,8 @@
 <script module lang="ts">
-	export interface TabsProps<T extends Component<any>> {
-		tabs?: (ContentTab | ComponentTab<T>)[];
+	export interface TabsProps<T extends Component> {
+		tabs?: (SnippetTab | ComponentTab<T>)[];
 		/** A replacement Snippet for the default tab button */
-		tab_button?: Snippet<[tab: ContentTab | ComponentTab<T>]>;
+		tab_button?: Snippet<[tab: SnippetTab | ComponentTab<T>]>;
 		/** A replacement Snippet for the default tab container title */
 		tab_container_title?: Snippet | null;
 		/** The title of the default tab button */
@@ -18,7 +18,7 @@
 		/** The attributes of the default tab <button> element */
 		tab_button_attributes?: HTMLButtonAttributes;
 		/** The selected tab */
-		selected_tab?: ContentTab | ComponentTab<T>;
+		selected_tab?: SnippetTab | ComponentTab<T>;
 		/** The transition parameters of the tab content */
 		tab_content_transition_parameters?: ComponentProps<typeof TransitionNativeRunes>;
 	}
@@ -26,12 +26,12 @@
 	interface Tab {
 		title: string;
 	}
-	export interface ContentTab extends Tab {
-		content?: Snippet;
+	export interface SnippetTab extends Tab {
+		snippet?: Snippet;
 	}
 
-	export interface ComponentTab<T extends Component<any>> extends Tab {
-		component?: T;
+	export interface ComponentTab<T extends Component<any, any>> extends Tab {
+		Component?: T;
 		props?: ComponentProps<T>;
 	}
 </script>
@@ -55,7 +55,8 @@
 	}: TabsProps<T> = $props();
 
 	const id = crypto.randomUUID();
-	let transitions = $state<(typeof TransitionNativeRunes)[]>([]);
+	//@ts-ignore
+	let transitions = $state<TransitionNativeRunes[]>([]);
 	let selected_tab = $state.raw(tabs[0]);
 
 	function move_focus_to_tab(e: KeyboardEvent) {
@@ -85,22 +86,22 @@
 		focus_tab?.focus();
 	}
 
-	function get_index_of_tab(tab: ContentTab | ComponentTab<T> | undefined) {
+	function get_index_of_tab(tab: SnippetTab | ComponentTab<T> | undefined) {
 		if (!tab) return 0;
 		return tabs.findIndex((t) => t === tab);
 	}
 
-	function select_tab(tab: ContentTab | ComponentTab<T>) {
+	function select_tab(tab: SnippetTab | ComponentTab<T>) {
 		if (selected_tab) {
 			// Toggle off/out the old tab
 			const old_tab_index = get_index_of_tab(selected_tab);
-			transitions[old_tab_index].toggle();
+			transitions.at(old_tab_index).toggle();
 		}
 
 		// Toggle on/in the new tab
 		selected_tab = tab;
 		const new_tab_index = get_index_of_tab(selected_tab);
-		transitions[new_tab_index]?.toggle();
+		transitions[new_tab_index].toggle();
 	}
 </script>
 
@@ -114,30 +115,27 @@
 
 <div {id} class="tabs" {...tab_container_attributes}>
 	{@render tab_container_title?.()}
-
 	<div
 		role="tablist"
 		aria-labelledby={`tablist-${id}`}
 		class="automatic"
 		{...tab_button_container_attributes}
 	>
-		{#if tabs && tabs.length > 0}
-			{#each tabs as tab, i (tab)}
-				<button
-					id={`tab-${i}-${id}`}
-					tabindex={tab === selected_tab ? 0 : -1}
-					onkeydown={move_focus_to_tab}
-					type="button"
-					role="tab"
-					aria-selected={tab === selected_tab}
-					aria-controls={`tabpanel-${i}-${id}`}
-					onclick={() => select_tab(tab)}
-					{...tab_button_attributes}
-				>
-					{@render tab_button?.(tab)}
-				</button>
-			{/each}
-		{/if}
+		{#each tabs as tab, i (tab)}
+			<button
+				id={`tab-${i}-${id}`}
+				tabindex={tab === selected_tab ? 0 : -1}
+				onkeydown={move_focus_to_tab}
+				type="button"
+				role="tab"
+				aria-selected={tab === selected_tab}
+				aria-controls={`tabpanel-${i}-${id}`}
+				onclick={() => select_tab(tab)}
+				{...tab_button_attributes}
+			>
+				{@render tab_button?.(tab)}
+			</button>
+		{/each}
 	</div>
 	<div id={`tab-content-${id}`} class="tab-content" {...tab_content_container_attributes}>
 		{#each tabs as tab, i (tab)}
@@ -148,27 +146,35 @@
 				aria-labelledby={`tab-${i}-${id}`}
 				{...tab_panel_attributes}
 			>
-				{#if 'content' in tab}
-					<TransitionNativeRunes
-						bind:this={transitions[i]}
-						visible={i === 0}
-						children={tab.content}
-						{...tab_content_transition_parameters}
-					/>
-				{:else if 'component' in tab && 'props' in tab}
-					{@const { component: C } = tab}
-					<TransitionNativeRunes
-						bind:this={transitions[i]}
-						visible={i === 0}
-						{...tab_content_transition_parameters}
-					>
-						<C {...tab.props}></C>
-					</TransitionNativeRunes>
+				{#if 'snippet' in tab}
+					{@render snippet_tab(tab, i)}
+				{:else if 'Component' in tab && 'props' in tab}
+					{@render component_tab(tab, i)}
 				{/if}
 			</div>
 		{/each}
 	</div>
 </div>
+
+{#snippet snippet_tab(tab: SnippetTab, i: number)}
+	<TransitionNativeRunes
+		bind:this={transitions[i]}
+		visible={i === 0}
+		{...tab_content_transition_parameters}
+	>
+		{@render tab.snippet?.()}
+	</TransitionNativeRunes>
+{/snippet}
+{#snippet component_tab(tab: ComponentTab<T>, i: number)}
+	{@const { Component, props } = tab}
+	<TransitionNativeRunes
+		bind:this={transitions[i]}
+		visible={i === 0}
+		{...tab_content_transition_parameters}
+	>
+		<Component {...props} />
+	</TransitionNativeRunes>
+{/snippet}
 
 <style>
 	.tabs {

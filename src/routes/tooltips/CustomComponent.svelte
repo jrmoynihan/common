@@ -2,11 +2,13 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	interface CustomComponentProps extends HTMLAttributes<HTMLElement> {
-		text: string;
-		background: string;
-		color: string;
+		required_text: string;
+		text?: string;
+		background?: string;
+		color?: string;
 	}
 	let {
+		required_text,
 		text = `I'm a custom component thing!`,
 		background = 'blue',
 		color = 'white',

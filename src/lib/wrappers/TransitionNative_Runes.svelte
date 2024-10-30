@@ -282,7 +282,7 @@
 	duration,
 	delay,
 	easing,
-	opacity = 0
+	opacity = 1
 }: FlyCSSParams)}
 	{@render transition({ easing, x, y, outX, outY, duration, delay, opacity, types: ['fly'] })}
 {/snippet}
@@ -295,7 +295,7 @@
 	duration,
 	delay,
 	easing,
-	opacity = 0,
+	opacity = 1,
 	amount = '5px'
 }: BlurCSSParams)}
 	{@render transition({

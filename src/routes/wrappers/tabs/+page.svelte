@@ -1,57 +1,60 @@
 <script lang="ts">
 	import CustomComponent from '$routes/tooltips/CustomComponent.svelte';
-	import TabsRunes, { type ComponentTab } from '$wrappers/Tabs_Runes.svelte';
+	import TabsRunes, { type ComponentTab, type SnippetTab } from '$wrappers/Tabs_Runes.svelte';
 	import { fly } from 'svelte/transition';
 
-	const tabs = [
-		{ title: 'One', content: content_one },
-		{ title: 'Two', content: content_two },
-		{ title: 'Three', content: content_three },
-		{ title: 'One', content: content_one },
-		{ title: 'Two', content: content_two },
-		{ title: 'Three', content: content_three },
-		{ title: 'One', content: content_one },
-		{ title: 'Two', content: content_two },
-		{ title: 'Three', content: content_three },
-		{ title: 'One', content: content_one },
-		{ title: 'Two', content: content_two },
-		{ title: 'Three', content: content_three },
-		{ title: 'One', content: content_one },
-		{ title: 'Two', content: content_two },
-		{ title: 'Three', content: content_three },
-		{ title: 'One', content: content_one },
-		{ title: 'Two', content: content_two },
-		{ title: 'Three', content: content_three },
-		{ title: 'One', content: content_one },
-		{ title: 'Two', content: content_two },
-		{ title: 'Three', content: content_three }
+	const tabs: SnippetTab[] = [
+		{ title: 'One', snippet: content_one },
+		{ title: 'Two', snippet: content_two },
+		{ title: 'Three', snippet: content_three },
+		{ title: 'One', snippet: content_one },
+		{ title: 'Two', snippet: content_two },
+		{ title: 'Three', snippet: content_three },
+		{ title: 'One', snippet: content_one },
+		{ title: 'Two', snippet: content_two },
+		{ title: 'Three', snippet: content_three },
+		{ title: 'One', snippet: content_one },
+		{ title: 'Two', snippet: content_two },
+		{ title: 'Three', snippet: content_three },
+		{ title: 'One', snippet: content_one },
+		{ title: 'Two', snippet: content_two },
+		{ title: 'Three', snippet: content_three },
+		{ title: 'One', snippet: content_one },
+		{ title: 'Two', snippet: content_two },
+		{ title: 'Three', snippet: content_three },
+		{ title: 'One', snippet: content_one },
+		{ title: 'Two', snippet: content_two },
+		{ title: 'Three', snippet: content_three }
 	];
 	const component_tabs: ComponentTab<typeof CustomComponent>[] = [
 		{
 			title: 'Custom 1',
-			component: CustomComponent,
+			Component: CustomComponent,
 			props: {
 				text: "I'm custom component #1!",
 				color: 'black',
-				background: 'orange'
+				background: 'orange',
+				required_text: 'this text was required'
 			}
 		},
 		{
 			title: 'Custom 2',
-			component: CustomComponent,
+			Component: CustomComponent,
 			props: {
 				text: "I'm custom component #2!",
 				color: 'var(--text)',
-				background: 'darkblue'
+				background: 'darkblue',
+				required_text: 'this text was required'
 			}
 		},
 		{
 			title: 'Custom 3',
-			component: CustomComponent,
+			Component: CustomComponent,
 			props: {
 				text: "I'm custom component #3!",
 				color: 'var(--text)',
-				background: 'darkseagreen'
+				background: 'darkseagreen',
+				required_text: 'this text was required'
 			}
 		}
 	];
