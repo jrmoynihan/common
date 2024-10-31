@@ -115,11 +115,7 @@
 		}
 	}
 	function capitalize_all_words(s: keyof T) {
-		if (typeof s === 'string') {
-			return replace_camel_case(s).split(' ').map(capitalize).join(' ');
-		} else {
-			return s.toString();
-		}
+		return replace_camel_case(s).split(' ').map(capitalize).join(' ');
 	}
 
 	function map_icons(obj: T, key: string, order: Ordering = null) {
@@ -237,47 +233,39 @@
 
 {#snippet default_th(content: Snippet)}
 	<th scope="col" {...table_header_cell_attributes}>
-		{@render content()}
+		{@render content?.()}
 	</th>
 {/snippet}
 {#snippet normal_th_content(key: string, index: number)}
-	{key}
-	{@render sort_button?.({ key, index })}
+	<th scope="col" {...table_header_cell_attributes}>
+		{#if key === 'id'}
+			ID
+		{:else}
+			{key}
+		{/if}
+		{@render sort_button?.({ key, index })}
+	</th>
 {/snippet}
-{#snippet capital_id_th_content(key: string, index: number)}
-	{key}
-	{@render sort_button?.({ key: 'id' as keyof T, index })}
-{/snippet}
-{#snippet capitalized_th_content(key: string, index: number)}
-	{capitalize_all_words(key)}
-	{@render sort_button?.({ key, index })}
+{#snippet capitalized_th_content(key: keyof T, index: number)}
+	<th scope="col" {...table_header_cell_attributes}>
+		{capitalize_all_words(key)}
+		{@render sort_button?.({ key: 'id' as keyof T, index })}
+	</th>
 {/snippet}
 
 {#snippet default_data_cell({ datum, key, value, index }: DataCell<T>)}
 	<td>{value}</td>
 {/snippet}
 {#snippet default_header_cell({ datum, key, index }: HeaderCell<T>)}
-	{#if typeof key === 'string' && !omitted_keys?.includes(key) && typeof datum[key] !== 'function'}
+	{#if key && typeof key === 'string' && !omitted_keys?.includes(key) && typeof datum[key] !== 'function'}
 		{#if capitalize_headers}
 			{#if key === 'id'}
-				{@render th(capital_id_th_content(key, index))}
-				<!-- <th scope="col">
-					ID
-					{@render sort_button?.({ key: 'id' as keyof T, index })}
-				</th> -->
-			{:else}
-				{@render th(capitalized_th_content(key, index))}
-				<!-- <th scope="col">
-					{capitalize_all_words(key)}
-					{@render sort_button?.({ key, index })}
-				</th> -->
+				{@render normal_th_content(key, index)}
+			{:else if key}
+				{@render capitalized_th_content(key, index)}
 			{/if}
 		{:else}
-			{@render th(normal_th_content(key, index))}
-			<!-- <th scope="col">
-				{key}
-				{@render sort_button?.({ key, index })}
-			</th> -->
+			{@render normal_th_content(key, index)}
 		{/if}
 	{/if}
 {/snippet}

@@ -31,7 +31,7 @@
 			return false;
 		}
 	};
-	const transition_props: ComponentProps<TransitionNativeRunes> = {
+	const transition_props: ComponentProps<typeof TransitionNativeRunes> = {
 		types: ['slide'],
 		slide_transition_parameters: { easing: 'ease' }
 	};

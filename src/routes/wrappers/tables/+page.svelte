@@ -53,38 +53,9 @@
 
 		constructor(initial_name: string) {
 			this.name = initial_name;
-
 			enumerate_runed_properties(this);
 		}
 	}
-
-	const create_person = (_name: string) => {
-		let name: string = $state(_name);
-		let birthday: Date = $state(get_random_date());
-		let name_length: number = $derived(name.length);
-		let age: number = $derived(find_age_in_years(birthday, new Date()));
-
-		return {
-			get name() {
-				return name;
-			},
-			set name(n) {
-				name = n;
-			},
-			get birthday() {
-				return birthday;
-			},
-			set birthday(b) {
-				birthday = b;
-			},
-			get name_length() {
-				return name_length;
-			},
-			get age() {
-				return age;
-			}
-		};
-	};
 
 	let data = $state<Person[]>(names.map((name) => new Person(name)));
 </script>
