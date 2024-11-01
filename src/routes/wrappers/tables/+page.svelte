@@ -42,7 +42,7 @@
 		'Zoe'
 	];
 	class Person {
-		id: string = $state(crypto.randomUUID());
+		id: string = $state<string>(crypto.randomUUID());
 		name: string = $state('');
 		birthday: Date = $state(get_random_date());
 		name_length: number = $derived(this.name.length);
@@ -101,8 +101,8 @@
 		bind:data
 		caption_text={'A Basic Table'}
 		--table-border-radius={'1rem'}
+		visible_keys={['name', 'name_length', 'birthday', 'age']}
 		data_cell={custom_data_cell}
-		omitted_keys={['id']}
 	>
 		{#snippet footer()}
 			<tfoot>

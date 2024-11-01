@@ -5,10 +5,6 @@
 		datum: T;
 		index: number;
 	}
-	export interface SortColumn<T> {
-		key: keyof T;
-		index: number;
-	}
 	export interface HeaderCell<T> extends DataRow<T> {
 		key: keyof T;
 	}
@@ -42,7 +38,7 @@
 		/** Should the headers be capitalized? */
 		capitalize_headers?: boolean;
 		/** A snippet representing the button to sort the table column */
-		sort_button?: Snippet<[SortColumn<T>]> | null;
+		sort_button?: Snippet<[keyof T]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, before the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
 		preceding_header_cells?: Snippet | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, after the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
@@ -74,6 +70,7 @@
 		type IconDefinition
 	} from '@fortawesome/free-solid-svg-icons';
 	import type { Snippet } from 'svelte';
+	import { SvelteDate, SvelteMap } from 'svelte/reactivity';
 
 	let {
 		data = $bindable([]),
@@ -102,7 +99,16 @@
 
 	// Assign icons for sorting; A-Z icons for strings, 1-9 icons for numbers, arrow icons for everything else
 	type Ordering = 'asc' | 'desc' | null;
-	let orders: Ordering[] = $state(Object.keys(data[0]).map((d) => 'desc'));
+	const orders: SvelteMap<keyof T, Ordering> = $state(
+		new SvelteMap(Object.keys(data[0]).map((d) => [d, 'desc']))
+	);
+	const icons: SvelteMap<keyof T, IconDefinition> = $derived.by(() => {
+		return new SvelteMap(
+			Array.from(orders.entries(), ([key, order]) => {
+				return [key, map_icons(data[0], key, order)];
+			})
+		);
+	});
 
 	function capitalize(s: string) {
 		return s.charAt(0).toUpperCase() + s.slice(1);
@@ -118,7 +124,7 @@
 		return replace_camel_case(s).split(' ').map(capitalize).join(' ');
 	}
 
-	function map_icons(obj: T, key: string, order: Ordering = null) {
+	function map_icons(obj: T, key: keyof T, order: Ordering) {
 		if (typeof obj[key] === 'string') {
 			return order === 'desc' ? faArrowDownAZ : faArrowUpZA;
 		} else if (typeof obj[key] === 'number') {
@@ -128,33 +134,30 @@
 		}
 	}
 
-	let icons: IconDefinition[] = $state(Object.keys(data[0]).map((d) => map_icons(data[0], d)));
-
-	function sort_strings({ key, index }: SortColumn<T>) {
-		const new_order = change_order(index);
+	function sort_strings(key: keyof T) {
+		const new_order = change_order(key);
+		// TODO: Use different sort algorithms for different size data arrays
 		new_order === 'asc'
 			? data.sort((a, b) => b[key].localeCompare(a[key]))
 			: data.sort((a, b) => a[key].localeCompare(b[key]));
 	}
 
-	function sort_numbers_or_boolean_or_dates({ key, index }: SortColumn<T>) {
-		const new_order = change_order(index);
+	function sort_numbers_or_boolean_or_dates(key: keyof T) {
+		// TODO: Use different sort algorithms for different size data arrays
+		const new_order = change_order(key);
 		new_order === 'asc'
 			? data.sort((a, b) => b[key] - a[key])
 			: data.sort((a, b) => a[key] - b[key]);
 	}
 
-	function change_order(index: number): Ordering {
-		let order = orders[index];
-		const key = Object.keys(data[0])[index];
-		if (order === 'asc') {
-			orders[index] = 'desc';
-			icons[index] = map_icons(data[0], key, 'desc');
+	function change_order(key: keyof T) {
+		let current_order = orders.get(key);
+		if (current_order === 'asc') {
+			orders.set(key, 'desc');
 		} else {
-			orders[index] = 'asc';
-			icons[index] = map_icons(data[0], key, 'asc');
+			orders.set(key, 'asc');
 		}
-		return orders[index];
+		return orders.get(key);
 	}
 </script>
 
@@ -166,34 +169,53 @@
 	<tr>
 		{@render preceding_header_cells?.()}
 		{#if datum instanceof Object}
-			{#each Object.keys(datum) as k, index}
-				{@const key = k as keyof T}
-				{@render header_cell({ datum, key, index })}
-			{/each}
+			{#if visible_keys.length > 0}
+				{#each visible_keys as key, index}
+					{#if typeof datum[key] !== 'function'}
+						{@render header_cell({ datum, key, index })}
+					{/if}
+				{/each}
+			{:else if omitted_keys.length > 0}
+				{#each Object.keys(datum).filter((k) => !omitted_keys.includes(k)) as k, index}
+					{@const key = k as keyof T}
+					{#if typeof datum[key] !== 'function'}
+						{@render header_cell({ datum, key, index })}
+					{/if}
+				{/each}
+			{:else if visible_keys.length === 0 && omitted_keys.length === 0}
+				{#each Object.keys(datum) as k, index}
+					{@const key = k as keyof T}
+					{#if typeof datum[key] !== 'function'}
+						{@render header_cell({ datum, key, index })}
+					{/if}
+				{/each}
+			{/if}
 		{/if}
 		{@render subsequent_header_cells?.()}
 	</tr>
 {/snippet}
 
-{#snippet default_sort_button({ key, index }: SortColumn<T>)}
-	{@const datum_0 = data[0][key]}
+{#snippet default_sort_button(key: keyof T)}
+	{@const datum_0 = data[0][key] as string | number | boolean | bigint | object}
+	{@const icon = icons.get(key) ?? faArrowDown19}
+	{@const order = orders.get(key)}
 	{#if typeof datum_0 === 'string'}
 		<ButtonRunes
-			classes={`sort-button ${orders[index]}`}
-			onclick={() => sort_strings({ key, index })}
+			classes={`sort-button ${order}`}
+			onclick={() => sort_strings(key)}
 			style={'padding: 0.25rem;'}
-			icon_props={{ icon: icons[index] }}
+			icon_props={{ icon }}
 			tooltip_options={{
-				content: `Sort strings (current: ${orders[index] === 'desc' ? 'A-Z' : 'Z-A'})`
+				content: `Sort strings (current: ${order === 'desc' ? 'A-Z' : 'Z-A'})`
 			}}
 		/>
-	{:else if typeof datum_0 === 'number'}
+	{:else if typeof datum_0 === 'number' || typeof datum_0 === 'boolean' || datum_0 instanceof Date || datum_0 instanceof BigInt || datum_0 instanceof SvelteDate}
 		<ButtonRunes
-			classes={`sort-button ${orders[index]}`}
-			onclick={() => sort_numbers_or_boolean_or_dates({ key, index })}
-			icon_props={{ icon: icons[index] }}
+			classes={`sort-button ${order}`}
+			onclick={() => sort_numbers_or_boolean_or_dates(key)}
+			icon_props={{ icon }}
 			tooltip_options={{
-				content: `Sort numbers (current: ${orders[index] === 'desc' ? 'low-to-high' : 'high-to-low'})`
+				content: `Sort numbers (current: ${order === 'desc' ? 'low-to-high' : 'high-to-low'})`
 			}}
 		/>
 		<!-- TODO: other data types -->
@@ -206,24 +228,23 @@
 		{#if datum instanceof Object}
 			{#if visible_keys.length > 0}
 				<!-- Visible keys can the provide the order of the columns, since you're already providing a finite set -->
-				{#each visible_keys as k}
-					{@const key = k as keyof T}
-					{@const value = datum[k]}
+				{#each visible_keys as key}
+					{@const value = datum[key]}
 					{@render data_cell({ datum, key, value, index })}
 				{/each}
 			{:else if omitted_keys.length > 0}
-				{#each Object.keys(datum) as k}
+				{#each Object.keys(datum).filter((k) => !omitted_keys.includes(k)) as k}
 					{@const key = k as keyof T}
 					{@const value = datum[k]}
-					{#if !omitted_keys.includes(key)}
-						{@render data_cell({ datum, key, value, index })}
-					{/if}
+					{@render data_cell({ datum, key, value, index })}
 				{/each}
 			{:else if visible_keys.length === 0 && omitted_keys.length === 0}
 				{#each Object.keys(datum) as k}
 					{@const key = k as keyof T}
 					{@const value = datum[k]}
-					{@render data_cell({ datum, key, value, index })}
+					{#if typeof value !== 'function'}
+						{@render data_cell({ datum, key, value, index })}
+					{/if}
 				{/each}
 			{/if}
 		{/if}
@@ -236,20 +257,20 @@
 		{@render content?.()}
 	</th>
 {/snippet}
-{#snippet normal_th_content(key: string, index: number)}
+{#snippet normal_th_content(key: keyof T)}
 	<th scope="col" {...table_header_cell_attributes}>
 		{#if key === 'id'}
 			ID
 		{:else}
 			{key}
 		{/if}
-		{@render sort_button?.({ key, index })}
+		{@render sort_button?.(key)}
 	</th>
 {/snippet}
-{#snippet capitalized_th_content(key: keyof T, index: number)}
+{#snippet capitalized_th_content(key: keyof T)}
 	<th scope="col" {...table_header_cell_attributes}>
 		{capitalize_all_words(key)}
-		{@render sort_button?.({ key: 'id' as keyof T, index })}
+		{@render sort_button?.(key)}
 	</th>
 {/snippet}
 
@@ -260,12 +281,12 @@
 	{#if key && typeof key === 'string' && !omitted_keys?.includes(key) && typeof datum[key] !== 'function'}
 		{#if capitalize_headers}
 			{#if key === 'id'}
-				{@render normal_th_content(key, index)}
+				{@render normal_th_content(key)}
 			{:else if key}
-				{@render capitalized_th_content(key, index)}
+				{@render capitalized_th_content(key)}
 			{/if}
 		{:else}
-			{@render normal_th_content(key, index)}
+			{@render normal_th_content(key)}
 		{/if}
 	{/if}
 {/snippet}
