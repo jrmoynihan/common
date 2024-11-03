@@ -168,8 +168,8 @@
 			gap: var(--size-3);
 			justify-content: space-between;
 			align-items: flex-start;
-			padding-inline: var(--size-5);
-			/* padding-block: var(--size-3); */
+			padding-inline: var(--footer-padding-inline, var(--size-5));
+			margin-block-start: var(--footer-margin-block-start, var(--size-2));
 
 			& > menu {
 				display: flex;
