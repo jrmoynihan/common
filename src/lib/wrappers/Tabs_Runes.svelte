@@ -137,7 +137,11 @@
 			</button>
 		{/each}
 	</div>
-	<div id={`tab-content-${id}`} class="tab-content" {...tab_content_container_attributes}>
+	<div
+		id={`tab-content-${id}`}
+		{...tab_content_container_attributes}
+		class={`tab-content ${tab_content_container_attributes?.class} ;`}
+	>
 		{#each tabs as tab, i (tab)}
 			<div
 				id={`tabpanel-${i}-${id}`}
