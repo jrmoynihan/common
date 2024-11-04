@@ -57,7 +57,7 @@
 </script>
 
 {#snippet default_spinner_button({ icon, size, ...button_props }: SpinnerButton<T>)}
-	<InputButton {...button_props}>
+	<InputButton {...button_props} disabled={input_attributes?.disabled}>
 		<Fa
 			{icon}
 			{size}
