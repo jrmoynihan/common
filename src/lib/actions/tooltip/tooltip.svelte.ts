@@ -4,63 +4,63 @@ import { mount, unmount, type Snippet } from 'svelte';
 import ActionTooltip from './ActionTooltip.svelte';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
-export class BaseTooltipProps {
+export class BaseTooltipProps<T> {
 	/** Choose from top, bottom, right, left anchor positions for the tooltip.
 	 * @default top
 	 */
-	position = $state<TooltipDirections>('top');
+	position? = $state<TooltipDirections>('top');
 	/** The element id to anchor the tooltip to.
 	 * @default a random UUID
 	 */
-	id = $state<string>(crypto.randomUUID());
+	id? = $state<string>(crypto.randomUUID());
 	/** Allow the tooltip to start visible when mounted to the DOM and programmatically trigger its visibility. May be useful for e.g. guided tour interactions.
 	 * @default false
 	 */
-	visible = $state<boolean>(false);
+	visible? = $state<boolean>(false);
 	/** Prevent the tooltip from being shown.
 	 * @default false
 	 */
-	disabled = $state<boolean>(false);
+	disabled? = $state<boolean>(false);
 	/** Allow the tooltip to stay visible even after the user moves the mouse outside the parent element.
 	 * @default false
 	 */
-	keep_visible = $state<boolean>(false);
+	keep_visible? = $state<boolean>(false);
 	/** Enable or disable the tooltip arrow
 	 * @default true
 	 */
-	show_arrow = $state<boolean>(true);
+	show_arrow? = $state<boolean>(true);
 	/** Dynamic styles that can change on the tooltip.  Note: use '--tooltip'-prefixed CSS custom properties wherever possible (e.g. --tooltip-background: 'white' instead of background: 'white').
 	 * @default ''
 	 */
-	styles = $state<string>('');
+	styles? = $state<string>('');
 	/** The tooltip's distance from the anchor element. Numbers will be converted to `px`. Strings will be passed as CSS property values.
 	 * @default 10
 	 */
-	distance = $state<number | string>(10);
+	distance? = $state<number | string>(10);
 	/** If the tooltip should be inert or interactive.
 	 * @default true
 	 */
-	inert = $state<boolean>(true);
+	inert? = $state<boolean>(true);
 	/** The current step of the tooltip when used in a multi-step action
 	 * @default 0
 	 */
-	step = $state<number>(0);
+	step? = $state<number>(0);
 	/** The additional to move the tooltip to if used in a multi-step action */
-	steps = $state<TooltipStep[]>([]);
+	steps? = $state<TooltipStep<T>[]>([]);
 	/** Should the tooltip have a fallback position?
 	 * @default true
 	 */
-	fallback = $state<boolean>(true);
+	fallback? = $state<boolean>(true);
 	content?: string;
-	content_snippet?: Snippet<[any]>;
-	content_args?: any;
+	content_snippet?: Snippet<[T]>;
+	content_args?: T;
 }
-export interface TooltipProps extends BaseTooltipProps {
+export interface TooltipProps<T> extends BaseTooltipProps<T> {
 	/** The content of the tooltip. */
 	content?: string;
 }
 
-export interface TooltipWithContentProps<T> extends BaseTooltipProps {
+export interface TooltipWithContentProps<T> extends BaseTooltipProps<T> {
 	/** The content of the tooltip, as a {@link Snippet} */
 	content_snippet?: Snippet<[T]>;
 	/** Arguments to pass to the content when it is a {@link Snippet} */
@@ -68,11 +68,11 @@ export interface TooltipWithContentProps<T> extends BaseTooltipProps {
 }
 
 /** Each additional step takes the same parameters as the action itself, but you must also provide a node to move the tooltips to at each step. */
-export type TooltipStep = {
+export type TooltipStep<T> = {
 	node: HTMLElement;
-} & Omit<TooltipProps | TooltipWithContentProps<any>, 'steps'>;
+} & Omit<TooltipProps<T> | TooltipWithContentProps<T>, 'steps'>;
 
-export function tooltip<C, T extends Partial<TooltipProps> | Partial<TooltipWithContentProps<C>>>(
+export function tooltip<C, T extends Partial<TooltipProps<T>> | TooltipWithContentProps<C>>(
 	node: HTMLElement,
 	// TODO: Fix this with better typing
 	//@ts-ignore
@@ -87,12 +87,12 @@ export function tooltip<C, T extends Partial<TooltipProps> | Partial<TooltipWith
 		// Mark the node with a popovertarget so it can be targeted
 		node.setAttribute('popovertarget', `tooltip-${id}`);
 
-		let props = $state<TooltipProps | TooltipWithContentProps<T>>(new BaseTooltipProps());
+		let props = $state<TooltipProps<T> | TooltipWithContentProps<T>>(new BaseTooltipProps());
 
 		// Get some nice type-safety for the props
 		if ('content' in parameters && typeof parameters.content === 'string') {
 			const { content, ...rest } = parameters;
-			props = { ...props, content, ...rest, id } as TooltipProps;
+			props = { ...props, content, ...rest, id } as TooltipProps<T>;
 		} else if (
 			'content_snippet' in parameters &&
 			typeof parameters.content_snippet === 'function'
@@ -153,7 +153,7 @@ export function tooltip<C, T extends Partial<TooltipProps> | Partial<TooltipWith
 		add_event_listeners(node);
 
 		return {
-			async update(new_parameters: TooltipProps | TooltipWithContentProps<T>) {
+			async update(new_parameters: TooltipProps<T> | TooltipWithContentProps<T>) {
 				//TODO: Fix this with better typing
 				for (const [key, value] of Object.entries(new_parameters)) {
 					//@ts-ignore

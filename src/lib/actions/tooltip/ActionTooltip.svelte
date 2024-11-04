@@ -8,7 +8,8 @@ https://web.dev/building-a-tooltip-component/
 	import type { TooltipProps, TooltipWithContentProps } from './tooltip.svelte';
 
 	let {
-		content_snippet: content,
+		content,
+		content_snippet,
 		content_args,
 		position = 'top',
 		id = '',
@@ -20,7 +21,7 @@ https://web.dev/building-a-tooltip-component/
 		inert = true,
 		disabled = false,
 		fallback = true
-	}: TooltipProps | TooltipWithContentProps<T> = $props();
+	}: TooltipProps<T> | TooltipWithContentProps<T> = $props();
 
 	let tooltip: HTMLElement | undefined = $state(undefined);
 </script>
@@ -49,7 +50,7 @@ https://web.dev/building-a-tooltip-component/
 			{content}
 		{:else}
 			{@const asserted_args = content_args as T}
-			{@render content?.(asserted_args)}
+			{@render content_snippet?.(asserted_args)}
 		{/if}
 	{/if}
 
