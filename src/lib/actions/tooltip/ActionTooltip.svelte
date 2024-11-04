@@ -8,7 +8,7 @@ https://web.dev/building-a-tooltip-component/
 	import type { TooltipProps, TooltipWithContentProps } from './tooltip.svelte';
 
 	let {
-		content,
+		content_snippet: content,
 		content_args,
 		position = 'top',
 		id = '',
@@ -19,44 +19,44 @@ https://web.dev/building-a-tooltip-component/
 		distance = 10,
 		inert = true,
 		disabled = false,
-		fallback = true,
-	} : TooltipProps | TooltipWithContentProps<T> = $props();
-	
-	let tooltip : HTMLElement | undefined = $state(undefined);
-</script>
-		<!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. a 'toggle-tip' -->
-		<tool-tip
-		bind:this={tooltip}
-		use:dynamic_style={{ styles }}
-		{inert}
-		role="tooltip"
-		class="tooltip"
-		id={`tooltip-${id}`}
-		anchor={id}
-		popover="auto"
-		data-tip-position={position}
-		class:visible={(!disabled && visible) || keep_visible}
-		class:fallback
-		style:--anchor-position={position}
-		style:--anchor={id}
-		style:--tooltip-width={`${tooltip?.offsetWidth}px`}
-		style:--tooltip-height={`${tooltip?.offsetHeight}px`}
-		style:--distance={typeof distance === 'number' ? `${distance}px` : distance}
-		>
-			{#if content}
-				{#if typeof content === 'string'}
-					{content}
-				{:else}
-					{@const asserted_args = content_args as T}
-					{@render content?.(asserted_args)}
-				{/if}
-			{/if}
+		fallback = true
+	}: TooltipProps | TooltipWithContentProps<T> = $props();
 
-			{#if show_arrow}
-				<tooltip-arrow class="arrow" data-tip-position={position}>
-				</tooltip-arrow>
-			{/if}
-		</tool-tip>
+	let tooltip: HTMLElement | undefined = $state(undefined);
+</script>
+
+<!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. a 'toggle-tip' -->
+<tool-tip
+	bind:this={tooltip}
+	use:dynamic_style={{ styles }}
+	{inert}
+	role="tooltip"
+	class="tooltip"
+	id={`tooltip-${id}`}
+	anchor={id}
+	popover="auto"
+	data-tip-position={position}
+	class:visible={(!disabled && visible) || keep_visible}
+	class:fallback
+	style:--anchor-position={position}
+	style:--anchor={id}
+	style:--tooltip-width={`${tooltip?.offsetWidth}px`}
+	style:--tooltip-height={`${tooltip?.offsetHeight}px`}
+	style:--distance={typeof distance === 'number' ? `${distance}px` : distance}
+>
+	{#if content}
+		{#if typeof content === 'string'}
+			{content}
+		{:else}
+			{@const asserted_args = content_args as T}
+			{@render content?.(asserted_args)}
+		{/if}
+	{/if}
+
+	{#if show_arrow}
+		<tooltip-arrow class="arrow" data-tip-position={position}> </tooltip-arrow>
+	{/if}
+</tool-tip>
 
 <style>
 	@layer tooltip {
@@ -91,13 +91,13 @@ https://web.dev/building-a-tooltip-component/
 			position: fixed;
 			overflow: visible;
 			margin: 0;
-	
+
 			&[data-tip-position='bottom'] {
 				transform-origin: center top;
 				left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
 				top: calc(anchor(bottom) + var(--distance));
 				bottom: auto;
-				&.fallback{
+				&.fallback {
 					/* position-try-options: --bottom-top-right-left; */
 					position-try-options: flip-block, flip-inline, flip-start;
 				}
@@ -107,7 +107,7 @@ https://web.dev/building-a-tooltip-component/
 				left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
 				bottom: calc(anchor(top) + var(--distance));
 				top: auto;
-				&.fallback{
+				&.fallback {
 					/* position-try-options: --top-bottom-right-left; */
 					position-try-options: flip-block, flip-inline, flip-start;
 				}
@@ -117,7 +117,7 @@ https://web.dev/building-a-tooltip-component/
 				right: calc(anchor(left) + var(--distance));
 				left: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
-				&.fallback{
+				&.fallback {
 					/* position-try-options: --left-right-top-bottom; */
 					position-try-options: flip-inline, flip-block, flip-start;
 				}
@@ -127,7 +127,7 @@ https://web.dev/building-a-tooltip-component/
 				left: calc(anchor(right) + var(--distance));
 				right: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
-				&.fallback{
+				&.fallback {
 					/* position-try-options: --right-left-top-bottom; */
 					position-try-options: flip-inline, flip-block, flip-start;
 				}
@@ -137,14 +137,19 @@ https://web.dev/building-a-tooltip-component/
 				opacity: 1;
 			}
 		}
-	
-		
+
 		.arrow {
-			--side-arrow-length: calc(var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) + var(--arrow-cushion, 4px));
+			--side-arrow-length: calc(
+				var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) + var(--arrow-cushion, 4px)
+			);
 			--side-arrow-base: calc(var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) * 2);
-			--arrow-transparent-border: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid transparent;
+			--arrow-transparent-border: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem))
+				solid transparent;
 			--arrow-border-and-color: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
-						var(--tooltip-arrow-color, var(--tooltip-background, var(--tooltip-background-color, white)));
+				var(
+					--tooltip-arrow-color,
+					var(--tooltip-background, var(--tooltip-background-color, white))
+				);
 			position: absolute;
 			overflow: hidden;
 			&::after {
@@ -158,13 +163,13 @@ https://web.dev/building-a-tooltip-component/
 				);
 				border-width: var(--default-arrow-size, 0.5rem);
 			}
-	
+
 			&[data-tip-position='left'],
 			&[data-tip-position='right'] {
 				width: var(--side-arrow-length);
 				height: var(--side-arrow-base);
 				top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
-	
+
 				&::after {
 					border-top: var(--arrow-transparent-border);
 					border-bottom: var(--arrow-transparent-border);
@@ -175,7 +180,7 @@ https://web.dev/building-a-tooltip-component/
 				width: var(--side-arrow-base);
 				height: var(--side-arrow-length);
 				left: calc(50% - var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)));
-	
+
 				&::after {
 					border-left: var(--arrow-transparent-border);
 					border-right: var(--arrow-transparent-border);
@@ -184,32 +189,32 @@ https://web.dev/building-a-tooltip-component/
 			&[data-tip-position='bottom'] {
 				top: calc(
 					-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 * var(--arrow-cushion, 4px)
-				); 
+				);
 				/* overlap with the tooltip box */
-	
+
 				&::after {
-					border-bottom: var(--arrow-border-and-color)
+					border-bottom: var(--arrow-border-and-color);
 				}
 			}
 			&[data-tip-position='top'] {
 				top: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
-	
+
 				&::after {
-					border-top: var(--arrow-border-and-color)
+					border-top: var(--arrow-border-and-color);
 				}
 			}
 			&[data-tip-position='left'] {
 				left: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
-	
+
 				&::after {
-					border-left: var(--arrow-border-and-color)
+					border-left: var(--arrow-border-and-color);
 				}
 			}
 			&[data-tip-position='right'] {
 				left: calc(-1 * var(--tooltip-arrow-width, 0.75rem) + -1 * var(--arrow-cushion, 0px));
-	
+
 				&::after {
-					border-right: var(--arrow-border-and-color)
+					border-right: var(--arrow-border-and-color);
 				}
 			}
 		}
