@@ -1,7 +1,7 @@
 <script module lang="ts">
 	export interface ButtonProps<T> extends Omit<HTMLButtonAttributes, 'class'> {
 		/** Options to style the tooltip or modify its visible/disabled state */
-		tooltip_options?: TooltipProps | TooltipWithContentProps<T>;
+		tooltip_options?: TooltipProps<T> | TooltipWithContentProps<T>;
 		/** Style the button, allowing dynamic updates */
 		dynamic_styles?: DynamicStyleParameters;
 		/** External classes to add to the button. */

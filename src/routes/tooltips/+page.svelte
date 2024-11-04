@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { tooltip, type TooltipDirections } from '$actions/tooltip/tooltip.svelte.js';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
+	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+	import Fa from 'svelte-fa';
+	import { SvelteMap } from 'svelte/reactivity';
+	import { fly } from 'svelte/transition';
+	import CustomComponent from './CustomComponent.svelte';
 	let position: TooltipDirections = $state('top');
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width = 150;
@@ -26,7 +31,7 @@
 		'Type in the text input while hovering the parent element to see the magic happen!'
 	);
 
-	const styling_green_map = new Map()
+	const styling_green_map = new SvelteMap<string, string>()
 		.set('max-width', `${max_width}px`)
 		.set('--tooltip-color', 'black')
 		.set('--tooltip-font-weight', '600')
@@ -34,14 +39,14 @@
 		.set('--tooltip-background', 'radial-gradient( white 30%, lightgreen)')
 		.set('--tooltip-drop-shadow', '0px 0px 10px lime');
 
-	const hot_sun_map = new Map()
+	const hot_sun_map = new SvelteMap<string, string>()
 		.set('--tooltip-background', 'lightyellow')
 		.set('box-shadow', '0px 0px 16px 8px orange');
 
 	let styling_green_styles = $derived(convertMapToStyleString(styling_green_map));
 	let hot_sun_styles = $derived(convertMapToStyleString(hot_sun_map));
 
-	function convertMapToStyleString(map: Map<string, string>) {
+	function convertMapToStyleString(map: SvelteMap<string, string>) {
 		let styles = '';
 		for (const [key, value] of map) {
 			styles += `${key}: ${value}; `;
@@ -77,34 +82,32 @@
 		</label>
 	</div>
 
-	<!-- position: selected_position, -->
+	<!-- position, -->
 	<button class="full-width" use:tooltip={tooltip_props}>
 		Tooltips Can Adjust Their Position Automatically
 	</button>
-	<!-- <button
+	<button
 		class="full-width"
 		use:tooltip={{
-			position: selected_position,
+			position,
 			visible: initially_visible_example && visible,
-			
 			disabled,
-			visibility_delay: 900,
 			content: `This is a tooltip that is set to become visible as soon as its parent is mounted (after waiting for a specified delay). Mouseout its parent to hide the tooltip, or do it programmatically by clicking its parent button!`,
 			styles: `max-width: min(100vw, 200px); ${hot_sun_styles}`
 		}}
-		on:click={() => (initially_visible_example = !initially_visible_example)}
+		onclick={() => (initially_visible_example = !initially_visible_example)}
 	>
 		Tooltips Can Be Used Without the Mouse
 	</button>
 	<button
 		use:tooltip={{
-			position: selected_position,
 			content: dynamic_tooltip_text,
+			position,
 			disabled,
 			delay: 150,
 			styles: 'max-width: min(100vw, 200px)',
 			keep_visible
-}}
+		}}
 	>
 		Dynamically Updating Tooltip Text
 	</button>
@@ -112,21 +115,25 @@
 
 	<button
 		use:tooltip={{
-			position: selected_position,
+			position,
 			content: keep_visible
-? `I'll stick around. It's useful for debugging styles on the tip too!`
+				? `I'll stick around. It's useful for debugging styles on the tip too!`
 				: `I'll disappear after a short delay`,
-			
+
 			disabled
 		}}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
 	</button>
+	{#snippet test(text: string)}
+		Hello
+	{/snippet}
+
 	<button
 		id="custom-component-button"
 		use:tooltip={{
-			position: selected_position,
-			content: `I've got a <br/> custom component!`,			
+			position,
+			content: `I've got a <br/> custom component!`,
 			visible,
 			disabled,
 			custom_component: CustomComponent,
@@ -137,10 +144,10 @@
 	</button>
 	<button
 		use:tooltip={{
-			position: selected_position,
+			position,
 			content: `I'm so stylin'!`,
 			show_arrow: false,
-			disabled,			
+			disabled,
 			delay: 200,
 			transition: fly,
 			transition_config: {
@@ -157,7 +164,7 @@
 		style="display:grid; grid-template-columns: repeat(3, minmax(0,max-content)); column-gap: 0.5rem; row-gap:1rem;"
 		use:tooltip={{
 			delay: 600,
-			content: 'There are different delays on each the tooltips to achieve a staggered effect',		
+			content: 'There are different delays on each the tooltips to achieve a staggered effect',
 			styles: hot_sun_styles,
 			position: 'left',
 			vertical_offset: -200
@@ -165,18 +172,27 @@
 	>
 		<h4>Rule</h4>
 		<h4>Value</h4>
-		<div />
-		{#each [...styling_green_map] as [rule, value]}
-			<input type="text" bind:value={rule} />
-			<input type="text" bind:value />
-			<button class="delete" on:click={() => styling_green_map.delete(rule)}
+		<div></div>
+		{#each styling_green_map.entries() as [rule, value], i}
+			{@const rule_value = styling_green_map.get(rule)}
+			<input
+				type="text"
+				value={rule}
+				onblur={(e) => styling_green_map.set(e.currentTarget.value, value)}
+			/>
+			<input
+				type="text"
+				{value}
+				oninput={(e) => styling_green_map.set(rule, e.currentTarget.value)}
+			/>
+			<button class="delete" onclick={() => styling_green_map.delete(rule)}
 				><Fa icon={faTrash} size="lg" /></button
 			>
 		{/each}
-		<button class="add" on:click={() => styling_green_map.set('', '')}
+		<button class="add" onclick={() => styling_green_map.set('', '')}
 			><Fa icon={faPlus} />Add CSS Rule</button
 		>
-	</div> -->
+	</div>
 </section>
 
 <style>
