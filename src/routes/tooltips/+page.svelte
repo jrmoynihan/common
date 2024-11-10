@@ -4,8 +4,6 @@
 	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { SvelteMap } from 'svelte/reactivity';
-	import { fly } from 'svelte/transition';
-	import CustomComponent from './CustomComponent.svelte';
 	let position: TooltipDirections = $state('top');
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width = 150;
@@ -30,6 +28,7 @@
 	let dynamic_tooltip_text = $state(
 		'Type in the text input while hovering the parent element to see the magic happen!'
 	);
+	let dynamic_tooltip_text_num = $state(0);
 
 	const styling_green_map = new SvelteMap<string, string>()
 		.set('max-width', `${max_width}px`)
@@ -64,6 +63,9 @@
 	}
 </script>
 
+{#snippet tooltip_example({ text, num }: { text: string; num: number })}
+	<button>example from a snippet: {text} {num}</button>
+{/snippet}
 <section id="tooltips-section">
 	<div class="settings full-width">
 		{#each positions as p}
@@ -104,14 +106,29 @@
 			content: dynamic_tooltip_text,
 			position,
 			disabled,
-			delay: 150,
 			styles: 'max-width: min(100vw, 200px)',
 			keep_visible
 		}}
 	>
 		Dynamically Updating Tooltip Text
 	</button>
-	<input type="text" class="tooltip-text-input" bind:value={dynamic_tooltip_text} />
+	<input
+		type="text"
+		class="tooltip-text-input"
+		bind:value={dynamic_tooltip_text}
+		use:tooltip={{
+			content_snippet: tooltip_example,
+			content_args: { text: dynamic_tooltip_text, num: dynamic_tooltip_text_num }
+		}}
+	/>
+	<input
+		type="number"
+		bind:value={dynamic_tooltip_text_num}
+		use:tooltip={{
+			content_snippet: tooltip_example,
+			content_args: { text: dynamic_tooltip_text, num: dynamic_tooltip_text_num }
+		}}
+	/>
 
 	<button
 		use:tooltip={{
@@ -125,19 +142,13 @@
 	>
 		Tooltips Can Stay Visible Or Be Disabled
 	</button>
-	{#snippet test(text: string)}
-		Hello
-	{/snippet}
-
 	<button
 		id="custom-component-button"
 		use:tooltip={{
 			position,
 			content: `I've got a <br/> custom component!`,
 			visible,
-			disabled,
-			custom_component: CustomComponent,
-			custom_component_props: { text: 'I can be changed!' }
+			disabled
 		}}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
@@ -148,13 +159,6 @@
 			content: `I'm so stylin'!`,
 			show_arrow: false,
 			disabled,
-			delay: 200,
-			transition: fly,
-			transition_config: {
-				duration: 500,
-				x: -70,
-				y: 70
-			},
 			styles: styling_green_styles
 		}}
 	>
@@ -163,11 +167,10 @@
 	<div
 		style="display:grid; grid-template-columns: repeat(3, minmax(0,max-content)); column-gap: 0.5rem; row-gap:1rem;"
 		use:tooltip={{
-			delay: 600,
 			content: 'There are different delays on each the tooltips to achieve a staggered effect',
 			styles: hot_sun_styles,
 			position: 'left',
-			vertical_offset: -200
+			distance: -200
 		}}
 	>
 		<h4>Rule</h4>

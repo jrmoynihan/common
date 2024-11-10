@@ -48,10 +48,9 @@ https://web.dev/building-a-tooltip-component/
 	{#if content}
 		{#if typeof content === 'string'}
 			{content}
-		{:else}
-			{@const asserted_args = content_args as T}
-			{@render content_snippet?.(asserted_args)}
 		{/if}
+	{:else if content_snippet}
+		{@render content_snippet(content_args)}
 	{/if}
 
 	{#if show_arrow}

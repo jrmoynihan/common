@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import type { PartiallyRequired } from '$functions/helpers.svelte';
 import { ErrorLog } from '$functions/logging.js';
 import { mount, unmount, type Snippet } from 'svelte';
 import ActionTooltip from './ActionTooltip.svelte';
@@ -51,20 +52,42 @@ export class BaseTooltipProps<T> {
 	 * @default true
 	 */
 	fallback? = $state<boolean>(true);
-	content?: string;
-	content_snippet?: Snippet<[T]>;
-	content_args?: T;
+	constructor({ ...args }: Partial<BaseTooltipProps<T>>) {
+		this.position = args.position ?? 'top';
+		this.id = args.id ?? crypto.randomUUID();
+		this.visible = args.visible ?? false;
+		this.disabled = args.disabled ?? false;
+		this.keep_visible = args.keep_visible ?? false;
+		this.show_arrow = args.show_arrow ?? true;
+		this.styles = args.styles ?? '';
+		this.distance = args.distance ?? 10;
+		this.inert = args.inert ?? true;
+		this.step = args.step ?? 0;
+		this.steps = args.steps ?? [];
+		this.fallback = args.fallback ?? true;
+	}
 }
-export interface TooltipProps<T> extends BaseTooltipProps<T> {
+export class TooltipProps<T> extends BaseTooltipProps<T> {
 	/** The content of the tooltip. */
 	content?: string;
+	constructor({ ...args }: PartiallyRequired<TooltipProps<T>, 'content'>) {
+		super(args);
+		this.content = args.content;
+	}
 }
 
-export interface TooltipWithContentProps<T> extends BaseTooltipProps<T> {
+export class TooltipWithContentProps<T> extends BaseTooltipProps<T> {
 	/** The content of the tooltip, as a {@link Snippet} */
 	content_snippet?: Snippet<[T]>;
 	/** Arguments to pass to the content when it is a {@link Snippet} */
 	content_args?: T;
+	constructor({
+		...args
+	}: PartiallyRequired<TooltipWithContentProps<T>, 'content_snippet' | 'content_args'>) {
+		super(args);
+		this.content_snippet = args.content_snippet;
+		this.content_args = args.content_args;
+	}
 }
 
 /** Each additional step takes the same parameters as the action itself, but you must also provide a node to move the tooltips to at each step. */
@@ -75,8 +98,7 @@ export type TooltipStep<T> = {
 export function tooltip<C, T extends Partial<TooltipProps<T>> | TooltipWithContentProps<C>>(
 	node: HTMLElement,
 	// TODO: Fix this with better typing
-	//@ts-ignore
-	parameters: T = new BaseTooltipProps()
+	parameters: TooltipProps<C> | TooltipWithContentProps<C>
 ) {
 	try {
 		// Either use existing id to anchor the tooltip, or create a new one and add it to the node
@@ -87,18 +109,20 @@ export function tooltip<C, T extends Partial<TooltipProps<T>> | TooltipWithConte
 		// Mark the node with a popovertarget so it can be targeted
 		node.setAttribute('popovertarget', `tooltip-${id}`);
 
-		let props = $state<TooltipProps<T> | TooltipWithContentProps<T>>(new BaseTooltipProps());
+		const default_props = new BaseTooltipProps<C>({});
 
+		let props = $state<TooltipProps<T> | TooltipWithContentProps<T>>(new BaseTooltipProps({}));
 		// Get some nice type-safety for the props
-		if ('content' in parameters && typeof parameters.content === 'string') {
+		if ('content' in parameters && parameters.content && typeof parameters.content === 'string') {
 			const { content, ...rest } = parameters;
-			props = { ...props, content, ...rest, id } as TooltipProps<T>;
+			props = { ...default_props, content, ...rest, id } as TooltipProps<T>;
 		} else if (
 			'content_snippet' in parameters &&
+			parameters.content_snippet &&
 			typeof parameters.content_snippet === 'function'
 		) {
 			const { content_snippet, ...rest } = parameters;
-			props = { ...props, content_snippet, ...rest, id } as TooltipWithContentProps<T>;
+			props = { ...default_props, content_snippet, ...rest, id } as TooltipWithContentProps<C>;
 		}
 
 		let tooltip: ReturnType<typeof mount>;
@@ -153,9 +177,9 @@ export function tooltip<C, T extends Partial<TooltipProps<T>> | TooltipWithConte
 		add_event_listeners(node);
 
 		return {
-			async update(new_parameters: TooltipProps<T> | TooltipWithContentProps<T>) {
+			async update(new_props: TooltipProps<T> | TooltipWithContentProps<T>) {
 				//TODO: Fix this with better typing
-				for (const [key, value] of Object.entries(new_parameters)) {
+				for (const [key, value] of Object.entries(new_props)) {
 					//@ts-ignore
 					props[key] = value;
 				}
