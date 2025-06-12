@@ -1,29 +1,27 @@
 <script module lang="ts">
-	export interface NavLinkProps extends HTMLAnchorAttributes {
+	export interface NavLinkProps<T> extends HTMLAnchorAttributes {
 		/** The navigation link to display. */
 		nav_link: NavigationLink;
 		/** Tooltip options to apply to the nav links. */
-		tooltip_options?: TooltipProps;
+		tooltip_options?: TooltipProps<T>;
 		/** Classes to apply to the nav links. */
 		classes?: string;
 		/** Styles to apply to a link when it is the _currently active_ page URL. */
 		current_page_styles?: string;
 		/** Dynamic styles to apply to the nav links. */
 		dynamic_styles?: DynamicStyleParameters;
-		/** Props for an `<FaLayers>` component */
-		fa_layers_props?: ComponentProps<FaLayers>;
 		/** The children snippet to render. */
 		children?: Snippet;
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
-	import { page } from '$app/stores';
-	import { Fa, FaLayers, FaLayersText } from '@jrmoynihan/svelte-fa';
-	import type { ComponentProps, Snippet } from 'svelte';
+	import { page } from '$app/state';
+	import Icon from '@iconify/svelte';
+	import type { Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
 	import type { NavigationLink } from './nav-functions.js';
 
@@ -33,13 +31,12 @@
 		classes,
 		current_page_styles,
 		dynamic_styles,
-		fa_layers_props,
 		children,
 		...anchor_attributes
-	}: NavLinkProps = $props();
+	}: NavLinkProps<T> = $props();
 
-	let is_current_page = $derived(nav_link.isCurrentPage($page));
-	let is_page_active = $derived(nav_link.is_page_within_path($page));
+	let is_current_page = $derived(nav_link.isCurrentPage(page));
+	let is_page_active = $derived(nav_link.is_page_within_path(page));
 	let anchor_path_to_scroll_to: string | undefined = $state();
 
 	beforeNavigate(({ from, to, cancel }) => {
@@ -54,7 +51,7 @@
 			if (is_same_base_path && is_anchor) {
 				cancel();
 				scrollToElement();
-			} else if (is_anchor) {
+			} else if (is_anchor && base_path) {
 				cancel();
 				// Navigate to the base path, then allow the afterNavigate hook to move to the anchor smoothly
 				goto(base_path);
@@ -92,18 +89,8 @@
 	href={nav_link.url.href}
 	{...anchor_attributes}
 >
-	{#if Array.isArray(nav_link.icons) && nav_link.icons.length > 0}
-		<FaLayers {...fa_layers_props}>
-			{#each nav_link.icons as { icon, text, ...rest }}
-				{#if icon}
-					<Fa {icon} {...rest} />
-				{:else if text}
-					<FaLayersText {...rest}>
-						{text}
-					</FaLayersText>
-				{/if}
-			{/each}
-		</FaLayers>
+	{#if nav_link.icon}
+		<Icon {...nav_link.icon} />
 	{/if}
 	{@render children?.()}
 	{nav_link.link_text}

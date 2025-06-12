@@ -11,8 +11,8 @@
 	export interface AccordionDetailsProps extends HTMLDetailsAttributes {
 		/** How many degrees to rotate the icon when closed. Defaults to 0. */
 		closed_icon_rotation?: number;
-		/** The icon to display. */
-		icon?: IconDefinition;
+		/** The Iconify icon props. */
+		icon_props?: IconProps;
 		/** A custom icon snippet. */
 		custom_icon?: Snippet;
 		/** Attributes for the `<summary>` element. */
@@ -23,8 +23,6 @@
 		details_classes?: string;
 		/** The position of the expand icon. Defaults to `right`. */
 		expand_icon_position?: 'left' | 'right' | 'none';
-		/** The class of the expand icon. Defaults to `fa-CaretDown`. */
-		icon_class?: string;
 		/** The maximum height of the content when closed. Defaults to `0`. */
 		max_height_closed?: string;
 		/** The maximum height of the content when open. Defaults to `100%`. */
@@ -36,33 +34,31 @@
 		/** The summary of the accordion. */
 		summary_content?: Snippet;
 		/** Parameters for the summary tooltip. Defaults to `{ disabled: true }`.*/
-		summary_tooltip_parameters?: TooltipProps;
+		summary_tooltip_parameters?: TooltipProps<T>;
 		/**
 		 * Parameters for the content transition. Defaults to `{ slide_transition_parameters: { duration: '500ms', easing: 'ease' } }`.
 		 *  Available transitions are `fly`, `fade`, `blur`, `slide`, and `scale`. See the {@link TransitionNative_Runes.svelte} component.
 		 **/
-		transition_props?: ComponentProps<TransitionNativeRunes>;
+		transition_props?: ComponentProps<typeof TransitionNativeRunes>;
 		/** If only details in a group should open at a time, set a name for the group */
 		group_name?: string;
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
-	import type { IconDefinition } from '@fortawesome/fontawesome-common-types';
-	import { Fa } from '@jrmoynihan/svelte-fa';
 	import type { ComponentProps, Snippet } from 'svelte';
+	import Icon, { type IconProps } from '@iconify/svelte';
 	import type { HTMLAttributes, HTMLDetailsAttributes } from 'svelte/elements';
 	import TransitionNativeRunes from './TransitionNative_Runes.svelte';
 
 	let {
 		closed_icon_rotation = 0,
 		children,
-		icon,
+		icon_props: icon,
 		custom_icon,
 		details_classes = '',
 		expand_icon_position = 'right',
-		icon_class = 'fa-CaretDown',
 		max_height_closed = 'calc(3ch + 0.5rem)',
 		max_height_open = 'calc(100% + 1rem)',
 		open = $bindable(false),
@@ -106,8 +102,8 @@
 	});
 </script>
 
-{#snippet fa_icon_snippet(icon: IconDefinition)}
-	<Fa {icon} class={icon_class} rotate={open ? open_icon_rotation : closed_icon_rotation} />
+{#snippet fa_icon_snippet(icon_props: IconProps)}
+	<Icon {...icon_props} rotate={open ? open_icon_rotation : closed_icon_rotation} />
 {/snippet}
 
 {#snippet default_icon()}

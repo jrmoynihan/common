@@ -1,43 +1,22 @@
-import { capitalize, deKebab } from '$functions/helpers.svelte.js';
+import { capitalize, dekebab } from '$functions/helpers.svelte.js';
 import { ErrorLog } from '$functions/logging.js';
-import type { IconDefinition } from '@fortawesome/free-solid-svg-icons/index';
+import type { IconProps } from '@iconify/svelte';
 import type { NavigationTarget, Page } from '@sveltejs/kit';
-import type { IconSize } from '../lib_types.js';
 
 interface INavigationLink {
 	url: URL;
 	link_text?: string;
-	icons?: IconLayer[];
+	icon?: IconProps;
 	anchors?: NavigationLink[];
 }
-export class IconLayer {
-	icon?: IconDefinition;
-	size?: IconSize;
-	translateX?: number;
-	translateY?: number;
-	color?: string;
-	text?: string;
-	scale?: number;
-	style?: string;
 
-	constructor(args: IconLayer) {
-		this.icon = args?.icon;
-		this.size = args?.size;
-		this.translateX = args?.translateX;
-		this.translateY = args?.translateY;
-		this.color = args?.color;
-		this.text = args?.text;
-		this.scale = args?.scale;
-		this.style = args?.style;
-	}
-}
 export class NavigationLink {
 	/** The URL object describing the link */
 	url: URL;
 	/** The displayed text for the link (defaults to the link's pathname)*/
 	link_text: string;
-	/** Pass in an array of icons to use in a FaLayer component. */
-	icons: IconLayer[] | undefined;
+	/** Pass in an icon to use in a Iconify component. */
+	icon?: IconProps;
 	/** Pass in an array of NavigationLinks to use as anchors for the link. */
 	anchors: NavigationLink[] | undefined;
 	/** Whether or not the link is the current page.  Can update with the `isCurrentPage()` method. */
@@ -45,18 +24,18 @@ export class NavigationLink {
 
 	constructor(args: INavigationLink) {
 		this.url = args?.url;
-		this.link_text = args?.link_text ? capitalize(deKebab(args?.link_text)) : '';
-		this.icons = args?.icons ?? undefined;
+		this.link_text = args?.link_text ? capitalize(dekebab(args?.link_text)) : '';
+		this.icon = args?.icon ?? undefined;
 		this.anchors = args?.anchors ?? undefined;
 		this.is_current_page = false;
 	}
 
-	isCurrentPage = (page: Page<Record<string, string>, string | null>): boolean => {
+	isCurrentPage = (page: Page): boolean => {
 		const is_current = page?.url?.pathname === this.url?.pathname;
 		this.is_current_page = is_current;
 		return is_current;
 	};
-	is_page_within_path = (page: Page<Record<string, string>, string | null>): boolean => {
+	is_page_within_path = (page: Page): boolean => {
 		return page?.url?.pathname.startsWith(this.url?.pathname);
 	};
 }
@@ -87,7 +66,7 @@ function filter_path({ path, name }: { path: string; name: string }, full_path: 
 
 export async function make_subroute_nav_links(
 	load_event_url: URL,
-	icon_map?: Map<string, IconLayer>
+	icon_map?: Map<string, IconProps>
 ) {
 	const is_root_path = load_event_url.pathname.endsWith('/');
 	const subroutes = await get_subroutes(load_event_url.pathname);
@@ -98,7 +77,7 @@ export async function make_subroute_nav_links(
 		return new NavigationLink({
 			url: subroute_url,
 			link_text: name,
-			icons: icon_map ? [{ ...icon_map.get(name) }] : undefined
+			icon: icon_map?.get(name)
 		});
 	});
 

@@ -1,9 +1,9 @@
 <script module lang="ts">
-	export interface AccordionProps extends HTMLButtonAttributes {
+	export interface AccordionProps<T> extends HTMLButtonAttributes {
 		/** A snippet to provide a custom summary section instead of just passing the `summary_text`. */
 		summary?: Snippet | string;
 		/** The parameters of the `<summary>` tooltip. */
-		summary_tooltip_props?: TooltipProps;
+		summary_tooltip_props?: TooltipProps<T>;
 		/** Attributes to apply to the `<summary>` element. */
 		summary_attributes?: HTMLAttributes<HTMLElement>;
 		/** (Bindable) The open state of the accordion. */
@@ -12,8 +12,8 @@
 		transition_props?: ComponentProps<typeof TransitionRunes>;
 		/** The position of the expand icon. */
 		expand_icon_position?: 'left' | 'right' | 'none';
-		/** Props to apply to the expand/collapse icon's `<Fa>` component. */
-		icon_props?: ComponentProps<Fa>;
+		/** Props to apply to the expand/collapse icon's component. */
+		icon_props?: IconProps;
 		/** The rotation of the open icon. */
 		closed_icon_rotation?: number;
 		/** The rotation of the closed icon. */
@@ -21,14 +21,13 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte';
-	import { Fa } from '@jrmoynihan/svelte-fa';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import { cubicInOut } from 'svelte/easing';
 	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	import TransitionRunes from './Transition_Runes.svelte';
-
+	import Icon, { type IconProps } from '@iconify/svelte';
 	export const toggle = () => {
 		open = !open;
 	};
@@ -47,14 +46,15 @@
 		closed_icon_rotation = 90,
 		open_icon_rotation = -90,
 		...button_attributes
-	}: AccordionProps = $props();
+	}: AccordionProps<T> = $props();
 </script>
 
-{#snippet icon(icon_props: ComponentProps<Fa>)}
-	<Fa
-		class={'fa-CaretDown'}
+{#snippet icon(icon_props: IconProps)}
+	{@const {icon = 'mdi:caret-down', ...rest} = icon_props}
+	<Icon
 		rotate={open ? open_icon_rotation : closed_icon_rotation}
-		{...icon_props}
+		{icon}
+		{...rest}
 	/>
 {/snippet}
 

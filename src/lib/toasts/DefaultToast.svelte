@@ -1,21 +1,20 @@
 <script lang="ts">
-	import { faBreadSlice } from '@fortawesome/free-solid-svg-icons';
-	import { Fa } from '@jrmoynihan/svelte-fa';
-	import type { ComponentProps, Snippet } from 'svelte';
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import Icon, { type IconProps } from '@iconify/svelte';
 
 	interface DefaultToastProps {
 		title: string;
 		header_attributes?: HTMLAttributes<HTMLHeadingElement>;
-		icon_attributes?: ComponentProps<Fa>;
-		header?: Snippet<[string, HTMLAttributes<HTMLHeadingElement>?, ComponentProps<Fa>?]>;
+		icon_attributes?: IconProps;
+		header?: Snippet<[string, HTMLAttributes<HTMLHeadingElement>?, IconProps?]>;
 		children: Snippet;
 	}
 
 	let {
 		title = '',
 		header_attributes,
-		icon_attributes = { icon: faBreadSlice, size: 'lg', color: 'inherit' },
+		icon_attributes = { icon: 'fa6-solid:bread-slice', color: 'inherit' },
 		header = default_header,
 		children
 	}: DefaultToastProps = $props();
@@ -24,11 +23,11 @@
 {#snippet default_header(
 	title: string,
 	header_attributes?: HTMLAttributes<HTMLHeadingElement>,
-	icon_attributes?: ComponentProps<Fa>
+	icon_attributes?: IconProps
 )}
 	<h3 {...header_attributes}>
 		{#if icon_attributes}
-			<Fa {...icon_attributes} />
+			<Icon {...icon_attributes} />
 		{/if}
 		{title}
 	</h3>

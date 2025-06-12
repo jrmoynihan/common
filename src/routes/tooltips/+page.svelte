@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { tooltip, type TooltipDirections } from '$actions/tooltip/tooltip.svelte.js';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-	import Fa from 'svelte-fa';
 	import { SvelteMap } from 'svelte/reactivity';
+	import Icon from '@iconify/svelte';
 	let position: TooltipDirections = $state('top');
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width = 150;
@@ -189,11 +188,11 @@
 				oninput={(e) => styling_green_map.set(rule, e.currentTarget.value)}
 			/>
 			<button class="delete" onclick={() => styling_green_map.delete(rule)}
-				><Fa icon={faTrash} size="lg" /></button
+				><Icon icon="fa-solid:trash" /></button
 			>
 		{/each}
 		<button class="add" onclick={() => styling_green_map.set('', '')}
-			><Fa icon={faPlus} />Add CSS Rule</button
+			><Icon icon="fa-solid:plus" />Add CSS Rule</button
 		>
 	</div>
 </section>

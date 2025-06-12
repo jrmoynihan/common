@@ -1,5 +1,5 @@
 <script module lang="ts">
-	export interface NumericInputProps extends InputProps {
+	export interface NumericInputProps<K> extends InputProps {
 		input_element?: HTMLInputElement;
 		value?: string | number | string[] | null;
 		valid?: boolean;
@@ -7,7 +7,7 @@
 		label_element?: HTMLLabelElement;
 		invalid_msg?: string;
 		show_spinner_buttons?: boolean;
-		tooltip_options?: TooltipProps | null;
+		tooltip_options?: TooltipProps<K> | null;
 		container_styles?: DynamicStyleParameters;
 		input_styles?: DynamicStyleParameters;
 		placeholder_props?: ComponentProps<typeof Placeholder>;
@@ -23,15 +23,14 @@
 	// TODO: add a prop for a custom validity function?
 	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
 
-	type SpinnerButton<T> = InputButtonProps<T> & ComponentProps<Fa>;
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts" generics="T, K">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import { type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
-	import { Fa } from '@jrmoynihan/svelte-fa';
 	import { type ComponentProps, type Snippet } from 'svelte';
+	import Icon, { type IconProps } from '@iconify/svelte';
 	import Input, { type InputProps } from './Input.svelte';
 	import InputButton, { type InputButtonProps } from './InputButton.svelte';
 	import InputLabel from './InputLabel.svelte';
@@ -53,17 +52,12 @@
 		down_spinner_button,
 		children,
 		...input_attributes
-	}: NumericInputProps = $props();
+	}: NumericInputProps<K> = $props();
 </script>
 
-{#snippet default_spinner_button({ icon, size, ...button_props }: SpinnerButton<T>)}
+{#snippet default_spinner_button(icon_props: IconProps, button_props: InputButtonProps<T>)}
 	<InputButton {...button_props} disabled={input_attributes?.disabled}>
-		<Fa
-			{icon}
-			{size}
-			color="var(--text-input-button-color, buttontext)"
-			class="spinner-button-icon"
-		/>
+		<Icon {...icon_props} class="spinner-button-icon" style="color: var(--text-input-button-color, buttontext);"/>
 	</InputButton>
 {/snippet}
 
@@ -94,16 +88,18 @@
 			{:else if spinner_button}
 				{@render spinner_button()}
 			{:else}
-				{@render default_spinner_button({
-					classes: 'plus',
-					icon: faCaretUp,
-					size: 'xs',
-					onclick: () => {
+				{@render default_spinner_button(
+					{
+						icon: 'mdi:caret-up',
+					},
+					{
+						classes: 'plus',
+						onclick: () => {
 						if (current + step <= max_num) {
 							value = Number(value) + step;
 						}
-					}
-				})}
+					}}
+				)}
 			{/if}
 
 			{#if down_spinner_button}
@@ -111,10 +107,9 @@
 			{:else if spinner_button}
 				{@render spinner_button()}
 			{:else}
-				{@render default_spinner_button({
+				{@render default_spinner_button({icon: 'mdi:caret-down'},
+				{
 					classes: 'minus',
-					icon: faCaretDown,
-					size: 'xs',
 					onclick: () => {
 						if (current - step >= min_num) {
 							value = Number(value) - step;

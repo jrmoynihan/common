@@ -9,7 +9,7 @@
 		/** The position of the icon relative to the children/content of the button */
 		icon_position?: 'before' | 'after';
 		/** Props on the font-awesome component for the icon */
-		icon_props?: ComponentProps<Fa>;
+		icon_props?: IconProps;
 		/** A Svelte transition to use on the button */
 		transition?: SvelteTransition;
 		/** Transition properties to use on the button */
@@ -29,8 +29,7 @@
 		type TooltipWithContentProps
 	} from '$actions/tooltip/tooltip.svelte.js';
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types.js';
-	import { Fa } from '@jrmoynihan/svelte-fa';
-	import type { ComponentProps } from 'svelte';
+	import Icon, { type IconProps } from '@iconify/svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import { fade } from 'svelte/transition';
 
@@ -53,8 +52,8 @@
 	}: ButtonProps<T> = $props();
 </script>
 
-{#snippet fa_icon(icon_props: ComponentProps<Fa>)}
-	<Fa {...icon_props} />
+{#snippet icon(icon_props: IconProps)}
+	<Icon {...icon_props} />
 {/snippet}
 
 <button
@@ -68,13 +67,13 @@
 	{...attributes}
 >
 	{#if icon_props && icon_position === 'before'}
-		{@render fa_icon(icon_props)}
+		{@render icon(icon_props)}
 	{/if}
 
 	{@render children?.()}
 
 	{#if icon_props && icon_position === 'after'}
-		{@render fa_icon(icon_props)}
+		{@render icon(icon_props)}
 	{/if}
 </button>
 
