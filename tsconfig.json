@@ -9,6 +9,9 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"strict": true,
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"noUncheckedIndexedAccess": true, // Added to avoid errors with indexed access
 		"types": ["svelte"]
 	}
 }
