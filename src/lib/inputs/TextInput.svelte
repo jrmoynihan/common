@@ -1,5 +1,5 @@
 <script module lang="ts">
-	export interface TextInputProps extends InputProps {
+	export interface TextInputProps<T> extends InputProps {
 		input_element?: HTMLInputElement;
 		value?: unknown;
 		show_confirm?: boolean;
@@ -9,7 +9,7 @@
 		dynamic_input_styles?: DynamicStyleParameters;
 		label_element?: HTMLLabelElement;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
-		label_props?: InputLabelProps;
+		label_props?: InputLabelProps<T>;
 		/** A binding to the placeholder <div> element */
 		placeholder_element?: HTMLDivElement;
 		placeholder_props?: PlaceholderProps;
@@ -22,9 +22,8 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import { faCheck, faX } from '@fortawesome/free-solid-svg-icons/index';
 	import type { FormEventHandler } from 'svelte/elements';
 	import Input, { type InputProps } from './Input.svelte';
 	import InputButton from './InputButton.svelte';
@@ -53,7 +52,7 @@
 		onblur,
 		oninput,
 		...input_attributes
-	}: TextInputProps = $props();
+	}: TextInputProps<T> = $props();
 
 	function clear_input() {
 		value = '';
@@ -130,7 +129,10 @@
 				tabindex={value && valid ? 0 : -1}
 				onclick={handle_click}
 				disabled={!value}
-				icon_props={{ icon: faCheck, color: 'var(--text-input-button-color, buttontext)' }}
+				icon_props={{
+					icon: 'fa6-solid:check',
+					color: 'var(--text-input-button-color, buttontext)'
+				}}
 			></InputButton>
 		{/if}
 		{#if show_cancel}
@@ -140,7 +142,7 @@
 				tabindex={value ? 0 : -1}
 				onclick={cancel}
 				disabled={!value}
-				icon_props={{ icon: faX, color: 'var(--text-input-button-color, buttontext)' }}
+				icon_props={{ icon: 'fa6-solid:x', color: 'var(--text-input-button-color, buttontext)' }}
 			></InputButton>
 		{/if}
 	</div>

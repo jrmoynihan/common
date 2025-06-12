@@ -22,13 +22,11 @@
 	}
 	// TODO: add a prop for a custom validity function?
 	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
-
 </script>
 
 <script lang="ts" generics="T, K">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import { type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
-	import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 	import { type ComponentProps, type Snippet } from 'svelte';
 	import Icon, { type IconProps } from '@iconify/svelte';
 	import Input, { type InputProps } from './Input.svelte';
@@ -57,7 +55,11 @@
 
 {#snippet default_spinner_button(icon_props: IconProps, button_props: InputButtonProps<T>)}
 	<InputButton {...button_props} disabled={input_attributes?.disabled}>
-		<Icon {...icon_props} class="spinner-button-icon" style="color: var(--text-input-button-color, buttontext);"/>
+		<Icon
+			{...icon_props}
+			class="spinner-button-icon"
+			style="color: var(--text-input-button-color, buttontext);"
+		/>
 	</InputButton>
 {/snippet}
 
@@ -90,15 +92,16 @@
 			{:else}
 				{@render default_spinner_button(
 					{
-						icon: 'mdi:caret-up',
+						icon: 'mdi:caret-up'
 					},
 					{
 						classes: 'plus',
 						onclick: () => {
-						if (current + step <= max_num) {
-							value = Number(value) + step;
+							if (current + step <= max_num) {
+								value = Number(value) + step;
+							}
 						}
-					}}
+					}
 				)}
 			{/if}
 
@@ -107,15 +110,17 @@
 			{:else if spinner_button}
 				{@render spinner_button()}
 			{:else}
-				{@render default_spinner_button({icon: 'mdi:caret-down'},
-				{
-					classes: 'minus',
-					onclick: () => {
-						if (current - step >= min_num) {
-							value = Number(value) - step;
+				{@render default_spinner_button(
+					{ icon: 'mdi:caret-down' },
+					{
+						classes: 'minus',
+						onclick: () => {
+							if (current - step >= min_num) {
+								value = Number(value) - step;
+							}
 						}
 					}
-				})}
+				)}
 			{/if}
 		</div>
 	{/if}

@@ -21,7 +21,7 @@
 		option_snippet?: Snippet<[SelectOption | T]>;
 		options?: SelectOptionList<T>;
 		dynamic_select_styles?: DynamicStyleParameters;
-		input_label_props?: InputLabelProps;
+		input_label_props?: InputLabelProps<T>;
 		value_key?: string;
 		label_key?: string;
 		label?: Snippet<[any]>;

@@ -3,8 +3,8 @@
 
 	import type { Snippet } from 'svelte';
 
-	type InputWithLabelProps = InputProps & InputLabelProps;
-	export interface RadioGroupProps<T> extends Omit<InputWithLabelProps, 'value' | 'children'> {
+	type InputWithLabelProps<T> = InputProps & InputLabelProps<T>;
+	export interface RadioGroupProps<T> extends Omit<InputWithLabelProps<T>, 'value' | 'children'> {
 		/** An array or iterable of items to display in the radio group. */
 		items: ArrayLike<T> | Iterable<T>;
 		/** Styles to apply to the label of the selected item */
