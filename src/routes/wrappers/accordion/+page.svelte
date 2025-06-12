@@ -21,7 +21,7 @@
 		'https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/401671786?lang=en&region=us'
 	);
 
-	const accordion_configs: ComponentProps<AccordionDetails>[] = [
+	const accordion_configs: ComponentProps<typeof AccordionDetails>[] = [
 		{
 			summary_content: opacity_default
 		},
