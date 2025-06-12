@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AccordionDetails from '$wrappers/AccordionDetails.svelte';
-	import type { Snippet } from 'svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import TreeItem from './TreeItem.svelte';
 	import TreeList from './TreeList.svelte';
 
@@ -62,16 +62,16 @@
 	<summary class="tree-item-label">{text}</summary>
 {/snippet}
 
-{#snippet tree_item(node: string, children: Snippet<[]>)}
-	<li class="tree-item" style:--is={node}>
+{#snippet tree_item(is_node: string, children: Snippet<[]>)}
+	<li class="tree-item" style:--is={is_node}>
 		{@render children()}
 	</li>
 {/snippet}
 
-{#snippet tree(node: string, items: TreeItem[])}
+{#snippet tree(node: string, items: ComponentProps<typeof TreeItem>[])}
 	<ul class="tree" style:--to={node}>
 		{#each items as item}
-			{@render tree_item(item.node, item.children)}
+			{@render tree_item(item.is_node, item.children)}
 		{/each}
 	</ul>
 {/snippet}

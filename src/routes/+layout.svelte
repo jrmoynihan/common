@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import LightDarkToggleV2 from '$buttons/LightDarkToggle_v2.svelte';
 	import Navigation from '$navigation/Navigation.svelte';
-	import {
-		shouldLayoutTransitionOnNavigation
-	} from '$navigation/nav-functions.js';
+	import { should_layout_transition_on_navigation } from '$navigation/nav-functions.js';
 	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
 	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
 	import { type Snippet } from 'svelte';
@@ -19,16 +17,17 @@
 		children: Snippet;
 	};
 
-	let {
-		data,
-		children
-	} : LayoutProps = $props()
+	let { data, children }: LayoutProps = $props();
 	const { nav_links } = data;
-	
+
 	let trigger: boolean = $state(false);
 	beforeNavigate(async (nav) => {
 		const { from, to } = nav;
-		if (from && to && (await shouldLayoutTransitionOnNavigation({from, to, layout_parent_path: '/' }))){
+		if (
+			from &&
+			to &&
+			(await should_layout_transition_on_navigation({ from, to, layout_parent_path: '/' }))
+		) {
 			trigger = !trigger;
 		}
 	});
@@ -41,22 +40,20 @@
 	<h1>
 		<a href="/" class="cool-text">The Commons</a>
 	</h1>
-		<Navigation
-			links={nav_links}
-			link_current_page_styles="color: white"
-			dynamic_link_styles={{
-				styles: `color: white`,
-				hover_styles: 'background: darkorange'
-			}}
-		/>
+	<Navigation
+		links={nav_links}
+		link_current_page_styles="color: white"
+		dynamic_link_styles={{
+			styles: `color: white`,
+			hover_styles: 'background: darkorange'
+		}}
+	/>
 	<main>
-		<TransitionRunes
-			bind:trigger
-			>
+		<TransitionRunes bind:trigger>
 			{@render children()}
 		</TransitionRunes>
 	</main>
-	{#if $page.url.pathname.includes('/functions')}
+	{#if page.url.pathname.includes('/functions')}
 		<FunctionsAside />
 	{/if}
 </div>

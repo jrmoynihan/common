@@ -7,9 +7,8 @@
 </script>
 
 <script lang="ts" generics="T">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import ButtonRunes from '$buttons/Button_Runes.svelte';
-	import { faLink } from '@fortawesome/free-solid-svg-icons/index';
 	import { onDestroy, type ComponentProps, type Snippet } from 'svelte';
 	import AnchorHeading from './AnchorHeading.svelte';
 
@@ -28,7 +27,7 @@
 
 	function copyLinkAddress() {
 		const { id } = heading_props;
-		const link = `${$page.url.origin}/${$page.route.id}#${id}`;
+		const link = `${page.url.origin}/${page.route.id}#${id}`;
 		navigator.clipboard.writeText(link);
 		copied = true;
 		// default_toast({ msg: 'Copied Link!', duration: 2_000 });
@@ -46,7 +45,7 @@
 
 {#snippet copy_link_button()}
 	<ButtonRunes
-		icon_props={{ icon: faLink }}
+		icon_props={{ icon: 'fa6-solid:link' }}
 		aria-label="Copy Link"
 		aria-pressed={copied}
 		data-pressed={copied}

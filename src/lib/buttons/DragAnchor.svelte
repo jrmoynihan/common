@@ -8,7 +8,6 @@
 
 <script lang="ts" generics="T">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
-	import { faGripVertical } from '@fortawesome/free-solid-svg-icons/index';
 	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
 
 	let {
@@ -32,7 +31,7 @@
 
 <ButtonRunes
 	bind:disabled
-	icon_props={{ icon: faGripVertical }}
+	icon_props={{ icon: 'fa6-solid:grip-vertical' }}
 	classes={`drag-anchor ${!hovered ? 'faded' : ''} ${grabbed ? 'grabbed' : ''}`}
 	dynamic_styles={{
 		hover_styles: 'color: oklch(from var(--text) l c h / 1);',

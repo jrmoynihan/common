@@ -48,10 +48,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fortawesome/fontawesome-common-types": "^6.7.2",
-		"@fortawesome/free-solid-svg-icons": "^6.7.2",
 		"@iconify/svelte": "^5.0.0",
-		"@jrmoynihan/svelte-fa": "^4.0.2",
 		"@js-temporal/polyfill": "^0.5.1",
 		"@sveltejs/kit": "^2.21.4",
 		"acorn": "^8.15.0",

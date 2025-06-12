@@ -1,53 +1,83 @@
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { dynamic_style } from '$actions/dynamic-styles.svelte';
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte';
-	import { createEventDispatcher } from 'svelte';
+	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
+	import type { Snippet } from 'svelte';
+	import type { HTMLInputAttributes, HTMLLabelAttributes } from 'svelte/elements';
 	import { fly } from 'svelte/transition';
 	// TODO: Use Temporal API instead of Date constructor
 	// https://tc39.es/proposal-temporal/docs/cookbook.html#current-date-and-time
 	/** The date to display */
-	export let date: Date;
-	export let min: Date = new Date(-8640000000000000);
-	export let max: Date = new Date(8640000000000000);
-	export let name: string = '';
-	export let label_text: string = '';
-	export let label_styles: string = '';
-	export let input_styles = '';
-	export let input_hover_styles = '';
-	export let input_focus_styles = '';
-	export let input_active_styles = '';
-	export let input_container_styles = '';
-	export let input_container_hover_styles = '';
-	export let input_container_focus_styles = '';
-	export let input_container_active_styles = '';
-	export let invalid_msg: string | undefined = '';
-	export let label_position: 'before' | 'after' = 'before';
-	export let use_transition: boolean = false;
-	export let transition = fly;
-	export let transition_parameters = {
-		duration: use_transition ? 500 : 0,
-		x: use_transition ? 200 : 0
-	};
-	export let date_input: HTMLInputElement | null = null;
-	export let label_element: HTMLLabelElement | null = null;
-	export let is_valid: boolean | undefined = false;
-	export let required: boolean = false;
-	export let tooltip_options: TooltipProps | null = null;
-	export let title: string = '';
-	let internal: string;
-	const dispatch = createEventDispatcher();
-	const changed = (value: string | number) => {
-		if (internal) {
-			date = output(internal);
-		}
-		dispatch('change', value);
-	};
+
+	interface Props<T> {
+		date: Date;
+		min: Date;
+		max: Date;
+		name: string;
+		label_text: string;
+		label_styles: string;
+		input_styles: string;
+		input_hover_styles: string;
+		input_focus_styles: string;
+		input_active_styles: string;
+		input_container_styles: string;
+		input_container_hover_styles: string;
+		input_container_focus_styles: string;
+		input_container_active_styles: string;
+		label_position: 'before' | 'after';
+		use_transition: boolean;
+		transition: SvelteTransition;
+		transition_parameters: SvelteTransitionParams;
+		date_input: HTMLInputElement;
+		label_element: HTMLLabelElement;
+		is_valid: boolean;
+		invalid_msg: string;
+		date_input_attributes: HTMLInputAttributes;
+		tooltip_options: TooltipProps<T>;
+		label_attributes?: HTMLLabelAttributes;
+		children?: Snippet;
+	}
+	let {
+		date,
+		min = new Date(-8640000000000000),
+		max = new Date(8640000000000000),
+		name,
+		label_text,
+		input_styles,
+		input_hover_styles,
+		input_focus_styles,
+		input_active_styles,
+		input_container_styles,
+		input_container_hover_styles,
+		input_container_focus_styles,
+		input_container_active_styles,
+		invalid_msg = '',
+		label_position = 'before',
+		use_transition = false,
+		transition = fly,
+		transition_parameters = { duration: use_transition ? 500 : 0, x: use_transition ? 200 : 0 },
+		date_input,
+		label_element,
+		is_valid,
+		date_input_attributes,
+		tooltip_options,
+		label_attributes,
+		children
+	}: Props<T> = $props();
+
 	const convertDateToString = (date: Date) => {
 		// NOTE: getMMonth is zero-based, so it requires a +1 offset to return the correct month
 		const newString = `${date.getFullYear()}-${
 			date.getMonth() < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
 		}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
 		return newString;
+	};
+	let internal: string = $derived(convertDateToString(date));
+	const changed = (value: string | number) => {
+		if (internal) {
+			date = output(internal);
+		}
+		return value;
 	};
 	const output = (stringDate: string) => {
 		// NOTE: remove the +1 offset to return the correct month
@@ -58,20 +88,18 @@
 		);
 		return newDate;
 	};
-	$: internal = convertDateToString(date);
-	$: maxInternal = convertDateToString(max);
-	$: minInternal = convertDateToString(min);
-	$: {
+	const maxInternal = $derived(convertDateToString(max));
+	const minInternal = $derived(convertDateToString(min));
+	$effect(() => {
 		date;
 		is_valid = date_input?.checkValidity();
 		invalid_msg = date_input?.validationMessage;
-	}
+	});
 </script>
 
 <label
 	bind:this={label_element}
 	for={name}
-	style={label_styles}
 	use:tooltip={{ ...tooltip_options }}
 	use:dynamic_style={{
 		styles: input_container_styles,
@@ -79,8 +107,8 @@
 		focus_styles: input_container_focus_styles,
 		active_styles: input_container_active_styles
 	}}
-	title={title ? title : null}
 	transition:transition={transition_parameters}
+	{...label_attributes}
 >
 	{#if label_position === 'before'}
 		<p>{label_text}</p>
@@ -89,7 +117,7 @@
 				{invalid_msg}
 			</p>
 		{/if}
-		<slot name="label" />
+		{@render children?.()}
 	{/if}
 	<input
 		use:dynamic_style={{
@@ -99,19 +127,20 @@
 			active_styles: input_active_styles
 		}}
 		bind:this={date_input}
+		bind:value={internal}
 		id={name}
 		type="date"
 		class="invalid"
 		max={maxInternal}
 		min={minInternal}
-		{required}
-		bind:value={internal}
-		on:input={(e) => changed(e.currentTarget.value)}
+		oninput={(e) => changed(e.currentTarget.value)}
+		onchange={(e) => changed(e.currentTarget.value)}
+		{...date_input_attributes}
 	/>
 	<!-- TODO: Add datalist option https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist#date_and_time_types -->
 	{#if label_position === 'after'}
 		{label_text}
-		<slot name="label" />
+		{@render children?.()}
 	{/if}
 </label>
 

@@ -8,7 +8,7 @@
 -->
 
 <script module lang="ts">
-	export interface AccordionDetailsProps extends HTMLDetailsAttributes {
+	export interface AccordionDetailsProps<T> extends HTMLDetailsAttributes {
 		/** How many degrees to rotate the icon when closed. Defaults to 0. */
 		closed_icon_rotation?: number;
 		/** The Iconify icon props. */
@@ -47,8 +47,8 @@
 
 <script lang="ts" generics="T">
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
-	import type { ComponentProps, Snippet } from 'svelte';
 	import Icon, { type IconProps } from '@iconify/svelte';
+	import type { ComponentProps, Snippet } from 'svelte';
 	import type { HTMLAttributes, HTMLDetailsAttributes } from 'svelte/elements';
 	import TransitionNativeRunes from './TransitionNative_Runes.svelte';
 
@@ -75,7 +75,7 @@
 		},
 		group_name,
 		...details_attributes
-	}: AccordionDetailsProps = $props();
+	}: AccordionDetailsProps<T> = $props();
 
 	const id = crypto.randomUUID();
 	let toggle: HTMLInputElement | undefined = $state();

@@ -1,5 +1,5 @@
 <script module lang="ts">
-	export interface AccordionJsonProps extends AccordionDetailsProps {
+	export interface AccordionJsonProps<T> extends AccordionDetailsProps<T> {
 		value: unknown;
 		key?: string;
 		open?: boolean;
@@ -7,7 +7,7 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { AccordionJson } from '$lib';
 	import type { ComponentProps } from 'svelte';
 	import AccordionDetails, { type AccordionDetailsProps } from './AccordionDetails.svelte';
@@ -19,7 +19,7 @@
 		open = $bindable(false),
 		level = 1,
 		...accordion_details_props
-	}: AccordionJsonProps = $props();
+	}: AccordionJsonProps<T> = $props();
 
 	export const isValidUrl = (testString: string) => {
 		try {

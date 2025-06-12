@@ -20,7 +20,7 @@
 	}
 	function draggingStart(i: number) {
 		dragFrom = i;
-		dragContent = items[i];
+		dragContent = items[i]!;
 	}
 	function dropped(dragContent: any, dragTo: number, dragFrom: number) {
 		grabbed = false; // Make the it undraggable again until you click the handle
@@ -56,8 +56,14 @@
 			aria-grabbed={grabbed}
 			onmouseover={() => draggingStart(i)}
 			onfocus={() => draggingStart(i)}
-			ondragover={(e) => {e.preventDefault(); draggingOver(i)}}
-			ondrop={(e) => { e.preventDefault(); dropped(dragContent, dragTo, dragFrom)}}
+			ondragover={(e) => {
+				e.preventDefault();
+				draggingOver(i);
+			}}
+			ondrop={(e) => {
+				e.preventDefault();
+				dropped(dragContent, dragTo, dragFrom);
+			}}
 		>
 			{item.name}
 			<div class="right">

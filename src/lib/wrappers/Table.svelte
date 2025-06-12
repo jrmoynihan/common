@@ -60,15 +60,7 @@
 
 <script lang="ts" generics="T extends Record<string,any>">
 	import ButtonRunes from '$buttons/Button_Runes.svelte';
-	import {
-		faArrowDown19,
-		faArrowDownAZ,
-		faArrowDownWideShort,
-		faArrowUp91,
-		faArrowUpShortWide,
-		faArrowUpZA,
-		type IconDefinition
-	} from '@fortawesome/free-solid-svg-icons';
+	import type { IconProps } from '@iconify/svelte';
 	import type { Snippet } from 'svelte';
 	import { SvelteDate, SvelteMap } from 'svelte/reactivity';
 
@@ -100,12 +92,12 @@
 	// Assign icons for sorting; A-Z icons for strings, 1-9 icons for numbers, arrow icons for everything else
 	type Ordering = 'asc' | 'desc' | null;
 	const orders: SvelteMap<keyof T, Ordering> = $state(
-		new SvelteMap(Object.keys(data[0]).map((d) => [d, 'desc']))
+		new SvelteMap(Object.keys(data[0]!).map((d) => [d, 'desc']))
 	);
-	const icons: SvelteMap<keyof T, IconDefinition> = $derived.by(() => {
+	const icons: SvelteMap<keyof T, IconProps['icon']> = $derived.by(() => {
 		return new SvelteMap(
 			Array.from(orders.entries(), ([key, order]) => {
-				return [key, map_icons(data[0], key, order)];
+				return [key, map_icons(data[0]!, key, order)];
 			})
 		);
 	});
@@ -126,11 +118,11 @@
 
 	function map_icons(obj: T, key: keyof T, order: Ordering) {
 		if (typeof obj[key] === 'string') {
-			return order === 'desc' ? faArrowDownAZ : faArrowUpZA;
+			return order === 'desc' ? 'fa6-solid:arrow-down-az' : 'fa6-solid:arrow-up-za';
 		} else if (typeof obj[key] === 'number') {
-			return order === 'desc' ? faArrowDown19 : faArrowUp91;
+			return order === 'desc' ? 'fa6-solid:arrow-down-1-9' : 'fa6-solid:arrow-up-9-1';
 		} else {
-			return order === 'desc' ? faArrowDownWideShort : faArrowUpShortWide;
+			return order === 'desc' ? 'fa6-solid:arrow-down-wide-short' : 'fa6-solid:arrow-up-short-wide';
 		}
 	}
 
@@ -196,8 +188,8 @@
 {/snippet}
 
 {#snippet default_sort_button(key: keyof T)}
-	{@const datum_0 = data[0][key] as string | number | boolean | bigint | object}
-	{@const icon = icons.get(key) ?? faArrowDown19}
+	{@const datum_0 = data[0]?.[key] as string | number | boolean | bigint | object}
+	{@const icon = icons.get(key) ?? 'fa6-solid:arrow-down-wide-short'}
 	{@const order = orders.get(key)}
 	{#if typeof datum_0 === 'string'}
 		<ButtonRunes
@@ -274,7 +266,7 @@
 	</th>
 {/snippet}
 
-{#snippet default_data_cell({ datum, key, value, index }: DataCell<T>)}
+{#snippet default_data_cell<T>({ datum, key, value, index }: DataCell<T>)}
 	<td>{value}</td>
 {/snippet}
 {#snippet default_header_cell({ datum, key, index }: HeaderCell<T>)}
@@ -306,7 +298,7 @@
 
 	{#if data.length > 0}
 		<thead {...table_header_attributes}>
-			{@render header_row?.(data[0])}
+			{@render header_row?.(data[0]!)}
 		</thead>
 	{/if}
 	<!-- TODO: Add support for virtual list -->

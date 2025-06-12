@@ -1,5 +1,5 @@
 <script module lang="ts">
-	export interface NavigationProps extends HTMLAttributes<HTMLElement> {
+	export interface NavigationProps<T> extends HTMLAttributes<HTMLElement> {
 		/** Dynamic styles for the <nav> parent element that will be applied on hover, focus, and active states, and base styles that will be re-applied when those states are lost. */
 		dynamic_styles?: DynamicStyleParameters;
 		/** Dynamic styles to the individual nav links that will be applied on hover, focus, and active states, and base styles that will be re-applied when those states are lost. */
@@ -13,13 +13,13 @@
 		/** Styles to apply to the link if it is part of the current page path */
 		link_current_page_styles?: string;
 		/** The tooltip options for all parameters, or an array of tooltip options.  Each item of the options array will be passed into each respective nav item.*/
-		tooltip_options?: TooltipProps | TooltipProps[];
+		tooltip_options?: TooltipProps<T> | TooltipProps<T>[];
 		/** A snippet to render as the children of the <nav> element.*/
 		children?: Snippet;
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import type { TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { browser } from '$app/environment';
@@ -39,7 +39,7 @@
 		tooltip_options = { disabled: true },
 		children,
 		...nav_attributes
-	}: NavigationProps = $props();
+	}: NavigationProps<T> = $props();
 
 	// Close any open dialog elements before navigating.
 	beforeNavigate(() => {

@@ -40,7 +40,6 @@
 	import TransitionNativeRunes from '$wrappers/TransitionNative_Runes.svelte';
 	import type { Component, ComponentProps, Snippet } from 'svelte';
 	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
-
 	let {
 		tabs = [],
 		tab_button = default_tab_button,
@@ -55,7 +54,6 @@
 	}: TabsProps<T> = $props();
 
 	const id = crypto.randomUUID();
-	//@ts-ignore
 	let transitions = $state<TransitionNativeRunes[]>([]);
 	let selected_tab = $state.raw(tabs[0]);
 
@@ -95,23 +93,15 @@
 		if (selected_tab) {
 			// Toggle off/out the old tab
 			const old_tab_index = get_index_of_tab(selected_tab);
-			transitions.at(old_tab_index).toggle();
+			transitions.at(old_tab_index)?.toggle();
 		}
 
 		// Toggle on/in the new tab
 		selected_tab = tab;
 		const new_tab_index = get_index_of_tab(selected_tab);
-		transitions[new_tab_index].toggle();
+		transitions.at(new_tab_index)?.toggle();
 	}
 </script>
-
-{#snippet default_tab_button({ title }: { title: string })}
-	<span>{title}</span>
-{/snippet}
-
-{#snippet default_tab_container_title()}
-	<h3 id={`tablist-${id}`}>{title}</h3>
-{/snippet}
 
 <div {id} class="tabs" {...tab_container_attributes}>
 	{@render tab_container_title?.()}
@@ -159,7 +149,13 @@
 		{/each}
 	</div>
 </div>
+{#snippet default_tab_button({ title }: SnippetTab)}
+	<span>{title}</span>
+{/snippet}
 
+{#snippet default_tab_container_title()}
+	<h3 id={`tablist-${id}`}>{title}</h3>
+{/snippet}
 {#snippet snippet_tab(tab: SnippetTab, i: number)}
 	<TransitionNativeRunes
 		bind:this={transitions[i]}

@@ -24,9 +24,9 @@
 		if (selected_image) {
 			const index = images.findIndex((image) => image.uuid === selected_image?.uuid);
 			if (index < images.length - 1) {
-				showImage(images[index + 1]);
+				showImage(images[index + 1]!);
 			} else {
-				showImage(images[0]);
+				showImage(images[0]!);
 			}
 		}
 	}
@@ -35,9 +35,9 @@
 		if (selected_image) {
 			const index = images.findIndex((image) => image.uuid === selected_image?.uuid);
 			if (index > 0) {
-				showImage(images[index - 1]);
+				showImage(images[index - 1]!);
 			} else {
-				showImage(images[images.length - 1]);
+				showImage(images[images.length - 1]!);
 			}
 		}
 	}
