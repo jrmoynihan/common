@@ -56,7 +56,6 @@ import Table, {
 	type DataCell,
 	type DataRow,
 	type HeaderCell,
-	type SortColumn,
 	type TableProps
 } from '$wrappers/Table.svelte';
 import TransitionNative_Runes, {
@@ -74,6 +73,31 @@ export {
 	type SpotlightParameters,
 	type SpotlightStep
 } from '$actions/spotlight/spotlight.svelte.js';
+export {
+	capitalize,
+	clamp,
+	create_media_query,
+	dekebab,
+	delay,
+	enumerate_runed_properties,
+	flatten_object_recursively,
+	get_ancestors,
+	get_max,
+	get_max_date,
+	get_max_temporal_zoned_date_time,
+	get_min,
+	get_min_date,
+	get_min_temporal_zoned_date_time,
+	get_random_between,
+	get_transition_durations,
+	modulo,
+	remove_special_characters,
+	split_camel_case,
+	split_snake_case,
+	type PartiallyOptional,
+	type PartiallyRequired,
+	type PrettifyIntersection
+} from '$lib/functions/helpers.svelte.js';
 export { Temporal } from '@js-temporal/polyfill';
 export { dynamic_style } from './actions/dynamic-styles.svelte.js';
 export {
@@ -82,31 +106,6 @@ export {
 	type TooltipProps
 } from './actions/tooltip/tooltip.svelte.js';
 export { willChange } from './actions/will-change.js';
-export {
-	capitalize,
-	clamp,
-	createMediaQuery,
-	deKebab,
-	delay,
-	enumerate_runed_properties,
-	flattenObjectRecursively,
-	getAncestors,
-	getMax,
-	getMaxDate,
-	getMaxTemporalZonedDateTime,
-	getMin,
-	getMinDate,
-	getMinTemporalZonedDateTime,
-	getRandomBetween,
-	getTransitionDurations,
-	modulo,
-	removeSpecialCharacters,
-	splitCamelCase,
-	splitSnakeCase,
-	type PartiallyOptional,
-	type PartiallyRequired,
-	type PrettifyIntersection
-} from './functions/helpers.svelte.js';
 export {
 	delete_local_storage_item,
 	get_local_storage_item,
@@ -137,8 +136,7 @@ export {
 export {
 	make_subroute_nav_links,
 	NavigationLink,
-	shouldLayoutTransitionOnNavigation,
-	type IconLayer
+	should_layout_transition_on_navigation
 } from './navigation/nav-functions.js';
 export type { ComponentTab, SnippetTab } from './wrappers/Tabs_Runes.svelte';
 export {
@@ -209,7 +207,6 @@ export {
 	type SelectOptionGroup,
 	type SelectOptionList,
 	type SelectProps,
-	type SortColumn,
 	type TableProps,
 	type TabsProps,
 	type TextInputProps,

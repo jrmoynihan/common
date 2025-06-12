@@ -85,7 +85,7 @@ export async function make_subroute_nav_links(
 }
 
 /** Compares the navigation targets (from and to) and returns true if layout should transition, and false if it should not */
-export async function shouldLayoutTransitionOnNavigation({
+export async function should_layout_transition_on_navigation({
 	from,
 	to,
 	layout_parent_path
