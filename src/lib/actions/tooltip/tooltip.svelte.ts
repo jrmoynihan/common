@@ -97,7 +97,7 @@ export type TooltipStep<T> = {
 
 export function tooltip<C, T extends Partial<TooltipProps<T>> | TooltipWithContentProps<C>>(
 	node: HTMLElement,
-	// TODO: Fix this with better typing
+	// TODO: Fix this.  Could (should) split into two functions, one for TooltipProps and one for TooltipWithContentProps?  Can still reuse the shared logic.
 	parameters: TooltipProps<C> | TooltipWithContentProps<C>
 ) {
 	try {
