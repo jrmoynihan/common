@@ -66,7 +66,7 @@ export const capitalize = (str: string): string => {
  * @param str the string to split
  * @returns an array of strings
  */
-export const splitCamelCase = (str: string): string[] => {
+export const split_camel_case = (str: string): string[] => {
 	return str.split(/(?=[A-Z])/);
 };
 /**
@@ -74,7 +74,7 @@ export const splitCamelCase = (str: string): string[] => {
  * @param str the string to split
  * @returns an array of strings
  */
-export const splitSnakeCase = (str: string): string[] => {
+export const split_snake_case = (str: string): string[] => {
 	return str.indexOf('_') !== -1 ? str.split('_') : str.split('-');
 };
 /**
@@ -82,11 +82,11 @@ export const splitSnakeCase = (str: string): string[] => {
  * @param str the string to remove special characters from
  * @returns a string with the special characters replaced by ''
  */
-export function removeSpecialCharacters(str: string): string {
+export function remove_special_characters(str: string): string {
 	return str.replace(/[^a-zA-Z0-9 ]/g, '');
 }
 /** Replaces kebab case (e.g. "hello-world") with a space between words and capitalized words ("Hello World") */
-export function deKebab(str: string): string {
+export function dekebab(str: string): string {
 	return str
 		.replace(/-/g, ' ')
 		.split(' ')
@@ -107,7 +107,7 @@ export async function delay(time: number) {
  * @param max The maximum number to return
  * @returns a random number between `min` and `max`
  */
-export function getRandomBetween(min: number, max: number) {
+export function get_random_between(min: number, max: number) {
 	return Math.random() * (max - min) + min;
 }
 /**
@@ -115,11 +115,12 @@ export function getRandomBetween(min: number, max: number) {
  * @param array An array of numbers to search
  * @returns The maximum number in the array
  */
-export const getMax = (array: number[]): number => {
+export const get_max = (array: number[]): number => {
 	let len = array.length;
 	let max = Number.NEGATIVE_INFINITY;
 
 	while (len--) {
+		// @ts-ignore
 		max = array[len] > max ? array[len] : max;
 	}
 	return max;
@@ -129,11 +130,12 @@ export const getMax = (array: number[]): number => {
  * @param array An array of numbers to search
  * @returns The minimum number in the array
  */
-export const getMin = (array: number[]): number => {
+export const get_min = (array: number[]): number => {
 	let len = array.length;
 	let min = Number.POSITIVE_INFINITY;
 
 	while (len--) {
+		// @ts-ignore
 		min = array[len] < min ? array[len] : min;
 	}
 	return min;
@@ -143,11 +145,12 @@ export const getMin = (array: number[]): number => {
  * @param array An array of dates to search
  * @returns The minimum date in the array
  */
-export const getMinDate = (array: Date[]): Date => {
+export const get_min_date = (array: Date[]): Date => {
 	let len = array.length;
 	let min = new Date(8640000000000000);
 
 	while (len--) {
+		// @ts-ignore
 		min = array[len].getTime() < min.getTime() ? array[len] : min;
 	}
 	return min;
@@ -157,19 +160,21 @@ export const getMinDate = (array: Date[]): Date => {
  * @param array An array of datetimes to search
  * @returns The minimum datetime in the array
  */
-export const getMinTemporalZonedDateTime = (
+export const get_min_temporal_zoned_date_time = (
 	array: Temporal.ZonedDateTime[]
 ): Temporal.ZonedDateTime => {
 	let len = array.length;
 	const max_date = new Date(8640000000000000);
 	let min = Temporal.ZonedDateTime.from(max_date.toLocaleDateString());
 	while (len--) {
+		// @ts-ignore
 		// https://tc39.es/proposal-temporal/docs/zoneddatetime.html#compare
 		// Returns: an integer indicating whether one comes before or after or is equal to two.
 		// −1 if one is less than two
 		// Zero if the two instances describe the same exact instant, ignoring the time zone and calendar
 		// 1 if one is greater than two
 		const compared = Temporal.ZonedDateTime.compare(min, array[len]);
+		// @ts-ignore
 		min = compared === -1 ? array[len] : min;
 	}
 	return min;
@@ -179,19 +184,21 @@ export const getMinTemporalZonedDateTime = (
  * @param array An array of datetimes to search
  * @returns The minimum datetime in the array
  */
-export const getMaxTemporalZonedDateTime = (
+export const get_max_temporal_zoned_date_time = (
 	array: Temporal.ZonedDateTime[]
 ): Temporal.ZonedDateTime => {
 	let len = array.length;
 	const min_date = new Date(-8640000000000000);
 	let max = Temporal.ZonedDateTime.from(min_date.toLocaleDateString());
 	while (len--) {
+		// @ts-ignore
 		// https://tc39.es/proposal-temporal/docs/zoneddatetime.html#compare
 		// Returns: an integer indicating whether one comes before or after or is equal to two.
 		// −1 if one is less than two
 		// Zero if the two instances describe the same exact instant, ignoring the time zone and calendar
 		// 1 if one is greater than two
 		const compared = Temporal.ZonedDateTime.compare(max, array[len]);
+		// @ts-ignore
 		max = compared === 1 ? array[len] : max;
 	}
 	return max;
@@ -201,18 +208,19 @@ export const getMaxTemporalZonedDateTime = (
  * @param array An array of dates to search
  * @returns The maximum date in the array
  */
-export const getMaxDate = (array: Date[]): Date => {
+export const get_max_date = (array: Date[]): Date => {
 	let len = array.length;
 	let max = new Date(-8640000000000000);
 
 	while (len--) {
+		// @ts-ignore
 		max = array[len].getTime() > max.getTime() ? array[len] : max;
 	}
 	return max;
 };
 
 /** Take an object and return its entire structure flattened to the top-level of a new object's keys. */
-export const flattenObjectRecursively = (
+export const flatten_object_recursively = (
 	obj: { [key: string]: unknown } & { [key: string]: unknown }
 ) => {
 	try {
@@ -225,7 +233,7 @@ export const flattenObjectRecursively = (
 				if (typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
 					const val_typed = value as { [key: string]: unknown };
 
-					const temp = flattenObjectRecursively(val_typed) as {
+					const temp = flatten_object_recursively(val_typed) as {
 						[key: string]: unknown;
 					};
 					for (const [key2, val2] of Object.entries(temp)) {
@@ -245,7 +253,7 @@ export const flattenObjectRecursively = (
 	}
 };
 /** Returns an array of the ancestor elements for the provided HTML element. */
-export const getAncestors = (element: HTMLElement) => {
+export const get_ancestors = (element: HTMLElement) => {
 	const ancestors: HTMLElement[] = [];
 	let parent = element.parentElement;
 	try {
@@ -266,7 +274,7 @@ export const getAncestors = (element: HTMLElement) => {
 			});
 	}
 };
-export function getTransitionDurations(elements: HTMLElement[]): number[] {
+export function get_transition_durations(elements: HTMLElement[]): number[] {
 	const durations: number[] = [];
 	for (const ele of elements) {
 		const computed_style = window.getComputedStyle(ele);
@@ -282,7 +290,7 @@ export function modulo(dividend: number, divisor: number): number {
 	return ((dividend % divisor) + divisor) % divisor;
 }
 
-export function createMediaQuery(query: string) {
+export function create_media_query(query: string) {
 	let match = $state<boolean | null>(null);
 
 	$effect.pre(() => {
@@ -319,3 +327,70 @@ export function enumerate_runed_properties(this_obj: Object) {
 		}
 	}
 }
+
+/**
+ * Calculates the length of a string type.
+ *
+ * @template T - The string type whose length is to be calculated.
+ * @template Count - An array used to count the characters in the string.
+ * @returns The length of the string as a number.
+ */
+export type StringLength<
+	T extends string,
+	Count extends number[] = []
+> = T extends `${infer _}${infer Rest}` ? StringLength<Rest, [...Count, 1]> : Count['length'];
+
+/**
+ * Compares two number types and determines their relationship.
+ *
+ * @template First - The first number to compare.
+ * @template Second - The second number to compare.
+ * @template Count - An array used to count the iterations during comparison.
+ * @returns 'equal' if both numbers are the same, 'less' if the first is less than the second,
+ *          and 'greater' if the first is greater than the second.
+ */
+export type CompareNumbers<
+	First extends number,
+	Second extends number,
+	Count extends number[] = []
+> = First extends Second
+	? 'equal'
+	: Count['length'] extends First
+		? 'less'
+		: Count['length'] extends Second
+			? 'greater'
+			: CompareNumbers<First, Second, [...Count, 0]>;
+
+/**
+ * Ensures that a string type does not exceed a specified maximum length.
+ *
+ * @template T - The string type to check.
+ * @template Max - The maximum length allowed for the string.
+ * @returns The string type if its length is less than or equal to Max, otherwise never.
+ */
+export type MaxLength<T extends string, Max extends number> =
+	CompareNumbers<StringLength<T>, Max> extends 'less' | 'equal' ? T : never;
+
+/**
+ * Ensures that a string type meets a specified minimum length.
+ *
+ * @template T - The string type to check.
+ * @template Min - The minimum length required for the string.
+ * @returns The string type if its length is greater than or equal to Min, otherwise never.
+ */
+export type MinLength<T extends string, Min extends number> =
+	CompareNumbers<Min, StringLength<T>> extends 'less' | 'equal' ? T : never;
+
+/**
+ * Ensures that a string type's length is between a specified minimum and maximum.
+ *
+ * @template T - The string type to check.
+ * @template Min number - The minimum length required for the string.
+ * @template Max - The maximum length allowed for the string.
+ * @returns The string type if its length is between Min and Max, otherwise never.
+ */
+export type StringLengthBetween<
+	T extends string,
+	Min extends number,
+	Max extends number
+> = MinLength<T, Min> & MaxLength<T, Max>;
