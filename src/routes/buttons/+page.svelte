@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { TooltipDirections } from '$actions/tooltip/tooltip.svelte.js';
 	import ButtonRunes from '$buttons/Button_Runes.svelte';
+	import ResetButton from '$buttons/ResetButton.svelte';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
 	import { delay } from '$functions/helpers.svelte.js';
 	import { Log, checkered_flag } from '$functions/logging.js';
+	import { SubmitButton } from '$lib';
 	import { complex_state } from '$routes/stores.svelte';
 	// import { default_toast } from "$toasts/toasts.js";
 
@@ -100,9 +102,8 @@
 			}}
 		/>
 	</div> -->
-	<ButtonRunes bind:button={high_button} classes="orange" {onclick}>
-		I'm a button with high elevation!!
-	</ButtonRunes>
+	<ResetButton classes="red" {onclick}>I'm a reset button with high elevation!!</ResetButton>
+	<SubmitButton classes="green" {onclick}>I'm a submit button with high elevation!!</SubmitButton>
 
 	<ToggleSwitch
 		bind:checked={complex_state.player.toggled}

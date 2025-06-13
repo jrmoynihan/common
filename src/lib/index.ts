@@ -6,64 +6,86 @@
 // Buttons
 import ResetButton from '$buttons/ResetButton.svelte';
 import SubmitButton from '$buttons/SubmitButton.svelte';
-import Button, { type ButtonProps } from './buttons/Button_Runes.svelte';
-import DragAnchor, { type DragAnchorProps } from './buttons/DragAnchor.svelte';
-import LightDarkToggle, { type LightDarkToggleProps } from './buttons/LightDarkToggle_v2.svelte';
-import ToggleSwitch, { type ToggleSwitchProps } from './buttons/ToggleSwitch.svelte';
+import Button from './buttons/Button_Runes.svelte';
+import type { ButtonProps } from './buttons/Button_Runes.svelte';
+import DragAnchor from './buttons/DragAnchor.svelte';
+import type { DragAnchorProps } from './buttons/DragAnchor.svelte';
+import LightDarkToggle from './buttons/LightDarkToggle_v2.svelte';
+import type { LightDarkToggleProps } from './buttons/LightDarkToggle_v2.svelte';
+import ToggleSwitch from './buttons/ToggleSwitch.svelte';
+import type { ToggleSwitchProps } from './buttons/ToggleSwitch.svelte';
 
 // Tooltips
 import ActionTooltip from './actions/tooltip/ActionTooltip.svelte';
 
 // Inputs
-import Checkbox, { type CheckboxProps } from '$inputs/Checkbox.svelte';
-import InputButton, { type InputButtonProps } from '$inputs/InputButton.svelte';
-import InputLabel, { type InputLabelProps } from '$inputs/InputLabel.svelte';
-import RadioGroup, { type RadioGroupProps } from '$inputs/RadioGroup.svelte';
-import NumericInput, { type NumericInputProps } from './inputs/NumericInput.svelte';
-import Select, {
-	type SelectOption,
-	type SelectOptionGroup,
-	type SelectOptionList,
-	type SelectProps
+import Checkbox from '$inputs/Checkbox.svelte';
+import type { CheckboxProps } from '$inputs/Checkbox.svelte';
+import InputButton from '$inputs/InputButton.svelte';
+import type { InputButtonProps } from '$inputs/InputButton.svelte';
+import InputLabel from '$inputs/InputLabel.svelte';
+import type { InputLabelProps } from '$inputs/InputLabel.svelte';
+import RadioGroup from '$inputs/RadioGroup.svelte';
+import type { RadioGroupProps } from '$inputs/RadioGroup.svelte';
+import NumericInput from './inputs/NumericInput.svelte';
+import type { NumericInputProps } from './inputs/NumericInput.svelte';
+import Select from './inputs/Select.svelte';
+import type {
+	SelectOption,
+	SelectOptionGroup,
+	SelectOptionList,
+	SelectProps
 } from './inputs/Select.svelte';
-import DateInput, { type DateInputProps } from './inputs/TemporalDateInput.svelte';
-import TextInput, { type TextInputProps } from './inputs/TextInput.svelte';
+import DateInput from './inputs/TemporalDateInput.svelte';
+import type { DateInputProps } from './inputs/TemporalDateInput.svelte';
+import TextInput from './inputs/TextInput.svelte';
+import type { TextInputProps } from './inputs/TextInput.svelte';
 import type { DatalistOption, TextInputTypes } from './inputs/types.js';
 
 // Navigation
-import AnchorHeading, { type AnchorHeadingProps } from './navigation/AnchorHeading.svelte';
-import LinkableAnchorHeading, {
-	type LinkableAnchorHeadingProps
-} from './navigation/LinkableAnchorHeading.svelte';
-import NavLink, { type NavLinkProps } from './navigation/NavLink.svelte';
-import Navigation, { type NavigationProps } from './navigation/Navigation.svelte';
-import ScrollProgress, { type ScrollProgressProps } from './navigation/ScrollProgress.svelte';
+import AnchorHeading from './navigation/AnchorHeading.svelte';
+import type { AnchorHeadingProps } from './navigation/AnchorHeading.svelte';
+import LinkableAnchorHeading from './navigation/LinkableAnchorHeading.svelte';
+import type { LinkableAnchorHeadingProps } from './navigation/LinkableAnchorHeading.svelte';
+import NavLink from './navigation/NavLink.svelte';
+import type { NavLinkProps } from './navigation/NavLink.svelte';
+import Navigation from './navigation/Navigation.svelte';
+import type { NavigationProps } from './navigation/Navigation.svelte';
+import ScrollProgress from './navigation/ScrollProgress.svelte';
+import type { ScrollProgressProps } from './navigation/ScrollProgress.svelte';
 
 // Toasts
 import SeenToast from './toasts/SeenToast.svelte';
 
 // Wrappers
-import AccordionDetails, { type AccordionDetailsProps } from '$wrappers/AccordionDetails.svelte';
-import AccordionJson, { type AccordionJsonProps } from '$wrappers/AccordionJSON.svelte';
-import Dialog, { type DialogProps } from '$wrappers/Dialog.svelte';
-import Flex, { type FlexProps } from '$wrappers/Flex.svelte';
-import FlexItem, { type FlexItemProps } from '$wrappers/FlexItem.svelte';
-import FullDialog, { type FullDialogProps } from '$wrappers/FullDialog.svelte';
-import Grid, { type GridProps } from '$wrappers/Grid.svelte';
-import JsonView, { type JSONViewProps } from '$wrappers/JSONView.svelte';
-import MiniDialog, { type MiniDialogProps } from '$wrappers/MiniDialog.svelte';
-import Table, {
-	type DataCell,
-	type DataRow,
-	type HeaderCell,
-	type TableProps
-} from '$wrappers/Table.svelte';
-import TransitionNative_Runes, {
-	type TransitionNativeProps
-} from '$wrappers/TransitionNative_Runes.svelte';
-import Accordion, { type AccordionProps } from './wrappers/Accordion.svelte';
-import Tabs, { type TabsProps } from './wrappers/Tabs_Runes.svelte';
-import Transition, { type TransitionProps } from './wrappers/Transition_Runes.svelte';
+import AccordionDetails from '$wrappers/AccordionDetails.svelte';
+import type { AccordionDetailsProps } from '$wrappers/AccordionDetails.svelte';
+import AccordionJson from '$wrappers/AccordionJSON.svelte';
+import type { AccordionJsonProps } from '$wrappers/AccordionJSON.svelte';
+import Dialog from '$wrappers/Dialog.svelte';
+import type { DialogProps } from '$wrappers/Dialog.svelte';
+import Flex from '$wrappers/Flex.svelte';
+import type { FlexProps } from '$wrappers/Flex.svelte';
+import FlexItem from '$wrappers/FlexItem.svelte';
+import type { FlexItemProps } from '$wrappers/FlexItem.svelte';
+import FullDialog from '$wrappers/FullDialog.svelte';
+import type { FullDialogProps } from '$wrappers/FullDialog.svelte';
+import Grid from '$wrappers/Grid.svelte';
+import type { GridProps } from '$wrappers/Grid.svelte';
+import JsonView from '$wrappers/JSONView.svelte';
+import type { JSONViewProps } from '$wrappers/JSONView.svelte';
+import MiniDialog from '$wrappers/MiniDialog.svelte';
+import type { MiniDialogProps } from '$wrappers/MiniDialog.svelte';
+import Table from '$wrappers/Table.svelte';
+import type { DataCell, DataRow, HeaderCell, TableProps } from '$wrappers/Table.svelte';
+import TransitionNative_Runes from '$wrappers/TransitionNative_Runes.svelte';
+import type { TransitionNativeProps } from '$wrappers/TransitionNative_Runes.svelte';
+import Accordion from './wrappers/Accordion.svelte';
+import type { AccordionProps } from './wrappers/Accordion.svelte';
+import Tabs from './wrappers/Tabs_Runes.svelte';
+import type { TabsProps } from './wrappers/Tabs_Runes.svelte';
+import Transition from './wrappers/Transition_Runes.svelte';
+import type { TransitionProps } from './wrappers/Transition_Runes.svelte';
 
 // Exports
 // Functions
