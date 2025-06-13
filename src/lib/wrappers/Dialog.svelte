@@ -159,9 +159,6 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 				}
 			}
 
-			&:has(.tooltip) {
-				overflow: visible;
-			}
 			&:not([open]) {
 				pointer-events: none;
 				opacity: 0;

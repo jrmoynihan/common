@@ -4,7 +4,8 @@
 	import type { Snippet } from 'svelte';
 
 	type InputWithLabelProps<T> = InputProps & InputLabelProps<T>;
-	export interface RadioGroupProps<T> extends Omit<InputWithLabelProps<T>, 'value' | 'children'> {
+	export interface RadioGroupProps<T, K extends keyof T & string>
+		extends Omit<InputWithLabelProps<T>, 'value' | 'children'> {
 		/** An array or iterable of items to display in the radio group. */
 		items: ArrayLike<T> | Iterable<T>;
 		/** Styles to apply to the label of the selected item */
@@ -12,15 +13,15 @@
 		/** Styles to apply to the input of the selected item */
 		input_dynamic_styles?: DynamicStyleParameters;
 		/** The key to use for the label of the selected item. (Default: 'label') */
-		label_key?: string;
+		label_key?: keyof T;
 		/** The key to use for the value of the selected item, which affects the group's binding. (Default: the item itself, which may be an object) */
-		value_key?: string;
+		value_key?: K;
 		/** A snippet to render within the label of each item, adjacent to the radio input.*/
 		children?: Snippet<[T]>;
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts" generics="T, K extends keyof T & string">
 	import Input, { type InputProps } from './Input.svelte';
 
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
@@ -30,19 +31,19 @@
 		group = $bindable(),
 		label_dynamic_styles = $bindable(),
 		input_dynamic_styles = $bindable(),
-		label_key = 'label',
+		label_key = 'label' as K,
 		value_key,
 		children,
 		name = crypto.randomUUID(),
 		...input_attributes
-	}: RadioGroupProps<T> = $props();
+	}: RadioGroupProps<T, K> = $props();
 </script>
 
-{#snippet labeled_item(item)}
+{#snippet labeled_item(item: T)}
 	{@const id = crypto.randomUUID()}
 	{@const label = item instanceof Object ? item[label_key] : item}
 	{@const value = value_key && item instanceof Object ? item[value_key] : item}
-	<InputLabel text={label} {id}>
+	<InputLabel text={typeof label === 'string' ? label : JSON.stringify(label)} {id}>
 		<Input
 			bind:group
 			{id}

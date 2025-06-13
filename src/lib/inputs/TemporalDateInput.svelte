@@ -1,9 +1,9 @@
 <script module lang="ts">
-	export interface DateInputProps extends Omit<HTMLInputAttributes, 'date' | 'min' | 'max'> {
+	export interface DateInputProps<T> extends Omit<HTMLInputAttributes, 'date' | 'min' | 'max'> {
 		date?: Temporal.ZonedDateTime;
 		min?: Temporal.ZonedDateTime;
 		max?: Temporal.ZonedDateTime;
-		label_props?: InputLabelProps;
+		label_props?: InputLabelProps<T>;
 		input_attributes?: HTMLInputAttributes;
 		input_dynamic_styles?: DynamicStyleParameters;
 		is_valid?: boolean;
@@ -13,7 +13,7 @@
 	}
 </script>
 
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import { Temporal } from '@js-temporal/polyfill';
 	import type { HTMLInputAttributes } from 'svelte/elements';
@@ -33,7 +33,7 @@
 		date_input = $bindable(),
 		label_element = $bindable(),
 		...input_attributes
-	}: DateInputProps = $props();
+	}: DateInputProps<T> = $props();
 
 	const input_changed = (value: string) => {
 		date = stringToTemporalDate(value);
@@ -60,24 +60,26 @@
 	};
 	const stringToTemporalDate = (date_string: string) => {
 		const yyyy_mm_dd = date_string.split('T')[0];
-		const [year, month, day] = yyyy_mm_dd.split('-');
+		const [year, month, day] = yyyy_mm_dd?.split('-') ?? [];
 
 		switch (input_attributes?.type) {
-			case 'datetime' || 'time' || 'datetime-local': {
+			case 'datetime':
+			case 'time':
+			case 'datetime-local': {
 				const hh_mm_ss = date_string.split('T')?.[1];
-				const [hour, minute, second] = hh_mm_ss.split(':');
+				const [hour, minute, second] = hh_mm_ss?.split(':') ?? [];
 				const new_date_with_time = date.with({
-					hour: Number.parseInt(hour),
-					minute: Number.parseInt(minute),
-					second: Number.parseInt(second)
+					hour: Number.parseInt(hour ?? '0'),
+					minute: Number.parseInt(minute ?? '0'),
+					second: Number.parseInt(second ?? '0')
 				});
 				return new_date_with_time;
 			}
 			default: {
 				const new_date = date.with({
-					year: Number.parseInt(year),
-					month: Number.parseInt(month),
-					day: Number.parseInt(day)
+					year: Number.parseInt(year ?? '0'),
+					month: Number.parseInt(month ?? '0'),
+					day: Number.parseInt(day ?? '0')
 				});
 				return new_date;
 			}

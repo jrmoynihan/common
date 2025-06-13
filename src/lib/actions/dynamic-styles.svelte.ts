@@ -191,7 +191,7 @@ function splitStyleRules(styles: string | undefined): string[] {
 }
 function splitRuletoKeyValuePair(rule: string): [string, string] {
 	const trimmed_rule = rule.trim();
-	const [key, value] = trimmed_rule.split(':');
+	const [key = '', value = ''] = trimmed_rule.split(':');
 	return [key, value];
 }
 function applyStyles(element: HTMLElement, split_rules: string[]): void {

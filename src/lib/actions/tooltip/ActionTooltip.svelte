@@ -21,7 +21,7 @@ https://web.dev/building-a-tooltip-component/
 		inert = true,
 		disabled = false,
 		fallback = true
-	}: TooltipProps<T> | TooltipWithContentProps<T> = $props();
+	}: TooltipProps<T> & TooltipWithContentProps<T> = $props();
 
 	let tooltip: HTMLElement | undefined = $state(undefined);
 </script>
@@ -49,7 +49,7 @@ https://web.dev/building-a-tooltip-component/
 		{#if typeof content === 'string'}
 			{content}
 		{/if}
-	{:else if content_snippet}
+	{:else if content_snippet && content_args}
 		{@render content_snippet(content_args)}
 	{/if}
 
@@ -188,7 +188,8 @@ https://web.dev/building-a-tooltip-component/
 			}
 			&[data-tip-position='bottom'] {
 				top: calc(
-					-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 * var(--arrow-cushion, 4px)
+					-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 *
+						var(--arrow-cushion, 4px)
 				);
 				/* overlap with the tooltip box */
 

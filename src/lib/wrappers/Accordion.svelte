@@ -50,12 +50,8 @@
 </script>
 
 {#snippet icon(icon_props: IconProps)}
-	{@const {icon = 'mdi:caret-down', ...rest} = icon_props}
-	<Icon
-		rotate={open ? open_icon_rotation : closed_icon_rotation}
-		{icon}
-		{...rest}
-	/>
+	{@const { icon = 'mdi:caret-down', ...rest } = icon_props}
+	<Icon rotate={open ? open_icon_rotation : closed_icon_rotation} {icon} {...rest} />
 {/snippet}
 
 {#snippet default_expand_icon()}
