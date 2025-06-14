@@ -27,7 +27,7 @@
 		"@sveltejs/vite-plugin-svelte": "^5.1.0",
 		"@typescript-eslint/eslint-plugin": "^8.34.0",
 		"@typescript-eslint/parser": "^8.34.0",
-		"eslint": "^9.28.0",
+		"eslint": "^9.29.0",
 		"eslint-config-prettier": "^10.1.5",
 		"eslint-plugin-svelte": "^3.9.2",
 		"mdsvex": "^0.12.6",
@@ -50,7 +50,7 @@
 	"dependencies": {
 		"@iconify/svelte": "^5.0.0",
 		"@js-temporal/polyfill": "^0.5.1",
-		"@sveltejs/kit": "^2.21.4",
+		"@sveltejs/kit": "^2.21.5",
 		"acorn": "^8.15.0",
 		"mdsvexamples": "^0.5.0",
 		"postcss-jit-props": "^1.0.16",

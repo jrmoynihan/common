@@ -1,25 +1,29 @@
 <script lang="ts" module>
-	export interface SelectOption {
-		value: unknown;
-		label?: string | null;
+	// SelectOption: a single option
+	export interface SelectOption<T = unknown> {
+		value: T;
+		label?: string;
 		disabled?: boolean;
 	}
 
-	export interface SelectOptionGroup {
-		options: SelectOption[] | SelectOptionGroup[];
-		label?: string | null;
+	// SelectOptionGroup: a group of options
+	export interface SelectOptionGroup<T = unknown> {
+		label: string;
+		options: Array<SelectOption<T> | SelectOptionGroup<T>>;
+		disabled?: boolean;
 	}
 
-	export type SelectOptionList<T> = (SelectOption | SelectOptionGroup | T)[];
+	// The options prop: array of options or groups
+	export type SelectOptions<T> = Array<SelectOption<T> | SelectOptionGroup<T>>;
 
 	export interface SelectProps<T> extends HTMLSelectAttributes {
 		value?: T;
 		id?: string | null;
 		/** A snippet of HTML for the `<optgroup>` of the `<select>`.  This should also include logic for how to render a single `<option>` vs subgroups. */
-		group_snippet?: Snippet<[any]>;
+		group_snippet?: Snippet<[SelectOptionGroup<T>]>;
 		/** A snippet for how to render a single `<option>` in the `<select>`.*/
-		option_snippet?: Snippet<[SelectOption | T]>;
-		options?: SelectOptionList<T>;
+		option_snippet?: Snippet<[SelectOption<T>]>;
+		options?: SelectOptions<T>;
 		dynamic_select_styles?: DynamicStyleParameters;
 		input_label_props?: InputLabelProps<T>;
 		value_key?: string;
@@ -40,7 +44,7 @@
 	let {
 		value = $bindable(),
 		dynamic_select_styles = $bindable(),
-		options = [],
+		options = $bindable([]),
 		option_snippet = default_option,
 		group_snippet = default_group,
 		children,
@@ -55,24 +59,26 @@
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
-{#snippet default_option(item: SelectOption | T)}
-	{@const is_object = item instanceof Object}
-	{@const value = is_object && 'value' in item ? item.value : item}
-	{@const label = is_object && 'label' in item ? item.label : item}
-	{@const disabled = is_object && 'disabled' in item ? item.disabled : false}
+{#snippet default_option(item: SelectOption<T>)}
+	{@const { value, label, disabled } = item}
 	<option {value} {disabled}>
 		{label ?? value}
 	</option>
 {/snippet}
 
-{#snippet default_group(o: SelectOptionGroup | SelectOption)}
-	<optgroup label={o.label}>
-		{#if 'options' in o}
-			{#each o.options as suboption}
-				{@render default_group(suboption)}
+{#snippet default_group(group: SelectOptionGroup<T>)}
+	{@const { label, options, disabled } = group}
+	<optgroup {label} {disabled}>
+		{#if 'options' in group}
+			{#each group.options as suboption}
+				{#if 'options' in suboption}
+					{@render default_group(suboption)}
+				{:else}
+					{@render option_snippet(suboption)}
+				{/if}
 			{/each}
 		{:else}
-			{@render option_snippet(o)}
+			{@render option_snippet(group)}
 		{/if}
 	</optgroup>
 {/snippet}
@@ -88,14 +94,20 @@
 	>
 		{#if children}
 			{@render children()}
-		{:else if group_snippet && options[0] instanceof Object && 'options' in options[0]}
+		{:else}
 			{#each options as opt}
-				{@render group_snippet(opt)}
+				{#if 'options' in opt}
+					{@render group_snippet(opt)}
+				{:else}
+					{@render option_snippet(opt)}
+				{/if}
 			{/each}
-		{:else if option_snippet}
-			{@const opts = options as T[]}
-			{#each opts as opt}
-				{@render option_snippet(opt)}
+			{#each options as opt}
+				{#if 'options' in opt}
+					{@render group_snippet(opt)}
+				{:else}
+					{@render option_snippet(opt)}
+				{/if}
 			{/each}
 		{/if}
 	</select>
