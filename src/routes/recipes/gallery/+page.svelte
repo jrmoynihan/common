@@ -49,9 +49,9 @@
 	href,
 	width = '100%',
 	height = 'auto',
-	class
-}: (typeof images)[0] & { width: string; height: string; class?: string })}
-	<img {class} alt={text} src={href} {width} {height} />
+	class_names
+}: (typeof images)[0] & { width: string; height: string; class_names?: string })}
+	<img class={class_names} alt={text} src={href} {width} {height} />
 {/snippet}
 
 <svelte:window
@@ -108,7 +108,7 @@
 					...image,
 					width: use_full_size ? '100%' : 'auto',
 					height: '100%',
-					class: use_full_size ? 'selected-image full-size' : 'selected-image'
+					class_names: use_full_size ? 'selected-image full-size' : 'selected-image'
 				})}
 			</button>
 		{/each}
