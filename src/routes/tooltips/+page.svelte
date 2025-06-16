@@ -24,10 +24,10 @@
 	});
 
 	let initially_visible_example = $state(true);
+	let dynamic_tooltip_text_num = $state(0);
 	let dynamic_tooltip_text = $state(
 		'Type in the text input while hovering the parent element to see the magic happen!'
 	);
-	let dynamic_tooltip_text_num = $state(0);
 
 	const styling_green_map = new SvelteMap<string, string>()
 		.set('max-width', `${max_width}px`)
@@ -62,7 +62,7 @@
 	}
 </script>
 
-{#snippet tooltip_example({ text, num }: { text: string; num: number })}
+{#snippet tooltip_example({ text, num }: Partial<{ text: string; num: number }>)}
 	<button>example from a snippet: {text} {num}</button>
 {/snippet}
 <section id="tooltips-section">
@@ -105,7 +105,7 @@
 			content: dynamic_tooltip_text,
 			position,
 			disabled,
-			styles: 'max-width: min(100vw, 200px)',
+			styles: 'max-width: min(100vw, 200px);',
 			keep_visible
 		}}
 	>
@@ -117,7 +117,7 @@
 		bind:value={dynamic_tooltip_text}
 		use:tooltip={{
 			content_snippet: tooltip_example,
-			content_args: { text: dynamic_tooltip_text, num: dynamic_tooltip_text_num }
+			content_args: { text: dynamic_tooltip_text }
 		}}
 	/>
 	<input
@@ -125,7 +125,7 @@
 		bind:value={dynamic_tooltip_text_num}
 		use:tooltip={{
 			content_snippet: tooltip_example,
-			content_args: { text: dynamic_tooltip_text, num: dynamic_tooltip_text_num }
+			content_args: { num: dynamic_tooltip_text_num }
 		}}
 	/>
 
@@ -164,7 +164,7 @@
 		Tooltips Can Be Styled
 	</button>
 	<div
-		style="display:grid; grid-template-columns: repeat(3, minmax(0,max-content)); column-gap: 0.5rem; row-gap:1rem;"
+		style="display:grid; grid-template-columns: repeat(3, minmax(0, max-content)); column-gap: 0.5rem; row-gap:1rem;"
 		use:tooltip={{
 			content: 'There are different delays on each the tooltips to achieve a staggered effect',
 			styles: hot_sun_styles,
