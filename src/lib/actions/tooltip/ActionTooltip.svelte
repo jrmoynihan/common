@@ -98,8 +98,7 @@ https://web.dev/building-a-tooltip-component/
 				top: calc(anchor(bottom) + var(--distance));
 				bottom: auto;
 				&.fallback {
-					/* position-try-options: --bottom-top-right-left; */
-					position-try-options: flip-block, flip-inline, flip-start;
+					position-try: flip-block, flip-inline, flip-start;
 				}
 			}
 			&[data-tip-position='top'] {
@@ -108,8 +107,7 @@ https://web.dev/building-a-tooltip-component/
 				bottom: calc(anchor(top) + var(--distance));
 				top: auto;
 				&.fallback {
-					/* position-try-options: --top-bottom-right-left; */
-					position-try-options: flip-block, flip-inline, flip-start;
+					position-try: flip-block, flip-inline, flip-start;
 				}
 			}
 			&[data-tip-position='left'] {
@@ -118,8 +116,7 @@ https://web.dev/building-a-tooltip-component/
 				left: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
 				&.fallback {
-					/* position-try-options: --left-right-top-bottom; */
-					position-try-options: flip-inline, flip-block, flip-start;
+					position-try: flip-inline, flip-block, flip-start;
 				}
 			}
 			&[data-tip-position='right'] {
@@ -128,8 +125,7 @@ https://web.dev/building-a-tooltip-component/
 				right: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
 				&.fallback {
-					/* position-try-options: --right-left-top-bottom; */
-					position-try-options: flip-inline, flip-block, flip-start;
+					position-try: flip-inline, flip-block, flip-start;
 				}
 			}
 			&.visible {
@@ -195,6 +191,8 @@ https://web.dev/building-a-tooltip-component/
 
 				&::after {
 					border-bottom: var(--arrow-border-and-color);
+					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
+					border-top-style: unset;
 				}
 			}
 			&[data-tip-position='top'] {
@@ -202,6 +200,8 @@ https://web.dev/building-a-tooltip-component/
 
 				&::after {
 					border-top: var(--arrow-border-and-color);
+					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
+					border-bottom-style: unset;
 				}
 			}
 			&[data-tip-position='left'] {
@@ -209,6 +209,8 @@ https://web.dev/building-a-tooltip-component/
 
 				&::after {
 					border-left: var(--arrow-border-and-color);
+					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
+					border-right-style: unset;
 				}
 			}
 			&[data-tip-position='right'] {
@@ -216,6 +218,8 @@ https://web.dev/building-a-tooltip-component/
 
 				&::after {
 					border-right: var(--arrow-border-and-color);
+					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
+					border-left-style: unset;
 				}
 			}
 		}
