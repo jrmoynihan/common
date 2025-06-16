@@ -8,10 +8,8 @@
 		extends Omit<InputWithLabelProps<T>, 'value' | 'children'> {
 		/** An array or iterable of items to display in the radio group. */
 		items: ArrayLike<T> | Iterable<T>;
-		/** Styles to apply to the label of the selected item */
-		label_dynamic_styles?: DynamicStyleParameters;
-		/** Styles to apply to the input of the selected item */
-		input_dynamic_styles?: DynamicStyleParameters;
+		/** Attributes to pass to the label of the selected item. */
+		label_attributes?: Partial<InputLabelProps<T>>;
 		/** The key to use for the label of the selected item. (Default: 'label') */
 		label_key?: keyof T;
 		/** The key to use for the value of the selected item, which affects the group's binding. (Default: the item itself, which may be an object) */
@@ -29,8 +27,7 @@
 	let {
 		items = $bindable([]),
 		group = $bindable(),
-		label_dynamic_styles = $bindable(),
-		input_dynamic_styles = $bindable(),
+		label_attributes,
 		label_key = 'label' as K,
 		value_key,
 		children,
@@ -41,9 +38,14 @@
 
 {#snippet labeled_item(item: T)}
 	{@const id = crypto.randomUUID()}
-	{@const label = item instanceof Object ? item[label_key] : item}
-	{@const value = value_key && item instanceof Object ? item[value_key] : item}
-	<InputLabel text={typeof label === 'string' ? label : JSON.stringify(label)} {id}>
+	{@const label = item instanceof Object && label_key in item ? item[label_key] : item}
+	{@const value =
+		value_key !== undefined && item instanceof Object && value_key in item ? item[value_key] : item}
+	<InputLabel
+		text={typeof label === 'string' ? label : JSON.stringify(label)}
+		{id}
+		{...label_attributes}
+	>
 		<Input
 			bind:group
 			{id}
@@ -64,9 +66,41 @@
 <style>
 	@layer input_label {
 		:global(label) {
+			--radiogroup-default-label-background-color: transparent;
+			--radiogroup-default-label-disabled-opacity: 0.5;
+			--radiogroup-default-label-checked-border-width: 2px;
+			--radiogroup-default-label-hover-background-color: oklch(
+				from var(--background) calc(l + 0.2) c h / 0.8
+			);
 			transition: all 300ms ease;
-			border-radius: var(--radio-group-border-radius, 0.25rem);
-			padding: var(--radio-group-padding, 0.25rem);
+			background-color: var(
+				--radiogroup-label-background-color,
+				var(--radiogroup-default-label-background-color)
+			);
+			opacity: var(--radiogroup-unchecked-opacity, var(--radiogroup-default-unchecked-opacity, 1));
+		}
+		:global(label:hover) {
+			background-color: var(
+				--radiogroup-label-hover-background-color,
+				var(--radiogroup-default-label-hover-background-color)
+			);
+		}
+		:global(label:has(input[type='radio']:disabled)) {
+			opacity: var(
+				--radiogroup-label-disabled-opacity,
+				var(--radiogroup-default-label-disabled-opacity)
+			);
+			cursor: not-allowed;
+		}
+		:global(label:has(input[type='radio']:focus-visible:not(:disabled))) {
+			outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
+			background-color: var(
+				--radiogroup-label-focus-background-color,
+				oklch(from var(--radiogroup-default-label-hover-background-color) l c h / 1)
+			);
+		}
+		:global(input[type='radio']:focus-visible) {
+			outline: none;
 		}
 		:global(label:has(input[type='radio'][data-checked='true'])) {
 			outline: 2px solid currentColor;
