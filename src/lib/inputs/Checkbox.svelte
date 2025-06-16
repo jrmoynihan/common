@@ -45,18 +45,20 @@
 				var(--checkbox-default-transition-speed)
 			)
 			var(--checkbox-transition-timing-function, var(--checkbox-default-transition-timing-function));
-		--checkbox-default-checked-transition: scale var(--checkbox-default-transition-function),
+		--checkbox-default-transition:
+			scale var(--checkbox-default-transition-function),
 			opacity var(--checkbox-default-transition-function);
 		--checbox-default-label-transition: background-color var(--checkbox-default-transition-function);
 		--checkbox-default-unchecked-opacity: 0.5;
 		--checkbox-default-checked-opacity: 1;
-		--checkbox-default-checked-scale: 1.3;
+		--checkbox-default-unchecked-scale: 0.8;
+		--checkbox-default-checked-scale: 1;
 		--checkbox-default-padding: 0.5rem;
 		--checkbox-default-label-padding: 0.5rem;
 		--checkbox-default-label-border-radius: 0.5rem;
 		--checkbox-default-label-gap: 0.5rem;
 		--checkbox-default-label-hover-background-color: oklch(
-			from var(--background) calc(l + 0.2) c h
+			from var(--background) calc(l + 0.2) c h / 0.8
 		);
 		--checkbox-default-label-disabled-opacity: 0.5;
 		--checkbox-default-font-size: initial;
@@ -86,17 +88,28 @@
 			);
 			cursor: not-allowed;
 		}
+		&:has(> input[type='checkbox']:focus-visible:not(:disabled)) {
+			outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
+			background-color: var(
+				--checkbox-label-focus-background-color,
+				oklch(from var(--checkbox-default-label-hover-background-color) l c h / 1)
+			);
+		}
 		& > input[type='checkbox'] {
 			accent-color: var(--checkbox-accent-color, var(--checkbox-default-accent-color));
 			opacity: var(--checkbox-unchecked-opacity, var(--checkbox-default-unchecked-opacity));
+			scale: var(--checkbox-unchecked-scale, var(--checkbox-default-unchecked-scale));
 			padding: var(--checkbox-padding, var(--checkbox-default-padding));
+			transition: var(--checkbox-transition, var(--checkbox-default-transition));
 			&:checked {
 				opacity: var(--checkbox-checked-opacity, var(--checkbox-default-checked-opacity));
 				scale: var(--checkbox-checked-scale, var(--checkbox-default-checked-scale));
-				transition: var(--checkbox-checked-transition, var(--checkbox-default-checked-transition));
 			}
 			&:disabled {
 				cursor: not-allowed;
+			}
+			&:focus-visible {
+				outline: none;
 			}
 		}
 	}
