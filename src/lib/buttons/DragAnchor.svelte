@@ -32,7 +32,7 @@
 <ButtonRunes
 	bind:disabled
 	icon_props={{ icon: 'fa6-solid:grip-vertical' }}
-	class={['drag-anchor', !hovered && 'faded', grabbed]}
+	class={['_drag-anchor', !hovered && 'faded', grabbed]}
 	dynamic_styles={{
 		hover_styles: 'color: oklch(from var(--text) l c h / 1);',
 		...dynamic_styles
@@ -47,7 +47,7 @@
 
 <style lang="scss">
 	@layer drag-anchor {
-		:global(.drag-anchor) {
+		:global(._drag-anchor) {
 			--default-transition: opacity 200ms, color 200ms;
 			box-sizing: border-box;
 			display: grid;
@@ -80,9 +80,5 @@
 		:global(.button.drag-anchor.grabbed) {
 			cursor: grabbing;
 		}
-		// :global(.button.drag-anchor.faded) {
-		// opacity: var(--drag-anchor-faded-opacity, 0.2);
-		// color: oklch(from currentColor l c h / 0.2);
-		// }
 	}
 </style>
