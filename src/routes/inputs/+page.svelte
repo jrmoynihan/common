@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Inspect } from 'svelte-inspect-value';
 	import Checkbox from '$inputs/Checkbox.svelte';
 	import DatalistTextInput from '$inputs/DatalistTextInput.svelte';
 	import NumericInput from '$inputs/NumericInput.svelte';
@@ -7,6 +8,7 @@
 	import TemporalDateInput from '$inputs/TemporalDateInput.svelte';
 	import TextInput from '$inputs/TextInput.svelte';
 	import type { PageData } from './$types';
+	import Icon from '@iconify/svelte';
 
 	let { data } = $props();
 	const { datalist, select_options, date_inputs }: PageData = data;
@@ -16,6 +18,15 @@
 	let selected_fruit_name: string | undefined = $state();
 	let selected_number = $state<number>(1);
 	let valid_email: string = $state('');
+	let value_key: keyof (typeof select_options)[0] = $state(
+		'value' as keyof (typeof select_options)[0]
+	);
+	let label_key: keyof (typeof select_options)[0] = $state(
+		'label' as keyof (typeof select_options)[0]
+	);
+	let option_keys = $derived(
+		Array.from(new Set(select_options.flatMap((obj) => Object.keys(obj))))
+	);
 </script>
 
 <div class="inputs-container">
@@ -54,6 +65,10 @@
 					content: `I'm an email input that hides the confirm button when the email is invalid!`
 				}
 			}}
+			dynamic_input_styles={{
+				invalid_styles: 'background: oklch(70% 0.1 30 / 0.4);',
+				valid_styles: 'background: oklch(70% 0.1 130 / 0.3);'
+			}}
 			type="email"
 			autocomplete="email"
 			required={true}
@@ -77,7 +92,7 @@
 	<section class="date-inputs">
 		<h2>Date Inputs</h2>
 		{#each date_inputs as input}
-			<TemporalDateInput {...input} />
+			<TemporalDateInput {...input} {...input.input_attributes} />
 		{/each}
 	</section>
 	<section class="numeric-inputs">
@@ -90,33 +105,44 @@
 			show_spinner_buttons={false}
 		/>
 	</section>
-	<section class="select-inputs">
+	<section class="select-inputs grid gap-4">
 		<h2>Select Inputs</h2>
 		<Select
-			input_label_props={{ text: 'Select an option' }}
+			input_label_props={{ text: 'Select an object option' }}
 			options={select_options}
 			placeholder_props={{ text: 'pick one...' }}
 			required={true}
-		/>
-		<Select
-			input_label_props={{ text: 'Select an option' }}
-			options={select_options}
-			placeholder_props={{ text: 'pick one...' }}
-			required={true}
+			label_key={'label'}
 			bind:value={selected_option}
 		/>
+		<Inspect value={selected_option} />
 		<Select
-			input_label_props={{ text: 'Select a fruit' }}
-			options={datalist}
-			placeholder_props={{ text: 'pick a fruit...' }}
-			bind:value={selected_fruit}
+			bind:value={value_key}
+			input_label_props={{ text: 'Value Key ' }}
+			placeholder_props={{ text: 'pick a value key' }}
+			options={option_keys}
 		/>
-		<Select bind:value={selected_number} options={select_options}>
-			{#snippet option_snippet(item)}
-				<option value={item}>{item}</option>
-			{/snippet}
-		</Select>
-		<Select bind:value={selected_fruit} options={datalist}>
+		<Select
+			bind:value={label_key}
+			input_label_props={{ text: 'Label Key ' }}
+			placeholder_props={{ text: 'pick a label key' }}
+			options={option_keys}
+		/>
+		<Select
+			bind:value={selected_number}
+			input_label_props={{
+				text: 'Derived select with dynamic label/value key selection from an array of objects'
+			}}
+			options={select_options}
+			{value_key}
+			{label_key}
+		/>
+		<Select
+			bind:value={selected_fruit}
+			options={datalist}
+			input_label_props={{ text: 'Select a fruit' }}
+			placeholder_props={{ text: 'pick a fruit...' }}
+		>
 			{#snippet option_snippet(fruit)}
 				<option value={fruit}>{fruit.label}</option>
 			{/snippet}
@@ -125,6 +151,7 @@
 
 	<section class="checkbox-inputs">
 		<h2>Checkbox Inputs</h2>
+		<Checkbox label="Regular Checkbox" />
 		<Checkbox>
 			{#snippet label()}
 				<p>Labeled Checkbox</p>
@@ -135,34 +162,53 @@
 			{/snippet}
 		</Checkbox>
 		<Checkbox disabled label={'Disabled Checkbox'} />
-		<Checkbox />
 	</section>
 	<section class="radio-inputs">
 		<h2>Radio Inputs</h2>
-		<RadioGroup items={datalist} bind:group={selected_fruit}>
+		<RadioGroup
+			items={datalist}
+			bind:group={selected_fruit}
+			label_attributes={{
+				style: 'font-style: italic;  text-align: center;'
+			}}
+		>
 			{#snippet children(item)}
-				<span class="selected-fruit">{item?.icon}</span>
+				<span
+					class="selected-fruit"
+					style="transition: scale 300ms ease; place-self: center;"
+					style:scale={selected_fruit?.label === item.label ? 1.5 : 1}>{item?.icon}</span
+				>
 			{/snippet}
 		</RadioGroup>
-		<RadioGroup items={select_options} bind:group={selected_number} />
+		<RadioGroup
+			items={select_options.flatMap((o) => {
+				return o.options ? o.options : [];
+			})}
+			bind:group={selected_number}
+			value_key={'value'}
+		/>
 	</section>
 </div>
 
 <style lang="scss">
+	h2 {
+		font-size: 1.5rem;
+		font-weight: 600;
+		margin-bottom: 1rem;
+	}
 	.inputs-container {
 		display: flex;
-		justify-content: center;
-		align-items: center;
+		justify-content: space-evenly;
 		width: 100%;
 		height: 100%;
 		gap: 2rem 1rem;
 		flex-wrap: wrap;
-		flex-basis: min(100rem, 50vw);
-	}
-	section {
-		display: flex;
-		place-items: center;
-		flex-wrap: wrap;
+		padding: 2rem;
+		& > * {
+			flex-basis: max(15rem, 15vw);
+			flex-grow: 1;
+			flex-shrink: 1;
+		}
 	}
 	.text-inputs,
 	.date-inputs,
@@ -177,6 +223,12 @@
 	.radio-inputs {
 		display: flex;
 		gap: 1rem;
+		flex-wrap: wrap;
+		& :global(label) {
+			flex-grow: 1;
+			flex-shrink: 1;
+			flex-basis: min(100%, 10ch);
+		}
 	}
 	.date-inputs {
 		@layer input_label {
