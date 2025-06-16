@@ -25,6 +25,9 @@
 		"@sveltejs/adapter-vercel": "^5.7.2",
 		"@sveltejs/package": "^2.3.11",
 		"@sveltejs/vite-plugin-svelte": "^5.1.0",
+		"@tailwindcss/forms": "^0.5.10",
+		"@tailwindcss/typography": "^0.5.16",
+		"@tailwindcss/vite": "^4.1.10",
 		"@typescript-eslint/eslint-plugin": "^8.34.0",
 		"@typescript-eslint/parser": "^8.34.0",
 		"eslint": "^9.29.0",
@@ -35,11 +38,13 @@
 		"postcss-easings": "^4.0.0",
 		"prettier": "^3.5.3",
 		"prettier-plugin-svelte": "^3.4.0",
+		"prettier-plugin-tailwindcss": "^0.6.12",
 		"remark-codesandbox": "^0.10.1",
 		"sass": "^1.89.2",
 		"svelte-check": "^4.2.1",
 		"svelte-preprocess": "^6.0.3",
 		"svelte2tsx": "^0.7.39",
+		"tailwindcss": "^4.1.10",
 		"tslib": "^2.8.1",
 		"typescript": "^5.8.3",
 		"vite": "^6.3.5",
@@ -54,7 +59,8 @@
 		"acorn": "^8.15.0",
 		"mdsvexamples": "^0.5.0",
 		"postcss-jit-props": "^1.0.16",
-		"svelte": "^5.34.1"
+		"svelte": "^5.34.3",
+		"svelte-inspect-value": "^0.8.0"
 	},
 	"exports": {
 		".": {
