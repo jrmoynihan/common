@@ -103,10 +103,8 @@
 			-moz-appearance: textfield;
 			background-color: var(--background-color, revert);
 			color: var(--input-color, fieldtext);
-			width: 100%;
 			margin: 0;
 			border-radius: var(--input-border-radius, 1em);
-			border-radius: var(--input-border-radius, 1rem);
 			border: var(--input-border, inset light-dark(rgb(118, 118, 118), rgb(133, 133, 133)));
 			overflow: hidden;
 			text-overflow: ellipsis;
