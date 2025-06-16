@@ -96,20 +96,37 @@
 <style lang="scss">
 	@layer input_label {
 		label.label-container {
+			--default-input-label-hover-background-color: oklch(
+				from var(--background) calc(l + 0.2) c h / 0.8
+			);
 			--text-input-padding: 1.25em;
+			--default-input-label-border-radius: 1.5em;
+			--default-input-label-padding-inline: max(
+				0.25em,
+				calc(var(--default-input-label-border-radius) / 2)
+			);
+			--default-input-label-padding-block: 0.5em;
+			--input-border-radius: calc(
+				var(--default-input-label-border-radius) -
+					(var(--default-input-label-padding-inline) + var(--default-input-label-padding-block)) / 2
+			);
 			position: relative;
 			display: grid;
-			// max-width: max-content;
 			gap: var(--label-gap, 0.35em);
 			grid-auto-rows: minmax(0, max-content);
 			grid-template-areas:
 				'before'
 				'input'
 				'after';
+			container-type: inline-size;
+			padding-inline: var(--input-label-padding-inline, var(--default-input-label-padding-inline));
+			padding-block: var(--input-label-padding-block, var(--default-input-label-padding-block));
+			border-radius: var(--input-label-border-radius, var(--default-input-label-border-radius));
+			cursor: var(--input-label-cursor, pointer);
 			& > :global(:is(.before, .after)) {
 				padding-block: 0.25em;
 			}
-			& > :gloal(.before) {
+			& > :global(.before) {
 				grid-area: before;
 			}
 			& > :global(.after) {
@@ -118,16 +135,31 @@
 			&:focus-within > :global(.placeholder) {
 				scale: 0.75;
 				translate: -3ch -25% 0;
+				translate: -13cqw -1.5cqh 0;
 			}
 			& > :global(:where(input.value, select.value)) ~ :global(.placeholder) {
 				scale: 0.75;
 				translate: -3ch -25% 0;
+				translate: -13cqw -1.5cqh 0;
 			}
 			&:hover:not(:focus) > :global(.placeholder) {
 				opacity: 0.5;
 			}
+			&:hover {
+				background-color: var(
+					--input-label-hover-background-color,
+					var(--default-input-label-hover-background-color)
+				);
+			}
 			&:focus-visible {
 				outline: var(--input-outline, -webkit-focus-ring-color auto 1px);
+			}
+			&:has(> input:focus-visible:not(:disabled)) {
+				outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
+				background-color: var(
+					--input-label-focus-background-color,
+					oklch(from var(--default-input-label-hover-background-color) l c h / 1)
+				);
 			}
 		}
 	}
