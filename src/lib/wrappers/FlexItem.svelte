@@ -2,30 +2,21 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	export interface FlexItemProps extends Omit<HTMLAttributes<HTMLDivElement>, 'class'> {
+	export interface FlexItemProps extends HTMLAttributes<HTMLDivElement> {
 		order?: number;
 		grow?: number;
 		shrink?: number;
 		basis?: string;
-		classes?: string;
 		children?: Snippet;
 	}
 </script>
 
 <script lang="ts">
-	let {
-		order,
-		grow = 1,
-		shrink = 1,
-		basis,
-		classes = '',
-		children,
-		...attributes
-	}: FlexItemProps = $props();
+	let { order, grow = 1, shrink = 1, basis, children, ...attributes }: FlexItemProps = $props();
 </script>
 
 <div
-	class="_flex-item {classes}"
+	class={['_flex-item', attributes.class]}
 	style:--order={order}
 	style:--grow={grow}
 	style:--shrink={shrink}

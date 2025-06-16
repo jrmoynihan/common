@@ -32,7 +32,7 @@
 <ButtonRunes
 	bind:disabled
 	icon_props={{ icon: 'fa6-solid:grip-vertical' }}
-	classes={`drag-anchor ${!hovered ? 'faded' : ''} ${grabbed ? 'grabbed' : ''}`}
+	class={['drag-anchor', !hovered && 'faded', grabbed]}
 	dynamic_styles={{
 		hover_styles: 'color: oklch(from var(--text) l c h / 1);',
 		...dynamic_styles

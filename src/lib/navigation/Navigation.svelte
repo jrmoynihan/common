@@ -6,9 +6,7 @@
 		dynamic_link_styles?: DynamicStyleParameters | DynamicStyleParameters[];
 		/** An array of items to display within the nav wrapper element.  You can provide links here or manually create `<NavLink>` components and provide them to the `children` snippet.  */
 		links?: NavigationLink[];
-		/** Classes to apply to the <a> elements. */
-		link_classes?: string | string[];
-		/** Attributes to apply to the <a> elements. */
+		/** Attributes to apply to the <a> elements.  Can be a uniform object to apply to all links, or an array of individual attribute objects to apply to each link separately (in order of appearance). */
 		link_attributes?: HTMLAnchorAttributes | HTMLAnchorAttributes[];
 		/** Styles to apply to the link if it is part of the current page path */
 		link_current_page_styles?: string;
@@ -33,7 +31,6 @@
 		dynamic_styles,
 		dynamic_link_styles,
 		links = [],
-		link_classes,
 		link_attributes,
 		link_current_page_styles,
 		tooltip_options = { disabled: true },
@@ -64,14 +61,12 @@
 			{@const link_dynamic_styles = Array.isArray(dynamic_link_styles)
 				? dynamic_link_styles[i]
 				: dynamic_link_styles}
-			{@const link_class = Array.isArray(link_classes) ? link_classes[i] : link_classes}
 			{@const attributes = Array.isArray(link_attributes) ? link_attributes[i] : link_attributes}
 			<NavLink
 				{nav_link}
 				current_page_styles={link_current_page_styles}
 				tooltip_options={link_tooltip_options}
 				dynamic_styles={link_dynamic_styles}
-				classes={link_class}
 				{...attributes}
 			/>
 		{/each}

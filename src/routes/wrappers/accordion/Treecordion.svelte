@@ -93,7 +93,7 @@
 <TreeList node_to={''}>
 	<TreeItem is_node="--node-1">
 		<AccordionDetails
-			details_classes={'tree-item-details'}
+			class={'tree-item-details'}
 			summary_attributes={{ class: 'tree-item-label' }}
 			summary_text={'CSS selectors'}
 			transition_props={{ types: ['scale'] }}
@@ -101,7 +101,7 @@
 			<TreeList node_to="--node-1">
 				<TreeItem is_node="--node-1-1">
 					<AccordionDetails
-						details_classes={'tree-item-details'}
+						class={'tree-item-details'}
 						summary_attributes={{ class: 'tree-item-label' }}
 						summary_text={'Basic selectors'}
 						transition_props={{ types: ['fly'], slide_transition_parameters: { side: 'left' } }}
@@ -123,7 +123,7 @@
 				</TreeItem>
 				<TreeItem is_node="--node-1-3">
 					<AccordionDetails
-						details_classes={'tree-item-details'}
+						class={'tree-item-details'}
 						summary_attributes={{ class: 'tree-item-label' }}
 						summary_text={'Combinators'}
 						transition_props={{ types: ['slide'] }}
@@ -139,7 +139,7 @@
 				</TreeItem>
 				<TreeItem is_node="--node-1-4">
 					<AccordionDetails
-						details_classes={'tree-item-details'}
+						class={'tree-item-details'}
 						summary_attributes={{ class: 'tree-item-label' }}
 						summary_text={'Pseudos'}
 					>

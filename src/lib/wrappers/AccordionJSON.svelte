@@ -41,7 +41,7 @@
 	<AccordionDetails
 		--details-focus-outline={'none'}
 		bind:open
-		details_classes={'json'}
+		class="json"
 		summary_attributes={{ class: 'json' }}
 		{transition_props}
 		{...accordion_details_props}

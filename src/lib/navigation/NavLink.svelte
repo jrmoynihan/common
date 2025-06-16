@@ -4,8 +4,6 @@
 		nav_link: NavigationLink;
 		/** Tooltip options to apply to the nav links. */
 		tooltip_options?: TooltipProps<T>;
-		/** Classes to apply to the nav links. */
-		classes?: string;
 		/** Styles to apply to a link when it is the _currently active_ page URL. */
 		current_page_styles?: string;
 		/** Dynamic styles to apply to the nav links. */
@@ -28,7 +26,6 @@
 	let {
 		nav_link,
 		tooltip_options = { disabled: true, visible: false },
-		classes,
 		current_page_styles,
 		dynamic_styles,
 		children,
@@ -83,7 +80,7 @@
 		...dynamic_styles,
 		styles: is_current_page ? current_page_styles : dynamic_styles?.styles
 	}}
-	class={`link ${classes ?? ''}`}
+	class={['_link', anchor_attributes.class]}
 	class:current={is_current_page}
 	class:active-path={is_page_active}
 	href={nav_link.url.href}
@@ -98,7 +95,7 @@
 
 <style lang="scss">
 	@layer navlink {
-		.link {
+		._link {
 			font-family: var(--link-font, var(--font, inherit));
 			text-decoration: var(--link-text-decoration, none);
 			font-size: var(--link-font-size, 1rem);

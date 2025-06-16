@@ -102,8 +102,8 @@
 			}}
 		/>
 	</div> -->
-	<ResetButton classes="red" {onclick}>I'm a reset button with high elevation!!</ResetButton>
-	<SubmitButton classes="green" {onclick}>I'm a submit button with high elevation!!</SubmitButton>
+	<ResetButton class="red" {onclick}>I'm a reset button with high elevation!!</ResetButton>
+	<SubmitButton class="green" {onclick}>I'm a submit button with high elevation!!</SubmitButton>
 
 	<ToggleSwitch
 		bind:checked={complex_state.player.toggled}

@@ -95,7 +95,7 @@
 						icon: 'mdi:caret-up'
 					},
 					{
-						classes: 'plus',
+						class: 'plus',
 						onclick: () => {
 							if (current + step <= max_num) {
 								value = Number(value) + step;
@@ -113,7 +113,7 @@
 				{@render default_spinner_button(
 					{ icon: 'mdi:caret-down' },
 					{
-						classes: 'minus',
+						class: 'minus',
 						onclick: () => {
 							if (current - step >= min_num) {
 								value = Number(value) - step;

@@ -94,9 +94,9 @@
 			{@render footer_children?.()}
 			<ButtonRunes
 				onclick={dialog?.close}
-				classes={`close-button`}
 				style={'aspect-ratio: 1.5 / 1'}
 				{...close_button_attributes}
+				class={['close-button', close_button_attributes?.class]}
 			>
 				Close
 			</ButtonRunes>
@@ -109,7 +109,11 @@
 		<h3 {...heading_attributes}>
 			{heading}
 		</h3>
-		<ButtonRunes onclick={dialog?.close} classes="close-button" {...close_x_attributes}>
+		<ButtonRunes
+			{...close_x_attributes}
+			onclick={dialog?.close}
+			class={['close-button', close_x_attributes?.class]}
+		>
 			X
 		</ButtonRunes>
 	</header>

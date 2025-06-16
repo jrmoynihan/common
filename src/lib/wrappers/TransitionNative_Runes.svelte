@@ -4,8 +4,8 @@
 	export interface TransitionNativeProps {
 		/** Will trigger the CSS transition when this value changes. */
 		visible?: boolean;
-		inner_container_styles?: string;
-		inner_container_classes?: string;
+		/** Attributes to apply to the inner container (parent of the transitioned content). */
+		inner_container_attributes?: HTMLAttributes<HTMLDivElement>;
 		/** The type of transition to use. */
 		types?: TransitionTypes[];
 		/** Should the outro transition return to the same initial state as the intro transition?  */
@@ -102,11 +102,11 @@
 	// Inspired by https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
 
 	import type { Snippet } from 'svelte';
+	import type { HTMLAttributes } from 'svelte/elements';
 
 	let {
 		visible = $bindable(false),
-		inner_container_styles = '',
-		inner_container_classes = '',
+		inner_container_attributes,
 		types = ['fade'],
 		symmetrical = true,
 		origin,
@@ -212,7 +212,12 @@
 	ScaleCSSParams &
 	FadeCSSParams & { types: TransitionTypes[] })}
 	<div
-		class={`transition-inner ${types.length > 1 ? types.join(' ') : types} ${inner_container_classes}`}
+		{...inner_container_attributes}
+		class={[
+			'transition-inner',
+			types.length > 1 ? types.join(' ') : types,
+			inner_container_attributes?.class
+		]}
 		class:visible
 		class:entering
 		class:leaving
@@ -256,7 +261,6 @@
 		class:slide-right={side === 'right' && sliding}
 		class:slide-top={side === 'top' && sliding}
 		class:slide-bottom={side === 'bottom' && sliding}
-		style={inner_container_styles}
 		style:--x={x}
 		style:--y={y}
 		style:--out-x={outX}

@@ -1,14 +1,12 @@
 <script module lang="ts">
-	export interface ButtonProps<T> extends Omit<HTMLButtonAttributes, 'class'> {
+	export interface ButtonProps<T> extends HTMLButtonAttributes {
 		/** Options to style the tooltip or modify its visible/disabled state */
 		tooltip_options?: TooltipProps<T> | TooltipWithContentProps<T>;
 		/** Style the button, allowing dynamic updates */
 		dynamic_styles?: DynamicStyleParameters;
-		/** External classes to add to the button. */
-		classes?: string;
 		/** The position of the icon relative to the children/content of the button */
 		icon_position?: 'before' | 'after';
-		/** Props on the font-awesome component for the icon */
+		/** Props on the `@iconify/svelte` <Icon> component */
 		icon_props?: IconProps;
 		/** A Svelte transition to use on the button */
 		transition?: SvelteTransition;
@@ -41,7 +39,6 @@
 		},
 		children,
 		dynamic_styles,
-		classes = '',
 		icon_position = 'after',
 		icon_props,
 		transition = fade,
@@ -61,7 +58,7 @@
 	transition:transition={transition_config}
 	use:dynamic_style={dynamic_styles}
 	use:tooltip={{ ...tooltip_options }}
-	class={`_button ${classes}`}
+	class={[`_button`, attributes.class]}
 	type="button"
 	{disabled}
 	{...attributes}

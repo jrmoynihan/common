@@ -193,7 +193,7 @@
 	{@const order = orders.get(key)}
 	{#if typeof datum_0 === 'string'}
 		<ButtonRunes
-			classes={`sort-button ${order}`}
+			class={['sort-button', order]}
 			onclick={() => sort_strings(key)}
 			style={'padding: 0.25rem;'}
 			icon_props={{ icon }}
@@ -203,7 +203,7 @@
 		/>
 	{:else if typeof datum_0 === 'number' || typeof datum_0 === 'boolean' || datum_0 instanceof Date || datum_0 instanceof BigInt || datum_0 instanceof SvelteDate}
 		<ButtonRunes
-			classes={`sort-button ${order}`}
+			class={['sort-button', order]}
 			onclick={() => sort_numbers_or_boolean_or_dates(key)}
 			icon_props={{ icon }}
 			tooltip_options={{

@@ -1,6 +1,7 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
 	import { cubicOut } from 'svelte/easing';
+	import type { HTMLAttributes } from 'svelte/elements';
 	import {
 		blur,
 		fade,
@@ -17,10 +18,8 @@
 	export interface TransitionProps {
 		/** Will trigger the transition via {#key} block when this value changes. */
 		trigger?: unknown;
-		/** Styles to apply to the inner container (parent of the transitioned content). */
-		inner_container_styles?: string;
-		/** Classes to apply to the inner container (parent of the transitioned content). */
-		inner_container_classes?: string;
+		/** Attributes to apply to the inner container (parent of the transitioned content). */
+		inner_container_attributes?: HTMLAttributes<HTMLDivElement>;
 		/** Parameters to use with a fly transition. */
 		fly_transition_parameters?: FlyParams;
 		/** Parameters to use with a fade transition. */
@@ -51,8 +50,7 @@
 
 	let {
 		trigger = $bindable(false),
-		inner_container_styles = '',
-		inner_container_classes = '',
+		inner_container_attributes,
 		fly_transition_parameters = {
 			x: -150,
 			duration: 300,
@@ -75,8 +73,8 @@
 {#snippet default_fly_transition(params: FlyParams)}
 	{#key trigger}
 		<div
-			class="transition-inner fly {inner_container_classes}"
-			style={inner_container_styles}
+			{...inner_container_attributes}
+			class={['transition-inner', 'fly', inner_container_attributes?.class]}
 			in:fly={{ ...params }}
 			out:fly={{ ...params, x: Number(params.x) * -1 }}
 		>
@@ -88,8 +86,8 @@
 {#snippet default_fade_transition(params: FadeParams)}
 	{#key trigger}
 		<div
-			class="transition-inner fade {inner_container_classes}"
-			style={inner_container_styles}
+			{...inner_container_attributes}
+			class={['transition-inner', 'fade', inner_container_attributes?.class]}
 			in:fade={params}
 			out:fade={params}
 		>
@@ -101,8 +99,8 @@
 {#snippet default_blur_transition(params: BlurParams)}
 	{#key trigger}
 		<div
-			class="transition-inner blur {inner_container_classes}"
-			style={inner_container_styles}
+			{...inner_container_attributes}
+			class={['transition-inner', 'blur', inner_container_attributes?.class]}
 			in:blur={params}
 			out:blur={params}
 		>
@@ -114,8 +112,8 @@
 {#snippet default_slide_transition(params: SlideParams)}
 	{#key trigger}
 		<div
-			class="transition-inner slide {inner_container_classes}"
-			style={inner_container_styles}
+			{...inner_container_attributes}
+			class={['transition-inner', 'slide', inner_container_attributes?.class]}
 			in:slide={params}
 			out:slide={params}
 		>
@@ -127,8 +125,8 @@
 {#snippet default_scale_transition(params: ScaleParams)}
 	{#key trigger}
 		<div
-			class="transition-inner scale {inner_container_classes}"
-			style={inner_container_styles}
+			{...inner_container_attributes}
+			class={['transition-inner', 'scale', inner_container_attributes?.class]}
 			in:scale={params}
 			out:scale={params}
 		>
@@ -166,7 +164,6 @@
 		display: grid;
 		grid-template-rows: 1fr;
 		grid-template-columns: 1fr;
-		/* width: 100%; */
 	}
 	.transition-inner {
 		box-sizing: border-box;

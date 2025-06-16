@@ -19,8 +19,6 @@
 		summary_attributes?: HTMLAttributes<HTMLElement>;
 		/** Text to display within the `<summary>` element. */
 		summary_text?: string;
-		/** Classes to apply to the `<details>` element. */
-		details_classes?: string;
 		/** The position of the expand icon. Defaults to `right`. */
 		expand_icon_position?: 'left' | 'right' | 'none';
 		/** The maximum height of the content when closed. Defaults to `0`. */
@@ -57,7 +55,6 @@
 		children,
 		icon_props: icon,
 		custom_icon,
-		details_classes = '',
 		expand_icon_position = 'right',
 		max_height_closed = 'calc(3ch + 0.5rem)',
 		max_height_open = 'calc(100% + 1rem)',
@@ -124,7 +121,7 @@
 <!--The `open` attribute on the <details> element is assigned to `true` to enable the transition trick with `max-height` in the CSS -->
 <!--svelte-ignore a11y_no_noninteractive_element_interactions-->
 <details
-	class={`details ${details_classes}`}
+	class={['_details', details_attributes.class]}
 	open={true}
 	style:--duration={max_duration ? `${max_duration}ms` : undefined}
 	style:--details-max-height-closed={max_height_closed}
@@ -199,7 +196,7 @@
 		summary > * {
 			cursor: pointer;
 		}
-		.details {
+		._details {
 			max-height: var(--details-max-height-closed, 1.5rem);
 			overflow: hidden;
 			transition: max-height var(--duration, 400ms);
@@ -246,7 +243,6 @@
 
 			/* Remove the default triangle arrow */
 			& > summary {
-				/* width: 100%; */
 				cursor: pointer;
 				list-style: none;
 				&:focus-visible {
@@ -258,7 +254,6 @@
 				/* Customize the summary styles */
 				& > label {
 					display: flex;
-					/* width: 100%; */
 					justify-content: space-between;
 				}
 				/* Hide the checkbox */

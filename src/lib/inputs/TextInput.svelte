@@ -121,11 +121,11 @@
 	{#if children}
 		{@render children()}
 	{/if}
-	<div class="btn-container" class:valid class:show_confirm class:value>
+	<div class={['_btn-container', { valid, show_confirm, value }]}>
 		{#if show_confirm}
 			<InputButton
 				dynamic_styles={dynamic_button_styles}
-				classes={`confirm-btn ${valid ? 'valid' : ''} ${value ? 'value' : ''}`}
+				class={['_confirm-btn', { value, valid }]}
 				tabindex={value && valid ? 0 : -1}
 				onclick={handle_click}
 				disabled={!value}
@@ -138,7 +138,7 @@
 		{#if show_cancel}
 			<InputButton
 				dynamic_styles={dynamic_button_styles}
-				classes={`cancel-btn ${valid ? 'valid' : ''} ${value ? 'value' : ''} ${show_confirm ? '' : 'no-confirm'}`}
+				class={['_cancel-btn', { valid, value }, !show_confirm && 'no-confirm']}
 				tabindex={value ? 0 : -1}
 				onclick={cancel}
 				disabled={!value}
@@ -153,9 +153,8 @@
 	* {
 		box-sizing: border-box;
 	}
-	.btn-container {
-		--text-input-button-margin: 0.15rem;
-		--input-border-radius: 1rem;
+	._btn-container {
+		--input-button-margin: 0.15rem;
 		box-sizing: content-box;
 		margin: 0;
 		display: grid;
@@ -174,12 +173,12 @@
 		border-top-left-radius: 0;
 		border-bottom-left-radius: 0;
 		border-top-right-radius: max(
-			calc(var(--text-input-border-radius, 1em) - var(--text-input-padding, 1.25em)),
-			var(--text-input-border-radius, 1em)
+			calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
+			var(--input-border-radius, 1em)
 		);
 		border-bottom-right-radius: max(
-			calc(var(--text-input-border-radius, 1em) - var(--text-input-padding, 1.25em)),
-			var(--text-input-border-radius, 1em)
+			calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
+			var(--input-border-radius, 1em)
 		);
 		overflow: hidden;
 		&:not(.valid) {
@@ -194,28 +193,28 @@
 		}
 	}
 	@layer button {
-		:global(:is(.cancel-btn.value, .confirm-btn.value)) {
+		:global(:is(._cancel-btn.value, ._confirm-btn.value)) {
 			opacity: 0.5;
 		}
-		:global(:is(.cancel-btn.value, .confirm-btn.value):where(:hover, :focus-visible)) {
+		:global(:is(._cancel-btn.value, ._confirm-btn.value):where(:hover, :focus-visible)) {
 			opacity: 1;
 		}
-		:global(:is(.cancel-btn, .confirm-btn):where(:focus-visible)) {
+		:global(:is(._cancel-btn, ._confirm-btn):where(:focus-visible)) {
 			outline: 1px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) solid;
 		}
-		:global(.cancel-btn) {
+		:global(._cancel-btn) {
 			grid-area: cancel;
 			transform-origin: top right;
 			scale: 1 1;
 			border-bottom-right-radius: max(
-				calc(var(--text-input-border-radius, 1em) - var(--text-input-padding, 1.25em)),
-				var(--text-input-border-radius, 1em)
+				calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
+				var(--input-border-radius, 1em)
 			);
 		}
-		:global(.cancel-btn:not(.value)) {
+		:global(._cancel-btn:not(.value)) {
 			scale: 0 1;
 		}
-		:global(.cancel-btn:is(.no-confirm), :not(.valid).cancel-btn) {
+		:global(._cancel-btn:is(.no-confirm), :not(.valid)._cancel-btn) {
 			box-sizing: border-box;
 			margin-bottom: 0;
 			/* padding: calc(var(--max-width) / 3.5) calc(var(--max-width) / 3); */
@@ -225,20 +224,20 @@
 			margin-right: 0;
 			aspect-ratio: unset;
 			border-top-right-radius: max(
-				calc(var(--text-input-border-radius, 1em) - var(--text-input-padding, 1.25em)),
-				var(--text-input-border-radius, 1em)
+				calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
+				var(--input-border-radius, 1em)
 			);
 		}
 
-		:global(.confirm-btn) {
+		:global(._confirm-btn) {
 			grid-area: confirm;
 			transform-origin: top right;
 			border-top-right-radius: max(
-				calc(var(--text-input-border-radius, 1em) - var(--text-input-padding, 1.25em)),
-				var(--text-input-border-radius, 1em)
+				calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
+				var(--input-border-radius, 1em)
 			);
 		}
-		:global(.confirm-btn:not(.valid)) {
+		:global(._confirm-btn:not(.valid)) {
 			display: none;
 			pointer-events: none;
 			opacity: 0;

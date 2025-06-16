@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	export interface FlexProps extends Omit<HTMLAttributes<HTMLDivElement>, 'class'> {
+	export interface FlexProps extends HTMLAttributes<HTMLDivElement> {
 		direction?: 'row' | 'column';
 		wrap?: 'wrap' | 'nowrap' | 'wrap-reverse';
 		justify_content?:
@@ -39,7 +39,6 @@
 		align_self?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
 		gap?: string;
 		overflow?: 'hidden' | 'scroll' | 'auto' | 'visible';
-		classes?: string;
 		children?: Snippet;
 	}
 </script>
@@ -55,14 +54,13 @@
 		align_self,
 		gap,
 		overflow,
-		classes = '',
 		children,
 		...attributes
 	}: FlexProps = $props();
 </script>
 
 <div
-	class="_flex {classes}"
+	class={['_flex', attributes.class]}
 	style:--flex-direction={direction}
 	style:--flex-wrap={wrap}
 	style:--flex-justify-content={justify_content}
