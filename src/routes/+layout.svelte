@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '../app.css';
 	import { beforeNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import LightDarkToggleV2 from '$buttons/LightDarkToggle_v2.svelte';
@@ -7,22 +8,19 @@
 	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
 	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
 	import { type Snippet } from 'svelte';
-	import '../../src/app.css';
 	import '../../src/mdsvex.css';
 	import type { LayoutData } from './$types';
 	import { aside_visible } from './stores.svelte.js';
 
-	type LayoutProps = {
-		data: LayoutData;
-		children: Snippet;
-	};
+	type LayoutProps = { data: LayoutData; children: Snippet };
 
 	let { data, children }: LayoutProps = $props();
 	const { nav_links } = data;
-
 	let trigger: boolean = $state(false);
+
 	beforeNavigate(async (nav) => {
 		const { from, to } = nav;
+
 		if (
 			from &&
 			to &&
