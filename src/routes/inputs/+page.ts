@@ -1,4 +1,3 @@
-import type { SelectOptionList } from '$inputs/Select.svelte';
 import type { DateInputProps } from '$inputs/TemporalDateInput.svelte';
 import { Temporal } from '@js-temporal/polyfill';
 import type { PageLoadEvent } from './$types';
@@ -24,9 +23,14 @@ export async function load({}: PageLoadEvent) {
 		{ icon: unicode_pineapple, label: 'Pineapple' }
 	];
 
-	const select_options: SelectOptionList<{ value: number | null; label?: string | null }> = [
-		{ value: null, label: null },
-		{ value: null, disabled: true, label: 'a disabled option' },
+	const select_options: {
+		value?: number;
+		label?: string | null;
+		disabled?: boolean;
+		options?: { value: number | null; label?: string | null }[];
+	}[] = [
+		{ value: undefined, label: null },
+		{ value: undefined, disabled: true, label: 'a disabled option' },
 		{
 			label: 'A Group Of Options',
 			options: [
