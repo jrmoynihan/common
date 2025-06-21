@@ -111,18 +111,18 @@ export function tooltip<C, T extends Partial<TooltipProps<T>> | TooltipWithConte
 
 		const default_props = new BaseTooltipProps<C>({});
 
-		let props = $state<TooltipProps<T> | TooltipWithContentProps<T>>(new BaseTooltipProps({}));
+		let props = $state<TooltipProps<T> | TooltipWithContentProps<T>>(default_props);
 		// Get some nice type-safety for the props
 		if ('content' in parameters && parameters.content && typeof parameters.content === 'string') {
-			const { content, ...rest } = parameters;
-			props = { ...default_props, content, ...rest, id } as TooltipProps<T>;
+			props = { ...default_props, ...parameters, id } as TooltipProps<T>;
 		} else if (
 			'content_snippet' in parameters &&
 			parameters.content_snippet &&
 			typeof parameters.content_snippet === 'function'
 		) {
-			const { content_snippet, ...rest } = parameters;
-			props = { ...default_props, content_snippet, ...rest, id } as TooltipWithContentProps<C>;
+			props = { ...default_props, ...parameters, id } as TooltipWithContentProps<C>;
+		} else {
+			props = { ...default_props, ...parameters, id };
 		}
 
 		let tooltip: ReturnType<typeof mount>;
@@ -130,14 +130,17 @@ export function tooltip<C, T extends Partial<TooltipProps<T>> | TooltipWithConte
 		// Make the tooltip instance if it is enabled.
 		if (!props.disabled) {
 			// Determine if the tooltip will be within a <dialog> element
-			// const closest_dialog = node.closest('dialog')
-			const closest_dialog = null;
+			const closest_dialog = node.closest('dialog');
+			// const closest_dialog = null;
 			const within_dialog = closest_dialog !== null;
 
+			// TODO: Fix this type issue
 			tooltip = mount(ActionTooltip, {
-				props: within_dialog ? { ...props, fallback: false } : props, // Don't use fallback position if tooltip is within dialog (it will often intersect the dialog edge, causing the fallback to trigger)
+				// @ts-ignore
+				props,
 				intro: true,
-				target: within_dialog ? closest_dialog : document.body // If tooltip is within dialog, mount it to the dialog, otherwise mount it to the body
+				// target: within_dialog ? closest_dialog : node // If tooltip is within dialog, mount it to the dialog, otherwise mount it to the body
+				target: node
 			});
 		}
 		// TODO: See if Popover API (top-layer promotion) is available yet https://chromestatus.com/feature/5463833265045504
