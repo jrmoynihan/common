@@ -6,7 +6,7 @@
 		show_cancel?: boolean;
 		allow_enter_to_confirm?: boolean;
 		dynamic_button_styles?: DynamicStyleParameters;
-		dynamic_input_styles?: DynamicStyleParameters;
+		input_dynamic_styles?: DynamicStyleParameters;
 		label_element?: HTMLLabelElement;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
 		label_props?: InputLabelProps<T>;
@@ -39,7 +39,7 @@
 		show_cancel = true,
 		allow_enter_to_confirm = true,
 		dynamic_button_styles,
-		dynamic_input_styles,
+		input_dynamic_styles,
 		placeholder_element = $bindable(),
 		placeholder_props = {},
 		label_element = $bindable(),
@@ -102,7 +102,7 @@
 
 <InputLabel bind:label_element bind:valid {id} {...label_props}>
 	<Input
-		bind:dynamic_input_styles
+		bind:input_dynamic_styles
 		bind:input_element
 		bind:value
 		bind:valid
@@ -182,17 +182,17 @@
 		);
 		overflow: hidden;
 		&:not(.valid) {
-			grid-template-rows: 0fr 1fr;
+			grid-template-rows: minmax(0, 0fr) minmax(0, 1fr);
 		}
 		&:not(.show_confirm) {
-			grid-template-rows: 0 1fr;
+			grid-template-rows: minmax(0, 0fr) minmax(0, 1fr);
 		}
 		&:not(.value) {
-			grid-template-rows: 0;
-			grid-template-columns: 0;
+			grid-template-rows: minmax(0, 0fr);
+			grid-template-columns: minmax(0, 0fr);
 		}
 	}
-	@layer button {
+	@layer common.input.button {
 		:global(:is(._cancel-btn.value, ._confirm-btn.value)) {
 			opacity: 0.5;
 		}
