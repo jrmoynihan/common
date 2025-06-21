@@ -38,8 +38,18 @@ const obj_b : PartiallyRequired<typeof obj_a, 'a'> = { a: 1 }
 ```
 */
 export type PartiallyRequired<T, K extends keyof T> = PrettifyIntersection<
-	Pick<T, K> & Partial<Omit<T, K>>
+	Required<Pick<T, K>> & Partial<Omit<T, K>>
 >;
+
+/** From `T`, makes all properties optional, and applies NonNullable to their value types. */
+export type PartialWithNonNullableValues<T> = {
+	[P in keyof T]?: NonNullable<T[P]>;
+};
+
+/** Makes all values within `T` non-nullable. */
+export type NonNullableValues<T> = {
+	[P in keyof T]: NonNullable<T[P]>;
+};
 
 const obj_a: { a: number } = { a: 0 };
 const obj_b: { b: string } = { b: 'hello' };
