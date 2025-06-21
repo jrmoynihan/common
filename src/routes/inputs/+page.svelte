@@ -18,6 +18,10 @@
 	let selected_fruit_name: string | undefined = $state();
 	let selected_number = $state<number>(1);
 	let valid_email: string = $state('');
+	let valid_password: string = $state('');
+	let min = $state(-Infinity);
+	let step = $state(null);
+	let max = $state(Infinity);
 	let value_key: keyof (typeof select_options)[0] = $state(
 		'value' as keyof (typeof select_options)[0]
 	);
@@ -29,7 +33,7 @@
 	);
 </script>
 
-<div class="inputs-container">
+<div class="inputs-container" style:--input-invalid-outline="var(--accent) 2px solid">
 	<section class="text-inputs">
 		<h2>Text Inputs</h2>
 		<TextInput
@@ -46,14 +50,37 @@
 				text: 'Labels for Inputs',
 				tooltip_props: { content: `I'm a plain text input with a cancel button!`, position: 'top' }
 			}}
-			dynamic_input_styles={{
+			input_dynamic_styles={{
 				invalid_styles: 'background: oklch(70% 0.1 30 / 0.4);',
-				valid_styles: 'background: oklch(70% 0.1 130 / 0.3);'
+				valid_styles: 'background: oklch(50% 0.1 130 / 0.3);'
 			}}
 			autocomplete="off"
 			required={true}
-			pattern={'[a-z]{3,16}'}
-			--input-invalid-outline="var(--accent) 2px solid"
+			pattern={'.{3,16}'}
+		/>
+		<TextInput
+			bind:value={valid_password}
+			placeholder_props={{ text: 'make a good one' }}
+			label_props={{
+				invalid_text:
+					'Invalid password. Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number.',
+				text: 'Password:',
+				tooltip_props: {
+					content: `I'm a password input that hides the confirm button when the password is invalid!`
+				}
+			}}
+			input_dynamic_styles={{
+				invalid_styles: 'background: oklch(70% 0.1 30 / 0.4);',
+				valid_styles: 'background: oklch(50% 0.1 130 / 0.3);'
+			}}
+			type="password"
+			autocomplete="new-password"
+			required={true}
+			pattern={'((?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,})'}
+			title={'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number.'}
+			onconfirm={() => {
+				alert(`Good password!`);
+			}}
 		/>
 		<TextInput
 			bind:value={valid_email}
@@ -65,9 +92,9 @@
 					content: `I'm an email input that hides the confirm button when the email is invalid!`
 				}
 			}}
-			dynamic_input_styles={{
+			input_dynamic_styles={{
 				invalid_styles: 'background: oklch(70% 0.1 30 / 0.4);',
-				valid_styles: 'background: oklch(70% 0.1 130 / 0.3);'
+				valid_styles: 'background: oklch(50% 0.1 130 / 0.3);'
 			}}
 			type="email"
 			autocomplete="email"
@@ -75,7 +102,6 @@
 			onconfirm={() => {
 				alert(`Email confirmed!  ${valid_email}`);
 			}}
-			--input-invalid-outline="var(--accent) 2px solid"
 		/>
 
 		<DatalistTextInput
@@ -86,7 +112,6 @@
 			onconfirm={() => alert(`Selected fruit:  ${selected_fruit_name}`)}
 			placeholder_props={{ text: 'Pick a fruit' }}
 			label_props={{ text: 'Datalist Text Input:', invalid_text: 'Please enter a valid fruit.' }}
-			--input-invalid-outline="var(--accent) 2px solid"
 		/>
 	</section>
 	<section class="date-inputs">
@@ -97,11 +122,49 @@
 	</section>
 	<section class="numeric-inputs">
 		<h2>Numeric Inputs</h2>
-		<NumericInput placeholder={'a placeholder that disappears'} />
+		<fieldset>
+			<NumericInput
+				bind:value={min}
+				step={undefined}
+				min={undefined}
+				max={undefined}
+				placeholder_props={{ text: 'min' }}
+			/>
+			<NumericInput
+				bind:value={max}
+				step={undefined}
+				min={undefined}
+				max={undefined}
+				placeholder_props={{ text: 'max' }}
+			/>
+			<NumericInput
+				bind:value={step}
+				step={undefined}
+				min={undefined}
+				max={undefined}
+				placeholder_props={{ text: 'step' }}
+			/>
+			<NumericInput
+				value={null}
+				{step}
+				{min}
+				{max}
+				placeholder_props={{ text: 'any number' }}
+				label_props={{
+					invalid_text: `Invalid number. Must be between ${min ?? '(min)'} and ${max ?? '(max)'}.`
+				}}
+			/>
+		</fieldset>
 		<NumericInput
 			min={0}
 			max={10}
-			tooltip_options={{ content: `Is it between 0 and 10?` }}
+			value={null}
+			pattern={'^([0-9]|10)$'}
+			placeholder_props={{ text: 'min: 0, max: 10' }}
+			label_props={{
+				tooltip_props: { content: `Is it between 0 and 10?` },
+				invalid_text: 'Invalid number. Must be a whole number between 0 and 10.'
+			}}
 			show_spinner_buttons={false}
 		/>
 	</section>
@@ -168,16 +231,16 @@
 		<RadioGroup
 			items={datalist}
 			bind:group={selected_fruit}
-			label_attributes={{
-				style: 'font-style: italic;  text-align: center;'
-			}}
+			label_attributes={{ class: 'radio-label italic text-center' }}
 		>
 			{#snippet children(item)}
-				<span
+				<div
 					class="selected-fruit"
-					style="transition: scale 300ms ease; place-self: center;"
-					style:scale={selected_fruit?.label === item.label ? 1.5 : 1}>{item?.icon}</span
+					style="place-self: center; font-style: initial; transition: scale 300ms ease;"
+					style:scale={selected_fruit?.label === item.label ? '1.5' : '1'}
 				>
+					{item?.icon}
+				</div>
 			{/snippet}
 		</RadioGroup>
 		<RadioGroup
@@ -228,13 +291,6 @@
 			flex-grow: 1;
 			flex-shrink: 1;
 			flex-basis: min(100%, 10ch);
-		}
-	}
-	.date-inputs {
-		@layer input_label {
-			:global(label) {
-				max-width: 14em;
-			}
 		}
 	}
 	.selected-fruit {
