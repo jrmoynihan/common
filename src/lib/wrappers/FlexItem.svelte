@@ -4,15 +4,22 @@
 
 	export interface FlexItemProps extends HTMLAttributes<HTMLDivElement> {
 		order?: number;
-		grow?: number;
-		shrink?: number;
-		basis?: string;
+		grow?: number | string;
+		shrink?: number | string;
+		basis?: number | string;
 		children?: Snippet;
 	}
 </script>
 
 <script lang="ts">
-	let { order, grow = 1, shrink = 1, basis, children, ...attributes }: FlexItemProps = $props();
+	let {
+		order,
+		grow = 1,
+		shrink = 1,
+		basis = 'auto',
+		children,
+		...attributes
+	}: FlexItemProps = $props();
 </script>
 
 <div
