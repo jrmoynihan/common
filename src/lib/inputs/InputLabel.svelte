@@ -12,8 +12,6 @@
 		invalid_text?: string;
 		/** The id of the element this labels with the `for` attribute. Defaults to `crypto.randomUUID()` */
 		id?: string | null;
-		/** The transition types to use for the invalid message.  Defaults to `[slide]` */
-		invalid_msg_transition_types?: TransitionTypes[];
 		/** A binding to the validity of the input.  Changing this triggers the visibility of the invalid message. */
 		valid?: boolean;
 		/** Props to pass to the tooltip action. */
@@ -33,7 +31,6 @@
 <script lang="ts" generics="T">
 	import { dynamic_style, tooltip, type TooltipProps } from '$lib';
 	import type { SvelteTransition, SvelteTransitionParams, TransitionTypes } from '$lib/lib_types';
-	import TransitionNativeRunes from '$wrappers/TransitionNative_Runes.svelte';
 	import type { Snippet } from 'svelte';
 	import type { HTMLLabelAttributes } from 'svelte/elements';
 	import { fade } from 'svelte/transition';
@@ -47,7 +44,6 @@
 		invalid_text = $bindable(),
 		valid = $bindable(true),
 		id = $bindable(crypto?.randomUUID()),
-		invalid_msg_transition_types = ['slide'],
 		tooltip_props: tooltip_options = {
 			visible: false,
 			disabled: true
@@ -86,15 +82,13 @@
 	{#if position === 'after'}
 		{@render label_snippet?.()}
 	{/if}
-	<TransitionNativeRunes types={invalid_msg_transition_types} visible={!valid}>
-		<invalid>
-			{@render invalid_msg_snippet()}
-		</invalid>
-	</TransitionNativeRunes>
+	<invalid>
+		{@render invalid_msg_snippet()}
+	</invalid>
 </label>
 
-<style lang="scss">
-	@layer input_label {
+<style>
+	@layer common.input.input_label {
 		label.label-container {
 			--default-input-label-hover-background-color: oklch(
 				from var(--background) calc(l + 0.2) c h / 0.8
@@ -110,14 +104,21 @@
 				var(--default-input-label-border-radius) -
 					(var(--default-input-label-padding-inline) + var(--default-input-label-padding-block)) / 2
 			);
+			--invalid-transition-duration: 0.3s;
 			position: relative;
 			display: grid;
 			gap: var(--label-gap, 0.35em);
-			grid-auto-rows: minmax(0, max-content);
+			transition-property: grid-template-rows;
+			overflow: hidden;
+			transition-duration: var(--invalid-transition-duration);
+			transition-timing-function: ease-in-out;
+			transition-behavior: allow-discrete;
+			grid-template-rows: repeat(3, minmax(0, max-content)) 0fr;
 			grid-template-areas:
 				'before'
 				'input'
-				'after';
+				'after'
+				'invalid';
 			container-type: inline-size;
 			padding-inline: var(--input-label-padding-inline, var(--default-input-label-padding-inline));
 			padding-block: var(--input-label-padding-block, var(--default-input-label-padding-block));
@@ -160,6 +161,28 @@
 					--input-label-focus-background-color,
 					oklch(from var(--default-input-label-hover-background-color) l c h / 1)
 				);
+			}
+			invalid {
+				grid-area: invalid;
+				opacity: 0;
+				scale: 1 0;
+				transform-origin: top;
+				pointer-events: none;
+				visibility: hidden;
+				transition-property: opacity, pointer-events, visibility, scale;
+				transition-duration: var(--invalid-transition-duration);
+				transition-timing-function: ease-out;
+				transition-behavior: allow-discrete;
+				min-block-size: 0;
+			}
+			&:has(> :global(input:user-invalid)) {
+				grid-template-rows: repeat(3, minmax(0, max-content)) 1fr;
+				& > invalid {
+					opacity: 1;
+					scale: 1 1;
+					pointer-events: auto;
+					visibility: visible;
+				}
 			}
 		}
 	}
