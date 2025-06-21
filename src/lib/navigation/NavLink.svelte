@@ -98,7 +98,7 @@
 		._link {
 			font-family: var(--link-font, var(--font, inherit));
 			text-decoration: var(--link-text-decoration, none);
-			font-size: var(--link-font-size, 1rem);
+			font-size: var(--link-font-size, var(--font-size-fluid-1, 1rem));
 			padding: var(--link-padding, 1rem);
 			color: var(--link-color, var(--text, inherit));
 			border-radius: var(--link-border-radius, 1rem);
