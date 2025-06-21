@@ -1,8 +1,8 @@
 <script module lang="ts">
 	export interface DateInputProps<T> extends Omit<HTMLInputAttributes, 'date' | 'min' | 'max'> {
 		date?: Temporal.ZonedDateTime;
-		min?: Temporal.ZonedDateTime;
-		max?: Temporal.ZonedDateTime;
+		min?: string | number | Temporal.ZonedDateTime | null | undefined;
+		max?: string | number | Temporal.ZonedDateTime | null | undefined;
 		label_props?: InputLabelProps<T>;
 		input_attributes?: HTMLInputAttributes;
 		input_dynamic_styles?: DynamicStyleParameters;
@@ -14,10 +14,11 @@
 </script>
 
 <script lang="ts" generics="T">
-	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
+	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import { Temporal } from '@js-temporal/polyfill';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
+	import Input from './Input.svelte';
 
 	// Temporal API proposal status:
 	// https://tc39.es/proposal-temporal/docs/cookbook.html#current-date-and-time
@@ -27,7 +28,7 @@
 		min = date.subtract({ years: 100 }),
 		max = date.add({ years: 100 }),
 		label_props,
-		input_dynamic_styles,
+		input_dynamic_styles = $bindable(),
 		is_valid = $bindable(false),
 		on_input,
 		date_input = $bindable(),
@@ -39,7 +40,12 @@
 		date = stringToTemporalDate(value);
 		on_input?.();
 	};
-	const temporalDateToString = (date: Temporal.ZonedDateTime) => {
+	const temporalDateToString = (
+		date: Temporal.ZonedDateTime | string | number | null | undefined
+	) => {
+		if (!date) return '';
+		if (typeof date === 'number') return new Date(date).toISOString();
+		if (typeof date === 'string') return new Date(date).toISOString();
 		const { year, month, day, hour, minute, second } = date;
 		const date_string = `${year}-${month < 10 ? `0${month}` : month}-${day < 10 ? `0${day}` : day}`;
 		const time_string = `T${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}:${
@@ -105,31 +111,37 @@
 </script>
 
 <InputLabel bind:label_element {...label_props}>
-	<input
-		use:dynamic_style={input_dynamic_styles}
-		bind:this={date_input}
-		bind:value={internal_string_date}
-		id={crypto.randomUUID()}
+	<Input
 		type="date"
+		bind:input_dynamic_styles
+		bind:value={internal_string_date}
+		bind:input_element={date_input}
+		id={crypto.randomUUID()}
 		oninput={(e) => input_changed(e.currentTarget.value)}
-		{...input_attributes}
 		max={max_internal_string_date}
 		min={min_internal_string_date}
+		class={[input_attributes.required && 'required', input_attributes.class]}
+		{...input_attributes}
 	/>
 	<!-- TODO: Add datalist option https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist#date_and_time_types -->
 </InputLabel>
 
-<style lang="scss">
-	@layer temporal_date_input {
-		input {
+<style>
+	@layer common.input.temporal_date_input {
+		:global(label > input[type='date']) {
 			border-radius: 1rem;
 			padding: 0.5rem 0.75rem;
 			font-family: var(--date-input-font-family, inherit);
+			background-color: var(--date-input-background-color, field);
 			cursor: pointer;
 			grid-area: input;
-
-			&:invalid {
-				border: var(--date-input-invalid-border, 3px solid salmon);
+			&:is(:focus-visible, :focus) {
+				outline: var(--date-input-focus-outline, revert);
+				box-shadow: var(--date-input-focus-box-shadow, none);
+				outline-offset: var(--date-input-focus-outline-offset, 2px);
+				&:required:invalid {
+					outline: 2px solid var(--data-input-invalid-outline, var(--accent, revert));
+				}
 			}
 		}
 	}
