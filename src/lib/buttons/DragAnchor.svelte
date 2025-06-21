@@ -3,12 +3,15 @@
 		grabbed?: boolean;
 		hovered?: boolean;
 		dynamic_styles?: DynamicStyleParameters;
+		children?: Snippet;
 	}
 </script>
 
 <script lang="ts" generics="T">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
+	import type { Snippet } from 'svelte';
 	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
+	import type { FocusEventHandler, MouseEventHandler, PointerEventHandler } from 'svelte/elements';
 
 	let {
 		hovered = $bindable(false),
@@ -27,26 +30,48 @@
 		if (grabbed) return;
 		grabbed = true;
 	};
+	const pointerdown: PointerEventHandler<HTMLButtonElement> = (e) => {
+		grab();
+		button_props.onpointerdown?.(e);
+	};
+	const pointerup: PointerEventHandler<HTMLButtonElement> = (e) => {
+		release();
+		button_props.onpointerup?.(e);
+	};
+	const blur: FocusEventHandler<HTMLButtonElement> = (e) => {
+		release();
+		button_props.onblur?.(e);
+	};
+	const mousedown: MouseEventHandler<HTMLButtonElement> = (e) => {
+		grab();
+		button_props.onmousedown?.(e);
+	};
+	const mouseup: MouseEventHandler<HTMLButtonElement> = (e) => {
+		release();
+		button_props.onmouseup?.(e);
+	};
 </script>
 
 <ButtonRunes
 	bind:disabled
-	icon_props={{ icon: 'fa6-solid:grip-vertical' }}
-	class={['_drag-anchor', !hovered && 'faded', grabbed]}
 	dynamic_styles={{
 		hover_styles: 'color: oklch(from var(--text) l c h / 1);',
 		...dynamic_styles
 	}}
-	onmousedown={grab}
-	onmouseup={release}
-	onblur={release}
+	icon_props={{ icon: 'fa6-solid:grip-vertical' }}
 	{...button_props}
+	onmousedown={mousedown}
+	onmouseup={mouseup}
+	onpointerdown={pointerdown}
+	onpointerup={pointerup}
+	onblur={blur}
+	class={['_drag-anchor', !hovered && 'faded', grabbed, button_props.class]}
 >
 	{@render children?.()}
 </ButtonRunes>
 
 <style lang="scss">
-	@layer drag-anchor {
+	@layer common.drag-anchor {
 		:global(._drag-anchor) {
 			--default-transition: opacity 200ms, color 200ms;
 			box-sizing: border-box;
