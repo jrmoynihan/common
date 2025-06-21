@@ -192,9 +192,6 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 			&::backdrop {
 				background-color: hsla(0, 0%, 0%, 0.4);
 				padding: 10rem;
-				&.blur {
-					backdrop-filter: blur(10px);
-				}
 			}
 			& *:focus-visible {
 				outline: red 1px solid !important;
