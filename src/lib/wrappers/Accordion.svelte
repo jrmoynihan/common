@@ -122,7 +122,7 @@
 </button>
 
 <style>
-	@layer accordion {
+	@layer common.accordion {
 		.accordion-container {
 			--duration: 400ms;
 			appearance: none;

@@ -75,7 +75,7 @@
 </button>
 
 <style lang="scss">
-	@layer button {
+	@layer common.button {
 		._button {
 			cursor: pointer;
 			&:disabled {

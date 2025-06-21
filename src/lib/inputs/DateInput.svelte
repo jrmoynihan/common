@@ -144,7 +144,7 @@
 	{/if}
 </label>
 
-<style lang="scss">
+<style>
 	label {
 		display: grid;
 		justify-items: center;

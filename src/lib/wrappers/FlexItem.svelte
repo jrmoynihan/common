@@ -27,7 +27,7 @@
 </div>
 
 <style>
-	@layer flex_item {
+	@layer common.flex.flex_item {
 		._flex-item {
 			order: var(--order);
 			flex-grow: var(--grow);

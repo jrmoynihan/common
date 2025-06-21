@@ -76,7 +76,7 @@
 </div>
 
 <style>
-	@layer flex {
+	@layer common.flex {
 		._flex {
 			display: flex;
 			flex-direction: var(--flex-direction);

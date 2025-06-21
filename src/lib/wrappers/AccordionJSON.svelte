@@ -91,7 +91,7 @@
 {/if}
 
 <style>
-	@layer accordiondetails {
+	@layer common.accordiondetails {
 		:global(details.json) {
 			width: 100%;
 			text-align: left;

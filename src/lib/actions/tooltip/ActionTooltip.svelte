@@ -49,8 +49,8 @@ https://web.dev/building-a-tooltip-component/
 		{#if typeof content === 'string'}
 			{content}
 		{/if}
-	{:else if content_snippet && content_args}
-		{@render content_snippet(content_args)}
+	{:else if content_snippet}
+		{@render content_snippet(content_args ?? ({} as T))}
 	{/if}
 
 	{#if show_arrow}
@@ -59,7 +59,7 @@ https://web.dev/building-a-tooltip-component/
 </tool-tip>
 
 <style>
-	@layer tooltip {
+	@layer common.tooltip {
 		.tooltip {
 			box-sizing: border-box;
 			border: var(--tooltip-border, 1px solid #ddd);

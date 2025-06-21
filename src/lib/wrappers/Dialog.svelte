@@ -74,7 +74,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 	bind:this={dialog}
 	use:dialog_action
 	class="dialog"
-	class:blur
+	data-blur={blur}
 	class:scale-in={scale === 'in' || scale === 'both'}
 	class:scale-out={scale === 'out' || scale === 'both'}
 	class:slide-in-from-left={slide_in_from === 'left' && (slide === 'in' || slide === 'both')}
@@ -95,7 +95,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 </dialog>
 
 <style>
-	@layer modal {
+	@layer common.dialog {
 		:global(html:has(dialog[open][data-mode='full'])) {
 			overflow: hidden; /* prevent body from scrolling */
 		}
@@ -109,7 +109,6 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 			color: var(--dialog-color, var(--color, inherit));
 			font-size: initial;
 			width: var(--dialog-width, max-content);
-			/* height: var(--dialog-height, initial); // probably don't want to set this */
 			border: var(--dialog-border, initial);
 			place-self: var(--dialog-place-self, center);
 			align-content: start;
@@ -146,7 +145,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 
 			/** Full-screen mode */
 			&[data-mode='full'] {
-				&.blur[open]::backdrop {
+				&[data-blur][open]::backdrop {
 					backdrop-filter: blur(var(--blur));
 					opacity: 1;
 				}

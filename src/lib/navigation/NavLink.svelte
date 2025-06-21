@@ -94,7 +94,7 @@
 </a>
 
 <style lang="scss">
-	@layer navlink {
+	@layer common.navlink {
 		._link {
 			font-family: var(--link-font, var(--font, inherit));
 			text-decoration: var(--link-text-decoration, none);

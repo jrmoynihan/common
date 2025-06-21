@@ -187,7 +187,7 @@
 </details>
 
 <style>
-	@layer accordiondetails {
+	@layer common.accordiondetails {
 		details,
 		summary {
 			box-sizing: border-box;

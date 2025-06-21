@@ -24,7 +24,7 @@
 </Button>
 
 <style>
-	@layer button {
+	@layer common.button {
 		:global(._input_button) {
 			--max-width: 1.75rem;
 			display: grid;

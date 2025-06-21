@@ -152,9 +152,4 @@
 		grid: auto / repeat(2, 1fr);
 		gap: 2rem;
 	}
-	@layer button {
-		/* .button.orange {
-			background-color: orange;
-		} */
-	}
 </style>

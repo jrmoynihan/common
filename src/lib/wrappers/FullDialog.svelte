@@ -144,7 +144,7 @@
 </Dialog>
 
 <style>
-	@layer full-dialog {
+	@layer common.dialog.full-dialog {
 		article {
 			overflow-y: auto;
 			max-block-size: 100%; /* safari */

@@ -112,7 +112,7 @@
 </div>
 
 <style>
-	@layer grid {
+	@layer common.grid {
 		._grid-parent {
 			display: grid;
 			grid-template-columns: repeat(
