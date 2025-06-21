@@ -11,7 +11,7 @@
 		/** A binding to Whether the input is valid. Defaults to `true`. */
 		valid?: boolean;
 		/** Styles to apply to the input element including hover, focus, and active styles. */
-		dynamic_input_styles?: DynamicStyleParameters;
+		input_dynamic_styles?: DynamicStyleParameters;
 		/** The key used to confirm the input. Defaults to `Enter`.  Set to `null` to disable `onkeypress` confirmations. */
 		confirm_key?: string;
 		/** A callback that runs when the `confirm_key` is pressed.  If an `onkeypress` event handler is provided, this will be ignored. */
@@ -32,7 +32,7 @@
 		group = $bindable(),
 		valid = $bindable(true),
 		hidden = $bindable(false),
-		dynamic_input_styles = $bindable(),
+		input_dynamic_styles = $bindable(),
 		checked = $bindable(),
 		confirm_key = 'Enter',
 		onconfirm,
@@ -70,7 +70,7 @@
 
 {#if group}
 	<input
-		use:dynamic_style={dynamic_input_styles}
+		use:dynamic_style={input_dynamic_styles}
 		bind:this={input_element}
 		bind:group
 		{value}
@@ -82,10 +82,10 @@
 	/>
 {:else}
 	<input
-		use:dynamic_style={dynamic_input_styles}
+		use:dynamic_style={input_dynamic_styles}
 		bind:this={input_element}
 		bind:value
-		class:value
+		class:value={input_attributes.type === 'number' ? value !== undefined && value !== null : value}
 		class:hidden
 		onkeypress={handle_keypress}
 		id={crypto?.randomUUID()}
@@ -94,7 +94,7 @@
 {/if}
 
 <style>
-	@layer input {
+	@layer common.input {
 		input {
 			box-sizing: border-box;
 			position: relative;
@@ -120,7 +120,10 @@
 				appearance: none;
 			}
 
-			/* max-height: max-content;  // causes issues on Safari */
+			&[type='*']:focus,
+			&:focus-visible {
+				box-shadow: var(--input-focus-box-shadow, none);
+			}
 
 			/** Moved some of the placeholder styling from the input to the TextLabel component */
 			&:user-invalid {

@@ -1,13 +1,12 @@
 <script module lang="ts">
-	export interface NumericInputProps<K> extends InputProps {
+	export interface NumericInputProps<K> extends Omit<InputProps, 'placeholder'> {
 		input_element?: HTMLInputElement;
 		value?: string | number | string[] | null;
 		valid?: boolean;
-		dynamic_input_styles?: DynamicStyleParameters;
+		input_dynamic_styles?: DynamicStyleParameters;
 		label_element?: HTMLLabelElement;
 		invalid_msg?: string;
 		show_spinner_buttons?: boolean;
-		tooltip_options?: TooltipProps<K> | null;
 		container_styles?: DynamicStyleParameters;
 		input_styles?: DynamicStyleParameters;
 		placeholder_props?: ComponentProps<typeof Placeholder>;
@@ -26,7 +25,6 @@
 
 <script lang="ts" generics="T, K">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import { type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { type ComponentProps, type Snippet } from 'svelte';
 	import Icon, { type IconProps } from '@iconify/svelte';
 	import Input, { type InputProps } from './Input.svelte';
@@ -39,9 +37,8 @@
 		valid = $bindable(true),
 		input_element = $bindable(),
 		label_element = $bindable(),
-		dynamic_input_styles = $bindable(),
+		input_dynamic_styles = $bindable(),
 		show_spinner_buttons = true,
-		tooltip_options = null,
 		input_styles,
 		placeholder_props,
 		label_props,
@@ -65,14 +62,11 @@
 
 <InputLabel bind:label_element bind:valid {...label_props}>
 	<Input
-		bind:dynamic_input_styles
+		bind:input_dynamic_styles
 		bind:input_element
 		bind:value
 		bind:valid
 		inputmode="numeric"
-		min={0}
-		max={Infinity}
-		step={1}
 		{...input_attributes}
 		type="number"
 	/>
@@ -127,7 +121,7 @@
 </InputLabel>
 
 <style>
-	@layer numeric_input {
+	@layer common.input.numeric_input {
 		.btn-container {
 			--text-input-button-margin: 0.15rem;
 			--input-border-radius: 1rem;
@@ -160,7 +154,7 @@
 		}
 	}
 
-	@layer input {
+	@layer common.input.numeric_input {
 		:global(input[type='number']) {
 			appearance: textfield;
 			-moz-appearance: textfield;
@@ -178,7 +172,7 @@
 		fill: var(--button-outline-hover-or-focus, lightskyblue);
 	}
 
-	@layer button {
+	@layer common.input.button {
 		:global(.plus) {
 			grid-area: plus;
 			border-top-right-radius: inherit;
