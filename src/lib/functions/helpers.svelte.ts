@@ -404,3 +404,52 @@ export type StringLengthBetween<
 	Min extends number,
 	Max extends number
 > = MinLength<T, Min> & MaxLength<T, Max>;
+
+export const align_content_options = {
+	normal: 'normal',
+	start: 'start',
+	end: 'end',
+	center: 'center',
+	stretch: 'stretch',
+	baseline: 'baseline',
+	'space-between': 'space-between',
+	'space-around': 'space-around',
+	'space-evenly': 'space-evenly'
+};
+export const align_items_options = {
+	normal: 'normal',
+	start: 'start',
+	end: 'end',
+	center: 'center',
+	stretch: 'stretch',
+	baseline: 'baseline',
+	'anchor-center': 'anchor-center'
+};
+export const align_self_options = {
+	...align_items_options,
+	auto: 'auto'
+};
+export const justify_self_options = {
+	...align_self_options
+};
+export const justify_content_options = {
+	...align_content_options
+};
+export const justify_items_options = {
+	...align_items_options
+};
+export const wrap_options = {
+	wrap: 'wrap',
+	nowrap: 'nowrap',
+	'wrap-reverse': 'wrap-reverse'
+};
+export const direction_options = {
+	row: 'row',
+	column: 'column'
+};
+export const overflow_options = {
+	hidden: 'hidden',
+	scroll: 'scroll',
+	auto: 'auto',
+	visible: 'visible'
+};

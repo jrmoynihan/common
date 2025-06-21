@@ -33,7 +33,7 @@ import Select from './inputs/Select.svelte';
 import type {
 	SelectOption,
 	SelectOptionGroup,
-	SelectOptionList,
+	SelectOptions,
 	SelectProps
 } from './inputs/Select.svelte';
 import DateInput from './inputs/TemporalDateInput.svelte';
@@ -118,7 +118,14 @@ export {
 	split_snake_case,
 	type PartiallyOptional,
 	type PartiallyRequired,
-	type PrettifyIntersection
+	type PrettifyIntersection,
+	align_items_options,
+	align_content_options,
+	justify_content_options,
+	justify_self_options,
+	wrap_options,
+	direction_options,
+	overflow_options
 } from '$lib/functions/helpers.svelte.js';
 export { Temporal } from '@js-temporal/polyfill';
 export { dynamic_style } from './actions/dynamic-styles.svelte.js';
@@ -227,7 +234,7 @@ export {
 	type ScrollProgressProps,
 	type SelectOption,
 	type SelectOptionGroup,
-	type SelectOptionList,
+	type SelectOptions,
 	type SelectProps,
 	type TableProps,
 	type TabsProps,

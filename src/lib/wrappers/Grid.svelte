@@ -1,4 +1,13 @@
 <script module lang="ts">
+	import type {
+		align_content_options,
+		align_items_options,
+		align_self_options,
+		justify_content_options,
+		justify_items_options,
+		justify_self_options,
+		overflow_options
+	} from '$functions/helpers.svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	export interface GridProps extends HTMLAttributes<HTMLDivElement> {
@@ -17,55 +26,19 @@
 		/** The gap between grid items (default: 1rem. */
 		gap?: string;
 		/** The overflow of the grid (default: hidden).  */
-		overflow?: 'hidden' | 'scroll' | 'auto' | 'visible';
+		overflow?: keyof typeof overflow_options;
 		/** The inline alignment of the grid's content (default: normal). */
-		justify_content?:
-			| 'normal'
-			| 'start'
-			| 'end'
-			| 'left'
-			| 'right'
-			| 'center'
-			| 'space-between'
-			| 'space-around'
-			| 'space-evenly';
+		justify_content?: keyof typeof justify_content_options;
 		/** The inline alignment of the grid items (default: normal). */
-		justify_items?:
-			| 'auto'
-			| 'normal'
-			| 'stretch'
-			| 'start'
-			| 'end'
-			| 'left'
-			| 'right'
-			| 'center'
-			| 'baseline';
+		justify_items?: keyof typeof justify_items_options;
 		/** The inline alignment of the grid element itself (default: normal). */
-		justify_self?:
-			| 'auto'
-			| 'normal'
-			| 'stretch'
-			| 'start'
-			| 'end'
-			| 'left'
-			| 'right'
-			| 'center'
-			| 'baseline';
+		justify_self?: keyof typeof justify_self_options;
 		/** The block alignment of the grid's content (default: normal). */
-		align_content?:
-			| 'normal'
-			| 'start'
-			| 'end'
-			| 'center'
-			| 'stretch'
-			| 'baseline'
-			| 'space-between'
-			| 'space-around'
-			| 'space-evenly';
+		align_content?: keyof typeof align_content_options;
 		/** The block alignment of the grid items (default: normal). */
-		align_items?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
+		align_items?: keyof typeof align_items_options;
 		/** The block alignment of the grid element itself (default: normal). */
-		align_self?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
+		align_self?: keyof typeof align_self_options;
 	}
 </script>
 

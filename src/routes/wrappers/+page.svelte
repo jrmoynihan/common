@@ -1,7 +1,19 @@
 <script lang="ts">
+	import {
+		direction_options,
+		justify_items_options,
+		justify_self_options,
+		wrap_options
+	} from '$functions/helpers.svelte';
 	import NumericInput from '$inputs/NumericInput.svelte';
 	import Select from '$inputs/Select.svelte';
 	import TextInput from '$inputs/TextInput.svelte';
+	import {
+		align_content_options,
+		align_items_options,
+		justify_content_options,
+		overflow_options
+	} from '$lib';
 	import Flex, { type FlexProps } from '$wrappers/Flex.svelte';
 	import FlexItem, { type FlexItemProps } from '$wrappers/FlexItem.svelte';
 	import Grid, { type GridProps } from '$wrappers/Grid.svelte';
@@ -9,21 +21,7 @@
 	const items = Array(12)
 		.fill(0)
 		.map((_, i) => ({ id: i, name: `Item ${i + 1}` }));
-	let directions = ['row', 'column'];
-	let wraps = ['wrap', 'nowrap', 'wrap-reverse'];
-	let justifies = [
-		'normal',
-		'start',
-		'end',
-		'left',
-		'right',
-		'center',
-		'space-between',
-		'space-around',
-		'space-evenly'
-	];
-	let aligns = ['start', 'end', 'center', 'stretch', 'baseline'];
-	let overflows = ['hidden', 'scroll', 'auto'];
+
 	let overflow = $state<FlexProps['overflow']>('hidden');
 	let columns = $state(3);
 	let rows = $state(2);
@@ -40,12 +38,24 @@
 	let min_row_size = $state<GridProps['min_row_size']>('auto');
 	let max_row_size = $state<GridProps['max_row_size']>('1fr');
 	let justify_content = $state<FlexProps['justify_content']>('normal');
+	let justify_self = $state<FlexProps['justify_self']>('normal');
+	let align_self = $state<GridProps['align_self']>('normal');
+	let justify_items = $state<GridProps['justify_items']>('normal');
 </script>
 
 <Grid rows={1} columns={'auto-fit'} min_column_size="min(20rem, 100vw)">
 	<fieldset>
 		<legend>Grid Options</legend>
-
+		<Select
+			bind:value={justify_self}
+			options={Object.values(justify_self_options)}
+			input_label_props={{ text: 'Justify Self' }}
+		/>
+		<Select
+			bind:value={justify_items}
+			options={Object.values(justify_items_options)}
+			input_label_props={{ text: 'Justify Items' }}
+		/>
 		<NumericInput
 			label_props={{ text: 'Columns (numeric)' }}
 			bind:value={columns}
@@ -81,7 +91,6 @@
 			<option value="auto-fit">auto-fit</option>
 			<option value="auto-fill">auto-fill</option>
 		</Select>
-
 		<TextInput
 			bind:value={min_row_size}
 			show_confirm={false}
@@ -99,19 +108,24 @@
 		<Flex wrap="wrap" direction="column" align_items="start">
 			<TextInput bind:value={gap} show_confirm={false} label_props={{ text: 'Gap' }} />
 			<Select bind:value={overflow} input_label_props={{ text: 'Overflow' }}>
-				{#each overflows as overflow}
+				{#each Object.values(overflow_options) as overflow}
 					<option value={overflow}>{overflow}</option>
 				{/each}
 			</Select>
 			<Select
 				bind:value={align_items}
-				options={aligns}
+				options={Object.values(align_items_options)}
 				input_label_props={{ text: 'Align Items' }}
 			/>
 			<Select
 				bind:value={align_content}
-				options={aligns}
+				options={Object.values(align_content_options)}
 				input_label_props={{ text: 'Align Content' }}
+			/>
+			<Select
+				bind:value={justify_content}
+				options={Object.values(justify_content_options)}
+				input_label_props={{ text: 'Justify Content' }}
 			/>
 		</Flex>
 	</fieldset>
@@ -119,14 +133,13 @@
 		<legend>Flex Options</legend>
 		<Select
 			bind:value={direction}
-			options={directions}
+			options={Object.values(direction_options)}
 			input_label_props={{ text: 'Flex Direction' }}
 		/>
-		<Select bind:value={wrap} options={wraps} input_label_props={{ text: 'Flex Wrap' }} />
 		<Select
-			bind:value={justify_content}
-			options={justifies}
-			input_label_props={{ text: 'Justify Content' }}
+			bind:value={wrap}
+			options={Object.values(wrap_options)}
+			input_label_props={{ text: 'Flex Wrap' }}
 		/>
 		<TextInput label_props={{ text: 'Basis' }} bind:value={basis} />
 		<NumericInput label_props={{ text: 'Grow' }} bind:value={grow} min={0} max={items.length} />
@@ -145,6 +158,12 @@
 			{max_column_size}
 			{min_row_size}
 			{max_row_size}
+			{justify_self}
+			{justify_content}
+			{justify_items}
+			{align_self}
+			{align_content}
+			{align_items}
 		>
 			{#each items as item}
 				<div class="item">{item.name}</div>
@@ -153,7 +172,16 @@
 	</fieldset>
 	<fieldset>
 		<legend>Flex</legend>
-		<Flex {gap} {justify_content} {direction} {wrap} {overflow} {align_items}>
+		<Flex
+			{gap}
+			{direction}
+			{wrap}
+			{overflow}
+			{justify_content}
+			{align_self}
+			{align_content}
+			{align_items}
+		>
 			{#each items as item}
 				<FlexItem {basis} {grow} {shrink}>
 					<div class="item">{item.name}</div>
@@ -179,6 +207,7 @@
 		gap: 1rem;
 		align-items: start;
 		align-content: start;
+		justify-content: start;
 		& > :global(*) {
 			flex-grow: 1;
 			flex-shrink: 1;

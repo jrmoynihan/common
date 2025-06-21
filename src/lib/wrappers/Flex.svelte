@@ -1,44 +1,24 @@
 <script module lang="ts">
+	import type { align_self_options, overflow_options } from '$functions/helpers.svelte';
+	import type {
+		align_content_options,
+		align_items_options,
+		direction_options,
+		justify_content_options,
+		wrap_options
+	} from '$lib';
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	export interface FlexProps extends HTMLAttributes<HTMLDivElement> {
-		direction?: 'row' | 'column';
-		wrap?: 'wrap' | 'nowrap' | 'wrap-reverse';
-		justify_content?:
-			| 'normal'
-			| 'start'
-			| 'end'
-			| 'left'
-			| 'right'
-			| 'center'
-			| 'space-between'
-			| 'space-around'
-			| 'space-evenly';
-		justify_self?:
-			| 'auto'
-			| 'normal'
-			| 'stretch'
-			| 'start'
-			| 'end'
-			| 'left'
-			| 'right'
-			| 'center'
-			| 'baseline';
-		align_content?:
-			| 'normal'
-			| 'start'
-			| 'end'
-			| 'center'
-			| 'stretch'
-			| 'baseline'
-			| 'space-between'
-			| 'space-around'
-			| 'space-evenly';
-		align_items?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
-		align_self?: 'normal' | 'start' | 'end' | 'center' | 'stretch' | 'baseline';
+		direction?: keyof typeof direction_options;
+		wrap?: keyof typeof wrap_options;
+		justify_content?: keyof typeof justify_content_options;
+		align_content?: keyof typeof align_content_options;
+		align_items?: keyof typeof align_items_options;
+		align_self?: keyof typeof align_self_options;
+		overflow?: keyof typeof overflow_options;
 		gap?: string;
-		overflow?: 'hidden' | 'scroll' | 'auto' | 'visible';
 		children?: Snippet;
 	}
 </script>
@@ -48,7 +28,6 @@
 		direction,
 		wrap,
 		justify_content,
-		justify_self,
 		align_content,
 		align_items,
 		align_self,
@@ -64,7 +43,6 @@
 	style:--flex-direction={direction}
 	style:--flex-wrap={wrap}
 	style:--flex-justify-content={justify_content}
-	style:--flex-justify-self={justify_self}
 	style:--flex-align-content={align_content}
 	style:--flex-align-items={align_items}
 	style:--flex-align-self={align_self}
@@ -82,7 +60,6 @@
 			flex-direction: var(--flex-direction, auto);
 			flex-wrap: var(--flex-wrap, nowrap);
 			justify-content: var(--flex-justify-content, normal);
-			justify-self: var(--flex-justify-self, auto);
 			align-content: var(--flex-align-content);
 			align-items: var(--align-flex-items);
 			align-self: var(--align-flex-self);
