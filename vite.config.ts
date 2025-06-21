@@ -3,6 +3,9 @@ import examples from 'mdsvexamples/vite';
 import path from 'node:path';
 import { kitRoutes } from 'vite-plugin-kit-routes';
 import tailwindcss from '@tailwindcss/vite';
+import { browserslistToTargets } from 'lightningcss';
+import browserslist from 'browserslist';
+import type { UserConfig } from 'vite';
 
 const $root = path.resolve(__dirname, './src');
 const $lib = path.resolve($root, './lib');
@@ -10,8 +13,7 @@ const $routes = path.resolve($root, './routes');
 const $scripts = path.resolve($lib, './scripts');
 const $actions = path.resolve($lib, './actions');
 
-/** @type {import('vite').UserConfig} */
-const config = {
+const config: UserConfig = {
 	plugins: [examples, tailwindcss(), sveltekit(), kitRoutes()],
 	resolve: {
 		alias: {
@@ -21,8 +23,14 @@ const config = {
 			$actions
 		}
 	},
-	ssr: {
-		noExternal: ['@fortawesome/free-solid-svg-icons', '@fortawesome/free-brands-svg-icons']
+	build: {
+		cssMinify: 'lightningcss'
+	},
+	css: {
+		transformer: 'lightningcss',
+		lightningcss: {
+			targets: browserslistToTargets(browserslist('>= 0.25%'))
+		}
 	}
 };
 
