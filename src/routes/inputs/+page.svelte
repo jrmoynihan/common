@@ -255,15 +255,13 @@
 
 <style lang="scss">
 	h2 {
-		font-size: 1.5rem;
+		font-size: var(--font-size-fluid-1);
 		font-weight: 600;
 		margin-bottom: 1rem;
 	}
 	.inputs-container {
 		display: flex;
 		justify-content: space-evenly;
-		width: 100%;
-		height: 100%;
 		gap: 2rem 1rem;
 		flex-wrap: wrap;
 		padding: 2rem;
