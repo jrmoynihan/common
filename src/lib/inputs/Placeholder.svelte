@@ -18,6 +18,9 @@
 </script>
 
 <div
+	aria-hidden={true}
+	role="presentation"
+	inert
 	bind:this={placeholder_element}
 	class="placeholder"
 	use:dynamic_style={dynamic_styles}
@@ -28,6 +31,7 @@
 
 <style lang="scss">
 	.placeholder {
+		user-select: none;
 		font-size: var(--placeholder-font-size, 1em);
 		font-style: var(--placeholder-font-style, normal);
 		font-family: var(--placeholder-font-family, inherit);
