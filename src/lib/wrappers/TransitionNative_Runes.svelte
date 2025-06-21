@@ -372,6 +372,9 @@
 		display: grid;
 		grid-template-rows: 1fr;
 		grid-template-columns: 1fr;
+		flex-grow: var(--transition-flex-grow, 1);
+		flex-shrink: var(--transition-flex-shrink, 1);
+		flex-basis: var(--transition-flex-basis, 1fr);
 	}
 	.transition-inner {
 		box-sizing: border-box;

@@ -164,6 +164,11 @@
 		display: grid;
 		grid-template-rows: 1fr;
 		grid-template-columns: 1fr;
+		justify-items: var(--transition-justify-items, stretch);
+		align-items: var(--transition-align-items, stretch);
+		flex-grow: var(--transition-flex-grow, 1);
+		flex-shrink: var(--transition-flex-shrink, 1);
+		flex-basis: var(--transition-flex-basis, auto);
 	}
 	.transition-inner {
 		box-sizing: border-box;
