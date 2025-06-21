@@ -7,16 +7,13 @@
 </script>
 
 {#snippet lorem()}
-	<p>
+	<p use:tooltip={{ content: 'Hello again!' }}>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, tenetur nihil voluptate
 		placeat quo delectus sunt consequatur tempore maiores aliquid consequuntur illum molestiae
 		corrupti quaerat animi perferendis nesciunt nostrum optio!
 	</p>
 {/snippet}
 
-{@render lorem()}
-{@render lorem()}
-{@render lorem()}
 <section class="modals">
 	<MiniDialog
 		button_props={{
@@ -77,5 +74,20 @@
 		background-color: var(--background);
 		width: 100%;
 		height: max-content;
+	}
+	code {
+		white-space: pre-wrap;
+		word-break: break-all;
+		overflow-x: auto;
+		overflow-y: hidden;
+		scrollbar-width: thin;
+		scrollbar-color: var(--accent) var(--background);
+		scrollbar-gutter: stable;
+		scrollbar-gutter: stable;
+		background-color: light-dark(oklch(0.9 0 0), oklch(0.5 0 0));
+		padding: 1rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--accent);
+		color: var(--text);
 	}
 </style>
