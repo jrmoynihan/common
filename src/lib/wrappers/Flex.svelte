@@ -79,10 +79,10 @@
 	@layer common.flex {
 		._flex {
 			display: flex;
-			flex-direction: var(--flex-direction);
-			flex-wrap: var(--flex-wrap);
-			justify-content: var(--flex-justify-content);
-			justify-self: var(--flex-justify-self);
+			flex-direction: var(--flex-direction, auto);
+			flex-wrap: var(--flex-wrap, nowrap);
+			justify-content: var(--flex-justify-content, normal);
+			justify-self: var(--flex-justify-self, auto);
 			align-content: var(--flex-align-content);
 			align-items: var(--align-flex-items);
 			align-self: var(--align-flex-self);
