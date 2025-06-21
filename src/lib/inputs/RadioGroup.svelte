@@ -64,46 +64,69 @@
 {/each}
 
 <style>
-	@layer input_label {
-		:global(label) {
+	@layer common.input.input_label {
+		:global(label:has(input[type='radio'])) {
 			--radiogroup-default-label-background-color: transparent;
 			--radiogroup-default-label-disabled-opacity: 0.5;
 			--radiogroup-default-label-checked-border-width: 2px;
 			--radiogroup-default-label-hover-background-color: oklch(
 				from var(--background) calc(l + 0.2) c h / 0.8
 			);
-			transition: all 300ms ease;
+			--radiogroup-default-label-transition-property: background-color, opacity;
+			--radiogroup-default-label-transition-duration: 300ms;
+			--radiogroup-default-label-transition-timing-function: ease;
+			--radiogroup-default-label-border-radius: 1em;
+			border-radius: var(
+				--radiogroup-label-border-radius,
+				var(--radiogroup-default-label-border-radius)
+			);
+			transition-property: var(
+				--radiogroup-label-transition-property,
+				var(--default-transition-property)
+			);
+			transition-duration: var(
+				--radiogroup-label-transition-duration,
+				var(--default-transition-duration)
+			);
+			transition-timing-function: var(
+				--radiogroup-label-transition-timing-function,
+				var(--default-transition-timing-function)
+			);
 			background-color: var(
 				--radiogroup-label-background-color,
 				var(--radiogroup-default-label-background-color)
 			);
 			opacity: var(--radiogroup-unchecked-opacity, var(--radiogroup-default-unchecked-opacity, 1));
-		}
-		:global(label:hover) {
-			background-color: var(
-				--radiogroup-label-hover-background-color,
-				var(--radiogroup-default-label-hover-background-color)
-			);
-		}
-		:global(label:has(input[type='radio']:disabled)) {
-			opacity: var(
-				--radiogroup-label-disabled-opacity,
-				var(--radiogroup-default-label-disabled-opacity)
-			);
-			cursor: not-allowed;
+			&:hover {
+				background-color: var(
+					--radiogroup-label-hover-background-color,
+					var(--radiogroup-default-label-hover-background-color)
+				);
+			}
+			&:disabled {
+				opacity: var(
+					--radiogroup-label-disabled-opacity,
+					var(--radiogroup-default-label-disabled-opacity)
+				);
+				cursor: not-allowed;
+			}
+			&:focus-visible:not(:disabled) {
+				outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
+				background-color: var(
+					--radiogroup-label-focus-background-color,
+					oklch(from var(--radiogroup-default-label-hover-background-color) l c h / 1)
+				);
+			}
 		}
 		:global(label:has(input[type='radio']:focus-visible:not(:disabled))) {
-			outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
-			background-color: var(
-				--radiogroup-label-focus-background-color,
-				oklch(from var(--radiogroup-default-label-hover-background-color) l c h / 1)
-			);
-		}
-		:global(input[type='radio']:focus-visible) {
 			outline: none;
 		}
-		:global(label:has(input[type='radio'][data-checked='true'])) {
+		:global(label:has(input[type='radio']:checked)) {
 			outline: 2px solid currentColor;
+		}
+		:global(input[type='radio']:focus, input[type='radio']:checked) {
+			outline: none;
+			box-shadow: none;
 		}
 	}
 </style>
