@@ -1,20 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-theme="dark">
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 		<script type="module">
-			if (!("anchorName" in document.documentElement.style)) {
-			  import("https://unpkg.com/@oddbird/css-anchor-positioning");
+			if (!('anchorName' in document.documentElement.style)) {
+				import('https://unpkg.com/@oddbird/css-anchor-positioning');
+				console.log('Loading anchor positioning polyfill.');
 			}
-		  </script>
+		</script>
+		<style type="text/css">
+			@layer base, utilities, components, common.navlink, common.input, common.button, common.dialog, common.tooltip;
+		</style>
 		%sveltekit.head%
 	</head>
 	<body>
 		<div>%sveltekit.body%</div>
 	</body>
-	<link rel="stylesheet" href="https://unpkg.com/open-props"/>
-	<link rel="stylesheet" href="https://unpkg.com/open-props/sizes.min.css"/>
-	<link rel="stylesheet" href="https://unpkg.com/open-props/shadows.min.css"/>
+	<link rel="stylesheet" href="https://unpkg.com/open-props" />
+	<link rel="stylesheet" href="https://unpkg.com/open-props/sizes.min.css" />
+	<link rel="stylesheet" href="https://unpkg.com/open-props/shadows.min.css" />
 </html>

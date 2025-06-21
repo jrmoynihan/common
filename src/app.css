@@ -1,5 +1,5 @@
 /** allow an override of Tailwind's base layer */
-@layer base, tooltip;
+@layer base, utilities, components, common.navlink, common.input, common.button, common.dialog, common.tooltip;
 
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
@@ -16,11 +16,6 @@
 	--background: hsla(195 61% 14%); /* background/alternate color */
 	--accent: var(--orange);
 	--shadow-color: 220 3% 85%; /* For <dialog> box-shadows */
-}
-
-input {
-	background-color: revert;
-	border: revert;
 }
 
 @position-try --top-bottom-right-left {
