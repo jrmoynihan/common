@@ -114,6 +114,8 @@
 			transition-timing-function: ease-in-out;
 			transition-behavior: allow-discrete;
 			grid-template-rows: repeat(3, minmax(0, max-content)) 0fr;
+			/* Prevents overflow in some scenarios where the label is intrinsically sized in a flex container */
+			grid-template-columns: minmax(0, 1fr);
 			grid-template-areas:
 				'before'
 				'input'
