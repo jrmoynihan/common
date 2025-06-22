@@ -453,3 +453,7 @@ export const overflow_options = {
 	auto: 'auto',
 	visible: 'visible'
 };
+export const grid_fit_options = {
+	'auto-fit': 'auto-fit',
+	'auto-fill': 'auto-fill'
+};
