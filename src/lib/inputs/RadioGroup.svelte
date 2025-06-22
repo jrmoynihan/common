@@ -118,9 +118,6 @@
 				);
 			}
 		}
-		:global(label:has(input[type='radio']:focus-visible:not(:disabled))) {
-			outline: none;
-		}
 		:global(label:has(input[type='radio']:checked)) {
 			outline: 2px solid currentColor;
 		}
