@@ -23,12 +23,12 @@
 </script>
 
 <div
-	class={['_flex-item', attributes.class]}
 	style:--order={order}
 	style:--grow={grow}
 	style:--shrink={shrink}
 	style:--basis={basis}
 	{...attributes}
+	class={['_flex-item', attributes.class]}
 >
 	{@render children?.()}
 </div>

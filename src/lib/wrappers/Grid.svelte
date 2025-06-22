@@ -23,6 +23,8 @@
 		columns?: number | 'auto-fit' | 'auto-fill';
 		/** The number of rows in the grid, or an `auto-fit` or `auto-fill` algorithm (default: 1). */
 		rows?: number | 'auto-fit' | 'auto-fill';
+		/** The template areas of the grid. */
+		template_areas?: string;
 		/** The gap between grid items (default: 1rem. */
 		gap?: string;
 		/** The overflow of the grid (default: hidden).  */
@@ -50,6 +52,7 @@
 		max_row_size = '1fr',
 		columns = 1,
 		rows = 1,
+		template_areas,
 		gap = '1rem',
 		overflow,
 		justify_content,
@@ -64,11 +67,11 @@
 </script>
 
 <div
-	class={['_grid-parent', attributes.class]}
 	style:--grid-min-column-size={min_column_size}
 	style:--grid-max-column-size={max_column_size}
 	style:--grid-min-row-size={min_row_size}
 	style:--grid-max-row-size={max_row_size}
+	style:--grid-template-areas={template_areas}
 	style:--grid-columns={columns}
 	style:--grid-rows={rows}
 	style:--grid-gap={gap}
@@ -80,6 +83,7 @@
 	style:--grid-align-self={align_self}
 	style:--grid-overflow={overflow}
 	{...attributes}
+	class={['_grid-parent', attributes.class]}
 >
 	{@render children?.()}
 </div>
@@ -96,6 +100,7 @@
 				var(--grid-rows),
 				minmax(var(--grid-min-row-size), var(--grid-max-row-size))
 			);
+			grid-template-areas: var(--grid-template-areas);
 			gap: var(--grid-gap);
 			justify-content: var(--grid-justify-content);
 			justify-items: var(--grid-justify-items);
