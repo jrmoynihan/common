@@ -17,6 +17,7 @@
 	let selected_option: (typeof select_options)[0] | undefined = $state();
 	let selected_fruit_name: string | undefined = $state();
 	let selected_number = $state<number>(1);
+	let selected_value = $state<(typeof select_options)[0][keyof (typeof select_options)[0]]>();
 	let valid_email: string = $state('');
 	let valid_password: string = $state('');
 	let min = $state(-Infinity);
@@ -50,10 +51,6 @@
 				text: 'Labels for Inputs',
 				tooltip_props: { content: `I'm a plain text input with a cancel button!`, position: 'top' }
 			}}
-			input_dynamic_styles={{
-				invalid_styles: 'background: oklch(70% 0.1 30 / 0.4);',
-				valid_styles: 'background: oklch(50% 0.1 130 / 0.3);'
-			}}
 			autocomplete="off"
 			required={true}
 			pattern={'.{3,16}'}
@@ -68,10 +65,6 @@
 				tooltip_props: {
 					content: `I'm a password input that hides the confirm button when the password is invalid!`
 				}
-			}}
-			input_dynamic_styles={{
-				invalid_styles: 'background: oklch(70% 0.1 30 / 0.4);',
-				valid_styles: 'background: oklch(50% 0.1 130 / 0.3);'
 			}}
 			type="password"
 			autocomplete="new-password"
@@ -91,10 +84,6 @@
 				tooltip_props: {
 					content: `I'm an email input that hides the confirm button when the email is invalid!`
 				}
-			}}
-			input_dynamic_styles={{
-				invalid_styles: 'background: oklch(70% 0.1 30 / 0.4);',
-				valid_styles: 'background: oklch(50% 0.1 130 / 0.3);'
 			}}
 			type="email"
 			autocomplete="email"
@@ -117,7 +106,7 @@
 	<section class="date-inputs">
 		<h2>Date Inputs</h2>
 		{#each date_inputs as input}
-			<TemporalDateInput {...input} {...input.input_attributes} />
+			<TemporalDateInput {...input} />
 		{/each}
 	</section>
 	<section class="numeric-inputs">
@@ -151,7 +140,7 @@
 				{max}
 				placeholder_props={{ text: 'any number' }}
 				label_props={{
-					invalid_text: `Invalid number. Must be between ${min ?? '(min)'} and ${max ?? '(max)'}.`
+					invalid_text: `Invalid number. Must be between ${min ?? '(min)'} and ${max ?? '(max)'} ${step ? `in steps of ${step}.` : ''}`
 				}}
 			/>
 		</fieldset>
@@ -171,15 +160,6 @@
 	<section class="select-inputs grid gap-4">
 		<h2>Select Inputs</h2>
 		<Select
-			input_label_props={{ text: 'Select an object option' }}
-			options={select_options}
-			placeholder_props={{ text: 'pick one...' }}
-			required={true}
-			label_key={'label'}
-			bind:value={selected_option}
-		/>
-		<Inspect value={selected_option} />
-		<Select
 			bind:value={value_key}
 			input_label_props={{ text: 'Value Key ' }}
 			placeholder_props={{ text: 'pick a value key' }}
@@ -192,7 +172,7 @@
 			options={option_keys}
 		/>
 		<Select
-			bind:value={selected_number}
+			bind:value={selected_value}
 			input_label_props={{
 				text: 'Derived select with dynamic label/value key selection from an array of objects'
 			}}
@@ -200,6 +180,7 @@
 			{value_key}
 			{label_key}
 		/>
+		<Inspect theme="plain" value={selected_value} />
 		<Select
 			bind:value={selected_fruit}
 			options={datalist}
@@ -210,6 +191,15 @@
 				<option value={fruit}>{fruit.label}</option>
 			{/snippet}
 		</Select>
+		<Select
+			input_label_props={{ text: 'Select an object option' }}
+			options={select_options}
+			placeholder_props={{ text: 'pick one...' }}
+			required={true}
+			label_key={'label'}
+			bind:value={selected_option}
+		/>
+		<Inspect theme="plain" value={selected_option} />
 	</section>
 
 	<section class="checkbox-inputs">
@@ -247,8 +237,7 @@
 			items={select_options.flatMap((o) => {
 				return o.options ? o.options : [];
 			})}
-			bind:group={selected_number}
-			value_key={'value'}
+			bind:group={selected_option}
 		/>
 	</section>
 </div>

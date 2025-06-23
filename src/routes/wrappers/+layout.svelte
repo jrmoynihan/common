@@ -22,11 +22,7 @@
 </script>
 
 <section>
-	<Navigation
-		links={data.links}
-		link_current_page_styles="color: white"
-		dynamic_link_styles={{ styles: `color: white` }}
-	/>
+	<Navigation links={data.links} />
 
 	<TransitionRunes bind:trigger>
 		{@render children?.()}

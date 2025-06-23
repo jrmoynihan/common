@@ -29,7 +29,7 @@
 </script>
 
 <section>
-	<Navigation links={data.links} dynamic_link_styles={{ styles: `color: white` }} />
+	<Navigation links={data.links} />
 
 	<TransitionRunes bind:trigger>
 		{@render children()}
