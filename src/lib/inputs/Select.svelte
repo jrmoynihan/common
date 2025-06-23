@@ -1,57 +1,49 @@
 <script lang="ts" module>
-	// SelectOption: a single option
-	export interface SelectOption<T, V = T> extends HTMLOptionAttributes {
-		value: V;
-		label?: string;
-		disabled?: boolean;
-	}
-
-	// SelectOptionGroup: a group of options
-	export interface SelectOptionGroup<T, V = T> extends HTMLOptgroupAttributes {
-		label: string;
-		options: Array<SelectOption<T, V> | SelectOptionGroup<T, V>>;
-		disabled?: boolean;
-	}
-
-	// The options prop: array of options or groups
-	export type SelectOptions<T, V> = SelectOption<T, V>[] | SelectOptionGroup<T, V>[];
-
-	export interface SelectProps<T, K extends keyof T = keyof T, V extends T | K = T>
-		extends HTMLSelectAttributes {
-		value?: V;
-		id?: string | null;
-		/** A snippet of HTML for the `<optgroup>` of the `<select>`.  This should also include logic for how to render a single `<option>` vs subgroups. */
-		group_snippet?: Snippet<[SelectOptionGroup<T, V>]>;
-		/** A snippet for how to render a single `<option>` in the `<select>`.*/
-		option_snippet?: Snippet<[SelectOption<T, V>]>;
-		options?: SelectOptions<T, V> | T[];
-		dynamic_select_styles?: DynamicStyleParameters;
-		input_label_props?: InputLabelProps<T>;
-		value_key?: K;
-		label_key?: K;
-		label?: Snippet<[any]>;
-		children?: Snippet;
-		placeholder_props?: PlaceholderProps;
-	}
-</script>
-
-<script lang="ts" generics="T, K extends keyof T = keyof T, V extends T | K = T">
-	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import type { Snippet } from 'svelte';
 	import type {
 		HTMLOptgroupAttributes,
 		HTMLOptionAttributes,
 		HTMLSelectAttributes
 	} from 'svelte/elements';
+	import { dynamic_style, type DynamicStyleParameters } from '../actions/dynamic-styles.svelte.js';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
 	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
 
+	export interface SelectOption<Value> extends HTMLOptionAttributes {
+		value: Value;
+		label: string;
+	}
+	export interface SelectOptionGroup<Value> extends HTMLOptgroupAttributes {
+		label: string;
+		options: (SelectOption<Value> | SelectOptionGroup<Value>)[];
+	}
+	export type StructuredOptions<Value> = (SelectOption<Value> | SelectOptionGroup<Value>)[];
+
+	export interface SelectProps<Item, Value = Item> extends HTMLSelectAttributes {
+		value?: Value;
+		options?: Item[] | StructuredOptions<Value>;
+		id?: string | null;
+		/** A snippet for how to render a single `<option>` in the `<select>`.*/
+		option_snippet?: Snippet<[Item | SelectOption<Value>]>;
+		/** A snippet for how to render an `<optgroup>`. */
+		group_snippet?: Snippet<[SelectOptionGroup<Value>]>;
+		dynamic_select_styles?: DynamicStyleParameters;
+		input_label_props?: InputLabelProps<Item>;
+		value_key?: keyof Item;
+		label_key?: keyof Item;
+		label?: Snippet<[any]>;
+		children?: Snippet;
+		placeholder_props?: PlaceholderProps;
+	}
+</script>
+
+<script lang="ts" generics="Item, Value = Item">
 	let {
 		value = $bindable(),
 		dynamic_select_styles = $bindable(),
 		options = $bindable([]),
-		option_snippet = default_option,
-		group_snippet = default_group,
+		option_snippet = default_option_snippet,
+		group_snippet = default_group_snippet,
 		children,
 		input_label_props,
 		placeholder_props = {},
@@ -59,49 +51,53 @@
 		label_key,
 		id = crypto.randomUUID(),
 		...select_attributes
-	}: SelectProps<T, K, V> = $props();
+	}: SelectProps<Item, Value> = $props();
 
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
+
+	function is_group(item: any): item is SelectOptionGroup<Value> {
+		return item && typeof item === 'object' && 'options' in item && Array.isArray(item.options);
+	}
+
+	function get_value(item: Item): any {
+		if (value_key && typeof item === 'object' && item !== null && value_key in item) {
+			return item[value_key];
+		}
+		return item;
+	}
+
+	function get_label(item: Item): string {
+		if (label_key && typeof item === 'object' && item !== null && label_key in item) {
+			return String(item[label_key]);
+		}
+		const item_value = get_value(item);
+		if (typeof item_value === 'object' && item_value !== null) {
+			if ('label' in item_value) return String(item_value.label);
+			if ('name' in item_value) return String(item_value.name);
+			if ('id' in item_value) return String(item_value.id);
+			return JSON.stringify(item_value);
+		}
+		return String(item_value);
+	}
 </script>
 
-{#snippet default_option(item: SelectOption<T, V> | T)}>
-	{#if item instanceof Object && value_key !== undefined && value_key in item}
-		{@const value = item[value_key as keyof typeof item]}
-		{@const label =
-			label_key !== undefined && label_key in item ? item[label_key as keyof typeof item] : value}
-		{@const { disabled } = item}
-		<option {value} {disabled}>
-			{label}
-		</option>
-	{:else if item instanceof Object}
-		{@const { disabled } = item}
-		{@const value = item}
-		{@const label =
-			label_key !== undefined && label_key in item ? item[label_key as keyof typeof item] : value}
-		<option {value} {disabled}>
-			{label}
-		</option>
-	{:else}
-		<option value={item}>
-			{item}
-		</option>
-	{/if}
+{#snippet default_option_snippet(option: Item | SelectOption<Value>)}
+	{@const item = option as Item}
+	{@const { disabled } = item as SelectOption<Value>}
+	<option value={get_value(item)} {disabled}>
+		{get_label(item)}
+	</option>
 {/snippet}
 
-{#snippet default_group(group: SelectOptionGroup<T, V>)}
-	{@const { label, options, disabled } = group}
-	<optgroup {label} {disabled}>
-		{#if 'options' in group}
-			{#each options as suboption}
-				{#if 'options' in suboption}
-					{@render default_group(suboption)}
-				{:else}
-					{@render option_snippet(suboption)}
-				{/if}
-			{/each}
-		{:else}
-			{@render option_snippet(group)}
-		{/if}
+{#snippet default_group_snippet(group: SelectOptionGroup<Value>)}
+	<optgroup label={group.label} disabled={group.disabled}>
+		{#each group.options as item}
+			{#if is_group(item)}
+				{@render group_snippet(item)}
+			{:else}
+				{@render option_snippet(item)}
+			{/if}
+		{/each}
 	</optgroup>
 {/snippet}
 
@@ -117,11 +113,11 @@
 		{#if children}
 			{@render children()}
 		{:else}
-			{#each options as opt}
-				{#if opt instanceof Object && 'options' in opt}
-					{@render group_snippet(opt as unknown as SelectOptionGroup<T, V>)}
+			{#each options as item}
+				{#if is_group(item)}
+					{@render group_snippet(item)}
 				{:else}
-					{@render option_snippet(opt as SelectOption<T, V>)}
+					{@render option_snippet(item)}
 				{/if}
 			{/each}
 		{/if}
@@ -129,13 +125,13 @@
 	<Placeholder {...placeholder_props} />
 </InputLabel>
 
-<style lang="scss">
-	/* Avoid miscalculating size of padding/widths by including it in the box mesaurement */
+<style>
 	* {
+		/* Avoid miscalculating size of padding/widths by including it in the box mesaurement */
 		box-sizing: border-box;
 	}
 	select {
-		// appearance: base-select; // New CSS if you want custom selects
+		/* appearance: base-select;  /* New CSS if you want custom selects */
 		box-sizing: border-box;
 		grid-area: input;
 		padding: var(--text-input-padding, 1.25em);
@@ -146,7 +142,7 @@
 		border: var(--text-input-border, inset);
 		min-height: 3ch;
 
-		// Different rules that only get applied to Safari:
+		/* Different rules that only get applied to Safari: */
 		background-color: var(--text-input-background, revert);
 
 		&:focus-visible {
