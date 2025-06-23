@@ -104,7 +104,7 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 			display: grid;
 			scrollbar-width: thin;
 			border-radius: var(--radius-3);
-			box-shadow: var(--shadow-2);
+			box-shadow: var(--shadow-3);
 			background: var(--dialog-background, var(--background, inherit));
 			color: var(--dialog-color, var(--color, inherit));
 			font-size: initial;
@@ -203,6 +203,19 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 				max-block-size: 80vh;
 				max-block-size: 80dvb;
 				padding: var(--dialog-form-padding, 0.5rem);
+			}
+		}
+
+		@media (prefers-color-scheme: dark) {
+			.dialog {
+				background: var(
+					--dark-dialog-background,
+					var(--dialog-background, var(--dark-background, var(--background, inherit)))
+				);
+				color: var(
+					--dark-dialog-color,
+					var(--dialog-color, var(--dark-color, var(--color, inherit)))
+				);
 			}
 		}
 
