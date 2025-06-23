@@ -23,14 +23,16 @@ export async function load({}: PageLoadEvent) {
 		{ icon: unicode_pineapple, label: 'Pineapple' }
 	];
 
-	const select_options: {
+	interface SelectOption {
 		value?: number;
-		label?: string | null;
+		label?: string;
 		disabled?: boolean;
-		options?: { value: number | null; label?: string | null }[];
-	}[] = [
-		{ value: undefined, label: null },
-		{ value: undefined, disabled: true, label: 'a disabled option' },
+		options?: SelectOption[];
+	}
+
+	const select_options: SelectOption[] = [
+		{ value: 0, label: 'Basic Option' },
+		{ value: 0.5, disabled: true, label: 'a disabled option' },
 		{
 			label: 'A Group Of Options',
 			options: [
@@ -51,7 +53,7 @@ export async function load({}: PageLoadEvent) {
 		};
 	}>[] = [
 		{
-			input_attributes: { class: 'purple' },
+			class: 'purple',
 			date: date,
 			min: date.subtract({ days: 7 }),
 			max: date.add({ days: 7 }),
@@ -60,7 +62,7 @@ export async function load({}: PageLoadEvent) {
 			}
 		},
 		{
-			input_attributes: { type: 'datetime-local' },
+			type: 'datetime-local',
 			date: date.add({ days: 1 }),
 			min: date.subtract({ days: 7 }),
 			max: date.add({ days: 7 }),
@@ -69,7 +71,7 @@ export async function load({}: PageLoadEvent) {
 			}
 		},
 		{
-			input_attributes: { type: 'datetime' },
+			type: 'datetime',
 			min: date.subtract({ days: 7 }),
 			max: date.add({ days: 7 }),
 			label_props: {
@@ -77,7 +79,7 @@ export async function load({}: PageLoadEvent) {
 			}
 		},
 		{
-			input_attributes: { type: 'time' },
+			type: 'time',
 			min: date.subtract({ hours: 12 }),
 			max: date.add({ hours: 12 }),
 			label_props: {
