@@ -118,7 +118,7 @@
 
 	function map_icons(obj: T, key: keyof T, order: Ordering) {
 		if (typeof obj[key] === 'string') {
-			return order === 'desc' ? 'fa6-solid:arrow-down-az' : 'fa6-solid:arrow-up-za';
+			return order === 'desc' ? 'tabler:sort-ascending-letters' : 'tabler:sort-descending-letters';
 		} else if (typeof obj[key] === 'number') {
 			return order === 'desc' ? 'fa6-solid:arrow-down-1-9' : 'fa6-solid:arrow-up-9-1';
 		} else {
@@ -197,7 +197,7 @@
 			onclick={() => sort_strings(key)}
 			style={'padding: 0.25rem;'}
 			icon_props={{ icon }}
-			tooltip_options={{
+			tooltip_props={{
 				content: `Sort strings (current: ${order === 'desc' ? 'A-Z' : 'Z-A'})`
 			}}
 		/>
@@ -206,7 +206,7 @@
 			class={['sort-button', order]}
 			onclick={() => sort_numbers_or_boolean_or_dates(key)}
 			icon_props={{ icon }}
-			tooltip_options={{
+			tooltip_props={{
 				content: `Sort numbers (current: ${order === 'desc' ? 'low-to-high' : 'high-to-low'})`
 			}}
 		/>
