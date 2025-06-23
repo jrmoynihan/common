@@ -1,7 +1,7 @@
 <script module lang="ts">
-	export interface ButtonProps<T> extends HTMLButtonAttributes {
+	export interface ButtonProps extends HTMLButtonAttributes {
 		/** Options to style the tooltip or modify its visible/disabled state */
-		tooltip_props?: TooltipProps<T> | TooltipWithContentProps<T>;
+		tooltip_props?: TooltipProps | TooltipWithContentProps;
 		/** Style the button, allowing dynamic updates */
 		dynamic_styles?: DynamicStyleParameters;
 		/** The position of the icon relative to the children/content of the button */
@@ -19,7 +19,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import {
 		tooltip,
@@ -47,7 +47,7 @@
 		button = $bindable(),
 		disabled = $bindable(),
 		...attributes
-	}: ButtonProps<T> = $props();
+	}: ButtonProps = $props();
 </script>
 
 {#snippet icon(icon_props: IconProps)}

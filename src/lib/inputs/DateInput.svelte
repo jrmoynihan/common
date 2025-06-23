@@ -1,4 +1,4 @@
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { dynamic_style } from '$actions/dynamic-styles.svelte';
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte';
 	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
@@ -9,7 +9,7 @@
 	// https://tc39.es/proposal-temporal/docs/cookbook.html#current-date-and-time
 	/** The date to display */
 
-	interface Props<T> {
+	interface Props {
 		date: Date;
 		min: Date;
 		max: Date;
@@ -33,7 +33,7 @@
 		is_valid: boolean;
 		invalid_msg: string;
 		date_input_attributes: HTMLInputAttributes;
-		tooltip_options: TooltipProps<T>;
+		tooltip_options: TooltipProps;
 		label_attributes?: HTMLLabelAttributes;
 		children?: Snippet;
 	}
@@ -63,7 +63,7 @@
 		tooltip_options,
 		label_attributes,
 		children
-	}: Props<T> = $props();
+	}: Props = $props();
 
 	const convertDateToString = (date: Date) => {
 		// NOTE: getMMonth is zero-based, so it requires a +1 offset to return the correct month

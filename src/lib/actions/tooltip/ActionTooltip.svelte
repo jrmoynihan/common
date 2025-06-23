@@ -3,7 +3,7 @@
 https://web.dev/building-a-tooltip-component/
 -->
 
-<script lang="ts" generics="T">
+<script lang="ts" generics="T = unknown">
 	import { dynamic_style } from '$actions/dynamic-styles.svelte.js';
 	import type { TooltipProps, TooltipWithContentProps } from './tooltip.svelte';
 

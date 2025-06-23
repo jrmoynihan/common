@@ -5,7 +5,7 @@ import { mount, unmount, type Snippet } from 'svelte';
 import ActionTooltip from './ActionTooltip.svelte';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
-export class BaseTooltipProps<T> {
+export class BaseTooltipProps<T = unknown> {
 	/** Choose from top, bottom, right, left anchor positions for the tooltip.
 	 * @default top
 	 */
@@ -67,7 +67,7 @@ export class BaseTooltipProps<T> {
 		this.fallback = args.fallback ?? true;
 	}
 }
-export class TooltipProps<T> extends BaseTooltipProps<T> {
+export class TooltipProps<T = unknown> extends BaseTooltipProps<T> {
 	/** The content of the tooltip. */
 	content?: string;
 	constructor({ ...args }: PartiallyRequired<TooltipProps<T>, 'content'>) {
@@ -76,7 +76,7 @@ export class TooltipProps<T> extends BaseTooltipProps<T> {
 	}
 }
 
-export class TooltipWithContentProps<T> extends BaseTooltipProps<T> {
+export class TooltipWithContentProps<T = unknown> extends BaseTooltipProps<T> {
 	/** The content of the tooltip, as a {@link Snippet} */
 	content_snippet?: Snippet<[T]>;
 	/** Arguments to pass to the content when it is a {@link Snippet} */
@@ -91,11 +91,14 @@ export class TooltipWithContentProps<T> extends BaseTooltipProps<T> {
 }
 
 /** Each additional step takes the same parameters as the action itself, but you must also provide a node to move the tooltips to at each step. */
-export type TooltipStep<T> = {
+export type TooltipStep<T = unknown> = {
 	node: HTMLElement;
 } & Omit<TooltipProps<T> | TooltipWithContentProps<T>, 'steps'>;
 
-export function tooltip<C, T extends Partial<TooltipProps<T>> | TooltipWithContentProps<C>>(
+export function tooltip<
+	C = unknown,
+	T extends Partial<TooltipProps<T>> | TooltipWithContentProps<C> = TooltipProps<C>
+>(
 	node: HTMLElement,
 	// TODO: Fix this.  Could (should) split into two functions, one for TooltipProps and one for TooltipWithContentProps?  Can still reuse the shared logic.
 	parameters: TooltipProps<C> | TooltipWithContentProps<C>

@@ -1,15 +1,15 @@
 <script module lang="ts">
-	export interface TextInputProps<T> extends InputProps<T> {
+	export interface TextInputProps extends InputProps {
 		input_element?: HTMLInputElement;
 		value?: unknown;
 		show_confirm?: boolean;
 		show_cancel?: boolean;
 		allow_enter_to_confirm?: boolean;
-		button_props?: InputButtonProps<T>;
+		button_props?: InputButtonProps;
 		input_dynamic_styles?: DynamicStyleParameters;
 		label_element?: HTMLLabelElement;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
-		label_props?: InputLabelProps<T>;
+		label_props?: InputLabelProps;
 		/** A binding to the placeholder <div> element */
 		placeholder_element?: HTMLDivElement;
 		placeholder_props?: PlaceholderProps;
@@ -22,7 +22,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import type { FormEventHandler } from 'svelte/elements';
 	import Input, { type InputProps } from './Input.svelte';
@@ -52,7 +52,7 @@
 		onblur,
 		oninput,
 		...input_attributes
-	}: TextInputProps<T> = $props();
+	}: TextInputProps = $props();
 
 	function clear_input() {
 		value = '';

@@ -8,7 +8,7 @@
 -->
 
 <script module lang="ts">
-	export interface AccordionDetailsProps<T> extends HTMLDetailsAttributes {
+	export interface AccordionDetailsProps extends HTMLDetailsAttributes {
 		/** How many degrees to rotate the icon when closed. Defaults to 0. */
 		closed_icon_rotation?: number;
 		/** The Iconify icon props. */
@@ -32,7 +32,7 @@
 		/** The summary of the accordion. */
 		summary_content?: Snippet;
 		/** Parameters for the summary tooltip. Defaults to `{ disabled: true }`.*/
-		summary_tooltip_parameters?: TooltipProps<T>;
+		summary_tooltip_parameters?: TooltipProps;
 		/**
 		 * Parameters for the content transition. Defaults to `{ slide_transition_parameters: { duration: '500ms', easing: 'ease' } }`.
 		 *  Available transitions are `fly`, `fade`, `blur`, `slide`, and `scale`. See the {@link TransitionNative_Runes.svelte} component.
@@ -43,7 +43,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import Icon, { type IconProps } from '@iconify/svelte';
 	import type { ComponentProps, Snippet } from 'svelte';
@@ -72,7 +72,7 @@
 		},
 		group_name,
 		...details_attributes
-	}: AccordionDetailsProps<T> = $props();
+	}: AccordionDetailsProps = $props();
 
 	const id = crypto.randomUUID();
 	let toggle: HTMLInputElement | undefined = $state();

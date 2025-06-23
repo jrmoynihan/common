@@ -1,5 +1,5 @@
 <script module lang="ts">
-	export interface NumericInputProps<T> extends Omit<InputProps<T>, 'placeholder'> {
+	export interface NumericInputProps extends Omit<InputProps, 'placeholder'> {
 		/** The value of the input. */
 		value?: string | number | string[] | null;
 		/** Whether the input is valid. */
@@ -25,7 +25,7 @@
 	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { type ComponentProps, type Snippet } from 'svelte';
 	import Icon, { type IconProps } from '@iconify/svelte';
 	import Input, { type InputProps } from './Input.svelte';
@@ -47,10 +47,10 @@
 		down_spinner_button,
 		children,
 		...input_attributes
-	}: NumericInputProps<T> = $props();
+	}: NumericInputProps = $props();
 </script>
 
-{#snippet default_spinner_button(icon_props: IconProps, button_props: InputButtonProps<T>)}
+{#snippet default_spinner_button(icon_props: IconProps, button_props: InputButtonProps)}
 	<InputButton {...button_props} disabled={input_attributes?.disabled}>
 		<Icon
 			{...icon_props}

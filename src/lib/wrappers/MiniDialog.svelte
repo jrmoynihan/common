@@ -1,17 +1,13 @@
 <script module lang="ts">
-	export interface MiniDialogProps<T> extends Omit<FullDialogProps<T>, 'dialog'> {
-		dialog?: FullDialog<T>;
+	export interface MiniDialogProps extends Omit<FullDialogProps, 'dialog'> {
+		dialog?: FullDialog;
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import FullDialog, { type FullDialogProps } from './FullDialog.svelte';
 
-	let {
-		children = undefined,
-		dialog = $bindable(),
-		...dialog_props
-	}: MiniDialogProps<T> = $props();
+	let { children = undefined, dialog = $bindable(), ...dialog_props }: MiniDialogProps = $props();
 
 	export const open = () => {
 		dialog?.open();

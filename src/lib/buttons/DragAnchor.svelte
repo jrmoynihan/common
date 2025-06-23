@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	export interface DragAnchorProps<T> extends ButtonProps<T> {
+	export interface DragAnchorProps extends ButtonProps {
 		grabbed?: boolean;
 		hovered?: boolean;
 		dynamic_styles?: DynamicStyleParameters;
@@ -7,7 +7,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import type { Snippet } from 'svelte';
 	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
@@ -20,7 +20,7 @@
 		dynamic_styles,
 		children,
 		...button_props
-	}: DragAnchorProps<T> = $props();
+	}: DragAnchorProps = $props();
 
 	export const release = () => {
 		if (!grabbed) return;

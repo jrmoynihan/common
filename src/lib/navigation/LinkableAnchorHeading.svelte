@@ -1,16 +1,16 @@
 <script module lang="ts">
-	export interface LinkableAnchorHeadingProps<T> extends ComponentProps<typeof AnchorHeading> {
-		button_props?: ComponentProps<ButtonRunes<T>>;
+	export interface LinkableAnchorHeadingProps extends AnchorHeadingProps {
+		button_props?: ButtonProps;
 		button_position?: 'before' | 'after';
 		children?: Snippet;
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { page } from '$app/state';
-	import ButtonRunes from '$buttons/Button_Runes.svelte';
+	import ButtonRunes, { type ButtonProps } from '$buttons/Button_Runes.svelte';
 	import { onDestroy, type ComponentProps, type Snippet } from 'svelte';
-	import AnchorHeading from './AnchorHeading.svelte';
+	import AnchorHeading, { type AnchorHeadingProps } from './AnchorHeading.svelte';
 
 	let styles =
 		'border: 0; --button-opacity: 0.5; padding: 0rem 0.5rem; max-height: max-content; margin: 0.25rem 0.5rem;';
@@ -23,7 +23,7 @@
 		button_position = 'after',
 		children,
 		...heading_props
-	}: LinkableAnchorHeadingProps<T> = $props();
+	}: LinkableAnchorHeadingProps = $props();
 
 	function copyLinkAddress() {
 		const { id } = heading_props;

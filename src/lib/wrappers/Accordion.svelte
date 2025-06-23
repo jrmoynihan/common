@@ -1,9 +1,9 @@
 <script module lang="ts">
-	export interface AccordionProps<T> extends HTMLButtonAttributes {
+	export interface AccordionProps extends HTMLButtonAttributes {
 		/** A snippet to provide a custom summary section instead of just passing the `summary_text`. */
 		summary?: Snippet | string;
 		/** The parameters of the `<summary>` tooltip. */
-		summary_tooltip_props?: TooltipProps<T>;
+		summary_tooltip_props?: TooltipProps;
 		/** Attributes to apply to the `<summary>` element. */
 		summary_attributes?: HTMLAttributes<HTMLElement>;
 		/** (Bindable) The open state of the accordion. */
@@ -21,7 +21,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import { cubicInOut } from 'svelte/easing';
@@ -46,7 +46,7 @@
 		closed_icon_rotation = 90,
 		open_icon_rotation = -90,
 		...button_attributes
-	}: AccordionProps<T> = $props();
+	}: AccordionProps = $props();
 </script>
 
 {#snippet icon(icon_props: IconProps)}

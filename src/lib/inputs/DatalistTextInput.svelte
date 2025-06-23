@@ -1,5 +1,5 @@
 <script module lang="ts">
-	export interface DatalistTextInputProps<T> extends TextInputProps<T> {
+	export interface DatalistTextInputProps extends TextInputProps {
 		datalist: string[] | number[] | Record<string, unknown>[];
 		value?: unknown;
 		value_key?: string;
@@ -9,7 +9,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import type { ComponentProps } from 'svelte';
 	import InputLabel from './InputLabel.svelte';
 	import TextInput, { type TextInputProps } from './TextInput.svelte';
@@ -24,7 +24,7 @@
 		label_key = 'label',
 		label_props,
 		...text_input_props
-	}: DatalistTextInputProps<T> = $props();
+	}: DatalistTextInputProps = $props();
 </script>
 
 <TextInput

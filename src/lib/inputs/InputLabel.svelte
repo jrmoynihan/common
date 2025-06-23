@@ -1,7 +1,7 @@
 <script module lang="ts">
 	import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 
-	export interface InputLabelProps<T> extends HTMLLabelAttributes {
+	export interface InputLabelProps extends HTMLLabelAttributes {
 		/** A binding to the <label> element */
 		label_element?: HTMLLabelElement;
 		/** The text for the label */
@@ -15,7 +15,7 @@
 		/** A binding to the validity of the input.  Changing this triggers the visibility of the invalid message. */
 		valid?: boolean;
 		/** Props to pass to the tooltip action. */
-		tooltip_props?: TooltipProps<T>;
+		tooltip_props?: TooltipProps;
 		/** Styles to apply to the label, including hover/focus/active styles. */
 		dynamic_styles?: DynamicStyleParameters;
 		/** Parameters for the transition. */
@@ -28,7 +28,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { dynamic_style, tooltip, type TooltipProps } from '$lib';
 	import type { SvelteTransition, SvelteTransitionParams, TransitionTypes } from '$lib/lib_types';
 	import type { Snippet } from 'svelte';
@@ -53,7 +53,7 @@
 		invalid_msg_snippet = default_invalid_snippet,
 		transition = fade,
 		...label_attributes
-	}: InputLabelProps<T> = $props();
+	}: InputLabelProps = $props();
 </script>
 
 {#snippet default_invalid_snippet()}

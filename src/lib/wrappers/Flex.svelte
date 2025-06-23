@@ -15,11 +15,11 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	export interface FlexProps<T> extends HTMLAttributes<HTMLDivElement> {
+	export interface FlexProps extends HTMLAttributes<HTMLDivElement> {
 		/** Style the button, allowing dynamic updates */
 		dynamic_styles?: DynamicStyleParameters;
 		/** Options to style the tooltip or modify its visible/disabled state */
-		tooltip_props?: TooltipProps<T> | TooltipWithContentProps<T>;
+		tooltip_props?: TooltipProps | TooltipWithContentProps;
 		direction?: keyof typeof direction_options;
 		wrap?: keyof typeof wrap_options;
 		justify_content?: keyof typeof justify_content_options;
@@ -32,7 +32,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	let {
 		dynamic_styles,
 		tooltip_props = { disabled: true, visible: false },
@@ -46,7 +46,7 @@
 		overflow,
 		children,
 		...attributes
-	}: FlexProps<T> = $props();
+	}: FlexProps = $props();
 </script>
 
 <div

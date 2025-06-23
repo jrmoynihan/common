@@ -1,15 +1,13 @@
 <script module lang="ts">
-	import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
-
 	import type { Snippet } from 'svelte';
 
-	type InputWithLabelProps<T> = InputProps & InputLabelProps<T>;
+	type InputWithLabelProps = InputProps & InputLabelProps;
 	export interface RadioGroupProps<T, K extends keyof T & string>
-		extends Omit<InputWithLabelProps<T>, 'value' | 'children'> {
+		extends Omit<InputWithLabelProps, 'value' | 'children'> {
 		/** An array or iterable of items to display in the radio group. */
 		items: ArrayLike<T> | Iterable<T>;
 		/** Attributes to pass to the label of the selected item. */
-		label_attributes?: Partial<InputLabelProps<T>>;
+		label_attributes?: Partial<InputLabelProps>;
 		/** The key to use for the label of the selected item. (Default: 'label') */
 		label_key?: keyof T;
 		/** The key to use for the value of the selected item, which affects the group's binding. (Default: the item itself, which may be an object) */

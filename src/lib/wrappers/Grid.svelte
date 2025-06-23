@@ -16,7 +16,7 @@
 	} from '$functions/helpers.svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
-	export interface GridProps<T> extends HTMLAttributes<HTMLDivElement> {
+	export interface GridProps extends HTMLAttributes<HTMLDivElement> {
 		/** The min column size of the grid for a `minmax()` function. */
 		min_column_size?: string;
 		/** The max column size of the grid for a `minmax()` function. */
@@ -48,13 +48,13 @@
 		/** The block alignment of the grid element itself (default: normal). */
 		align_self?: keyof typeof align_self_options;
 		/** Options to style the tooltip or modify its visible/disabled state */
-		tooltip_props?: TooltipProps<T> | TooltipWithContentProps<T>;
+		tooltip_props?: TooltipProps | TooltipWithContentProps;
 		/** Style the button, allowing dynamic updates */
 		dynamic_styles?: DynamicStyleParameters;
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	let {
 		min_column_size = '0',
 		max_column_size = '1fr',
@@ -75,7 +75,7 @@
 		tooltip_props = { disabled: true, visible: false },
 		dynamic_styles,
 		...attributes
-	}: GridProps<T> = $props();
+	}: GridProps = $props();
 </script>
 
 <div

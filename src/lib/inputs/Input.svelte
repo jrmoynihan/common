@@ -2,7 +2,7 @@
 	import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import type { TooltipWithContentProps } from '$actions/tooltip/tooltip.svelte';
 
-	export interface InputProps<T> extends HTMLInputAttributes {
+	export interface InputProps extends HTMLInputAttributes {
 		/** A binding to the `<input>` element. */
 		input_element?: HTMLInputElement;
 		/** A binding to the value of the input. */
@@ -14,7 +14,7 @@
 		/** Styles to apply to the input element including hover, focus, and active styles. */
 		input_dynamic_styles?: DynamicStyleParameters;
 		/** Props to pass to the tooltip component. */
-		tooltip_props?: TooltipProps<T> | TooltipWithContentProps<T>;
+		tooltip_props?: TooltipProps | TooltipWithContentProps;
 		/** The key used to confirm the input. Defaults to `Enter`.  Set to `null` to disable `onkeypress` confirmations. */
 		confirm_key?: string;
 		/** A callback that runs when the `confirm_key` is pressed.  If an `onkeypress` event handler is provided, this will be ignored. */
@@ -24,7 +24,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { dynamic_style, tooltip, type TooltipProps } from '$lib';
 	import { onMount } from 'svelte';
 	import type { FormEventHandler, HTMLInputAttributes } from 'svelte/elements';
@@ -42,7 +42,7 @@
 		onconfirm,
 		onvalid,
 		...input_attributes
-	}: InputProps<T> = $props();
+	}: InputProps = $props();
 
 	function confirm(e: any) {
 		onconfirm?.(e);

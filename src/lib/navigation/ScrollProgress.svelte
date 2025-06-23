@@ -1,7 +1,7 @@
 <script module lang="ts">
-	export interface ScrollProgressProps<T> {
+	export interface ScrollProgressProps {
 		children?: Snippet;
-		button_props?: ComponentProps<ButtonRunes<T>>;
+		button_props?: ButtonProps;
 		/** The percent at which the scroll-to-top button becomes visible.  E.g., 10% would be 10*/
 		threshold?: number;
 		/** The scroll progess up and down the page, expressed as a percent. */
@@ -15,33 +15,35 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { browser } from '$app/environment';
-	import ButtonRunes from '$buttons/Button_Runes.svelte';
-	import type { ComponentProps, Snippet } from 'svelte';
-	import { spring, type Spring } from 'svelte/motion';
+	import ButtonRunes, { type ButtonProps } from '$buttons/Button_Runes.svelte';
+	import type { Snippet } from 'svelte';
+	import { Spring } from 'svelte/motion';
 
 	let {
 		children,
 		button_props,
 		threshold = 10,
-		progress = spring<number>(0, { damping: 0.5, stiffness: 0.1 }),
+		progress = new Spring<number>(0, { damping: 0.5, stiffness: 0.1 }),
 		show_return_to_top_button = true,
 		show_progress_bar = false,
 		show_progress_radial = false
-	}: ScrollProgressProps<T> = $props();
+	}: ScrollProgressProps = $props();
 
 	/** The scroll distance donw the page */
 	let scrollY: number = $state(0);
 	/** If the progress indicators or scroll-to-top button meet the scroll percentage threshold to become visible */
 	let meets_visibility_threshold: boolean = $state(false);
 
+	// TODO: just extend the Spring class to add a `toPercent` method
+
 	function checkScrollProgress() {
 		if (browser) {
 			window.requestAnimationFrame(() => {
 				const total_scroll_distance =
 					document.documentElement.scrollHeight - document.documentElement.clientHeight;
-				$progress = (scrollY * 100) / total_scroll_distance;
+				progress.set((scrollY * 100) / total_scroll_distance);
 			});
 		}
 	}
@@ -50,7 +52,7 @@
 	}
 
 	$effect(() => {
-		meets_visibility_threshold = $progress >= threshold;
+		meets_visibility_threshold = progress.current >= threshold;
 	});
 </script>
 
@@ -62,9 +64,9 @@
 		</ButtonRunes>
 	{/if}
 	{#if show_progress_bar}
-		<progress-indicator style="width:{($progress * 100).toString()}%;"> </progress-indicator>
+		<progress-indicator style="width:{(progress.current * 100).toString()}%;"> </progress-indicator>
 	{:else if show_progress_radial}
-		<progress-indicator-radial style="--radii:{($progress * 100).toString()}%">
+		<progress-indicator-radial style="--radii:{(progress.current * 100).toString()}%">
 		</progress-indicator-radial>
 	{/if}
 {/if}

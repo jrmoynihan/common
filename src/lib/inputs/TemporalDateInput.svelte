@@ -1,19 +1,19 @@
 <script module lang="ts">
-	export interface DateInputProps<T>
-		extends Omit<InputProps<T> & HTMLInputAttributes, 'date' | 'min' | 'max'> {
+	export interface DateInputProps
+		extends Omit<InputProps & HTMLInputAttributes, 'date' | 'min' | 'max'> {
 		date?: Temporal.ZonedDateTime;
 		min?: string | number | Temporal.ZonedDateTime | null | undefined;
 		max?: string | number | Temporal.ZonedDateTime | null | undefined;
-		label_props?: InputLabelProps<T>;
+		label_props?: InputLabelProps;
 		on_input?: () => void | Promise<void>;
 		date_input?: HTMLInputElement;
 		label_element?: HTMLLabelElement;
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { Temporal } from '@js-temporal/polyfill';
-	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { HTMLInputAttributes, HTMLInputTypeAttribute } from 'svelte/elements';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
 	import Input, { type InputProps } from './Input.svelte';
 
@@ -29,14 +29,15 @@
 		date_input = $bindable(),
 		label_element = $bindable(),
 		...input_attributes
-	}: DateInputProps<T> = $props();
+	}: DateInputProps = $props();
 
 	const input_changed = (value: string) => {
 		date = stringToTemporalDate(value);
 		on_input?.();
 	};
 	const temporalDateToString = (
-		date: Temporal.ZonedDateTime | string | number | null | undefined
+		date: Temporal.ZonedDateTime | string | number | null | undefined,
+		type: HTMLInputTypeAttribute = 'date'
 	) => {
 		if (!date) return '';
 		if (typeof date === 'number') return new Date(date).toISOString();
@@ -46,7 +47,7 @@
 		const time_string = `T${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}:${
 			second < 10 ? `0${second}` : second
 		}`;
-		switch (input_attributes?.type) {
+		switch (type) {
 			case 'date':
 				return date_string;
 			case 'datetime':
@@ -59,11 +60,11 @@
 				return date_string;
 		}
 	};
-	const stringToTemporalDate = (date_string: string) => {
+	const stringToTemporalDate = (date_string: string, type: HTMLInputTypeAttribute = 'date') => {
 		const yyyy_mm_dd = date_string.split('T')[0];
 		const [year, month, day] = yyyy_mm_dd?.split('-') ?? [];
 
-		switch (input_attributes?.type) {
+		switch (type) {
 			case 'datetime':
 			case 'time':
 			case 'datetime-local': {

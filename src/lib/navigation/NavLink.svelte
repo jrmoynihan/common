@@ -1,9 +1,9 @@
 <script module lang="ts">
-	export interface NavLinkProps<T> extends HTMLAnchorAttributes {
+	export interface NavLinkProps extends HTMLAnchorAttributes {
 		/** The navigation link to display. */
 		nav_link: NavigationLink;
 		/** Tooltip options to apply to the nav links. */
-		tooltip_options?: TooltipProps<T>;
+		tooltip_options?: TooltipProps;
 		/** Styles to apply to a link when it is the _currently active_ page URL. */
 		current_page_styles?: string;
 		/** Dynamic styles to apply to the nav links. */
@@ -13,7 +13,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
@@ -30,7 +30,7 @@
 		dynamic_styles,
 		children,
 		...anchor_attributes
-	}: NavLinkProps<T> = $props();
+	}: NavLinkProps = $props();
 
 	let is_current_page = $derived(nav_link.isCurrentPage(page));
 	let is_page_active = $derived(nav_link.is_page_within_path(page));
