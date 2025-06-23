@@ -74,7 +74,7 @@
 		dynamic_styles={{
 			styles: `;background: linear-gradient(to ${gradient_direction}, hsla(195, 40%, 60%, 30%), hsla(95, 40%, 60%, 30%), hsla(295, 40%, 60%, 30%) );`
 		}}
-		tooltip_options={{ position, content_snippet: tooltip_one, keep_visible }}
+		tooltip_props={{ position, content_snippet: tooltip_one, keep_visible }}
 		--shadow-color={'350deg 50% 70%'}
 	>
 		I'm a button with low elevation
@@ -82,7 +82,7 @@
 	<ButtonRunes
 		onclick={testToastUpdate}
 		style={`--shadow-color: 350deg 50% 70%;`}
-		tooltip_options={{ position, content_snippet: tooltip_one, keep_visible }}
+		tooltip_props={{ position, content_snippet: tooltip_one, keep_visible }}
 	>
 		I'm a button with medium elevation
 	</ButtonRunes>
