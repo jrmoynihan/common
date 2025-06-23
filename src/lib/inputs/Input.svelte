@@ -134,6 +134,10 @@
 			/** Moved some of the placeholder styling from the input to the TextLabel component */
 			&:user-invalid {
 				outline: var(--input-invalid-outline, intitial);
+				background-color: var(--input-invalid-background-color, initial);
+			}
+			&:user-valid {
+				background-color: var(--input-valid-background-color, initial);
 			}
 			&:user-valid:focus-visible {
 				outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
