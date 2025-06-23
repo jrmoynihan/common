@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-	import { tooltip } from '$lib';
+	import { tooltip, Button } from '$lib';
 	import FullDialog from '$wrappers/FullDialog.svelte';
 	import MiniDialog from '$wrappers/MiniDialog.svelte';
 
@@ -17,7 +17,7 @@
 <section class="modals">
 	<MiniDialog
 		button_props={{
-			tooltip_options: {
+			tooltip_props: {
 				content: 'Really, open the mini modal!'
 			}
 		}}
@@ -36,7 +36,7 @@
 	<FullDialog
 		bind:this={dialog}
 		onopening={() => console.log('opening!')}
-		button_props={{ tooltip_options: { content: 'Really, open the mega modal!' } }}
+		button_props={{ tooltip_props: { content: 'Really, open the mega modal!' } }}
 		heading="MegaModal"
 	>
 		{#snippet button_content()}
@@ -47,7 +47,10 @@
 		{/each}
 	</FullDialog>
 
-	<button onclick={() => dialog?.open()}>You can open the dialog externally, too!</button>
+	<hr />
+	<Button class="mt-4" onclick={() => dialog?.open()}>
+		You can open the dialog externally, too!
+	</Button>
 
 	<!-- TODO: replace with mdsvex snippet -->
 	<code>
@@ -74,6 +77,16 @@
 		background-color: var(--background);
 		width: 100%;
 		height: max-content;
+
+		& > :global(button) {
+			font-weight: bold;
+			font-size: large;
+			background: linear-gradient(darkcyan -70%, rgb(9, 94, 94) 25%, darkcyan 190%);
+			margin-inline: auto;
+			max-width: max-content;
+			padding: 0.5rem 1rem;
+			border-radius: 1em;
+		}
 	}
 	code {
 		white-space: pre-wrap;
