@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enumerate_runed_properties } from '$functions/helpers.svelte';
+	import Input from '$inputs/Input.svelte';
 	import Table, { type DataCell } from '$wrappers/Table.svelte';
 	import { fly } from 'svelte/transition';
 
@@ -63,7 +64,7 @@
 {#snippet custom_data_cell({ datum, key }: DataCell<Person>)}
 	{#if key === 'birthday'}
 		<td>
-			<input
+			<Input
 				type="date"
 				value={datum.birthday.toISOString().split('T')[0]}
 				oninput={(e) => (datum.birthday = new Date(e?.currentTarget.value))}
@@ -91,7 +92,7 @@
 		</td>
 	{:else if key === 'name'}
 		<td>
-			<input type="text" bind:value={datum.name} />
+			<Input type="text" bind:value={datum.name} />
 		</td>
 	{/if}
 {/snippet}
