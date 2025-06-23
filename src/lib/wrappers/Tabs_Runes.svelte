@@ -130,7 +130,7 @@
 	<div
 		id={`tab-content-${id}`}
 		{...tab_content_container_attributes}
-		class={`tab-content ${tab_content_container_attributes?.class} ;`}
+		class={['tab-content', tab_content_container_attributes?.class]}
 	>
 		{#each tabs as tab, i (tab)}
 			<div
@@ -207,14 +207,15 @@
 		color: var(--tab-color, inherit);
 		background-color: var(--tab-background-color, inherit);
 		cursor: pointer;
+		box-shadow: var(--tab-box-shadow, var(--shadow-2));
+		border: var(--tab-border-top, 1px solid);
 	}
 
 	[role='tab'][aria-selected='true'] {
+		box-shadow: var(--tab-box-shadow, var(--shadow-4));
 		border-style: inset;
-		border-top-width: var(--tab-border-top-width-selected, 2px);
-		border-top-color: var(--tab-border-top-color-selected, hsl(219deg 1% 72%));
 		border-bottom: var(--tab-border-bottom-selected, none);
-		background-color: var(--tab-background-color-selected);
+		background-color: var(--tab-background-color-selected, var(--tab-background-color, inherit));
 		color: var(--tab-color-selected, inherit);
 	}
 
