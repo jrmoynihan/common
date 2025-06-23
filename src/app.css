@@ -36,33 +36,49 @@
 			BlinkMacSystemFont,
 			'Segoe UI',
 			sans-serif;
-		background-color: var(--background);
-		color: var(--text);
+		--text: hsla(0 0% 100% / 1);
 		--tooltip-color: black;
 		--tooltip-font-weight: 400;
 		--tooltip-font-size: 12px;
 		--link-border-radius: 2rem;
-		--link-background-color: hsl(195, 61%, 34%);
 		--link-background-value: 195, 61%, 34%;
-		--link-hover-box-shadow: 0 0 4px 1px orange;
-		--link-hover-background-color: hsl(195, 61%, 44%);
-		--current-nav-page-box-shadow: 0 0 14px 4px orange;
+		--link-hover-box-shadow: 0 0 4px 1px var(--accent, orange);
 		--current-nav-page-background-color: hsl(195, 61%, 44%);
 		--orange: hsla(39, 100%, 50%, 1);
 		--spinner-background: var(--orange);
 		--spinner-color: black;
+		--link-background-color: var(--primary);
+		--input-invalid-background-color: oklch(70% 0.1 30 / 0.4);
+		--input-valid-background-color: oklch(50% 0.1 130 / 0.3);
 	}
 }
 
 [data-theme='light'] {
+	background-color: var(--background);
+	color: var(--text);
+	--primary: hsl(195, 61%, 34%);
 	--text: hsla(0 0% 0% / 1); /* main/text color */
 	--background: hsla(0 0% 100% / 1); /* background/alternate color */
-	--accent: hsl(195 81% 24%);
+	--accent: var(--orange);
+	--link-color: white;
+	--current-nav-page-color: white;
+	--link-hover-color: black;
+	--link-hover-background-color: oklch(from var(--accent) l c h / 30%);
+	--current-nav-page-box-shadow: 0 0 14px 4px var(--accent, orange);
 }
 
 [data-theme='dark'] {
-	--text: hsla(0 0% 100% / 1); /* main/text color */
-	--background: hsla(195 61% 14%); /* background/alternate color */
-	--accent: var(--orange);
+	background-color: var(--dark-background, var(--background));
+	color: var(--dark-text, var(--text));
+	--primary: hsl(195, 61%, 25%);
+	--dark-text: var(--dark-text, hsla(0 0% 100% / 1)); /* main/text color */
+	--dark-background: var(--background, hsla(195 61% 14%)); /* background/alternate color */
+	--dark-accent: var(--accent, var(--orange));
 	--shadow-color: 220 3% 85%; /* For <dialog> box-shadows */
+	--link-hover-background-color: var(
+		--dark-link-hover-background-color,
+		oklch(from var(--accent) l c h / 30%)
+	);
+	--link-background-color: var(--dark-primary, var(--primary));
+	--current-nav-page-box-shadow: 0 0 14px 4px var(--dark-accent, orange);
 }
