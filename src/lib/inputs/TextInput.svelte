@@ -1,11 +1,11 @@
 <script module lang="ts">
-	export interface TextInputProps<T> extends InputProps {
+	export interface TextInputProps<T> extends InputProps<T> {
 		input_element?: HTMLInputElement;
 		value?: unknown;
 		show_confirm?: boolean;
 		show_cancel?: boolean;
 		allow_enter_to_confirm?: boolean;
-		dynamic_button_styles?: DynamicStyleParameters;
+		button_props?: InputButtonProps<T>;
 		input_dynamic_styles?: DynamicStyleParameters;
 		label_element?: HTMLLabelElement;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
@@ -26,7 +26,7 @@
 	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import type { FormEventHandler } from 'svelte/elements';
 	import Input, { type InputProps } from './Input.svelte';
-	import InputButton from './InputButton.svelte';
+	import InputButton, { type InputButtonProps } from './InputButton.svelte';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
 	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
 
@@ -40,7 +40,7 @@
 		show_confirm = true,
 		show_cancel = true,
 		allow_enter_to_confirm = true,
-		dynamic_button_styles,
+		button_props,
 		input_dynamic_styles,
 		placeholder_props = {},
 		label_props = { ...placeholder_props },
@@ -73,28 +73,6 @@
 
 	function handle_keypress(e: KeyboardEvent) {
 		if (e.key === 'Enter' && allow_enter_to_confirm) confirm(e);
-		placeholder_element?.dispatchEvent(new Event('keypress'));
-	}
-	function handle_input(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-		oninput?.(e);
-		placeholder_element?.dispatchEvent(new Event('input'));
-	}
-
-	function handle_click(e: MouseEvent) {
-		confirm(e);
-	}
-	function handle_invalid(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-		oninvalid?.(e);
-		placeholder_element?.dispatchEvent(new Event('invalid'));
-	}
-
-	function handle_valid(e: Event & { currentTarget: EventTarget & HTMLInputElement }) {
-		onvalid?.(e);
-		placeholder_element?.dispatchEvent(new Event('valid'));
-	}
-	function handle_blur(e: FocusEvent & { currentTarget: EventTarget & HTMLInputElement }) {
-		onblur?.(e);
-		placeholder_element?.dispatchEvent(new Event('blur'));
 	}
 
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
@@ -107,11 +85,7 @@
 		bind:value
 		bind:valid
 		{id}
-		onblur={handle_blur}
-		onvalid={handle_valid}
-		oninvalid={handle_invalid}
 		onkeypress={handle_keypress}
-		oninput={handle_input}
 		type={'text'}
 		{...input_attributes}
 	/>
@@ -124,25 +98,25 @@
 	<div class={['_btn-container', { valid, show_confirm, value }]}>
 		{#if show_confirm}
 			<InputButton
-				dynamic_styles={dynamic_button_styles}
-				class={['_confirm-btn', { value, valid }]}
 				tabindex={value && valid ? 0 : -1}
-				onclick={handle_click}
+				onclick={confirm}
 				disabled={!value}
 				icon_props={{
 					icon: 'fa6-solid:check',
 					color: 'var(--text-input-button-color, buttontext)'
 				}}
+				{...button_props}
+				class={['_confirm-btn', { value, valid }]}
 			></InputButton>
 		{/if}
 		{#if show_cancel}
 			<InputButton
-				dynamic_styles={dynamic_button_styles}
-				class={['_cancel-btn', { valid, value }, !show_confirm && 'no-confirm']}
 				tabindex={value ? 0 : -1}
 				onclick={cancel}
 				disabled={!value}
 				icon_props={{ icon: 'fa6-solid:x', color: 'var(--text-input-button-color, buttontext)' }}
+				{...button_props}
+				class={['_cancel-btn', { valid, value }, !show_confirm && 'no-confirm']}
 			></InputButton>
 		{/if}
 	</div>
