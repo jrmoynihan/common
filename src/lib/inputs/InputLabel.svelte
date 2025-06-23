@@ -121,6 +121,7 @@
 				'input'
 				'after'
 				'invalid';
+			/* Helps with the placeholder translation, but will require the label to have an explicit width or flex-basis to work as a flex item. */
 			container-type: inline-size;
 			padding-inline: var(--input-label-padding-inline, var(--default-input-label-padding-inline));
 			padding-block: var(--input-label-padding-block, var(--default-input-label-padding-block));
