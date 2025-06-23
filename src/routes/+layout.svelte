@@ -11,12 +11,18 @@
 	import '../../src/mdsvex.css';
 	import type { LayoutData } from './$types';
 	import { aside_visible } from './stores.svelte.js';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	type LayoutProps = { data: LayoutData; children: Snippet };
 
 	let { data, children }: LayoutProps = $props();
 	const { nav_links } = data;
 	let trigger: boolean = $state(false);
+	let dark_mode = new MediaQuery('(prefers-color-scheme: dark)');
+	let bg_color: string = $state(dark_mode.current ? 'hsla(195 61% 14%)' : 'hsla(0 0% 100% / 1)');
+	let accent_color: string = $state(
+		dark_mode.current ? 'hsla(39 100% 50% / 1)' : 'hsl(195 81% 24%)'
+	);
 
 	beforeNavigate(async (nav) => {
 		const { from, to } = nav;
@@ -29,23 +35,34 @@
 			trigger = !trigger;
 		}
 	});
+
+	function handle_bg_color_change(e: Event) {
+		const color = (e.target as HTMLInputElement).value;
+		dark_mode.current &&
+		getComputedStyle(document.documentElement).getPropertyValue('--dark-background')
+			? document.documentElement.style.setProperty('--dark-background', color)
+			: document.documentElement.style.setProperty('--background', color);
+	}
+
+	function handle_accent_color_change(e: Event) {
+		const color = (e.target as HTMLInputElement).value;
+		dark_mode.current &&
+		getComputedStyle(document.documentElement).getPropertyValue('--dark-background')
+			? document.documentElement.style.setProperty('--dark-accent', color)
+			: document.documentElement.style.setProperty('--accent', color);
+	}
 </script>
 
 <div class="app-container" class:padded-left={$aside_visible}>
-	<div class="top right">
+	<div class="top right flex flex-col place-items-center gap-2">
 		<LightDarkToggleV2 />
+		<input type="color" bind:value={bg_color} oninput={handle_bg_color_change} />
+		<input type="color" bind:value={accent_color} oninput={handle_accent_color_change} />
 	</div>
 	<h1>
 		<a href="/" class="cool-text">The Commons</a>
 	</h1>
-	<Navigation
-		links={nav_links}
-		link_current_page_styles="color: white"
-		dynamic_link_styles={{
-			styles: `color: white`,
-			hover_styles: 'background: darkorange'
-		}}
-	/>
+	<Navigation links={nav_links} />
 	<main>
 		<TransitionRunes bind:trigger>
 			{@render children()}
@@ -56,9 +73,20 @@
 	{/if}
 </div>
 
-<!-- <SvelteToast /> -->
-
 <style>
+	input[type='color'] {
+		width: 35px;
+		height: 100%;
+		place-self: center;
+		display: flex;
+	}
+	input[type='color' i]::-webkit-color-swatch-wrapper {
+		border-radius: 100%;
+		aspect-ratio: 1 / 1;
+	}
+	input[type='color' i]::-webkit-color-swatch {
+		border-radius: 100%;
+	}
 	.app-container {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr);
