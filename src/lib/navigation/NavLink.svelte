@@ -107,18 +107,24 @@
 			&:hover,
 			&:focus-visible {
 				background-color: var(--link-hover-background-color);
-				color: var(--link-hover-color);
+				color: var(--link-hover-color, var(--link-color, var(--text, inherit)));
 				box-shadow: var(--link-hover-box-shadow);
 			}
 			&.current {
 				box-shadow: var(--current-nav-page-box-shadow);
-				background-color: var(--current-nav-page-background-color);
-				color: var(--current-nav-page-color);
+				background-color: var(
+					--current-nav-page-background-color,
+					var(--link-color, var(--text, inherit))
+				);
+				color: var(--current-nav-page-color, var(--link-color, var(--text, inherit)));
 			}
 			&.active-path {
 				box-shadow: var(--current-nav-page-box-shadow);
-				background-color: var(--current-nav-page-background-color);
-				color: var(--current-nav-page-color);
+				background-color: var(
+					--current-nav-page-background-color,
+					var(--link-color, var(--text, inherit))
+				);
+				color: var(--current-nav-page-color, var(--link-color, var(--text, inherit)));
 			}
 		}
 	}
