@@ -1,14 +1,16 @@
 <script module lang="ts">
-	export interface NumericInputProps<K> extends Omit<InputProps, 'placeholder'> {
-		input_element?: HTMLInputElement;
+	export interface NumericInputProps<T> extends Omit<InputProps<T>, 'placeholder'> {
+		/** The value of the input. */
 		value?: string | number | string[] | null;
+		/** Whether the input is valid. */
 		valid?: boolean;
-		input_dynamic_styles?: DynamicStyleParameters;
+		/** A binding to the label element that wraps the input. */
 		label_element?: HTMLLabelElement;
-		invalid_msg?: string;
+		/** A binding to the input element that is bound to the value. */
+		input_element?: HTMLInputElement;
+		/** Whether to show the spinner buttons. */
 		show_spinner_buttons?: boolean;
-		container_styles?: DynamicStyleParameters;
-		input_styles?: DynamicStyleParameters;
+		/** Props on the `<Placeholder>` element that wraps the input. */
 		placeholder_props?: ComponentProps<typeof Placeholder>;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
 		label_props?: ComponentProps<typeof InputLabel>;
@@ -23,8 +25,7 @@
 	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
 </script>
 
-<script lang="ts" generics="T, K">
-	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
+<script lang="ts" generics="T">
 	import { type ComponentProps, type Snippet } from 'svelte';
 	import Icon, { type IconProps } from '@iconify/svelte';
 	import Input, { type InputProps } from './Input.svelte';
@@ -39,7 +40,6 @@
 		label_element = $bindable(),
 		input_dynamic_styles = $bindable(),
 		show_spinner_buttons = true,
-		input_styles,
 		placeholder_props,
 		label_props,
 		spinner_button,
@@ -47,7 +47,7 @@
 		down_spinner_button,
 		children,
 		...input_attributes
-	}: NumericInputProps<K> = $props();
+	}: NumericInputProps<T> = $props();
 </script>
 
 {#snippet default_spinner_button(icon_props: IconProps, button_props: InputButtonProps<T>)}
