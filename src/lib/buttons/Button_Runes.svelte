@@ -59,10 +59,10 @@
 	transition:transition={transition_config}
 	use:dynamic_style={dynamic_styles}
 	use:tooltip={tooltip_props}
-	class={[`_button`, attributes.class]}
 	type="button"
 	{disabled}
 	{...attributes}
+	class={[`_button`, attributes?.class]}
 >
 	{#if icon_props && icon_position === 'before'}
 		{@render icon(icon_props)}
@@ -75,7 +75,7 @@
 	{/if}
 </button>
 
-<style lang="scss">
+<style>
 	@layer common.button {
 		._button {
 			cursor: pointer;
