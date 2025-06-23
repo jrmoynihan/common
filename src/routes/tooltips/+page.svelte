@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { tooltip, type TooltipDirections } from '$actions/tooltip/tooltip.svelte.js';
+	import { type TooltipDirections } from '$actions/tooltip/tooltip.svelte.js';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import Icon from '@iconify/svelte';
+	import Input from '$inputs/Input.svelte';
+	import { Button, Grid } from '$lib';
 	let position: TooltipDirections = $state('top');
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width = 150;
@@ -63,33 +65,31 @@
 </script>
 
 {#snippet tooltip_example({ text, num }: Partial<{ text: string; num: number }>)}
-	<button>example from a snippet: {text} {num}</button>
+	<Button>example from a snippet: {text} {num}</Button>
 {/snippet}
 <section id="tooltips-section">
 	<div class="settings full-width">
 		{#each positions as p}
-			<label>
-				<input type="radio" bind:group={position} value={p} />
+			<label class="p-4">
+				<Input type="radio" bind:group={position} value={p} />
 				{capitalize(p)}
 			</label>
 		{/each}
-		<label for="disabled-toggle">
+		<label class="p-4">
 			Disable Tooltip:
 			<ToggleSwitch bind:checked={disabled} />
 		</label>
-		<label for="keep-visible-toggle">
+		<label class="p-4">
 			Keep Tooltip Visible:
 			<ToggleSwitch bind:checked={keep_visible} />
 		</label>
 	</div>
-
-	<!-- position, -->
-	<button class="full-width" use:tooltip={tooltip_props}>
+	<Button class="full-width" {tooltip_props}>
 		Tooltips Can Adjust Their Position Automatically
-	</button>
-	<button
+	</Button>
+	<Button
 		class="full-width"
-		use:tooltip={{
+		tooltip_props={{
 			position,
 			visible: initially_visible_example && visible,
 			disabled,
@@ -99,9 +99,9 @@
 		onclick={() => (initially_visible_example = !initially_visible_example)}
 	>
 		Tooltips Can Be Used Without the Mouse
-	</button>
-	<button
-		use:tooltip={{
+	</Button>
+	<Button
+		tooltip_props={{
 			content: dynamic_tooltip_text,
 			position,
 			disabled,
@@ -110,27 +110,27 @@
 		}}
 	>
 		Dynamically Updating Tooltip Text
-	</button>
-	<input
+	</Button>
+	<Input
 		type="text"
 		class="tooltip-text-input"
 		bind:value={dynamic_tooltip_text}
-		use:tooltip={{
+		tooltip_props={{
 			content_snippet: tooltip_example,
 			content_args: { text: dynamic_tooltip_text }
 		}}
 	/>
-	<input
+	<Input
 		type="number"
 		bind:value={dynamic_tooltip_text_num}
-		use:tooltip={{
+		tooltip_props={{
 			content_snippet: tooltip_example,
 			content_args: { num: dynamic_tooltip_text_num }
 		}}
 	/>
 
-	<button
-		use:tooltip={{
+	<Button
+		tooltip_props={{
 			position,
 			content: keep_visible
 				? `I'll stick around. It's useful for debugging styles on the tip too!`
@@ -140,10 +140,10 @@
 		}}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
-	</button>
-	<button
+	</Button>
+	<Button
 		id="custom-component-button"
-		use:tooltip={{
+		tooltip_props={{
 			position,
 			content: `I've got a <br/> custom component!`,
 			visible,
@@ -151,9 +151,9 @@
 		}}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
-	</button>
-	<button
-		use:tooltip={{
+	</Button>
+	<Button
+		tooltip_props={{
 			position,
 			content: `I'm so stylin'!`,
 			show_arrow: false,
@@ -162,10 +162,12 @@
 		}}
 	>
 		Tooltips Can Be Styled
-	</button>
-	<div
-		style="display:grid; grid-template-columns: repeat(3, minmax(0, max-content)); column-gap: 0.5rem; row-gap:1rem;"
-		use:tooltip={{
+	</Button>
+	<Grid
+		columns={3}
+		max_column_size="max-content"
+		gap="1rem 0.5rem"
+		tooltip_props={{
 			content: 'There are different delays on each the tooltips to achieve a staggered effect',
 			styles: hot_sun_styles,
 			position: 'left',
@@ -177,24 +179,25 @@
 		<div></div>
 		{#each styling_green_map.entries() as [rule, value], i}
 			{@const rule_value = styling_green_map.get(rule)}
-			<input
+			<Input
 				type="text"
 				value={rule}
 				onblur={(e) => styling_green_map.set(e.currentTarget.value, value)}
 			/>
-			<input
+			<Input
 				type="text"
 				{value}
 				oninput={(e) => styling_green_map.set(rule, e.currentTarget.value)}
 			/>
-			<button class="delete" onclick={() => styling_green_map.delete(rule)}
-				><Icon icon="fa-solid:trash" /></button
-			>
+			<Button class="delete" onclick={() => styling_green_map.delete(rule)}>
+				<Icon icon="fa-solid:trash" />
+			</Button>
 		{/each}
-		<button class="add" onclick={() => styling_green_map.set('', '')}
-			><Icon icon="fa-solid:plus" />Add CSS Rule</button
-		>
-	</div>
+		<Button class="add" onclick={() => styling_green_map.set('', '')}>
+			<Icon icon="fa-solid:plus" />
+			Add CSS Rule
+		</Button>
+	</Grid>
 </section>
 
 <style>
@@ -204,6 +207,21 @@
 		flex-wrap: wrap;
 		place-items: center;
 		margin: auto;
+		& :global(button) {
+			font-weight: bold;
+			font-size: large;
+			background: linear-gradient(darkcyan -70%, rgb(9, 94, 94) 25%, darkcyan 190%);
+			margin: auto;
+			max-width: max-content;
+			border-radius: 20px 50px 20px 50px;
+			padding: 1rem;
+			color: white;
+			border: none;
+			transition: transform 250ms ease-in-out;
+			&:active {
+				scale: 0.98, 0.98, 1;
+			}
+		}
 	}
 	.settings {
 		display: flex;
@@ -222,47 +240,4 @@
 		margin: auto;
 		gap: 0.5rem;
 	}
-	button {
-		font-weight: bold;
-		font-size: large;
-		background: linear-gradient(darkcyan -70%, rgb(9, 94, 94) 25%, darkcyan 190%);
-		margin: auto;
-		max-width: max-content;
-		border-radius: 20px 50px 20px 50px;
-		padding: 1rem;
-		color: white;
-		border: none;
-		transition: transform 250ms ease-in-out;
-		&:active {
-			scale: 0.98, 0.98, 1;
-		}
-		/* &.delete,
-		&.add {
-			border: initial;
-			border-radius: 1rem;
-		}
-		&.delete {
-			background-color: hsl(0, 41%, 41%);
-		}
-		&.add {
-			background-color: darkcyan;
-			grid-column: 1 / span 2;
-			display: flex;
-			gap: 1rem;
-			place-items: center;
-			place-content: center;
-		} */
-	}
-	/* h4 {
-		text-align: center;
-	} */
-	input {
-		box-sizing: border-box;
-		padding: 1rem;
-		border-radius: 1rem;
-		margin: auto;
-	}
-	/* .tooltip-text-input {
-		width: 100%;
-	} */
 </style>
