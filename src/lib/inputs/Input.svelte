@@ -1,7 +1,8 @@
 <script lang="ts" module>
 	import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
+	import type { TooltipWithContentProps } from '$actions/tooltip/tooltip.svelte';
 
-	export interface InputProps extends HTMLInputAttributes {
+	export interface InputProps<T> extends HTMLInputAttributes {
 		/** A binding to the `<input>` element. */
 		input_element?: HTMLInputElement;
 		/** A binding to the value of the input. */
@@ -12,6 +13,8 @@
 		valid?: boolean;
 		/** Styles to apply to the input element including hover, focus, and active styles. */
 		input_dynamic_styles?: DynamicStyleParameters;
+		/** Props to pass to the tooltip component. */
+		tooltip_props?: TooltipProps<T> | TooltipWithContentProps<T>;
 		/** The key used to confirm the input. Defaults to `Enter`.  Set to `null` to disable `onkeypress` confirmations. */
 		confirm_key?: string;
 		/** A callback that runs when the `confirm_key` is pressed.  If an `onkeypress` event handler is provided, this will be ignored. */
@@ -21,8 +24,8 @@
 	}
 </script>
 
-<script lang="ts">
-	import { dynamic_style } from '$lib';
+<script lang="ts" generics="T">
+	import { dynamic_style, tooltip, type TooltipProps } from '$lib';
 	import { onMount } from 'svelte';
 	import type { FormEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
@@ -33,12 +36,13 @@
 		valid = $bindable(true),
 		hidden = $bindable(false),
 		input_dynamic_styles = $bindable(),
+		tooltip_props = $bindable({ disabled: true, visible: false }),
 		checked = $bindable(),
 		confirm_key = 'Enter',
 		onconfirm,
 		onvalid,
 		...input_attributes
-	}: InputProps = $props();
+	}: InputProps<T> = $props();
 
 	function confirm(e: any) {
 		onconfirm?.(e);
@@ -71,6 +75,7 @@
 {#if group}
 	<input
 		use:dynamic_style={input_dynamic_styles}
+		use:tooltip={tooltip_props}
 		bind:this={input_element}
 		bind:group
 		{value}
@@ -83,6 +88,7 @@
 {:else}
 	<input
 		use:dynamic_style={input_dynamic_styles}
+		use:tooltip={tooltip_props}
 		bind:this={input_element}
 		bind:value
 		class:value={input_attributes.type === 'number' ? value !== undefined && value !== null : value}

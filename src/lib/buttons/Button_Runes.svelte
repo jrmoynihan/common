@@ -1,7 +1,7 @@
 <script module lang="ts">
 	export interface ButtonProps<T> extends HTMLButtonAttributes {
 		/** Options to style the tooltip or modify its visible/disabled state */
-		tooltip_options?: TooltipProps<T> | TooltipWithContentProps<T>;
+		tooltip_props?: TooltipProps<T> | TooltipWithContentProps<T>;
 		/** Style the button, allowing dynamic updates */
 		dynamic_styles?: DynamicStyleParameters;
 		/** The position of the icon relative to the children/content of the button */
@@ -34,8 +34,9 @@
 	// TODO: box-shadow elevation options
 
 	let {
-		tooltip_options = {
-			disabled: true
+		tooltip_props = {
+			disabled: true,
+			visible: false
 		},
 		children,
 		dynamic_styles,
@@ -57,7 +58,7 @@
 	bind:this={button}
 	transition:transition={transition_config}
 	use:dynamic_style={dynamic_styles}
-	use:tooltip={{ ...tooltip_options }}
+	use:tooltip={tooltip_props}
 	class={[`_button`, attributes.class]}
 	type="button"
 	{disabled}
