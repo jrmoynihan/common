@@ -1,12 +1,10 @@
 <script module lang="ts">
-	export interface DateInputProps<T> extends Omit<HTMLInputAttributes, 'date' | 'min' | 'max'> {
+	export interface DateInputProps<T>
+		extends Omit<InputProps<T> & HTMLInputAttributes, 'date' | 'min' | 'max'> {
 		date?: Temporal.ZonedDateTime;
 		min?: string | number | Temporal.ZonedDateTime | null | undefined;
 		max?: string | number | Temporal.ZonedDateTime | null | undefined;
 		label_props?: InputLabelProps<T>;
-		input_attributes?: HTMLInputAttributes;
-		input_dynamic_styles?: DynamicStyleParameters;
-		is_valid?: boolean;
 		on_input?: () => void | Promise<void>;
 		date_input?: HTMLInputElement;
 		label_element?: HTMLLabelElement;
@@ -14,11 +12,10 @@
 </script>
 
 <script lang="ts" generics="T">
-	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import { Temporal } from '@js-temporal/polyfill';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
-	import Input from './Input.svelte';
+	import Input, { type InputProps } from './Input.svelte';
 
 	// Temporal API proposal status:
 	// https://tc39.es/proposal-temporal/docs/cookbook.html#current-date-and-time
@@ -28,8 +25,6 @@
 		min = date.subtract({ years: 100 }),
 		max = date.add({ years: 100 }),
 		label_props,
-		input_dynamic_styles = $bindable(),
-		is_valid = $bindable(false),
 		on_input,
 		date_input = $bindable(),
 		label_element = $bindable(),
@@ -96,15 +91,15 @@
 	const max_internal_string_date = $derived(temporalDateToString(max));
 	const min_internal_string_date = $derived(temporalDateToString(min));
 
+	// Update the label with the validation message when the input is in/valid
 	$effect(() => {
 		internal_string_date;
-		if (date_input) {
-			is_valid = date_input.checkValidity();
-			if (label_props) {
-				label_props.invalid_text = date_input.validationMessage;
-			}
+		if (date_input && label_props) {
+			date_input.checkValidity();
+			label_props.invalid_text = date_input.validationMessage;
 		}
 	});
+	// Update the date when the input value changes
 	$effect(() => {
 		date = stringToTemporalDate(internal_string_date);
 	});
@@ -113,15 +108,15 @@
 <InputLabel bind:label_element {...label_props}>
 	<Input
 		type="date"
-		bind:input_dynamic_styles
+		bind:input_dynamic_styles={input_attributes.input_dynamic_styles}
 		bind:value={internal_string_date}
 		bind:input_element={date_input}
 		id={crypto.randomUUID()}
 		oninput={(e) => input_changed(e.currentTarget.value)}
 		max={max_internal_string_date}
 		min={min_internal_string_date}
-		class={[input_attributes.required && 'required', input_attributes.class]}
 		{...input_attributes}
+		class={[input_attributes.required && 'required', input_attributes.class]}
 	/>
 	<!-- TODO: Add datalist option https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist#date_and_time_types -->
 </InputLabel>
