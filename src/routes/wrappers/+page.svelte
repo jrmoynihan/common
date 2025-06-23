@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
 	import {
 		direction_options,
 		grid_fit_options,
