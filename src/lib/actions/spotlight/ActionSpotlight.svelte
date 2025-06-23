@@ -155,6 +155,9 @@
 {#if visible}
 	<button
 		transition:fade={{ duration, delay, easing: cubicOut }}
+		role="dialog"
+		aria-live="polite"
+		aria-label="spotlight"
 		class="spotlight"
 		class:visible
 		class:circle={shape === 'circle'}
@@ -176,7 +179,7 @@
 	</button>
 {/if}
 
-<style lang="scss">
+<style>
 	svg {
 		position: fixed;
 		width: 100vw;
