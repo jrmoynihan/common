@@ -41,6 +41,10 @@
 	{@const label = item instanceof Object && label_key in item ? item[label_key] : item}
 	{@const value =
 		value_key !== undefined && item instanceof Object && value_key in item ? item[value_key] : item}
+	{@const is_checked =
+		value_key !== undefined
+			? group === value
+			: group && (group as T)[label_key] === item[label_key]}
 	<InputLabel
 		text={typeof label === 'string' ? label : JSON.stringify(label)}
 		{id}
@@ -52,7 +56,7 @@
 			{value}
 			{name}
 			type="radio"
-			data-checked={group === item}
+			data-checked={is_checked}
 			{...input_attributes}
 		/>
 		{@render children?.(item)}
