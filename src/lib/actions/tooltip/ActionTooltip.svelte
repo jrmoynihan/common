@@ -97,6 +97,9 @@ https://web.dev/building-a-tooltip-component/
 				left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
 				top: calc(anchor(bottom) + var(--distance));
 				bottom: auto;
+				/* could replace the `left` property? */
+				justify-self: anchor-center;
+				/* position-area: bottom; doesn't allow for spacing control though */
 				&.fallback {
 					position-try: flip-block, flip-inline, flip-start;
 				}
@@ -106,6 +109,9 @@ https://web.dev/building-a-tooltip-component/
 				left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
 				bottom: calc(anchor(top) + var(--distance));
 				top: auto;
+				/* could replace the `left` property? */
+				justify-self: anchor-center;
+				/* position-area: top; doesn't allow for spacing control though */
 				&.fallback {
 					position-try: flip-block, flip-inline, flip-start;
 				}
@@ -115,6 +121,9 @@ https://web.dev/building-a-tooltip-component/
 				right: calc(anchor(left) + var(--distance));
 				left: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+				/* could replace the `top` property? */
+				align-self: anchor-center;
+				/* position-area: left; doesn't allow for spacing control though */
 				&.fallback {
 					position-try: flip-inline, flip-block, flip-start;
 				}
@@ -124,6 +133,9 @@ https://web.dev/building-a-tooltip-component/
 				left: calc(anchor(right) + var(--distance));
 				right: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+				/* could replace the `top` property? */
+				align-self: anchor-center;
+				/* position-area: right; doesn't allow for spacing control though */
 				&.fallback {
 					position-try: flip-inline, flip-block, flip-start;
 				}
