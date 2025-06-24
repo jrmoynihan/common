@@ -30,12 +30,7 @@ import type { RadioGroupProps } from '$inputs/RadioGroup.svelte';
 import NumericInput from './inputs/NumericInput.svelte';
 import type { NumericInputProps } from './inputs/NumericInput.svelte';
 import Select from './inputs/Select.svelte';
-import type {
-	SelectOption,
-	SelectOptionGroup,
-	SelectOptions,
-	SelectProps
-} from './inputs/Select.svelte';
+import type { SelectOption, SelectOptionGroup, SelectProps } from './inputs/Select.svelte';
 import DateInput from './inputs/TemporalDateInput.svelte';
 import type { DateInputProps } from './inputs/TemporalDateInput.svelte';
 import TextInput from './inputs/TextInput.svelte';
@@ -89,12 +84,12 @@ import type { TransitionProps } from './wrappers/Transition_Runes.svelte';
 
 // Exports
 // Functions
-export { tutorial } from '$actions/general.svelte.js';
-export {
-	spotlight,
-	type SpotlightParameters,
-	type SpotlightStep
-} from '$actions/spotlight/spotlight.svelte.js';
+// export { tutorial } from '$actions/general.svelte.js';
+// export {
+// 	spotlight,
+// 	type SpotlightParameters,
+// 	type SpotlightStep
+// } from '$actions/spotlight/spotlight.svelte.js';
 export {
 	capitalize,
 	clamp,
@@ -234,7 +229,6 @@ export {
 	type ScrollProgressProps,
 	type SelectOption,
 	type SelectOptionGroup,
-	type SelectOptions,
 	type SelectProps,
 	type TableProps,
 	type TabsProps,
