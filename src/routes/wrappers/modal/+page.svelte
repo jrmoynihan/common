@@ -1,13 +1,13 @@
-<script lang="ts" generics="T">
+<script lang="ts">
 	import { tooltip, Button } from '$lib';
 	import FullDialog from '$wrappers/FullDialog.svelte';
 	import MiniDialog from '$wrappers/MiniDialog.svelte';
 
-	let dialog = $state<FullDialog<unknown>>();
+	let dialog = $state<FullDialog>();
 </script>
 
 {#snippet lorem()}
-	<p use:tooltip={{ content: 'Hello again!' }}>
+	<p {@attach tooltip({ content: 'Hello again!' })}>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, tenetur nihil voluptate
 		placeat quo delectus sunt consequatur tempore maiores aliquid consequuntur illum molestiae
 		corrupti quaerat animi perferendis nesciunt nostrum optio!
@@ -15,30 +15,14 @@
 {/snippet}
 
 <section class="modals">
-	<MiniDialog
-		button_props={{
-			tooltip_props: {
-				content: 'Really, open the mini modal!'
-			}
-		}}
-		heading="MiniModal"
-	>
+	<MiniDialog heading="MiniModal">
 		{#snippet button_content()}
 			Open the mini modal!
 		{/snippet}
-		<p use:tooltip={{ content: 'Hello again!' }}>
-			Hello! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti, tenetur nihil
-			voluptate placeat quo delectus sunt consequatur tempore maiores aliquid consequuntur illum
-			molestiae corrupti quaerat animi perferendis nesciunt nostrum optio!
-		</p>
+		{@render lorem()}
 	</MiniDialog>
 
-	<FullDialog
-		bind:this={dialog}
-		onopening={() => console.log('opening!')}
-		button_props={{ tooltip_props: { content: 'Really, open the mega modal!' } }}
-		heading="MegaModal"
-	>
+	<FullDialog bind:this={dialog} onopening={() => console.log('opening!')} heading="MegaModal">
 		{#snippet button_content()}
 			Open the mega modal!
 		{/snippet}
@@ -48,7 +32,11 @@
 	</FullDialog>
 
 	<hr />
-	<Button class="mt-4" onclick={() => dialog?.open()}>
+	<Button
+		class="mt-4"
+		{@attach tooltip({ content: 'Really, open the dialog!' })}
+		onclick={() => dialog?.open()}
+	>
 		You can open the dialog externally, too!
 	</Button>
 

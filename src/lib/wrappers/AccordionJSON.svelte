@@ -59,7 +59,7 @@
 				)}
 			{/if}
 		{/snippet}
-		{#snippet summary_content()}
+		{#snippet summary()}
 			{#if key}
 				<span class="key">{key}</span>
 			{/if}

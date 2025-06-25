@@ -73,7 +73,7 @@
 	</p>
 </section>
 
-<style lang="scss">
+<style>
 	section {
 		display: grid;
 		justify-content: center;

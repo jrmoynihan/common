@@ -29,7 +29,7 @@
 	</TransitionRunes>
 </section>
 
-<style lang="scss">
+<style>
 	section {
 		display: grid;
 		grid-auto-rows: max-content;

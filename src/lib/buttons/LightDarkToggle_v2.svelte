@@ -129,7 +129,7 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 	</svg>
 </button>
 
-<style lang="scss">
+<style>
 	/* Easings Source: 
 	'https://unpkg.com/open-props/easings.min.css';
 	*/

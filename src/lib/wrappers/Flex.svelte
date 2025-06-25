@@ -1,25 +1,16 @@
 <script module lang="ts">
-	import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
-	import type { TooltipWithContentProps } from '$actions/tooltip/tooltip.svelte';
 	import type { align_self_options, overflow_options } from '$functions/helpers.svelte';
 	import {
-		dynamic_style,
-		tooltip,
 		type align_content_options,
 		type align_items_options,
 		type direction_options,
 		type justify_content_options,
-		type TooltipProps,
 		type wrap_options
 	} from '$lib';
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	export interface FlexProps extends HTMLAttributes<HTMLDivElement> {
-		/** Style the button, allowing dynamic updates */
-		dynamic_styles?: DynamicStyleParameters;
-		/** Options to style the tooltip or modify its visible/disabled state */
-		tooltip_props?: TooltipProps | TooltipWithContentProps;
 		direction?: keyof typeof direction_options;
 		wrap?: keyof typeof wrap_options;
 		justify_content?: keyof typeof justify_content_options;
@@ -34,8 +25,6 @@
 
 <script lang="ts">
 	let {
-		dynamic_styles,
-		tooltip_props = { disabled: true, visible: false },
 		direction,
 		wrap,
 		justify_content,
@@ -50,8 +39,6 @@
 </script>
 
 <div
-	use:dynamic_style={dynamic_styles}
-	use:tooltip={tooltip_props}
 	class={['_flex', attributes.class]}
 	style:--flex-direction={direction}
 	style:--flex-wrap={wrap}

@@ -73,7 +73,7 @@
 	{/each}
 </div>
 
-<style lang="scss">
+<style>
 	.items {
 		display: grid;
 		width: 100%;

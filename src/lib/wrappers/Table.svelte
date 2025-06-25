@@ -63,6 +63,7 @@
 	import type { IconProps } from '@iconify/svelte';
 	import type { Snippet } from 'svelte';
 	import { SvelteDate, SvelteMap } from 'svelte/reactivity';
+	import { tooltip } from '$lib/attach/tooltip/tooltip.svelte';
 
 	let {
 		data = $bindable([]),
@@ -197,18 +198,18 @@
 			onclick={() => sort_strings(key)}
 			style={'padding: 0.25rem;'}
 			icon_props={{ icon }}
-			tooltip_props={{
+			{@attach tooltip({
 				content: `Sort strings (current: ${order === 'desc' ? 'A-Z' : 'Z-A'})`
-			}}
+			})}
 		/>
 	{:else if typeof datum_0 === 'number' || typeof datum_0 === 'boolean' || datum_0 instanceof Date || datum_0 instanceof BigInt || datum_0 instanceof SvelteDate}
 		<ButtonRunes
 			class={['sort-button', order]}
 			onclick={() => sort_numbers_or_boolean_or_dates(key)}
 			icon_props={{ icon }}
-			tooltip_props={{
+			{@attach tooltip({
 				content: `Sort numbers (current: ${order === 'desc' ? 'low-to-high' : 'high-to-low'})`
-			}}
+			})}
 		/>
 		<!-- TODO: other data types -->
 	{/if}
@@ -310,7 +311,7 @@
 	{@render footer?.(data)}
 </table>
 
-<style lang="scss" module="mixed">
+<style module="mixed">
 	table {
 		--table-border-color: hsla(0, 0%, 80%, 0.3);
 		--table-cell-padding-inline: 0.5rem;

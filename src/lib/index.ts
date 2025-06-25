@@ -16,7 +16,7 @@ import ToggleSwitch from './buttons/ToggleSwitch.svelte';
 import type { ToggleSwitchProps } from './buttons/ToggleSwitch.svelte';
 
 // Tooltips
-import ActionTooltip from './actions/tooltip/ActionTooltip.svelte';
+import ActionTooltip from './attach/tooltip/AttachedTooltip.svelte';
 
 // Inputs
 import Checkbox from '$inputs/Checkbox.svelte';
@@ -114,6 +114,8 @@ export {
 	type PartiallyOptional,
 	type PartiallyRequired,
 	type PrettifyIntersection,
+	type PartialWithNonNullableValues,
+	type NonNullableValues,
 	align_items_options,
 	align_content_options,
 	justify_content_options,
@@ -128,7 +130,7 @@ export {
 	tooltip,
 	type TooltipDirections,
 	type TooltipProps
-} from './actions/tooltip/tooltip.svelte.js';
+} from './attach/tooltip/tooltip.svelte.js';
 export { willChange } from './actions/will-change.js';
 export {
 	delete_local_storage_item,

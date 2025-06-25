@@ -33,7 +33,7 @@
 	{/each}
 </ul>
 
-<style lang="scss">
+<style>
 	.slider {
 		position: relative;
 		display: flex;
@@ -68,7 +68,7 @@
 		display: flex;
 		place-items: center;
 		flex-grow: 1;
-		// --target: var(--i);
+		/* --target: var(--i); */
 	}
 
 	.slider-link {
@@ -85,11 +85,12 @@
 		--target: --0;
 	}
 
-	// .slider-item:nth-child(2) {
+	/* .slider-item:nth-child(2) {
 	//     --is: --item-2;
 	// }
 
 	// .slider:has(:nth-child(2) > .slider-link:is(:hover, :focus-visible)) {
 	//     --target: --item-2;
 	// }
+	*/
 </style>

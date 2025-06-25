@@ -2,20 +2,14 @@
 	export interface NavLinkProps extends HTMLAnchorAttributes {
 		/** The navigation link to display. */
 		nav_link: NavigationLink;
-		/** Tooltip options to apply to the nav links. */
-		tooltip_options?: TooltipProps;
 		/** Styles to apply to a link when it is the _currently active_ page URL. */
 		current_page_styles?: string;
-		/** Dynamic styles to apply to the nav links. */
-		dynamic_styles?: DynamicStyleParameters;
 		/** The children snippet to render. */
 		children?: Snippet;
 	}
 </script>
 
 <script lang="ts">
-	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import Icon from '@iconify/svelte';
@@ -23,14 +17,7 @@
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
 	import type { NavigationLink } from './nav-functions.js';
 
-	let {
-		nav_link,
-		tooltip_options = { disabled: true, visible: false },
-		current_page_styles,
-		dynamic_styles,
-		children,
-		...anchor_attributes
-	}: NavLinkProps = $props();
+	let { nav_link, current_page_styles, children, ...anchor_attributes }: NavLinkProps = $props();
 
 	let is_current_page = $derived(nav_link.isCurrentPage(page));
 	let is_page_active = $derived(nav_link.is_page_within_path(page));
@@ -73,13 +60,9 @@
 	}
 </script>
 
+<!-- TODO: convert/merge dynamic styles to a single attachment using $derived state to trigger style updates -->
 <a
 	data-sveltekit-preload-data="hover"
-	use:tooltip={tooltip_options}
-	use:dynamic_style={{
-		...dynamic_styles,
-		styles: is_current_page ? current_page_styles : dynamic_styles?.styles
-	}}
 	class={['_link', anchor_attributes.class]}
 	class:current={is_current_page}
 	class:active-path={is_page_active}
@@ -93,7 +76,7 @@
 	{nav_link.link_text}
 </a>
 
-<style lang="scss">
+<style>
 	@layer common.navlink {
 		._link {
 			font-family: var(--link-font, var(--font, inherit));

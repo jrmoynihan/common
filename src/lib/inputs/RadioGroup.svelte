@@ -1,9 +1,8 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
 
-	type InputWithLabelProps = InputProps & InputLabelProps;
 	export interface RadioGroupProps<T, K extends keyof T & string>
-		extends Omit<InputWithLabelProps, 'value' | 'children'> {
+		extends Omit<InputProps & InputLabelProps, 'value' | 'children'> {
 		/** An array or iterable of items to display in the radio group. */
 		items: ArrayLike<T> | Iterable<T>;
 		/** Attributes to pass to the label of the selected item. */

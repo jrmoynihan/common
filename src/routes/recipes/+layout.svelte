@@ -35,6 +35,3 @@
 		{@render children()}
 	</TransitionRunes>
 </section>
-
-<style lang="scss">
-</style>

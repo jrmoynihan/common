@@ -14,7 +14,7 @@
 	{/if}
 </code>
 
-<style lang="scss">
+<style>
 	:global(.my-code) {
 		background-color: hsla(195, 81%, 24%, 60%);
 		padding: 0 0.25rem;

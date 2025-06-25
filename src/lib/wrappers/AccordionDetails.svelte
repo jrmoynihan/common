@@ -17,8 +17,6 @@
 		custom_icon?: Snippet;
 		/** Attributes for the `<summary>` element. */
 		summary_attributes?: HTMLAttributes<HTMLElement>;
-		/** Text to display within the `<summary>` element. */
-		summary_text?: string;
 		/** The position of the expand icon. Defaults to `right`. */
 		expand_icon_position?: 'left' | 'right' | 'none';
 		/** The maximum height of the content when closed. Defaults to `0`. */
@@ -30,9 +28,7 @@
 		/** How many degrees to rotate the icon when open. Defaults to `90`. */
 		open_icon_rotation?: number;
 		/** The summary of the accordion. */
-		summary_content?: Snippet;
-		/** Parameters for the summary tooltip. Defaults to `{ disabled: true }`.*/
-		summary_tooltip_parameters?: TooltipProps;
+		summary?: string | Snippet;
 		/**
 		 * Parameters for the content transition. Defaults to `{ slide_transition_parameters: { duration: '500ms', easing: 'ease' } }`.
 		 *  Available transitions are `fly`, `fade`, `blur`, `slide`, and `scale`. See the {@link TransitionNative_Runes.svelte} component.
@@ -44,7 +40,6 @@
 </script>
 
 <script lang="ts">
-	import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
 	import Icon, { type IconProps } from '@iconify/svelte';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import type { HTMLAttributes, HTMLDetailsAttributes } from 'svelte/elements';
@@ -60,15 +55,10 @@
 		max_height_open = 'calc(100% + 1rem)',
 		open = $bindable(false),
 		open_icon_rotation = 90,
-		summary_attributes: summary_styles,
 		summary_attributes,
-		summary_text,
-		summary_content,
+		summary,
 		transition_props = {
 			slide_transition_parameters: { duration: 500, easing: 'ease' }
-		},
-		summary_tooltip_parameters = {
-			disabled: true
 		},
 		group_name,
 		...details_attributes
@@ -134,11 +124,7 @@
 	}}
 	{...details_attributes}
 >
-	<summary
-		onclick={toggle_accordion}
-		use:tooltip={summary_tooltip_parameters}
-		{...summary_attributes}
-	>
+	<summary onclick={toggle_accordion} {...summary_attributes}>
 		{#if group_name}
 			<input class:open bind:this={toggle} type="radio" name={group_name} {id} value={id} />
 		{:else}
@@ -164,10 +150,10 @@
 				{/if}
 			{/if}
 
-			{#if summary_content}
-				{@render summary_content()}
-			{:else if summary_text}
-				{summary_text}
+			{#if typeof summary !== 'string'}
+				{@render summary?.()}
+			{:else}
+				{summary}
 			{/if}
 
 			{#if expand_icon_position === 'right'}

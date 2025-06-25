@@ -18,7 +18,7 @@
 
 <div style:background style:color {...rest}>{text}</div>
 
-<style lang="scss">
+<style>
 	div {
 		color: white;
 	}

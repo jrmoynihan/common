@@ -44,14 +44,7 @@ export async function load({}: PageLoadEvent) {
 	];
 
 	const date = Temporal.Now.zonedDateTimeISO();
-	const date_inputs: DateInputProps<{
-		date: Temporal.ZonedDateTime;
-		min: Temporal.ZonedDateTime;
-		max: Temporal.ZonedDateTime;
-		label_props: {
-			text: string;
-		};
-	}>[] = [
+	const date_inputs: DateInputProps[] = [
 		{
 			class: 'purple',
 			date: date,

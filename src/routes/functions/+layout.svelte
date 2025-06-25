@@ -1,14 +1,12 @@
 <script lang="ts">
-	let {
-		children
-	} = $props();
+	let { children } = $props();
 </script>
 
 <section class="functions-page-layout">
 	{@render children()}
 </section>
 
-<style lang="scss">
+<style>
 	.functions-page-layout {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr);

@@ -33,7 +33,7 @@
 	<input {id} type="checkbox" {disabled} {...input_attributes} />
 </label>
 
-<style lang="scss">
+<style>
 	label {
 		--checkbox-default-transition-speed: 150ms;
 		--checkbox-default-transition-timing-function: ease;

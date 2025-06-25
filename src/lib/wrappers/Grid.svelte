@@ -1,10 +1,4 @@
 <script module lang="ts">
-	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
-	import {
-		tooltip,
-		type TooltipProps,
-		type TooltipWithContentProps
-	} from '$actions/tooltip/tooltip.svelte';
 	import type {
 		align_content_options,
 		align_items_options,
@@ -47,10 +41,6 @@
 		align_items?: keyof typeof align_items_options;
 		/** The block alignment of the grid element itself (default: normal). */
 		align_self?: keyof typeof align_self_options;
-		/** Options to style the tooltip or modify its visible/disabled state */
-		tooltip_props?: TooltipProps | TooltipWithContentProps;
-		/** Style the button, allowing dynamic updates */
-		dynamic_styles?: DynamicStyleParameters;
 	}
 </script>
 
@@ -72,15 +62,11 @@
 		align_items,
 		align_self,
 		children,
-		tooltip_props = { disabled: true, visible: false },
-		dynamic_styles,
 		...attributes
 	}: GridProps = $props();
 </script>
 
 <div
-	use:dynamic_style={dynamic_styles}
-	use:tooltip={tooltip_props}
 	style:--grid-min-column-size={min_column_size}
 	style:--grid-max-column-size={max_column_size}
 	style:--grid-min-row-size={min_row_size}

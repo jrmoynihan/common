@@ -54,8 +54,6 @@
 }
 
 [data-theme='light'] {
-	background-color: var(--background);
-	color: var(--text);
 	--primary: hsl(195, 61%, 34%);
 	--text: hsla(0 0% 0% / 1); /* main/text color */
 	--background: hsla(0 0% 100% / 1); /* background/alternate color */
@@ -65,14 +63,15 @@
 	--link-hover-color: black;
 	--link-hover-background-color: oklch(from var(--accent) l c h / 30%);
 	--current-nav-page-box-shadow: 0 0 14px 4px var(--accent, orange);
+	--input-label-hover-background-color: oklch(from var(--background) calc(l - 0.3) c h / 30%);
+	background-color: var(--background);
+	color: var(--text);
 }
 
 [data-theme='dark'] {
-	background-color: var(--dark-background, var(--background));
-	color: var(--dark-text, var(--text));
+	--dark-background: var(--background, hsla(195 61% 14%)); /* background/alternate color */
 	--primary: hsl(195, 61%, 25%);
 	--dark-text: var(--dark-text, hsla(0 0% 100% / 1)); /* main/text color */
-	--dark-background: var(--background, hsla(195 61% 14%)); /* background/alternate color */
 	--dark-accent: var(--accent, var(--orange));
 	--shadow-color: 220 3% 85%; /* For <dialog> box-shadows */
 	--link-hover-background-color: var(
@@ -81,4 +80,7 @@
 	);
 	--link-background-color: var(--dark-primary, var(--primary));
 	--current-nav-page-box-shadow: 0 0 14px 4px var(--dark-accent, orange);
+	--input-label-hover-background-color: oklch(from var(--dark-background) calc(l + 0.5) c h / 30%);
+	background-color: var(--dark-background);
+	color: var(--dark-text, var(--text));
 }

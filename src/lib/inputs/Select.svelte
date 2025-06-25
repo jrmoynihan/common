@@ -5,7 +5,6 @@
 		HTMLOptionAttributes,
 		HTMLSelectAttributes
 	} from 'svelte/elements';
-	import { dynamic_style, type DynamicStyleParameters } from '../actions/dynamic-styles.svelte.js';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
 	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
 
@@ -27,8 +26,7 @@
 		option_snippet?: Snippet<[Item | SelectOption<Value>]>;
 		/** A snippet for how to render an `<optgroup>`. */
 		group_snippet?: Snippet<[SelectOptionGroup<Value>]>;
-		dynamic_select_styles?: DynamicStyleParameters;
-		input_label_props?: InputLabelProps<Item>;
+		input_label_props?: InputLabelProps;
 		value_key?: keyof Item;
 		label_key?: keyof Item;
 		label?: Snippet<[any]>;
@@ -40,7 +38,6 @@
 <script lang="ts" generics="Item, Value = Item">
 	let {
 		value = $bindable(),
-		dynamic_select_styles = $bindable(),
 		options = $bindable([]),
 		option_snippet = default_option_snippet,
 		group_snippet = default_group_snippet,
@@ -102,14 +99,7 @@
 {/snippet}
 
 <InputLabel {id} {...input_label_props}>
-	<select
-		use:dynamic_style={dynamic_select_styles}
-		bind:value
-		class="select"
-		class:value
-		{id}
-		{...select_attributes}
-	>
+	<select bind:value class="select" class:value {id} {...select_attributes}>
 		{#if children}
 			{@render children()}
 		{:else}

@@ -3,14 +3,12 @@
 https://web.dev/building-a-tooltip-component/
 -->
 
-<script lang="ts" generics="T = unknown">
-	import { dynamic_style } from '$actions/dynamic-styles.svelte.js';
-	import type { TooltipProps, TooltipWithContentProps } from './tooltip.svelte';
+<script lang="ts">
+	import type { TooltipProps } from './tooltip.svelte.js';
 
 	let {
 		content,
-		content_snippet,
-		content_args,
+		args,
 		position = 'top',
 		id = '',
 		visible = false,
@@ -20,8 +18,9 @@ https://web.dev/building-a-tooltip-component/
 		distance = 10,
 		inert = true,
 		disabled = false,
-		fallback = true
-	}: TooltipProps<T> & TooltipWithContentProps<T> = $props();
+		fallback = true,
+		...rest
+	}: TooltipProps = $props();
 
 	let tooltip: HTMLElement | undefined = $state(undefined);
 </script>
@@ -29,28 +28,24 @@ https://web.dev/building-a-tooltip-component/
 <!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. a 'toggle-tip' -->
 <tool-tip
 	bind:this={tooltip}
-	use:dynamic_style={{ styles }}
 	{inert}
-	role="tooltip"
-	class="tooltip"
-	id={`tooltip-${id}`}
-	anchor={id}
-	popover="auto"
 	data-tip-position={position}
-	class:visible={(!disabled && visible) || keep_visible}
-	class:fallback
 	style:--anchor-position={position}
 	style:--anchor={id}
 	style:--tooltip-width={`${tooltip?.offsetWidth}px`}
 	style:--tooltip-height={`${tooltip?.offsetHeight}px`}
 	style:--distance={typeof distance === 'number' ? `${distance}px` : distance}
+	{...rest}
+	role="tooltip"
+	id={`tooltip-${id}`}
+	anchor={id}
+	popover="auto"
+	class={['tooltip', fallback, ((!disabled && visible) || keep_visible) && 'visible', rest.class]}
 >
-	{#if content}
-		{#if typeof content === 'string'}
-			{content}
-		{/if}
-	{:else if content_snippet}
-		{@render content_snippet(content_args ?? ({} as T))}
+	{#if content && typeof content === 'string'}
+		{content}
+	{:else if content && typeof content === 'function'}
+		{@render content(args)}
 	{/if}
 
 	{#if show_arrow}

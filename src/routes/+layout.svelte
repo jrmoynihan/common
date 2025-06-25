@@ -65,7 +65,7 @@
 	<Navigation links={nav_links} />
 	<main>
 		<TransitionRunes bind:trigger>
-			{@render children()}
+			{@render children?.()}
 		</TransitionRunes>
 	</main>
 	{#if page.url.pathname.includes('/functions')}

@@ -29,10 +29,8 @@
 		button_props={{
 			transition: fly,
 			transition_config: { y: -50 },
-			dynamic_styles: {
-				styles:
-					'position: absolute; top:0; right: 0; font-size: 0.6rem; padding: 0.5rem 1rem; border: 1px solid hsla(var(--accent-value), 50%); border-radius: 0 0 0 1rem; display: flex; max-width: 40%;'
-			}
+			style:
+				'position: absolute; top:0; right: 0; font-size: 0.6rem; padding: 0.5rem 1rem; border: 1px solid hsla(var(--accent-value), 50%); border-radius: 0 0 0 1rem; display: flex; max-width: 40%;'
 		}}
 	>
 		Return to Top

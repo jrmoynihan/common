@@ -1,7 +1,4 @@
 <script lang="ts" module>
-	import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
-	import type { TooltipWithContentProps } from '$actions/tooltip/tooltip.svelte';
-
 	export interface InputProps extends HTMLInputAttributes {
 		/** A binding to the `<input>` element. */
 		input_element?: HTMLInputElement;
@@ -11,10 +8,6 @@
 		group?: unknown;
 		/** A binding to Whether the input is valid. Defaults to `true`. */
 		valid?: boolean;
-		/** Styles to apply to the input element including hover, focus, and active styles. */
-		input_dynamic_styles?: DynamicStyleParameters;
-		/** Props to pass to the tooltip component. */
-		tooltip_props?: TooltipProps | TooltipWithContentProps;
 		/** The key used to confirm the input. Defaults to `Enter`.  Set to `null` to disable `onkeypress` confirmations. */
 		confirm_key?: string;
 		/** A callback that runs when the `confirm_key` is pressed.  If an `onkeypress` event handler is provided, this will be ignored. */
@@ -25,18 +18,16 @@
 </script>
 
 <script lang="ts">
-	import { dynamic_style, tooltip, type TooltipProps } from '$lib';
 	import { onMount } from 'svelte';
 	import type { FormEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
 	let {
+		id = $bindable(crypto.randomUUID()),
 		input_element = $bindable(),
 		value = $bindable(),
 		group = $bindable(),
-		valid = $bindable(true),
+		valid = $bindable(),
 		hidden = $bindable(false),
-		input_dynamic_styles = $bindable(),
-		tooltip_props = $bindable({ disabled: true, visible: false }),
 		checked = $bindable(),
 		confirm_key = 'Enter',
 		onconfirm,
@@ -74,27 +65,23 @@
 
 {#if group}
 	<input
-		use:dynamic_style={input_dynamic_styles}
-		use:tooltip={tooltip_props}
 		bind:this={input_element}
 		bind:group
+		{id}
 		{value}
 		class:value
 		class:hidden
 		onkeypress={handle_keypress}
-		id={crypto?.randomUUID()}
 		{...input_attributes}
 	/>
 {:else}
 	<input
-		use:dynamic_style={input_dynamic_styles}
-		use:tooltip={tooltip_props}
 		bind:this={input_element}
 		bind:value
 		class:value={input_attributes.type === 'number' ? value !== undefined && value !== null : value}
 		class:hidden
 		onkeypress={handle_keypress}
-		id={crypto?.randomUUID()}
+		{id}
 		{...input_attributes}
 	/>
 {/if}
@@ -104,7 +91,6 @@
 		input {
 			box-sizing: border-box;
 			position: relative;
-			grid-area: input; /* Will overlap with the placeholder; */
 			appearance: textfield;
 			-moz-appearance: textfield;
 			background-color: var(--background-color, revert);
@@ -139,7 +125,7 @@
 			&:user-valid {
 				background-color: var(--input-valid-background-color, initial);
 			}
-			&:user-valid:focus-visible {
+			&:focus-visible {
 				outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
 			}
 

@@ -1,6 +1,4 @@
 <script module lang="ts">
-	import type { DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
-
 	export interface InputLabelProps extends HTMLLabelAttributes {
 		/** A binding to the <label> element */
 		label_element?: HTMLLabelElement;
@@ -11,13 +9,9 @@
 		/** The text for the invalid message. */
 		invalid_text?: string;
 		/** The id of the element this labels with the `for` attribute. Defaults to `crypto.randomUUID()` */
-		id?: string | null;
+		for_id?: string | null;
 		/** A binding to the validity of the input.  Changing this triggers the visibility of the invalid message. */
 		valid?: boolean;
-		/** Props to pass to the tooltip action. */
-		tooltip_props?: TooltipProps;
-		/** Styles to apply to the label, including hover/focus/active styles. */
-		dynamic_styles?: DynamicStyleParameters;
 		/** Parameters for the transition. */
 		transition_parameters?: SvelteTransitionParams;
 		invalid_msg_snippet?: Snippet;
@@ -29,25 +23,19 @@
 </script>
 
 <script lang="ts">
-	import { dynamic_style, tooltip, type TooltipProps } from '$lib';
-	import type { SvelteTransition, SvelteTransitionParams, TransitionTypes } from '$lib/lib_types';
+	import type { SvelteTransition, SvelteTransitionParams } from '$lib/lib_types';
 	import type { Snippet } from 'svelte';
 	import type { HTMLLabelAttributes } from 'svelte/elements';
 	import { fade } from 'svelte/transition';
 
 	let {
 		children,
-		dynamic_styles,
 		position = 'before',
 		label_element = $bindable(),
 		text = $bindable(),
 		invalid_text = $bindable(),
-		valid = $bindable(true),
-		id = $bindable(crypto?.randomUUID()),
-		tooltip_props: tooltip_options = {
-			visible: false,
-			disabled: true
-		},
+		valid = $bindable(),
+		for_id = $bindable(),
 		transition_parameters = { duration: 0 },
 		label_snippet = default_label,
 		invalid_msg_snippet = default_invalid_snippet,
@@ -66,10 +54,8 @@
 
 <label
 	bind:this={label_element}
-	for={id}
+	for={for_id}
 	class="label-container"
-	use:dynamic_style={dynamic_styles}
-	use:tooltip={{ ...tooltip_options }}
 	transition:transition={transition_parameters}
 	{...label_attributes}
 >
@@ -88,6 +74,14 @@
 </label>
 
 <style>
+	@layer common.input {
+		@scope (label) {
+			:global(input) {
+				grid-area: input; /* Will overlap with the placeholder; */
+			}
+		}
+	}
+
 	@layer common.input.input_label {
 		label.label-container {
 			--default-input-label-hover-background-color: oklch(

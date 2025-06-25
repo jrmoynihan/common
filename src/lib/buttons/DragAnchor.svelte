@@ -2,13 +2,11 @@
 	export interface DragAnchorProps extends ButtonProps {
 		grabbed?: boolean;
 		hovered?: boolean;
-		dynamic_styles?: DynamicStyleParameters;
 		children?: Snippet;
 	}
 </script>
 
 <script lang="ts">
-	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte';
 	import type { Snippet } from 'svelte';
 	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
 	import type { FocusEventHandler, MouseEventHandler, PointerEventHandler } from 'svelte/elements';
@@ -17,7 +15,6 @@
 		hovered = $bindable(false),
 		grabbed = $bindable(false),
 		disabled = $bindable(),
-		dynamic_styles,
 		children,
 		...button_props
 	}: DragAnchorProps = $props();
@@ -54,10 +51,6 @@
 
 <ButtonRunes
 	bind:disabled
-	dynamic_styles={{
-		hover_styles: 'color: oklch(from var(--text) l c h / 1);',
-		...dynamic_styles
-	}}
 	icon_props={{ icon: 'fa6-solid:grip-vertical' }}
 	{...button_props}
 	onmousedown={mousedown}
@@ -70,7 +63,7 @@
 	{@render children?.()}
 </ButtonRunes>
 
-<style lang="scss">
+<style>
 	@layer common.drag-anchor {
 		:global(._drag-anchor) {
 			--default-transition: opacity 200ms, color 200ms;
@@ -84,7 +77,6 @@
 			padding: var(--drag-anchor-padding, 1rem);
 			border-radius: var(--drag-anchor-border-radius, 1rem);
 			transition: var(--drag-anchor-transition, var(--default-transition));
-			// border: var(--drag-anchor-border, 2px solid inset);
 			background: var(--drag-anchor-background, transparent);
 			color: var(--drag-anchor-color, oklch(from var(--text, inherit) l c h / 0.2));
 

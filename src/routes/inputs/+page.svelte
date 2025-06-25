@@ -8,7 +8,7 @@
 	import TemporalDateInput from '$inputs/TemporalDateInput.svelte';
 	import TextInput from '$inputs/TextInput.svelte';
 	import type { PageData } from './$types';
-	import Icon from '@iconify/svelte';
+	import { tooltip } from '$lib';
 
 	let { data } = $props();
 	const { datalist, select_options, date_inputs }: PageData = data;
@@ -38,6 +38,10 @@
 	<section class="text-inputs">
 		<h2>Text Inputs</h2>
 		<TextInput
+			{@attach tooltip({
+				content: `I'm a plain text input with a cancel button!`,
+				position: 'top'
+			})}
 			placeholder_props={{
 				text: 'required',
 				dynamic_styles: {
@@ -48,23 +52,22 @@
 			show_confirm={false}
 			label_props={{
 				invalid_text: 'Please enter text between 3-16 characters.',
-				text: 'Labels for Inputs',
-				tooltip_props: { content: `I'm a plain text input with a cancel button!`, position: 'top' }
+				text: 'Labels for Inputs'
 			}}
 			autocomplete="off"
 			required={true}
 			pattern={'.{3,16}'}
 		/>
 		<TextInput
+			{@attach tooltip({
+				content: `I'm a password input that hides the confirm button when the password is invalid!`
+			})}
 			bind:value={valid_password}
 			placeholder_props={{ text: 'make a good one' }}
 			label_props={{
 				invalid_text:
 					'Invalid password. Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, and one number.',
-				text: 'Password:',
-				tooltip_props: {
-					content: `I'm a password input that hides the confirm button when the password is invalid!`
-				}
+				text: 'Password:'
 			}}
 			type="password"
 			autocomplete="new-password"
@@ -76,14 +79,14 @@
 			}}
 		/>
 		<TextInput
+			{@attach tooltip({
+				content: `I'm an email input that hides the confirm button when the email is invalid!`
+			})}
 			bind:value={valid_email}
 			placeholder_props={{ text: 'john@example.com' }}
 			label_props={{
 				invalid_text: 'Invalid email address.',
-				text: 'Email address:',
-				tooltip_props: {
-					content: `I'm an email input that hides the confirm button when the email is invalid!`
-				}
+				text: 'Email address:'
 			}}
 			type="email"
 			autocomplete="email"
@@ -145,13 +148,13 @@
 			/>
 		</fieldset>
 		<NumericInput
+			{@attach tooltip({ content: `Is it between 0 and 10?` })}
 			min={0}
 			max={10}
 			value={null}
 			pattern={'^([0-9]|10)$'}
 			placeholder_props={{ text: 'min: 0, max: 10' }}
 			label_props={{
-				tooltip_props: { content: `Is it between 0 and 10?` },
 				invalid_text: 'Invalid number. Must be a whole number between 0 and 10.'
 			}}
 			show_spinner_buttons={false}
@@ -242,7 +245,7 @@
 	</section>
 </div>
 
-<style lang="scss">
+<style>
 	h2 {
 		font-size: var(--font-size-fluid-1);
 		font-weight: 600;

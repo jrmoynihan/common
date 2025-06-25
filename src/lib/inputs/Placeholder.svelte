@@ -29,7 +29,7 @@
 	{text ?? ''}
 </div>
 
-<style lang="scss">
+<style>
 	.placeholder {
 		user-select: none;
 		font-size: var(--placeholder-font-size, 1em);
@@ -48,6 +48,6 @@
 		padding: var(--text-input-padding, 1.25em);
 		color: gray;
 		z-index: 0; /* addresses stacking context issue on the same grid-area */
-		// height: 100%;  /* causes layout bug in Safari */
+		/* height: 100%;  /* causes layout bug in Safari */
 	}
 </style>

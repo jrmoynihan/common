@@ -63,6 +63,16 @@
 	const stringToTemporalDate = (date_string: string, type: HTMLInputTypeAttribute = 'date') => {
 		const yyyy_mm_dd = date_string.split('T')[0];
 		const [year, month, day] = yyyy_mm_dd?.split('-') ?? [];
+		if (
+			!year ||
+			!month ||
+			!day ||
+			isNaN(Number(year)) ||
+			isNaN(Number(month)) ||
+			isNaN(Number(day))
+		) {
+			return date;
+		}
 
 		switch (type) {
 			case 'datetime':
@@ -79,9 +89,9 @@
 			}
 			default: {
 				const new_date = date.with({
-					year: Number.parseInt(year ?? '0'),
-					month: Number.parseInt(month ?? '0'),
-					day: Number.parseInt(day ?? '0')
+					year: Number.parseInt(year),
+					month: Number.parseInt(month),
+					day: Number.parseInt(day)
 				});
 				return new_date;
 			}
@@ -109,7 +119,6 @@
 <InputLabel bind:label_element {...label_props}>
 	<Input
 		type="date"
-		bind:input_dynamic_styles={input_attributes.input_dynamic_styles}
 		bind:value={internal_string_date}
 		bind:input_element={date_input}
 		id={crypto.randomUUID()}

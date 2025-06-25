@@ -13,7 +13,7 @@
 	<pre class="language-svelte"><slot name="code" /></pre>
 </div>
 
-<style lang="scss">
+<style>
 	.example {
 		display: grid;
 		justify-content: center;

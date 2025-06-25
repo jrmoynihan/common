@@ -5,6 +5,7 @@
 	import JsonView from '$wrappers/JSONView.svelte';
 	import type { ComponentProps } from 'svelte';
 	import Treecordion from './Treecordion.svelte';
+	import { tooltip } from '$lib';
 
 	const details_styles = 'max-width: max-content;';
 	const summary_styles = 'min-width: min(20rem, 30vw)';
@@ -23,10 +24,10 @@
 
 	const accordion_configs: ComponentProps<typeof AccordionDetails>[] = [
 		{
-			summary_content: opacity_default
+			summary: opacity_default
 		},
 		{
-			summary_content: slide_snippet,
+			summary: slide_snippet,
 			group_name: 'group_one',
 			transition_props: {
 				types: ['slide'],
@@ -34,7 +35,7 @@
 			}
 		},
 		{
-			summary_content: scale_snippet,
+			summary: scale_snippet,
 			group_name: 'group_one',
 			transition_props: {
 				types: ['scale'],
@@ -43,18 +44,17 @@
 			}
 		},
 		{
-			summary_content: blur_snippet,
+			summary: blur_snippet,
 			group_name: 'group_one',
 			transition_props: { types: ['blur'] }
 		},
 		{
-			summary_content: fly_snippet,
+			summary: fly_snippet,
 			group_name: 'group_one',
-			transition_props: { types: ['fly'], symmetrical: false },
-			summary_tooltip_parameters: { content: 'A summary tooltip' }
+			transition_props: { types: ['fly'], symmetrical: false }
 		},
 		{
-			summary_content: combo_snippet,
+			summary: combo_snippet,
 			group_name: 'group_one',
 			transition_props: {
 				types: ['scale', 'blur'],
@@ -62,8 +62,7 @@
 				blur_transition_parameters: { duration: 500, amount: 5 },
 				symmetrical: false,
 				scale_transition_parameters: { duration: 300, initial: 0, out_scale: 3 }
-			},
-			summary_tooltip_parameters: { content: 'A summary tooltip' }
+			}
 		}
 	];
 	const content_text = `Hello from inside the accordion! Lorem ipsum dolor sit amet, consectetur adipisicing elit.
@@ -102,6 +101,7 @@
 			{...accordion}
 			style={details_styles}
 			summary_attributes={{ style: summary_styles }}
+			{@attach tooltip({ content: 'A summary tooltip' })}
 		>
 			{@render content()}
 		</AccordionDetails>

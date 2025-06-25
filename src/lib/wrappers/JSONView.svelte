@@ -1,7 +1,7 @@
 <script module lang="ts">
-	export interface JSONViewProps<T> {
+	export interface JSONViewProps<TooltipType> {
 		/**  object or array to display */
-		obj: Object | Array<T>;
+		obj: Object | Array<TooltipType>;
 		/** initial expansion depth */
 		depth?: number;
 		/** separator character between keys and values */
@@ -25,7 +25,7 @@
 	}
 </script>
 
-<script lang="ts" generics="T">
+<script lang="ts" generics="TooltipType">
 	import { JsonView } from '$lib';
 
 	import type {
@@ -48,7 +48,7 @@
 		bracket_button_attributes,
 		_current_depth = 0,
 		_is_last_item_or_key = false
-	}: JSONViewProps<T> = $props();
+	}: JSONViewProps<TooltipType> = $props();
 
 	const keys = $derived(typeof obj === 'object' ? Object.keys(obj) : []);
 	const is_array = $derived(Array.isArray(obj));

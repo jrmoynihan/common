@@ -32,7 +32,7 @@
 	{/if}
 </ul>
 
-<style lang="scss">
+<style>
 	.tree {
 		all: unset;
 		display: flex;

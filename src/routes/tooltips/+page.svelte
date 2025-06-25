@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type TooltipDirections } from '$actions/tooltip/tooltip.svelte.js';
+	import { tooltip, type TooltipDirections } from '$lib/attach/tooltip/tooltip.svelte.js';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import Icon from '@iconify/svelte';
@@ -7,7 +7,7 @@
 	import { Button, Grid } from '$lib';
 	let position: TooltipDirections = $state('top');
 	let positions = ['top', 'bottom', 'left', 'right'];
-	let max_width = 150;
+	let max_width = 200;
 	let disabled = $state(false);
 	let visible = $state(false);
 	let keep_visible = $state(false);
@@ -64,7 +64,7 @@
 	}
 </script>
 
-{#snippet tooltip_example({ text, num }: Partial<{ text: string; num: number }>)}
+{#snippet tooltip_example({ text, num }: { text: string; num: number })}
 	<Button>example from a snippet: {text} {num}</Button>
 {/snippet}
 <section id="tooltips-section">
@@ -84,30 +84,30 @@
 			<ToggleSwitch bind:checked={keep_visible} />
 		</label>
 	</div>
-	<Button class="full-width" {tooltip_props}>
+	<Button class="full-width" {@attach tooltip({ ...tooltip_props })}>
 		Tooltips Can Adjust Their Position Automatically
 	</Button>
 	<Button
 		class="full-width"
-		tooltip_props={{
+		{@attach tooltip({
 			position,
 			visible: initially_visible_example && visible,
 			disabled,
 			content: `This is a tooltip that is set to become visible as soon as its parent is mounted (after waiting for a specified delay). Mouseout its parent to hide the tooltip, or do it programmatically by clicking its parent button!`,
 			styles: `max-width: min(100vw, 200px); ${hot_sun_styles}`
-		}}
+		})}
 		onclick={() => (initially_visible_example = !initially_visible_example)}
 	>
 		Tooltips Can Be Used Without the Mouse
 	</Button>
 	<Button
-		tooltip_props={{
+		{@attach tooltip({
 			content: dynamic_tooltip_text,
 			position,
 			disabled,
 			styles: 'max-width: min(100vw, 200px);',
 			keep_visible
-		}}
+		})}
 	>
 		Dynamically Updating Tooltip Text
 	</Button>
@@ -115,51 +115,47 @@
 		type="text"
 		class="tooltip-text-input"
 		bind:value={dynamic_tooltip_text}
-		tooltip_props={{
-			content_snippet: tooltip_example,
-			content_args: { text: dynamic_tooltip_text }
-		}}
+		{@attach tooltip({ content: tooltip_example, args: { text: dynamic_tooltip_text, num: 0 } })}
 	/>
 	<Input
 		type="number"
 		bind:value={dynamic_tooltip_text_num}
-		tooltip_props={{
-			content_snippet: tooltip_example,
-			content_args: { num: dynamic_tooltip_text_num }
-		}}
+		{@attach tooltip({
+			content: tooltip_example,
+			args: { num: dynamic_tooltip_text_num, text: dynamic_tooltip_text }
+		})}
 	/>
 
 	<Button
-		tooltip_props={{
-			position,
+		{@attach tooltip({
 			content: keep_visible
 				? `I'll stick around. It's useful for debugging styles on the tip too!`
 				: `I'll disappear after a short delay`,
-
-			disabled
-		}}
+			disabled,
+			position
+		})}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
 	</Button>
 	<Button
 		id="custom-component-button"
-		tooltip_props={{
-			position,
+		{@attach tooltip({
 			content: `I've got a <br/> custom component!`,
 			visible,
-			disabled
-		}}
+			disabled,
+			position
+		})}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
 	</Button>
 	<Button
-		tooltip_props={{
-			position,
+		{@attach tooltip({
 			content: `I'm so stylin'!`,
 			show_arrow: false,
 			disabled,
-			styles: styling_green_styles
-		}}
+			style: hot_sun_styles,
+			position
+		})}
 	>
 		Tooltips Can Be Styled
 	</Button>
@@ -167,33 +163,35 @@
 		columns={3}
 		max_column_size="max-content"
 		gap="1rem 0.5rem"
-		tooltip_props={{
-			content: 'There are different delays on each the tooltips to achieve a staggered effect',
-			styles: hot_sun_styles,
-			position: 'left',
-			distance: -200
-		}}
+		{@attach tooltip({
+			content: 'Try modifying the styles of the tooltip!',
+			style: styling_green_styles,
+			position
+		})}
 	>
-		<h4>Rule</h4>
-		<h4>Value</h4>
+		<div>Rule</div>
+		<div>Value</div>
 		<div></div>
-		{#each styling_green_map.entries() as [rule, value], i}
-			{@const rule_value = styling_green_map.get(rule)}
+		{#each styling_green_map.entries() as [rule, value]}
 			<Input
 				type="text"
+				style="grid-area: unset"
 				value={rule}
 				onblur={(e) => styling_green_map.set(e.currentTarget.value, value)}
 			/>
 			<Input
 				type="text"
+				style="grid-area: unset"
 				{value}
 				oninput={(e) => styling_green_map.set(rule, e.currentTarget.value)}
 			/>
-			<Button class="delete" onclick={() => styling_green_map.delete(rule)}>
-				<Icon icon="fa-solid:trash" />
-			</Button>
+			<Button
+				class="delete"
+				onclick={() => styling_green_map.delete(rule)}
+				icon_props={{ icon: 'fa-solid:trash' }}
+			/>
 		{/each}
-		<Button class="add" onclick={() => styling_green_map.set('', '')}>
+		<Button class="add" style="grid-column: span 3;" onclick={() => styling_green_map.set('', '')}>
 			<Icon icon="fa-solid:plus" />
 			Add CSS Rule
 		</Button>

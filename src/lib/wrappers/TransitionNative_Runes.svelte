@@ -367,7 +367,7 @@
 	{/if}
 </div>
 
-<style lang="scss">
+<style>
 	.transition-outer {
 		display: grid;
 		grid-template-rows: 1fr;

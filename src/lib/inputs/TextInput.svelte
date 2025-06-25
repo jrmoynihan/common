@@ -6,7 +6,6 @@
 		show_cancel?: boolean;
 		allow_enter_to_confirm?: boolean;
 		button_props?: InputButtonProps;
-		input_dynamic_styles?: DynamicStyleParameters;
 		label_element?: HTMLLabelElement;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
 		label_props?: InputLabelProps;
@@ -19,11 +18,14 @@
 		oncancel?: FormEventHandler<HTMLInputElement>;
 		/** A callback that runs when the input is changed */
 		oninput?: FormEventHandler<HTMLInputElement>;
+		/** A binding to the valid state of the input. */
+		valid?: boolean;
+		/** The id of the input and the for attribute of the label.  Defaults to a random UUID. */
+		for_id?: string;
 	}
 </script>
 
 <script lang="ts">
-	import { type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
 	import type { FormEventHandler } from 'svelte/elements';
 	import Input, { type InputProps } from './Input.svelte';
 	import InputButton, { type InputButtonProps } from './InputButton.svelte';
@@ -32,16 +34,15 @@
 
 	let {
 		input_element = $bindable(),
-		valid = $bindable(true),
 		value = $bindable(),
 		placeholder_element = $bindable(),
 		label_element = $bindable(),
-		id = crypto?.randomUUID(),
+		valid = $bindable(),
+		for_id = $bindable(crypto.randomUUID()),
 		show_confirm = true,
 		show_cancel = true,
 		allow_enter_to_confirm = true,
 		button_props,
-		input_dynamic_styles,
 		placeholder_props = {},
 		label_props = { ...placeholder_props },
 		children,
@@ -78,13 +79,12 @@
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 </script>
 
-<InputLabel bind:label_element bind:valid {id} {...label_props}>
+<InputLabel bind:label_element bind:valid bind:for_id {...label_props}>
 	<Input
-		bind:input_dynamic_styles
 		bind:input_element
 		bind:value
 		bind:valid
-		{id}
+		bind:id={for_id}
 		onkeypress={handle_keypress}
 		type={'text'}
 		{...input_attributes}
@@ -130,8 +130,8 @@
 	._btn-container {
 		--input-button-margin: 0.15rem;
 		box-sizing: content-box;
-		margin: 0;
 		display: grid;
+		margin: 0;
 		place-items: center;
 		grid-area: input; /* Overlap with the placeholder and input; */
 		place-self: center end;
@@ -155,6 +155,7 @@
 			var(--input-border-radius, 1em)
 		);
 		overflow: hidden;
+		isolation: isolate; /* Contain the z-index stacking context for the buttons to this container. */
 		&:not(.valid) {
 			grid-template-rows: minmax(0, 0fr) minmax(0, 1fr);
 		}

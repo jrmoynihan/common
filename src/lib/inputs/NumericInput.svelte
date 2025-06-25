@@ -4,6 +4,8 @@
 		value?: string | number | string[] | null;
 		/** Whether the input is valid. */
 		valid?: boolean;
+		/** The id of the input and the `for` attribute of the label. Defaults to a random UUID. */
+		for_id?: string;
 		/** A binding to the label element that wraps the input. */
 		label_element?: HTMLLabelElement;
 		/** A binding to the input element that is bound to the value. */
@@ -36,9 +38,9 @@
 	let {
 		value = $bindable(0),
 		valid = $bindable(true),
+		for_id = $bindable(crypto.randomUUID()),
 		input_element = $bindable(),
 		label_element = $bindable(),
-		input_dynamic_styles = $bindable(),
 		show_spinner_buttons = true,
 		placeholder_props,
 		label_props,
@@ -51,21 +53,19 @@
 </script>
 
 {#snippet default_spinner_button(icon_props: IconProps, button_props: InputButtonProps)}
-	<InputButton {...button_props} disabled={input_attributes?.disabled}>
-		<Icon
-			{...icon_props}
-			class="spinner-button-icon"
-			style="color: var(--text-input-button-color, buttontext);"
-		/>
-	</InputButton>
+	<InputButton
+		{...button_props}
+		disabled={input_attributes?.disabled}
+		icon_props={{ style: 'color: var(--text-input-button-color, buttontext);', ...icon_props }}
+	/>
 {/snippet}
 
-<InputLabel bind:label_element bind:valid {...label_props}>
+<InputLabel bind:label_element bind:valid bind:for_id {...label_props}>
 	<Input
-		bind:input_dynamic_styles
 		bind:input_element
 		bind:value
 		bind:valid
+		bind:id={for_id}
 		inputmode="numeric"
 		{...input_attributes}
 		type="number"
@@ -126,16 +126,19 @@
 			--text-input-button-margin: 0.15rem;
 			--input-border-radius: 1rem;
 			display: grid;
+			margin: 0;
+			place-items: center;
+			place-self: center end;
+			height: 100%;
+			grid-area: input; /* Overlap with the placeholder and input; */
 			grid-template-rows: repeat(auto-fit, minmax(0, 1fr));
 			grid-template-areas:
 				'plus'
 				'minus';
-			place-items: center;
-			grid-area: input; /* Overlap with the placeholder and input; */
-			place-self: center end;
-			height: 100%;
+			transition: all 300ms ease;
+			scale: 1 1;
+			z-index: 0;
 			transform-origin: right;
-			margin: 0;
 			border-top-left-radius: 0;
 			border-bottom-left-radius: 0;
 			border-top-right-radius: max(
@@ -146,9 +149,6 @@
 				calc(var(--text-input-border-radius, 1em) - var(--text-input-padding, 1.25em)),
 				var(--text-input-border-radius, 1em)
 			);
-			transition: all 300ms ease;
-			scale: 1 1;
-			z-index: 0;
 			overflow: hidden;
 			isolation: isolate; /* Contain the z-index stacking context for the buttons to this container. */
 		}

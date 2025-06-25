@@ -115,7 +115,7 @@
 	</Dialog>
 </section>
 
-<style lang="scss">
+<style>
 	h2 {
 		margin-inline: auto;
 	}
