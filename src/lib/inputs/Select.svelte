@@ -8,24 +8,20 @@
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
 	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
 
-	export interface SelectOption<Value> extends HTMLOptionAttributes {
-		value: Value;
+	export interface SelectOptionGroup<Item> extends HTMLOptgroupAttributes {
 		label: string;
+		options: (Item | SelectOptionGroup<Item>)[];
 	}
-	export interface SelectOptionGroup<Value> extends HTMLOptgroupAttributes {
-		label: string;
-		options: (SelectOption<Value> | SelectOptionGroup<Value>)[];
-	}
-	export type StructuredOptions<Value> = (SelectOption<Value> | SelectOptionGroup<Value>)[];
+	export type StructuredOptions<Item> = Item[] | SelectOptionGroup<Item>[];
 
 	export interface SelectProps<Item, Value = Item> extends HTMLSelectAttributes {
 		value?: Value;
-		options?: Item[] | StructuredOptions<Value>;
+		options?: StructuredOptions<Item>;
 		id?: string | null;
 		/** A snippet for how to render a single `<option>` in the `<select>`.*/
-		option_snippet?: Snippet<[Item | SelectOption<Value>]>;
+		option_snippet?: Snippet<[Item]>;
 		/** A snippet for how to render an `<optgroup>`. */
-		group_snippet?: Snippet<[SelectOptionGroup<Value>]>;
+		group_snippet?: Snippet<[SelectOptionGroup<Item>]>;
 		input_label_props?: InputLabelProps;
 		value_key?: keyof Item;
 		label_key?: keyof Item;
@@ -52,7 +48,7 @@
 
 	// TODO: Use the Sanitizer API: https://web.dev/sanitizer/
 
-	function is_group(item: any): item is SelectOptionGroup<Value> {
+	function is_group(item: any): item is SelectOptionGroup<Item> {
 		return item && typeof item === 'object' && 'options' in item && Array.isArray(item.options);
 	}
 
@@ -78,15 +74,13 @@
 	}
 </script>
 
-{#snippet default_option_snippet(option: Item | SelectOption<Value>)}
-	{@const item = option as Item}
-	{@const { disabled } = item as SelectOption<Value>}
-	<option value={get_value(item)} {disabled}>
-		{get_label(item)}
+{#snippet default_option_snippet(option: Item)}
+	<option {...option} value={get_value(option)}>
+		{get_label(option)}
 	</option>
 {/snippet}
 
-{#snippet default_group_snippet(group: SelectOptionGroup<Value>)}
+{#snippet default_group_snippet(group: SelectOptionGroup<Item>)}
 	<optgroup label={group.label} disabled={group.disabled}>
 		{#each group.options as item}
 			{#if is_group(item)}
