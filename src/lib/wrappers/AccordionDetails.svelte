@@ -33,7 +33,7 @@
 		 * Parameters for the content transition. Defaults to `{ slide_transition_parameters: { duration: '500ms', easing: 'ease' } }`.
 		 *  Available transitions are `fly`, `fade`, `blur`, `slide`, and `scale`. See the {@link TransitionNative_Runes.svelte} component.
 		 **/
-		transition_props?: ComponentProps<typeof TransitionNativeRunes>;
+		transition_props?: TransitionNativeProps;
 		/** If only details in a group should open at a time, set a name for the group */
 		group_name?: string;
 	}
@@ -41,9 +41,11 @@
 
 <script lang="ts">
 	import Icon, { type IconProps } from '@iconify/svelte';
-	import type { ComponentProps, Snippet } from 'svelte';
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes, HTMLDetailsAttributes } from 'svelte/elements';
-	import TransitionNativeRunes from './TransitionNative_Runes.svelte';
+	import TransitionNativeRunes, {
+		type TransitionNativeProps
+	} from './TransitionNative_Runes.svelte';
 
 	let {
 		closed_icon_rotation = 0,
