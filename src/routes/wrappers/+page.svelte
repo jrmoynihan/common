@@ -65,78 +65,58 @@
 		class:hide-grid={grid_mode === 'Flex'}
 	>
 		<legend>Grid Options</legend>
-		<FlexItem>
-			<Select
-				bind:value={justify_self}
-				options={Object.values(justify_self_options)}
-				input_label_props={{ text: 'Justify Self' }}
-			/>
-		</FlexItem>
-		<FlexItem>
-			<Select
-				bind:value={justify_items}
-				options={Object.values(justify_items_options)}
-				input_label_props={{ text: 'Justify Items' }}
-			/>
-		</FlexItem>
-		<FlexItem>
-			<NumericInput
-				label_props={{ text: 'Columns (numeric)' }}
-				bind:value={columns}
-				min={1}
-				max={items.length}
-			/>
-		</FlexItem>
-		<FlexItem>
-			<Select
-				bind:value={columns}
-				input_label_props={{ text: 'Columns (keyword)' }}
-				options={Object.values(grid_fit_options)}
-			/>
-		</FlexItem>
-		<FlexItem>
-			<TextInput
-				bind:value={min_column_size}
-				show_confirm={false}
-				label_props={{ text: 'Min Column Size' }}
-			/>
-		</FlexItem>
-		<FlexItem>
-			<TextInput
-				bind:value={max_column_size}
-				show_confirm={false}
-				label_props={{ text: 'Max Column Size' }}
-			/>
-		</FlexItem>
-		<FlexItem>
-			<NumericInput
-				label_props={{ text: 'Rows (numeric)' }}
-				bind:value={rows}
-				min={1}
-				max={items.length}
-			/>
-		</FlexItem>
-		<FlexItem>
-			<Select
-				bind:value={rows}
-				input_label_props={{ text: 'Rows (keyword)' }}
-				options={Object.values(grid_fit_options)}
-			/>
-		</FlexItem>
-		<FlexItem>
-			<TextInput
-				bind:value={min_row_size}
-				show_confirm={false}
-				label_props={{ text: 'Min Row Size' }}
-			/>
-		</FlexItem>
-		<FlexItem>
-			<TextInput
-				bind:value={max_row_size}
-				show_confirm={false}
-				label_props={{ text: 'Max Row Size' }}
-			/>
-		</FlexItem>
+		<Select
+			bind:value={justify_self}
+			options={Object.values(justify_self_options)}
+			input_label_props={{ text: 'Justify Self' }}
+		/>
+		<Select
+			bind:value={justify_items}
+			options={Object.values(justify_items_options)}
+			input_label_props={{ text: 'Justify Items' }}
+		/>
+		<NumericInput
+			label_props={{ text: 'Columns (numeric)' }}
+			bind:value={columns}
+			min={1}
+			max={items.length}
+		/>
+		<Select
+			bind:value={columns}
+			input_label_props={{ text: 'Columns (keyword)' }}
+			options={Object.values(grid_fit_options)}
+		/>
+		<TextInput
+			bind:value={min_column_size}
+			show_confirm={false}
+			label_props={{ text: 'Min Column Size' }}
+		/>
+		<TextInput
+			bind:value={max_column_size}
+			show_confirm={false}
+			label_props={{ text: 'Max Column Size' }}
+		/>
+		<NumericInput
+			label_props={{ text: 'Rows (numeric)' }}
+			bind:value={rows}
+			min={1}
+			max={items.length}
+		/>
+		<Select
+			bind:value={rows}
+			input_label_props={{ text: 'Rows (keyword)' }}
+			options={Object.values(grid_fit_options)}
+		/>
+		<TextInput
+			bind:value={min_row_size}
+			show_confirm={false}
+			label_props={{ text: 'Min Row Size' }}
+		/>
+		<TextInput
+			bind:value={max_row_size}
+			show_confirm={false}
+			label_props={{ text: 'Max Row Size' }}
+		/>
 	</fieldset>
 	<fieldset style="grid-area: shared_options">
 		<legend>Shared Options</legend>
