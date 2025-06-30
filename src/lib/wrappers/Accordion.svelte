@@ -7,7 +7,7 @@
 		/** (Bindable) The open state of the accordion. */
 		open?: boolean;
 		/** The parameters of the transition. */
-		transition_props?: ComponentProps<typeof TransitionRunes>;
+		transition_props?: TransitionProps;
 		/** The position of the expand icon. */
 		expand_icon_position?: 'left' | 'right' | 'none';
 		/** Props to apply to the expand/collapse icon's component. */
@@ -20,11 +20,10 @@
 </script>
 
 <script lang="ts">
-	import { tooltip, type TooltipProps } from '$lib/attach/tooltip/tooltip.svelte';
-	import type { ComponentProps, Snippet } from 'svelte';
+	import type { Snippet } from 'svelte';
 	import { cubicInOut } from 'svelte/easing';
-	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
-	import TransitionRunes from './Transition_Runes.svelte';
+	import type { HTMLButtonAttributes, HTMLAttributes } from 'svelte/elements';
+	import type { TransitionProps } from './Transition_Runes.svelte';
 	import Icon, { type IconProps } from '@iconify/svelte';
 	export const toggle = () => {
 		open = !open;

@@ -13,9 +13,9 @@
 		/** Whether to show the spinner buttons. */
 		show_spinner_buttons?: boolean;
 		/** Props on the `<Placeholder>` element that wraps the input. */
-		placeholder_props?: ComponentProps<typeof Placeholder>;
+		placeholder_props?: PlaceholderProps;
 		/** Props on the `<label>` element that wraps the input, including the tooltip action and transition directive. */
-		label_props?: ComponentProps<typeof InputLabel>;
+		label_props?: InputLabelProps;
 		/** A spinner button Snippet for both up and down buttons*/
 		spinner_button?: Snippet;
 		/** A spinner button Snippet for the up button */
@@ -28,12 +28,12 @@
 </script>
 
 <script lang="ts">
-	import { type ComponentProps, type Snippet } from 'svelte';
-	import Icon, { type IconProps } from '@iconify/svelte';
+	import { type Snippet } from 'svelte';
 	import Input, { type InputProps } from './Input.svelte';
 	import InputButton, { type InputButtonProps } from './InputButton.svelte';
-	import InputLabel from './InputLabel.svelte';
-	import Placeholder from './Placeholder.svelte';
+	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
+	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
+	import type { IconProps } from '@iconify/svelte';
 
 	let {
 		value = $bindable(0),

@@ -9,9 +9,8 @@
 
 <script lang="ts">
 	import { AccordionJson } from '$lib';
-	import type { ComponentProps } from 'svelte';
 	import AccordionDetails, { type AccordionDetailsProps } from './AccordionDetails.svelte';
-	import TransitionNativeRunes from './TransitionNative_Runes.svelte';
+	import type { TransitionNativeProps } from './TransitionNative_Runes.svelte';
 
 	let {
 		value,
@@ -31,7 +30,7 @@
 			return false;
 		}
 	};
-	const transition_props: ComponentProps<typeof TransitionNativeRunes> = {
+	const transition_props: TransitionNativeProps = {
 		types: ['slide'],
 		slide_transition_parameters: { easing: 'ease' }
 	};
