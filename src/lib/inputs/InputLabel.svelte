@@ -55,9 +55,9 @@
 <label
 	bind:this={label_element}
 	for={for_id}
-	class="label-container"
 	transition:transition={transition_parameters}
 	{...label_attributes}
+	class={['_label-container', label_attributes.class]}
 >
 	{#if position === 'before'}
 		{@render label_snippet?.()}
@@ -83,7 +83,7 @@
 	}
 
 	@layer common.input.input_label {
-		label.label-container {
+		label._label-container {
 			--default-input-label-hover-background-color: oklch(
 				from var(--background) calc(l + 0.2) c h / 0.8
 			);
@@ -116,7 +116,7 @@
 				'after'
 				'invalid';
 			/* Helps with the placeholder translation, but will require the label to have an explicit width or flex-basis to work as a flex item. */
-			container-type: inline-size;
+			/* container-type: inline-size; */
 			padding-inline: var(--input-label-padding-inline, var(--default-input-label-padding-inline));
 			padding-block: var(--input-label-padding-block, var(--default-input-label-padding-block));
 			border-radius: var(--input-label-border-radius, var(--default-input-label-border-radius));
