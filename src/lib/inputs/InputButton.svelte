@@ -22,7 +22,7 @@
 <style>
 	@layer common.button {
 		:global(._input_button) {
-			--max-width: 1.75rem;
+			--max-width: 2cqw;
 			display: grid;
 			place-items: center;
 			z-index: var(--spinner-z-index, var(--above, 1));
