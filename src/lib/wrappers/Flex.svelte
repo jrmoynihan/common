@@ -39,7 +39,6 @@
 </script>
 
 <div
-	class={['_flex', attributes.class]}
 	style:--flex-direction={direction}
 	style:--flex-wrap={wrap}
 	style:--flex-justify-content={justify_content}
@@ -49,6 +48,7 @@
 	style:--flex-gap={gap}
 	style:--overflow={overflow}
 	{...attributes}
+	class={['_flex', attributes.class]}
 >
 	{@render children?.()}
 </div>
@@ -61,8 +61,8 @@
 			flex-wrap: var(--flex-wrap, nowrap);
 			justify-content: var(--flex-justify-content, normal);
 			align-content: var(--flex-align-content);
-			align-items: var(--align-flex-items);
-			align-self: var(--align-flex-self);
+			align-items: var(--flex-align-items);
+			align-self: var(--flex-align-self);
 			gap: var(--flex-gap);
 			overflow: var(--overflow);
 		}
