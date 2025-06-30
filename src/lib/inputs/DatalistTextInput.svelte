@@ -4,14 +4,13 @@
 		value?: unknown;
 		value_key?: string;
 		label_key?: string;
-		label_props?: ComponentProps<typeof InputLabel>;
+		label_props?: InputLabelProps;
 		label_element?: HTMLLabelElement;
 	}
 </script>
 
 <script lang="ts">
-	import type { ComponentProps } from 'svelte';
-	import InputLabel from './InputLabel.svelte';
+	import type { InputLabelProps } from './InputLabel.svelte';
 	import TextInput, { type TextInputProps } from './TextInput.svelte';
 
 	let list: string = crypto?.randomUUID();
