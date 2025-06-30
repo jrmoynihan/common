@@ -72,10 +72,14 @@
 		}
 		return String(item_value);
 	}
+	function is_valid_option_attribute(option: any): HTMLOptionAttributes {
+		const { label, value, disabled, selected, id, class: className, ...rest } = option;
+		return { label, value, disabled, selected, id, class: className };
+	}
 </script>
 
 {#snippet default_option_snippet(option: Item)}
-	<option {...option} value={get_value(option)}>
+	<option value={get_value(option)} {...is_valid_option_attribute(option)}>
 		{get_label(option)}
 	</option>
 {/snippet}
