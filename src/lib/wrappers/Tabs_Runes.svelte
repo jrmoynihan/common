@@ -1,9 +1,9 @@
 <script module lang="ts">
-	export interface TabsProps<T extends Component> {
+	export interface TabsProps<T extends Component> extends HTMLAttributes<HTMLDivElement> {
 		tabs?: (SnippetTab | ComponentTab<T>)[];
 		/** A replacement Snippet for the default tab button */
 		tab_button?: Snippet<[tab: SnippetTab | ComponentTab<T>]>;
-		/** A replacement Snippet for the default tab container title */
+		/** A replacement Snippet for the default tab container title (a <h3> element) */
 		tab_container_title?: Snippet | null;
 		/** The title of the default tab button */
 		title?: string;
@@ -20,7 +20,7 @@
 		/** The selected tab */
 		selected_tab?: SnippetTab | ComponentTab<T>;
 		/** The transition parameters of the tab content */
-		tab_content_transition_parameters?: ComponentProps<typeof TransitionNativeRunes>;
+		tab_content_transition_parameters?: TransitionNativeProps;
 	}
 
 	interface Tab {
@@ -37,20 +37,21 @@
 </script>
 
 <script lang="ts" generics="T extends Component<any>">
-	import TransitionNativeRunes from '$wrappers/TransitionNative_Runes.svelte';
+	import TransitionNativeRunes, {
+		type TransitionNativeProps
+	} from '$wrappers/TransitionNative_Runes.svelte';
 	import type { Component, ComponentProps, Snippet } from 'svelte';
 	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	let {
 		tabs = [],
 		tab_button = default_tab_button,
 		tab_container_title = default_tab_container_title,
-		title,
-		tab_container_attributes,
+		tab_button_attributes,
 		tab_button_container_attributes,
 		tab_content_container_attributes,
+		tab_content_transition_parameters,
 		tab_panel_attributes,
-		tab_button_attributes,
-		tab_content_transition_parameters
+		...tab_container_attributes
 	}: TabsProps<T> = $props();
 
 	const id = crypto.randomUUID();
@@ -103,14 +104,9 @@
 	}
 </script>
 
-<div {id} class="tabs" {...tab_container_attributes}>
+<div {id} {...tab_container_attributes} class={['tabs', tab_container_attributes?.class]}>
 	{@render tab_container_title?.()}
-	<div
-		role="tablist"
-		aria-labelledby={`tablist-${id}`}
-		class="automatic"
-		{...tab_button_container_attributes}
-	>
+	<div role="tablist" aria-labelledby={`tablist-${id}`} {...tab_button_container_attributes}>
 		{#each tabs as tab, i (tab)}
 			<button
 				id={`tab-${i}-${id}`}
@@ -154,7 +150,7 @@
 {/snippet}
 
 {#snippet default_tab_container_title()}
-	<h3 id={`tablist-${id}`}>{title}</h3>
+	<h3 id={`tablist-${id}`}>{tab_container_attributes.title}</h3>
 {/snippet}
 {#snippet snippet_tab(tab: SnippetTab, i: number)}
 	<TransitionNativeRunes
