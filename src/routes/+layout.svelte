@@ -19,10 +19,8 @@
 	const { nav_links } = data;
 	let trigger: boolean = $state(false);
 	let dark_mode = new MediaQuery('(prefers-color-scheme: dark)');
-	let bg_color: string = $state(dark_mode.current ? 'hsla(195 61% 14%)' : 'hsla(0 0% 100% / 1)');
-	let accent_color: string = $state(
-		dark_mode.current ? 'hsla(39 100% 50% / 1)' : 'hsl(195 81% 24%)'
-	);
+	let bg_color: string = $state(dark_mode.current ? '#0e2f39' : '#ffffff');
+	let accent_color: string = $state(dark_mode.current ? '#ffa600' : '#0c566f');
 
 	beforeNavigate(async (nav) => {
 		const { from, to } = nav;
