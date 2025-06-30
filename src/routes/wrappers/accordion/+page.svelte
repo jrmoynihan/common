@@ -1,11 +1,10 @@
 <script lang="ts">
 	import Accordion from '$wrappers/Accordion.svelte';
-	import AccordionDetails from '$wrappers/AccordionDetails.svelte';
+	import AccordionDetails, { type AccordionDetailsProps } from '$wrappers/AccordionDetails.svelte';
 	import AccordionJson from '$wrappers/AccordionJSON.svelte';
 	import JsonView from '$wrappers/JSONView.svelte';
-	import type { ComponentProps } from 'svelte';
-	import Treecordion from './Treecordion.svelte';
 	import { tooltip } from '$lib';
+	import Treecordion from './Treecordion.svelte';
 
 	const details_styles = 'max-width: max-content;';
 	const summary_styles = 'min-width: min(20rem, 30vw)';
@@ -22,7 +21,7 @@
 		'https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/401671786?lang=en&region=us'
 	);
 
-	const accordion_configs: ComponentProps<typeof AccordionDetails>[] = [
+	const accordion_configs: AccordionDetailsProps[] = [
 		{
 			summary: opacity_default
 		},
