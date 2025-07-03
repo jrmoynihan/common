@@ -72,6 +72,7 @@
 		}
 		return String(item_value);
 	}
+
 	function is_valid_option_attribute(option: any): HTMLOptionAttributes {
 		const { label, value, disabled, selected, id, class: className, ...rest } = option;
 		return { label, value, disabled, selected, id, class: className };
