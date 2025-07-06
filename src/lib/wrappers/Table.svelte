@@ -12,7 +12,7 @@
 		value: any;
 	}
 	export interface TableProps<T> extends HTMLTableAttributes {
-		data?: T[];
+		data?: T[] | null;
 		/** An snippet representing the table header row(s) (e.g. a `<tr>` element to be rendered within `<thead>`) */
 		header_row?: Snippet<[T]>;
 		/** A snippet representing the table header cells and how they should be rendered (`<th>` elements within `<thead>` `<tr>` rows).  The default excludes properties on the object that are `typeof === 'function'` and allows capitalization of headers, and then renders the `th` snippet.  */
@@ -93,14 +93,20 @@
 	// Assign icons for sorting; A-Z icons for strings, 1-9 icons for numbers, arrow icons for everything else
 	type Ordering = 'asc' | 'desc' | null;
 	const orders: SvelteMap<keyof T, Ordering> = $state(
-		new SvelteMap(Object.keys(data[0]!).map((d) => [d, 'desc']))
+		data && Array.isArray(data) && data.length > 0 && typeof data[0] === 'object'
+			? new SvelteMap(Object.keys(data[0]).map((d) => [d, 'desc']))
+			: new SvelteMap()
 	);
 	const icons: SvelteMap<keyof T, IconProps['icon']> = $derived.by(() => {
-		return new SvelteMap(
-			Array.from(orders.entries(), ([key, order]) => {
-				return [key, map_icons(data[0]!, key, order)];
-			})
-		);
+		if (data && Array.isArray(data) && data.length > 0 && typeof data[0] === 'object') {
+			return new SvelteMap(
+				Array.from(orders.entries(), ([key, order]) => {
+					return [key, map_icons(data[0] as T, key, order)];
+				})
+			);
+		} else {
+			return new SvelteMap();
+		}
 	});
 
 	function capitalize(s: string) {
@@ -131,16 +137,16 @@
 		const new_order = change_order(key);
 		// TODO: Use different sort algorithms for different size data arrays
 		new_order === 'asc'
-			? data.sort((a, b) => b[key].localeCompare(a[key]))
-			: data.sort((a, b) => a[key].localeCompare(b[key]));
+			? data?.sort((a, b) => b[key].localeCompare(a[key]))
+			: data?.sort((a, b) => a[key].localeCompare(b[key]));
 	}
 
 	function sort_numbers_or_boolean_or_dates(key: keyof T) {
 		// TODO: Use different sort algorithms for different size data arrays
 		const new_order = change_order(key);
 		new_order === 'asc'
-			? data.sort((a, b) => b[key] - a[key])
-			: data.sort((a, b) => a[key] - b[key]);
+			? data?.sort((a, b) => b[key] - a[key])
+			: data?.sort((a, b) => a[key] - b[key]);
 	}
 
 	function change_order(key: keyof T) {
@@ -189,7 +195,7 @@
 {/snippet}
 
 {#snippet default_sort_button(key: keyof T)}
-	{@const datum_0 = data[0]?.[key] as string | number | boolean | bigint | object}
+	{@const datum_0 = data?.[0]?.[key] as string | number | boolean | bigint | object}
 	{@const icon = icons.get(key) ?? 'fa6-solid:arrow-down-wide-short'}
 	{@const order = orders.get(key)}
 	{#if typeof datum_0 === 'string'}
@@ -297,16 +303,18 @@
 		{@render caption?.(caption_text)}
 	{/if}
 
-	{#if data.length > 0}
+	{#if data && data.length > 0}
 		<thead {...table_header_attributes}>
-			{@render header_row?.(data[0]!)}
+			{@render header_row?.(data[0] as T)}
 		</thead>
 	{/if}
 	<!-- TODO: Add support for virtual list -->
 	<tbody {...table_body_attributes}>
-		{#each data as datum, index (datum)}
-			{@render data_row?.({ datum, index })}
-		{/each}
+		{#if data}
+			{#each data as datum, index (datum)}
+				{@render data_row?.({ datum, index })}
+			{/each}
+		{/if}
 	</tbody>
 	{@render footer?.(data)}
 </table>
