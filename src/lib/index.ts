@@ -30,7 +30,7 @@ import type { RadioGroupProps } from '$inputs/RadioGroup.svelte';
 import NumericInput from './inputs/NumericInput.svelte';
 import type { NumericInputProps } from './inputs/NumericInput.svelte';
 import Select from './inputs/Select.svelte';
-import type { SelectOption, SelectOptionGroup, SelectProps } from './inputs/Select.svelte';
+import type { SelectOptionGroup, SelectProps } from './inputs/Select.svelte';
 import DateInput from './inputs/TemporalDateInput.svelte';
 import type { DateInputProps } from './inputs/TemporalDateInput.svelte';
 import TextInput from './inputs/TextInput.svelte';
@@ -93,7 +93,6 @@ import type { TransitionProps } from './wrappers/Transition_Runes.svelte';
 export {
 	capitalize,
 	clamp,
-	create_media_query,
 	dekebab,
 	delay,
 	enumerate_runed_properties,
@@ -106,23 +105,56 @@ export {
 	get_min_date,
 	get_min_temporal_zoned_date_time,
 	get_random_between,
+	get_random_integer,
 	get_transition_durations,
 	modulo,
 	remove_special_characters,
 	split_camel_case,
 	split_snake_case,
+	group_by,
+	uniqueBy,
+	is_object,
+	align_content_options,
+	align_items_options,
+	align_self_options,
+	justify_content_options,
+	justify_items_options,
+	justify_self_options,
+	wrap_options,
+	direction_options,
+	overflow_options,
+	grid_fit_options,
 	type PartiallyOptional,
 	type PartiallyRequired,
 	type PrettifyIntersection,
 	type PartialWithNonNullableValues,
 	type NonNullableValues,
-	align_items_options,
-	align_content_options,
-	justify_content_options,
-	justify_self_options,
-	wrap_options,
-	direction_options,
-	overflow_options
+	type HeterogenousArray,
+	type HomogenousArray,
+	type Mutable,
+	type First,
+	type Last,
+	type Tail,
+	type Head,
+	type Tuple,
+	type Maybe,
+	type Nullable,
+	type Optional,
+	type NonOptional,
+	type Brand,
+	type AtLeastOne,
+	type ExactlyOne,
+	type DeepPartial,
+	type DeepReadonly,
+	type Merge,
+	type ValueOf,
+	type KeysOfType,
+	type DeepRequired,
+	type StringLength,
+	type CompareNumbers,
+	type MaxLength,
+	type MinLength,
+	type StringLengthBetween
 } from '$lib/functions/helpers.svelte.js';
 export { Temporal } from '@js-temporal/polyfill';
 export { dynamic_style } from './actions/dynamic-styles.svelte.js';
@@ -229,7 +261,6 @@ export {
 	type NumericInputProps,
 	type RadioGroupProps,
 	type ScrollProgressProps,
-	type SelectOption,
 	type SelectOptionGroup,
 	type SelectProps,
 	type TableProps,
