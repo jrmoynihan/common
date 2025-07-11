@@ -141,7 +141,9 @@
 				{step}
 				{min}
 				{max}
-				placeholder_props={{ text: 'any number' }}
+				placeholder_props={{
+					text: ` ${min !== -Infinity && max !== Infinity && min !== null && max !== null ? 'a number between' : min !== -Infinity && min !== null ? 'at least' : max !== Infinity && max !== null ? 'at most' : ''} ${min !== -Infinity && min !== null ? min : ''} ${max !== Infinity && max !== null && min !== -Infinity && min !== null ? 'and' : ''} ${max !== Infinity && max !== null ? max : ''} ${step ? `in steps of ${step}.` : ''}`
+				}}
 				label_props={{
 					invalid_text: `Invalid number. Must be between ${min ?? '(min)'} and ${max ?? '(max)'} ${step ? `in steps of ${step}.` : ''}`
 				}}
