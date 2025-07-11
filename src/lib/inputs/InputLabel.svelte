@@ -115,8 +115,6 @@
 				'input'
 				'after'
 				'invalid';
-			/* Helps with the placeholder translation, but will require the label to have an explicit width or flex-basis to work as a flex item. */
-			/* container-type: inline-size; */
 			padding-inline: var(--input-label-padding-inline, var(--default-input-label-padding-inline));
 			padding-block: var(--input-label-padding-block, var(--default-input-label-padding-block));
 			border-radius: var(--input-label-border-radius, var(--default-input-label-border-radius));
@@ -132,13 +130,11 @@
 			}
 			&:focus-within > :global(.placeholder) {
 				scale: 0.75;
-				translate: -3ch -25% 0;
-				translate: -13cqw -1.5cqh 0;
+				translate: -12% -25% 0;
 			}
 			& > :global(:where(input.value, select.value)) ~ :global(.placeholder) {
 				scale: 0.75;
-				translate: -3ch -25% 0;
-				translate: -13cqw -1.5cqh 0;
+				translate: -12% -25% 0;
 			}
 			&:hover:not(:focus) > :global(.placeholder) {
 				opacity: 0.5;
