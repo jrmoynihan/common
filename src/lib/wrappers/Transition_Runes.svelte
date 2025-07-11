@@ -162,8 +162,8 @@
 <style>
 	.transition-outer {
 		display: grid;
-		grid-template-rows: 1fr;
-		grid-template-columns: 1fr;
+		grid-template-rows: minmax(0, 1fr);
+		grid-template-columns: minmax(0, 1fr);
 		justify-items: var(--transition-justify-items, stretch);
 		align-items: var(--transition-align-items, stretch);
 		flex-grow: var(--transition-flex-grow, 1);
@@ -177,6 +177,7 @@
 		background-size: cover;
 		display: grid;
 		grid-auto-rows: minmax(max-content, 100%);
+		grid-template-columns: minmax(0, 1fr);
 		grid-row: 1;
 		grid-column: 1;
 	}
