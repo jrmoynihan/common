@@ -20,7 +20,7 @@
 	let trigger: boolean = $state(false);
 	let dark_mode = new MediaQuery('(prefers-color-scheme: dark)');
 	let bg_color: string = $state(dark_mode.current ? '#0e2f39' : '#ffffff');
-	let accent_color: string = $state(dark_mode.current ? '#ffa600' : '#0c566f');
+	let accent_color: string = $state(dark_mode.current ? '#ffa600' : '#ffa600');
 
 	beforeNavigate(async (nav) => {
 		const { from, to } = nav;
