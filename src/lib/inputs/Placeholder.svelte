@@ -31,6 +31,7 @@
 
 <style>
 	.placeholder {
+		--text: light-dark(dimgray, lightgray);
 		user-select: none;
 		font-size: var(--placeholder-font-size, 1em);
 		font-style: var(--placeholder-font-style, normal);
@@ -46,7 +47,7 @@
 		box-sizing: border-box;
 		grid-area: input;
 		padding: var(--text-input-padding, 1.25em);
-		color: gray;
+		color: var(--placeholder-color, oklch(from var(--text) l c h / 0.7));
 		z-index: 0; /* addresses stacking context issue on the same grid-area */
 		/* height: 100%;  /* causes layout bug in Safari */
 	}
