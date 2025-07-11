@@ -130,7 +130,6 @@
 		grid-area: input;
 		padding: var(--text-input-padding, 1.25em);
 		color: var(--text-input-color, inherit);
-		width: 100%;
 		margin: 0;
 		border-radius: var(--text-input-border-radius, 1rem);
 		border: var(--text-input-border, inset);
