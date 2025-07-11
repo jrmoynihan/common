@@ -370,8 +370,8 @@
 <style>
 	.transition-outer {
 		display: grid;
-		grid-template-rows: 1fr;
-		grid-template-columns: 1fr;
+		grid-template-rows: minmax(0, 1fr);
+		grid-template-columns: minmax(0, 1fr);
 		flex-grow: var(--transition-flex-grow, 1);
 		flex-shrink: var(--transition-flex-shrink, 1);
 		flex-basis: var(--transition-flex-basis, 1fr);
@@ -390,6 +390,9 @@
 		transition-delay: var(--delay, 0);
 		transition-timing-function: var(--easing, linear);
 		transform-origin: var(--origin, center center);
+		display: grid;
+		grid-auto-rows: minmax(max-content, 100%);
+		grid-template-columns: minmax(0, 1fr);
 		&.visible {
 			opacity: var(--visible-opacity, 1);
 			pointer-events: all;
