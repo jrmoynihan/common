@@ -56,6 +56,7 @@
 		{disabled}
 		onchange={ontoggle}
 		{...input_attributes}
+		class={['toggle-switch', input_attributes.class]}
 	/>
 	<span class="switch">
 		<span class="slider round" data-slider-text={slider_text} {...slider_attributes}></span>
@@ -152,6 +153,8 @@
 	input {
 		height: 0;
 		width: 0;
+		box-shadow: none !important;
+		border: none !important;
 
 		&:checked + .switch > .slider {
 			background-color: var(--toggleBgColorActive, hsl(207, 90%, 54%));
