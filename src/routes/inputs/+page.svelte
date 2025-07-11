@@ -160,7 +160,7 @@
 			show_spinner_buttons={false}
 		/>
 	</section>
-	<section class="select-inputs grid gap-4">
+	<section class="select-inputs">
 		<h2>Select Inputs</h2>
 		<Select
 			bind:value={value_key}
@@ -265,13 +265,15 @@
 	}
 	.text-inputs,
 	.date-inputs,
-	.numeric-inputs {
+	.numeric-inputs,
+	.select-inputs {
 		place-self: start;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		justify-self: center;
 		gap: 1rem;
+		--inspect-min-width: 0;
 	}
 	.radio-inputs {
 		display: flex;
