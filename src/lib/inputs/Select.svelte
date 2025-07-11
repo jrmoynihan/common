@@ -35,13 +35,13 @@
 	let {
 		value = $bindable(),
 		options = $bindable([]),
+		value_key = $bindable(),
+		label_key = $bindable(),
 		option_snippet = default_option_snippet,
 		group_snippet = default_group_snippet,
 		children,
 		input_label_props,
 		placeholder_props = {},
-		value_key,
-		label_key,
 		id = crypto.randomUUID(),
 		...select_attributes
 	}: SelectProps<Item, Value> = $props();
@@ -98,7 +98,12 @@
 {/snippet}
 
 <InputLabel {id} {...input_label_props}>
-	<select bind:value class="select" class:value {id} {...select_attributes}>
+	<select
+		bind:value
+		{id}
+		{...select_attributes}
+		class={['select', value !== undefined && 'value', select_attributes.class]}
+	>
 		{#if children}
 			{@render children()}
 		{:else}
