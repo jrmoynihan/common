@@ -90,7 +90,6 @@
 	@layer common.input {
 		input {
 			box-sizing: border-box;
-			position: relative;
 			appearance: textfield;
 			-moz-appearance: textfield;
 			background-color: var(--background-color, revert);
