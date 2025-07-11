@@ -106,6 +106,7 @@
 					color: 'var(--text-input-button-color, buttontext)'
 				}}
 				{...button_props}
+				style={`${value === undefined || value === null ? null : 'display: none;'}`}
 				class={['_confirm-btn', { value, valid }]}
 			></InputButton>
 		{/if}
