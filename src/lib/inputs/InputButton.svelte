@@ -22,7 +22,6 @@
 <style>
 	@layer common.button {
 		:global(._input_button) {
-			--max-width: 2cqw;
 			display: grid;
 			place-items: center;
 			z-index: var(--spinner-z-index, var(--above, 1));
@@ -32,7 +31,7 @@
 			text-align: center;
 			color: var(--text-input-color, fieldtext);
 			border: var(--text-input-button-border, 1px inset buttonborder);
-			padding: var(--text-input-button-padding, calc(var(--max-width) / 3.5));
+			padding: var(--text-input-button-padding, 0.5em);
 			transition: all 300ms ease;
 			outline: 1px currentColor inset;
 			outline-offset: -1px;
