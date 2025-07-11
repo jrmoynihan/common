@@ -14,21 +14,21 @@
 	export interface TableProps<T> extends HTMLTableAttributes {
 		data?: T[] | null;
 		/** An snippet representing the table header row(s) (e.g. a `<tr>` element to be rendered within `<thead>`) */
-		header_row?: Snippet<[T]>;
+		header_row?: Snippet<[datum: T]>;
 		/** A snippet representing the table header cells and how they should be rendered (`<th>` elements within `<thead>` `<tr>` rows).  The default excludes properties on the object that are `typeof === 'function'` and allows capitalization of headers, and then renders the `th` snippet.  */
-		header_cell?: Snippet<[HeaderCell<T>]>;
+		header_cell?: Snippet<[params: HeaderCell<T>]>;
 		/** An snippet representing the table data row(s) */
-		data_row?: Snippet<[DataRow<T>]>;
+		data_row?: Snippet<[params: DataRow<T>]>;
 		/** A snippet representing the table data cells (`<td>` elements within `<tbody>` `<tr>` rows)*/
-		data_cell?: Snippet<[DataCell<T>]>;
+		data_cell?: Snippet<[params: DataCell<T>]>;
 		/** An snippet representing the table caption */
-		caption?: Snippet<[any]> | null;
+		caption?: Snippet<[text: string]> | null;
 		/** The text of the table caption */
 		caption_text?: string;
 		/** The side of the table caption, with respect to the table */
 		caption_side?: 'top' | 'bottom';
-		/** An snippet representing the table footer.  By default, it takes in an object of type `DataCell<T>` */
-		footer?: Snippet<[any]> | null;
+		/** An snippet representing the table footer.  By default, it takes in all data, of type `DataCell<T>` */
+		footer?: Snippet<[params: T[]]> | null;
 		/** The data of the table footer */
 		footer_data?: DataCell<T>;
 		/** A list of keys to include from the objects in the `data` array.  If left empty and `omitted_keys` is also left empty, all keys will be included */
@@ -38,17 +38,17 @@
 		/** Should the headers be capitalized? */
 		capitalize_headers?: boolean;
 		/** A snippet representing the button to sort the table column */
-		sort_button?: Snippet<[keyof T]> | null;
+		sort_button?: Snippet<[key: keyof T]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, before the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
-		preceding_header_cells?: Snippet | null;
+		preceding_header_cells?: Snippet<[]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, after the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
-		subsequent_header_cells?: Snippet | null;
+		subsequent_header_cells?: Snippet<[]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<tbody>`, before the keys of the `data` array.  Wrap your items in a `<td>` within the snippet.  Each item will have access to the `datum` and `index` properties. */
-		preceding_data_cells?: Snippet<[DataRow<T>]> | null;
+		preceding_data_cells?: Snippet<[params: DataRow<T>]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<tbody>`, after the keys of the `data` array.  Wrap your items in a `<td>` within the snippet.  Each item will have access to the `datum` and `index` properties. */
-		subsequent_data_cells?: Snippet<[DataRow<T>]> | null;
+		subsequent_data_cells?: Snippet<[params: DataRow<T>]> | null;
 		/** A snippet that will render an `<th>` within the `<thead>` and any snippets passed to it.  This element will receive the `table_header_cell_attributes` spread prop. */
-		th?: Snippet<[any]>;
+		th?: Snippet<[content: Snippet<[]>]>;
 		/** The attributes to be applied to the `<tbody>` element */
 		table_body_attributes?: HTMLAttributes<HTMLTableSectionElement>;
 		/** The attributes to be applied to the `<thead>` element */
@@ -290,10 +290,12 @@
 	{/if}
 {/snippet}
 
-{#snippet default_footer(d: DataCell<T>)}
+{#snippet default_footer<T>(data: T[])}
 	<tfoot>
 		<tr>
-			{@render data_cell?.(d)}
+			<td colspan={visible_keys ? visible_keys.length : data[0] ? Object.keys(data[0]).length : 0}>
+				{data.length} items
+			</td>
 		</tr>
 	</tfoot>
 {/snippet}
@@ -316,68 +318,78 @@
 			{/each}
 		{/if}
 	</tbody>
-	{@render footer?.(data)}
+	{#if data}
+		{@render footer?.(data)}
+	{:else}
+		{@render footer?.([])}
+	{/if}
 </table>
 
 <style module="mixed">
-	table {
-		--table-border-color: hsla(0, 0%, 80%, 0.3);
-		--table-cell-padding-inline: 0.5rem;
-		--table-cell-padding-block: 0.25rem;
-		--table-cell-padding: var(--table-cell-padding-block) var(--table-cell-padding-inline);
+	@layer common.table {
+		table {
+			--table-border-color: hsla(0, 0%, 80%, 0.3);
+			--table-cell-padding-inline: 0.5rem;
+			--table-cell-padding-block: 0.25rem;
+			--table-cell-padding: var(--table-cell-padding-block) var(--table-cell-padding-inline);
 
-		background-color: var(--table-background-color, inherit);
-		border-spacing: 0;
-		border: 2px solid var(--table-border-color);
-		border-radius: var(--table-border-radius);
-		width: var(--table-width, auto);
-		max-width: var(--table-max-width, 100%);
-		margin: var(--table-margin, 1rem 0);
+			background-color: var(--table-background-color, inherit);
+			border-spacing: 0;
+			border: 2px solid var(--table-border-color);
+			border-radius: var(--table-border-radius);
+			width: var(--table-width, auto);
+			max-width: var(--table-max-width, 100%);
+			margin: var(--table-margin, 1rem 0);
 
-		@media (width < 768px) {
-			display: block;
-			border-collapse: collapse;
-			overflow: auto;
+			@media (width < 768px) {
+				display: block;
+				border-collapse: collapse;
+				overflow: auto;
+			}
+
+			& > tbody {
+				white-space: nowrap;
+			}
+		}
+		thead {
+			position: sticky;
+			top: 0;
+			z-index: 1;
+		}
+		caption {
+			caption-side: var(--table-caption-side);
+			font-weight: var(--table-caption-font-weight, bold);
+		}
+		th,
+		td {
+			border: 1px solid var(--table-border-color);
+			padding: var(--table-cell-padding);
+			font-size: var(--table-font-size, var(--font-size-fluid-0)); /* open-props */
+		}
+		th:first-child {
+			border-top-left-radius: var(--table-border-radius, inherit);
+		}
+		th:last-child {
+			border-top-right-radius: var(--table-border-radius, inherit);
+		}
+		:global(tr:last-child > td:first-child) {
+			border-bottom-left-radius: var(--table-border-radius, inherit);
+		}
+		:global(tr:last-child > td:last-child) {
+			border-bottom-right-radius: var(--table-border-radius, inherit);
 		}
 
-		& > tbody {
-			white-space: nowrap;
+		th {
+			background-color: var(--table-header-background-color, inherit);
+			color: var(--table-header-color, inherit);
 		}
-	}
-	caption {
-		caption-side: var(--table-caption-side);
-		font-weight: var(--table-caption-font-weight, bold);
-	}
-	th,
-	td {
-		border: 1px solid var(--table-border-color);
-		padding: var(--table-cell-padding);
-	}
-	th:first-child {
-		border-top-left-radius: var(--table-border-radius, inherit);
-	}
-	th:last-child {
-		border-top-right-radius: var(--table-border-radius, inherit);
-	}
-	:global(tr:last-child > td:first-child) {
-		border-bottom-left-radius: var(--table-border-radius, inherit);
-	}
-	:global(tr:last-child > td:last-child) {
-		border-bottom-right-radius: var(--table-border-radius, inherit);
-	}
-
-	th {
-		background-color: var(--table-header-background-color, inherit);
-		color: var(--table-header-color, inherit);
-		position: sticky;
-		top: 0;
-	}
-	tr {
-		background-color: var(--table-row-background-color, inherit);
-		color: var(--table-row-color, inherit);
-	}
-	td {
-		background-color: var(--table-cell-background-color, inherit);
-		color: var(--table-cell-color, inherit);
+		tr {
+			background-color: var(--table-row-background-color, inherit);
+			color: var(--table-row-color, inherit);
+		}
+		td {
+			background-color: var(--table-cell-background-color, inherit);
+			color: var(--table-cell-color, inherit);
+		}
 	}
 </style>

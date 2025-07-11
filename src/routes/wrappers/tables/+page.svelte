@@ -1,8 +1,9 @@
 <script lang="ts">
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import { enumerate_runed_properties } from '$functions/helpers.svelte';
+	import { enumerate_runed_properties, get_max } from '$functions/helpers.svelte';
 	import Input from '$inputs/Input.svelte';
 	import Table, { type DataCell } from '$wrappers/Table.svelte';
+	import { MediaQuery } from 'svelte/reactivity';
 	import { fly } from 'svelte/transition';
 
 	function get_random_date() {
@@ -373,6 +374,11 @@
 		...names.map((name) => new Player(name)),
 		...names.map((name) => new Player(name))
 	]);
+	let bg = $derived(
+		new MediaQuery('(prefers-color-scheme: dark)').current
+			? 'var(--dark-background)'
+			: 'var(--background)'
+	);
 </script>
 
 {#snippet custom_data_cell({ datum, key }: DataCell<Person>)}
@@ -385,7 +391,7 @@
 			/>
 		</td>
 	{:else if key === 'age'}
-		<td class:young={datum.age < 30} class:old={datum.age >= 45}>
+		<td style:--lightness={datum.age / get_max(data.map((d) => d.age))}>
 			<div class="shared-grid age">
 				{#key datum.age}
 					<output in:fly={{ x: -50 }} out:fly={{ x: 50 }}>
@@ -411,7 +417,7 @@
 	{/if}
 {/snippet}
 
-<div class="tables">
+<div class="tables justify-items-center-safe" style="--table-header-background-color: {bg};">
 	<Table
 		bind:data
 		caption_text={'A Basic Table'}
@@ -443,19 +449,14 @@
 </div>
 
 <style>
-	.tables {
-		justify-self: center;
-	}
 	td {
+		--bg: light dark(var(--background), var(--background-dark));
 		padding: 0.25rem 0.5rem;
 		border: 1px solid var(--table-border-color);
-		&.young {
-			background-color: hsl(195, 61%, 74%);
-		}
-		&.old {
-			background-color: hsl(195, 61%, 34%);
-			color: white;
-		}
+		background-color: hsl(
+			from light-dark(var(--accent), var(--dark-accent)) h s calc(l * var(--lightness))
+		);
+		color: white;
 	}
 	.shared-grid {
 		display: grid;
