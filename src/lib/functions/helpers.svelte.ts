@@ -792,6 +792,9 @@ export function get_transition_durations(elements: HTMLElement[]): number[] {
  * ```
  */
 export function modulo(dividend: number, divisor: number): number {
+	if (divisor === 0) {
+		throw new Error('Division by zero: modulo function requires a non-zero divisor');
+	}
 	// handle negative numbers to behave like a true modulo operation instead of a remainder operation
 	return ((dividend % divisor) + divisor) % divisor;
 }
