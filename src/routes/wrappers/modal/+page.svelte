@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { tooltip, Button } from '$lib';
 	import FullDialog from '$wrappers/FullDialog.svelte';
 	import MiniDialog from '$wrappers/MiniDialog.svelte';
@@ -26,9 +27,21 @@
 		{#snippet button_content()}
 			Open the mega modal!
 		{/snippet}
-		{#each { length: 10 } as _}
-			{@render lorem()}
-		{/each}
+		{#snippet form()}
+			<form
+				method="POST"
+				action="?/submit"
+				use:enhance={() => {
+					console.log('submitting...');
+					alert('submitted!');
+				}}
+			>
+				{#each { length: 10 } as _}
+					{@render lorem()}
+				{/each}
+				<button type="submit">Submit</button>
+			</form>
+		{/snippet}
 	</FullDialog>
 
 	<hr />
@@ -90,5 +103,13 @@
 		border-radius: 0.5rem;
 		border: 1px solid var(--accent);
 		color: var(--text);
+	}
+	form {
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		align-items: start;
+		max-block-size: 80vh;
+		max-block-size: 80dvb;
+		padding: var(--dialog-form-padding, 0.5rem);
 	}
 </style>

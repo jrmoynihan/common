@@ -42,7 +42,7 @@ const SERVERS = {
  * ACTIONS
  */
 const ACTIONS = {
-  
+  "submit /wrappers/modal": `/wrappers/modal?/submit`
 }
 
 /**
@@ -159,7 +159,7 @@ export function route<T extends keyof AllTypes>(key: T, ...params: any[]): strin
 export type KIT_ROUTES = {
   PAGES: { '/': never, '/buttons': never, '/functions': never, '/functions/contexts': never, '/inputs': never, '/recipes': never, '/recipes/dynamic-highlight': never, '/recipes/gallery': never, '/recipes/navigation': never, '/recipes/orderable-list': never, '/tooltips': never, '/wrappers': never, '/wrappers/accordion': never, '/wrappers/modal': never, '/wrappers/tables': never, '/wrappers/tabs': never, '/wrappers/transition': never, '/wrappers/transition/[image]': 'image' }
   SERVERS: Record<string, never>
-  ACTIONS: Record<string, never>
+  ACTIONS: { 'submit /wrappers/modal': never }
   LINKS: Record<string, never>
   Params: { 'image': never }
 }
