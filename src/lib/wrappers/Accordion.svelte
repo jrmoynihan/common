@@ -66,11 +66,11 @@
 {/snippet}
 
 <button
-	class="accordion-container"
-	aria-roledescription="accordion"
-	onclick={toggle}
-	aria-expanded={open}
 	{...button_attributes}
+	aria-roledescription="accordion"
+	aria-expanded={open}
+	onclick={toggle}
+	class={['accordion-container', button_attributes.class]}
 >
 	<summary
 		class:left-icon={expand_icon_position === 'left'}
