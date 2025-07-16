@@ -5,8 +5,15 @@ export const get_local_storage_item = async <T>(key: string): Promise<T | undefi
 	if (browser) {
 		const item = localStorage.getItem(key);
 		if (item) {
-			const parsed_item = JSON.parse(item);
-			return parsed_item as T;
+			try {
+				const parsed_item = JSON.parse(item);
+				return parsed_item as T;
+			} catch (error) {
+				Log({ msg: `Failed to parse localStorage item "${key}": ${error}` });
+				// Optionally remove the corrupted item
+				localStorage.removeItem(key);
+				return undefined;
+			}
 		}
 	} else {
 		Log({ msg: 'unable to check for local storage without the browser available' });
