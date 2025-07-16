@@ -12,12 +12,6 @@
 		/** A binding to the placeholder <div> element */
 		placeholder_element?: HTMLDivElement;
 		placeholder_props?: PlaceholderProps;
-		/** A callback that runs when the confirm button is clicked */
-		onconfirm?: FormEventHandler<HTMLInputElement>;
-		/** A callback that runs when the cancel button is clicked */
-		oncancel?: FormEventHandler<HTMLInputElement>;
-		/** A callback that runs when the input is changed */
-		oninput?: FormEventHandler<HTMLInputElement>;
 		/** A binding to the valid state of the input. */
 		valid?: boolean;
 		/** The id of the input and the for attribute of the label.  Defaults to a random UUID. */
@@ -26,7 +20,6 @@
 </script>
 
 <script lang="ts">
-	import type { FormEventHandler } from 'svelte/elements';
 	import Input, { type InputProps } from './Input.svelte';
 	import InputButton, { type InputButtonProps } from './InputButton.svelte';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
@@ -46,12 +39,9 @@
 		placeholder_props = {},
 		label_props = { ...placeholder_props },
 		children,
-		onconfirm = () => input_element?.blur(),
+		onconfirm = confirm,
 		oncancel = clear_input,
-		oninvalid,
-		onvalid,
-		onblur,
-		oninput,
+		onkeypress = handle_keypress,
 		...input_attributes
 	}: TextInputProps = $props();
 
@@ -60,16 +50,15 @@
 		input_element?.focus();
 	}
 
-	function cancel(e: any) {
-		clear_input();
-		oncancel?.(e);
-	}
-
 	function confirm(e: any) {
 		if (!valid) {
 			return;
 		}
-		onconfirm?.(e);
+		input_element?.blur();
+	}
+
+	function handle_confirm_click(e: MouseEvent) {
+		onconfirm(e as any);
 	}
 
 	function handle_keypress(e: KeyboardEvent) {
@@ -85,7 +74,9 @@
 		bind:value
 		bind:valid
 		bind:id={for_id}
-		onkeypress={handle_keypress}
+		{oncancel}
+		{onconfirm}
+		{onkeypress}
 		type={'text'}
 		{...input_attributes}
 	/>
@@ -99,7 +90,7 @@
 		{#if show_confirm}
 			<InputButton
 				tabindex={value && valid ? 0 : -1}
-				onclick={confirm}
+				onclick={handle_confirm_click}
 				disabled={!value}
 				icon_props={{
 					icon: 'fa6-solid:check',
@@ -113,7 +104,7 @@
 		{#if show_cancel}
 			<InputButton
 				tabindex={value ? 0 : -1}
-				onclick={cancel}
+				onclick={clear_input}
 				disabled={!value}
 				icon_props={{ icon: 'fa6-solid:x', color: 'var(--text-input-button-color, buttontext)' }}
 				{...button_props}
