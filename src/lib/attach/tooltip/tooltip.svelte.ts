@@ -68,7 +68,7 @@ class BaseTooltipProps {
 		this.disabled = args.disabled ?? false;
 		this.keep_visible = args.keep_visible ?? false;
 		this.show_arrow = args.show_arrow ?? true;
-		this.styles = args.styles ?? '';
+		this.style = args.style ?? '';
 		this.distance = args.distance ?? 10;
 		this.inert = args.inert ?? true;
 		this.fallback = args.fallback ?? true;
