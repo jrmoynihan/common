@@ -48,6 +48,8 @@ import Navigation from './navigation/Navigation.svelte';
 import type { NavigationProps } from './navigation/Navigation.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 import type { ScrollProgressProps } from './navigation/ScrollProgress.svelte';
+import Carousel from './navigation/Carousel.svelte';
+import type { CarouselProps } from './navigation/Carousel.svelte';
 
 // Toasts
 import SeenToast from './toasts/SeenToast.svelte';
@@ -204,6 +206,7 @@ export {
 	ActionTooltip,
 	AnchorHeading,
 	Button,
+	Carousel,
 	Checkbox,
 	Dialog,
 	DragAnchor,
@@ -233,6 +236,7 @@ export {
 	ToggleSwitch,
 	Transition,
 	TransitionNative_Runes,
+	type CarouselProps,
 	type AccordionDetailsProps,
 	type AccordionJsonProps,
 	type AccordionProps,

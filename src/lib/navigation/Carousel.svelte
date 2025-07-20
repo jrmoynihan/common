@@ -1,15 +1,7 @@
 <script lang="ts" module>
 	export { carousel_item };
-</script>
-
-<script lang="ts">
-	// Adapted from https://web.dev/patterns/components/carousel/#js
-	// import { scrollend } from 'https://cdn.jsdelivr.net/gh/argyleink/scrollyfills@latest/dist/scrollyfills.modern.js';
-	import { type Snippet } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
-
 	type Index = number;
-	interface CarouselProps {
+	export interface CarouselProps {
 		items?: any[];
 		item_snippet?: Snippet<[any, Index]>;
 		children?: Snippet;
@@ -26,6 +18,13 @@
 		previous_attributes?: HTMLButtonAttributes;
 		next_attributes?: HTMLButtonAttributes;
 	}
+</script>
+
+<script lang="ts">
+	// Adapted from https://web.dev/patterns/components/carousel/#js
+	// import { scrollend } from 'https://cdn.jsdelivr.net/gh/argyleink/scrollyfills@latest/dist/scrollyfills.modern.js';
+	import { type Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	let {
 		items,
