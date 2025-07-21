@@ -10,6 +10,7 @@
 		pagination_type?: 'dots' | 'gallery' | 'none';
 		length?: number;
 		start_index?: number;
+		current_index?: number;
 		show_arrows?: boolean;
 		disable_previous?: boolean;
 		disable_next?: boolean;
@@ -17,17 +18,21 @@
 		show_next?: boolean;
 		previous_attributes?: HTMLButtonAttributes;
 		next_attributes?: HTMLButtonAttributes;
+		on_item_change?: (index: number, element: HTMLElement) => void;
+		on_navigation?: (direction: 'next' | 'previous', index: number) => void;
 	}
 </script>
 
 <script lang="ts">
+	import { browser } from '$app/environment';
+
 	// Adapted from https://web.dev/patterns/components/carousel/#js
 	// import { scrollend } from 'https://cdn.jsdelivr.net/gh/argyleink/scrollyfills@latest/dist/scrollyfills.modern.js';
 	import { type Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	let {
-		items,
+		items = [],
 		item_snippet,
 		children,
 		next_content = default_next_content,
@@ -35,13 +40,16 @@
 		pagination_type = 'dots',
 		length = 0,
 		start_index = 0,
+		current_index = $bindable(0),
 		show_arrows = true,
 		disable_previous = false,
 		disable_next = false,
 		show_previous = true,
 		show_next = true,
 		previous_attributes,
-		next_attributes
+		next_attributes,
+		on_item_change,
+		on_navigation
 	}: CarouselProps = $props();
 
 	// Determine the actual number of items
@@ -54,26 +62,23 @@
 		}
 		// If using children, we need to count the carousel items in the DOM
 		if (children) {
-			console.warn('Carousel: length is not set when using children');
+			console.warn('Carousel: `length` should be set when passing `children` snippets.');
 		}
 		return 0; // Will be updated by effect
 	});
 
 	// State management with runes
 	let current = $state<HTMLElement>();
-	let current_index = $state<number>(0);
 	let previous = $state<HTMLButtonElement>();
 	let next = $state<HTMLButtonElement>();
 	let carousel = $state<HTMLElement>();
 	let scroller = $state<HTMLElement>();
 	let pagination_nav = $state<HTMLElement>();
 	let has_intersected = $state<Set<IntersectionObserverEntry>>(new Set());
-	const is_at_end = $derived(current === (scroller?.lastElementChild as HTMLElement));
-	const is_at_start = $derived(current === (scroller?.firstElementChild as HTMLElement));
-	$effect(() => {
-		if (document?.activeElement === next && is_at_end) previous?.focus();
-		else if (document?.activeElement === previous && is_at_start) next?.focus();
-	});
+	const is_at_end = $derived(current_index === item_count - 1);
+	const is_at_start = $derived(current_index === 0);
+	const can_go_next = $derived(!disable_next && !is_at_end && item_count > 1);
+	const can_go_previous = $derived(!disable_previous && !is_at_start && item_count > 1);
 
 	// Observers
 	let carousel_observer: IntersectionObserver;
@@ -136,7 +141,7 @@
 		return () => mutation_observer.disconnect();
 	});
 
-	// Synchronize intersection observations
+	// Synchronize intersection observations and update current item
 	$effect(() => {
 		for (let observation of has_intersected) {
 			observation.target.toggleAttribute('inert', !observation.isIntersecting);
@@ -145,10 +150,14 @@
 			dot?.setAttribute('tabindex', !observation.isIntersecting ? '-1' : '0');
 
 			if (observation.isIntersecting) {
+				const new_index = get_element_index(observation.target);
 				current = observation.target as HTMLElement;
-				current_index = get_element_index(observation.target);
+				current_index = new_index;
 
-				const dot = pagination_nav?.children[get_element_index(observation.target)];
+				// Call on_item_change callback
+				on_item_change?.(new_index, observation.target as HTMLElement);
+
+				const dot = pagination_nav?.children[new_index];
 				if (dot && pagination_nav) {
 					go_to_element({
 						scrollport: pagination_nav,
@@ -161,13 +170,26 @@
 		has_intersected.clear();
 	});
 
-	// Initialize current item only once
+	// Initialize current item and re-initialize when item count changes
 	$effect(() => {
-		if (scroller && item_count && !current) {
+		if (scroller && item_count) {
 			const carousel_items = get_carousel_items();
-			if (carousel_items[start_index]) {
-				current = carousel_items[start_index];
+			// Re-initialize if no current item or if item count changed significantly
+			if (!current || carousel_items.length !== item_count) {
+				if (carousel_items[start_index]) {
+					current = carousel_items[start_index];
+					current_index = start_index;
+				}
 			}
+		}
+	});
+
+	// Handle focus management when buttons become disabled
+	$effect(() => {
+		if (browser && document?.activeElement === next && !can_go_next) {
+			previous?.focus();
+		} else if (browser && document?.activeElement === previous && !can_go_previous) {
+			next?.focus();
 		}
 	});
 
@@ -202,34 +224,44 @@
 	}
 
 	export function go_next() {
-		if (!current || !scroller) return;
+		if (!can_go_next || !current || !scroller) return;
 
 		const next_item = current.nextElementSibling as HTMLElement;
 		if (current === next_item) return;
 
 		if (next_item) {
+			const new_index = get_element_index(next_item);
+			current_index = new_index;
 			current = next_item;
+
 			go_to_element({
 				scrollport: scroller,
 				element: next_item
 			});
+			// Call on_navigation callback
+			on_navigation?.('next', new_index);
 		} else {
 			console.log('No next item found');
 		}
 	}
 
 	export function go_previous() {
-		if (!current || !scroller) return;
+		if (!can_go_previous || !current || !scroller) return;
 
 		const previous_item = current.previousElementSibling as HTMLElement;
 		if (current === previous_item) return;
 
 		if (previous_item) {
+			const new_index = get_element_index(previous_item);
+			current_index = new_index;
 			current = previous_item;
+
 			go_to_element({
 				scrollport: scroller,
 				element: previous_item
 			});
+			// Call on_navigation callback
+			on_navigation?.('previous', new_index);
 		} else {
 			console.log('No previous item found');
 		}
@@ -322,23 +354,6 @@
 		);
 	}
 
-	// function update_controls() {
-	// 	if (!scroller || !next || !previous) return;
-
-	// 	const { lastElementChild: last, firstElementChild: first } = scroller;
-
-	// 	const isAtEnd = current === last;
-	// 	const isAtStart = current === first;
-
-	// 	// before we possibly disable a button
-	// 	// shift the focus to the complimentary button
-	// 	if (document.activeElement === next && isAtEnd) previous.focus();
-	// 	else if (document.activeElement === previous && isAtStart) next.focus();
-
-	// 	next.toggleAttribute('disabled', isAtEnd);
-	// 	previous.toggleAttribute('disabled', isAtStart);
-	// }
-
 	export const handle_scroll_start = (event: AnimationEvent, i: number) => {
 		if (i === start_index && scroller) {
 			const carousel_items = get_carousel_items();
@@ -399,7 +414,7 @@
 			{#if show_previous}
 				<button
 					bind:this={previous}
-					disabled={disable_previous || is_at_start}
+					disabled={!can_go_previous}
 					type="button"
 					title="Previous Item"
 					class={[
@@ -421,7 +436,7 @@
 			{#if show_next}
 				<button
 					bind:this={next}
-					disabled={disable_next || is_at_end}
+					disabled={!can_go_next}
 					type="button"
 					title="Next Item"
 					class={['carousel-control arrow next', is_at_end && 'end', next_attributes?.class]}
@@ -446,21 +461,18 @@
 		aria-label="Items Scroller"
 		aria-live="polite"
 	>
-		{#if items && items.length > 0 && item_snippet}
-			{#each items as item, i}
-				<div
-					class="gui-carousel-item snap"
-					aria-label={`${i + 1} of ${item_count}`}
-					aria-roledescription="item"
-					style:animation={i === start_index ? 'carousel-scrollstart 1ms' : ''}
-					onanimationend={(e) => handle_scroll_start(e, i)}
-				>
-					{@render item_snippet(item, i)}
-				</div>
-			{/each}
-		{:else}
-			{@render children?.()}
-		{/if}
+		{#each items as item, i (i)}
+			<div
+				class="gui-carousel-item snap"
+				aria-label={`${i + 1} of ${item_count}`}
+				aria-roledescription="item"
+				style:animation={i === start_index ? 'carousel-scrollstart 1ms' : ''}
+				onanimationend={(e) => handle_scroll_start(e, i)}
+			>
+				{@render item_snippet?.(item, i)}
+			</div>
+		{/each}
+		{@render children?.()}
 	</div>
 
 	{#if pagination_type !== 'none' && item_count > 1}
