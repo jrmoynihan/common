@@ -4,8 +4,8 @@
 		checked?: boolean;
 		/** The disabled state of the toggle. Defaults to `false`. */
 		disabled?: boolean;
-		/** The dynamic styles for the label. */
-		label_dynamic_styles?: DynamicStyleParameters;
+		/** The attributes to apply to the `<label>` element. */
+		label_attributes?: HTMLLabelAttributes;
 		/** The position of the label relative to the toggle. Defaults to `before`. */
 		label_position?: 'before' | 'after';
 		/** The text to display in the label. */
@@ -20,13 +20,12 @@
 </script>
 
 <script lang="ts">
-	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-	import type { HTMLAttributes, HTMLInputAttributes } from 'svelte/elements';
+	import type { HTMLAttributes, HTMLInputAttributes, HTMLLabelAttributes } from 'svelte/elements';
 
 	let {
 		checked = $bindable(),
 		disabled = $bindable(),
-		label_dynamic_styles,
+		label_attributes,
 		label_position = 'before',
 		label_text,
 		slider_text,
@@ -39,7 +38,11 @@
 	const id = crypto?.randomUUID();
 </script>
 
-<label use:dynamic_style={label_dynamic_styles} class="label-text pointer" for={`toggle-${id}`}>
+<label
+	for={`toggle-${id}`}
+	class={['label-text pointer', label_attributes?.class]}
+	{...label_attributes}
+>
 	{#if label_position === 'before'}
 		{#if children}
 			{@render children?.()}
