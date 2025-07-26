@@ -68,9 +68,8 @@
 	<ToggleSwitch
 		bind:checked={complex_state.player.toggled}
 		style={'display: grid; transition: background-color 250ms ease, color 250ms ease; gap: 1rem; grid-auto-flow: column; padding: 1rem;'}
-		label_dynamic_styles={{
-			hover_styles: 'background-color: darkgreen;',
-			styles: `text-transform: capitalize; ${complex_state.player.toggled === true ? '' : 'text-decoration: line-through'}`
+		label_attributes={{
+			style: `text-transform: capitalize; ${complex_state.player.toggled === true ? '' : 'text-decoration: line-through'}`
 		}}
 	>
 		<p>I'm a toggle switch!</p>

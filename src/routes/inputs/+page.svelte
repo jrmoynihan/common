@@ -43,11 +43,8 @@
 				position: 'top'
 			})}
 			placeholder_props={{
-				text: 'required',
-				dynamic_styles: {
-					invalid_styles: 'color: var(--text);',
-					valid_styles: 'color: var(--text);'
-				}
+				text: 'required'
+				// style: 'color: var(--text);'
 			}}
 			show_confirm={false}
 			label_props={{

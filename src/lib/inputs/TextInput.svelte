@@ -37,7 +37,7 @@
 		allow_enter_to_confirm = true,
 		button_props,
 		placeholder_props = {},
-		label_props = { ...placeholder_props },
+		label_props,
 		children,
 		onconfirm = confirm,
 		oncancel = clear_input,
