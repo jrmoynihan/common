@@ -48,7 +48,7 @@ import Navigation from './navigation/Navigation.svelte';
 import type { NavigationProps } from './navigation/Navigation.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 import type { ScrollProgressProps } from './navigation/ScrollProgress.svelte';
-import Carousel from './navigation/Carousel.svelte';
+import Carousel, { carousel_item } from './navigation/Carousel.svelte';
 import type { CarouselProps } from './navigation/Carousel.svelte';
 
 // Toasts
@@ -200,6 +200,7 @@ export {
 } from './navigation/nav-functions.js';
 export type { ComponentTab, SnippetTab } from './wrappers/Tabs_Runes.svelte';
 export {
+	carousel_item,
 	Accordion,
 	AccordionDetails,
 	AccordionJson,
