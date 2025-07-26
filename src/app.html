@@ -10,6 +10,14 @@
 				console.log('Loading anchor positioning polyfill.');
 			}
 		</script>
+
+		<link rel="preload" as="style" href="https://unpkg.com/open-props" />
+		<link rel="preload" as="style" href="https://unpkg.com/open-props/sizes.min.css" />
+		<link rel="preload" as="style" href="https://unpkg.com/open-props/shadows.min.css" />
+
+		<link rel="stylesheet" href="https://unpkg.com/open-props" />
+		<link rel="stylesheet" href="https://unpkg.com/open-props/sizes.min.css" />
+		<link rel="stylesheet" href="https://unpkg.com/open-props/shadows.min.css" />
 		<style type="text/css">
 			@layer base, utilities, components, common.navlink, common.input, common.button, common.dialog, common.tooltip;
 		</style>
@@ -18,7 +26,4 @@
 	<body>
 		<div>%sveltekit.body%</div>
 	</body>
-	<link rel="stylesheet" href="https://unpkg.com/open-props" />
-	<link rel="stylesheet" href="https://unpkg.com/open-props/sizes.min.css" />
-	<link rel="stylesheet" href="https://unpkg.com/open-props/shadows.min.css" />
 </html>
