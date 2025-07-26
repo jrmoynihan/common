@@ -5,7 +5,7 @@ import { kitRoutes } from 'vite-plugin-kit-routes';
 import tailwindcss from '@tailwindcss/vite';
 import { browserslistToTargets } from 'lightningcss';
 import browserslist from 'browserslist';
-import type { UserConfig } from 'vite';
+import { defineConfig, type UserConfig } from 'vite';
 
 const $root = path.resolve(__dirname, './src');
 const $lib = path.resolve($root, './lib');
@@ -13,7 +13,7 @@ const $routes = path.resolve($root, './routes');
 const $scripts = path.resolve($lib, './scripts');
 const $actions = path.resolve($lib, './actions');
 
-const config: UserConfig = {
+const config = defineConfig({
 	plugins: [examples, tailwindcss(), sveltekit(), kitRoutes()],
 	resolve: {
 		alias: {
@@ -24,14 +24,17 @@ const config: UserConfig = {
 		}
 	},
 	build: {
+		sourcemap: true,
+		target: 'esnext',
 		cssMinify: 'lightningcss'
 	},
 	css: {
 		transformer: 'lightningcss',
 		lightningcss: {
-			targets: browserslistToTargets(browserslist('>= 0.25%'))
+			targets: browserslistToTargets(browserslist('defaults, not ie 11'))
 		}
-	}
-};
+	},
+	experimental: { enableNativePlugin: true }
+}) satisfies UserConfig;
 
 export default config;
