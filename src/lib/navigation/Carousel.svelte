@@ -1,16 +1,19 @@
 <script lang="ts" module>
 	export { carousel_item };
+
 	type Index = number;
-	export interface CarouselProps {
+	// Base interface with common properties
+	interface CarouselPropsBase {
 		items?: any[];
-		item_snippet?: Snippet<[any, Index]>;
-		children?: Snippet;
 		next_content?: Snippet;
 		previous_content?: Snippet;
 		pagination_type?: 'dots' | 'gallery' | 'none';
 		length?: number;
 		start_index?: number;
+		/** Which the carousel is scrolled to currently.  Changes during scroll events.*/
 		current_index?: number;
+		/** The actual item selected by the user.  Changes when the user clicks on a marker or arrow button. */
+		selected_index?: number;
 		show_arrows?: boolean;
 		disable_previous?: boolean;
 		disable_next?: boolean;
@@ -18,9 +21,22 @@
 		show_next?: boolean;
 		previous_attributes?: HTMLButtonAttributes;
 		next_attributes?: HTMLButtonAttributes;
+		carousel_attributes?: HTMLAttributes<HTMLDivElement>;
+		arrow_controls_container_attributes?: HTMLAttributes<HTMLDivElement>;
+		scroller_attributes?: HTMLAttributes<HTMLDivElement>;
+		pagination_attributes?: HTMLAttributes<HTMLElement>;
+		carousel_item_attributes?: HTMLAttributes<HTMLDivElement>;
+		marker_attributes?: HTMLButtonAttributes;
 		on_item_change?: (index: number, element: HTMLElement) => void;
 		on_navigation?: (direction: 'next' | 'previous', index: number) => void;
 	}
+
+	// Conditional type that requires item_snippet when children is not provided
+	export type CarouselProps = CarouselPropsBase &
+		(
+			| { children: Snippet; item_snippet?: Snippet<[any, Index]> }
+			| { children?: undefined; item_snippet: Snippet<[any, Index]> }
+		);
 </script>
 
 <script lang="ts">
@@ -29,7 +45,7 @@
 	// Adapted from https://web.dev/patterns/components/carousel/#js
 	// import { scrollend } from 'https://cdn.jsdelivr.net/gh/argyleink/scrollyfills@latest/dist/scrollyfills.modern.js';
 	import { type Snippet } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	let {
 		items = [],
@@ -41,6 +57,7 @@
 		length = 0,
 		start_index = 0,
 		current_index = $bindable(0),
+		selected_index = $bindable(0),
 		show_arrows = true,
 		disable_previous = false,
 		disable_next = false,
@@ -49,12 +66,18 @@
 		previous_attributes,
 		next_attributes,
 		on_item_change,
-		on_navigation
+		on_navigation,
+		carousel_attributes,
+		arrow_controls_container_attributes,
+		scroller_attributes,
+		pagination_attributes,
+		carousel_item_attributes,
+		marker_attributes
 	}: CarouselProps = $props();
 
 	// Determine the actual number of items
 	const item_count = $derived.by(() => {
-		if (items && items.length > 0) {
+		if (items.length > 0) {
 			return items.length;
 		}
 		if (length > 0) {
@@ -74,7 +97,9 @@
 	let carousel = $state<HTMLElement>();
 	let scroller = $state<HTMLElement>();
 	let pagination_nav = $state<HTMLElement>();
-	let has_intersected = $state<Set<IntersectionObserverEntry>>(new Set());
+	let marker_moving = $state(false);
+	// State for intersection observations
+	let intersectionObservations = $state<IntersectionObserverEntry[]>([]);
 	const is_at_end = $derived(current_index === item_count - 1);
 	const is_at_start = $derived(current_index === 0);
 	const can_go_next = $derived(!disable_next && !is_at_end && item_count > 1);
@@ -95,10 +120,13 @@
 		if (scroller) {
 			carousel_observer = new IntersectionObserver(
 				(observations) => {
+					// Update class names for visual feedback
 					for (let observation of observations) {
-						has_intersected.add(observation);
 						observation.target.classList.toggle('--in-view', observation.isIntersecting);
 					}
+
+					// Update intersection observations state
+					intersectionObservations = observations;
 				},
 				{
 					root: scroller,
@@ -109,6 +137,7 @@
 			// Observe all carousel items
 			get_carousel_items()?.forEach((item) => carousel_observer.observe(item));
 		}
+
 		return () => {
 			get_carousel_items()?.forEach((item) => carousel_observer.unobserve(item));
 		};
@@ -141,34 +170,42 @@
 		return () => mutation_observer.disconnect();
 	});
 
-	// Synchronize intersection observations and update current item
+	// Update current item and pagination based on intersection observations
 	$effect(() => {
-		for (let observation of has_intersected) {
+		// Find the most centered/primary intersecting item
+		let primary_intersection: IntersectionObserverEntry | null = null;
+		let max_intersection_ratio = 0;
+
+		for (let observation of intersectionObservations) {
 			observation.target.toggleAttribute('inert', !observation.isIntersecting);
-			const dot = pagination_nav?.children[get_element_index(observation.target)];
-			dot?.setAttribute('aria-selected', observation.isIntersecting.toString());
-			dot?.setAttribute('tabindex', !observation.isIntersecting ? '-1' : '0');
 
-			if (observation.isIntersecting) {
-				const new_index = get_element_index(observation.target);
-				current = observation.target as HTMLElement;
-				current_index = new_index;
-
-				// Call on_item_change callback
-				on_item_change?.(new_index, observation.target as HTMLElement);
-
-				const dot = pagination_nav?.children[new_index];
-				if (dot && pagination_nav) {
-					go_to_element({
-						scrollport: pagination_nav,
-						element: dot as HTMLElement
-					});
-				}
+			if (observation.isIntersecting && observation.intersectionRatio > max_intersection_ratio) {
+				max_intersection_ratio = observation.intersectionRatio;
+				primary_intersection = observation;
 			}
 		}
 
-		has_intersected.clear();
+		// Update current item and pagination for the primary intersection
+		if (primary_intersection) {
+			const new_index = get_element_index(primary_intersection.target);
+			current_index = new_index; // Will result in markers getting highlighted during scroll
+
+			// Call on_item_change callback
+			on_item_change?.(new_index, primary_intersection.target as HTMLElement);
+
+			// Update pagination dots
+			update_pagination_dots(new_index);
+		}
 	});
+
+	// Helper function to update pagination dots
+	function update_pagination_dots(index: number) {
+		const dot = pagination_nav?.children[index];
+		if (dot) {
+			dot.setAttribute('aria-selected', (selected_index === index).toString());
+			dot.setAttribute('tabindex', selected_index === index ? '0' : '-1');
+		}
+	}
 
 	// Initialize current item and re-initialize when item count changes
 	$effect(() => {
@@ -193,28 +230,38 @@
 		}
 	});
 
-	function handle_paginate(event: PointerEvent) {
+	function handle_paginate(event: Event, index: number) {
 		const target_element = event.target as HTMLElement;
 		if (!target_element || target_element.classList.contains('gui-carousel-pagination')) return;
 
-		target_element.setAttribute('aria-selected', 'true');
+		// // Get the index from the marker's position within the pagination nav
+		// const marker_index = Array.from(pagination_nav?.children || []).indexOf(target_element);
+		// if (marker_index === -1) return;
+
 		const carousel_items = get_carousel_items();
-		const element = carousel_items[get_element_index(target_element)];
+		const element = carousel_items[index];
 		if (element && scroller) {
-			go_to_element({ scrollport: scroller, element });
+			current = element;
+			selected_index = index;
+
+			// Call on_item_change callback
+			on_item_change?.(index, element);
+
+			// Update pagination dots
+			update_pagination_dots(index);
+
+			element.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 		}
 	}
 
 	function synchronize() {
-		for (let observation of has_intersected) {
+		// Process intersection observations when scroll ends
+		for (let observation of intersectionObservations) {
 			observation.target.toggleAttribute('inert', !observation.isIntersecting);
-			// toggle aria-selected on pagination dots
-			const dot = pagination_nav?.children[get_element_index(observation.target)];
-
-			dot?.setAttribute('aria-selected', observation.isIntersecting.toString());
-			dot?.setAttribute('tabindex', !observation.isIntersecting ? '-1' : '0');
 		}
-		has_intersected.clear();
+		// Clear observations after processing
+		intersectionObservations = [];
+		marker_moving = false;
 	}
 
 	function get_element_index(element: Element) {
@@ -223,7 +270,7 @@
 		return index;
 	}
 
-	export function go_next() {
+	export function go_next(event: Event) {
 		if (!can_go_next || !current || !scroller) return;
 
 		const next_item = current.nextElementSibling as HTMLElement;
@@ -231,13 +278,12 @@
 
 		if (next_item) {
 			const new_index = get_element_index(next_item);
-			current_index = new_index;
+			selected_index = new_index;
 			current = next_item;
 
-			go_to_element({
-				scrollport: scroller,
-				element: next_item
-			});
+			handle_paginate(event, new_index);
+			next_item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
 			// Call on_navigation callback
 			on_navigation?.('next', new_index);
 		} else {
@@ -245,7 +291,7 @@
 		}
 	}
 
-	export function go_previous() {
+	export function go_previous(event: Event) {
 		if (!can_go_previous || !current || !scroller) return;
 
 		const previous_item = current.previousElementSibling as HTMLElement;
@@ -253,13 +299,12 @@
 
 		if (previous_item) {
 			const new_index = get_element_index(previous_item);
-			current_index = new_index;
+			selected_index = new_index;
 			current = previous_item;
 
-			go_to_element({
-				scrollport: scroller,
-				element: previous_item
-			});
+			handle_paginate(event, new_index);
+			previous_item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
 			// Call on_navigation callback
 			on_navigation?.('previous', new_index);
 		} else {
@@ -267,78 +312,44 @@
 		}
 	}
 
-	function go_to_element({
-		scrollport,
-		element
-	}: {
-		scrollport: HTMLElement;
-		element: HTMLElement;
-	}) {
-		// Temporarily disable scroll snap to allow smooth scrolling
-		const originalScrollSnapType = scrollport.style.scrollSnapType;
-		scrollport.style.scrollSnapType = 'none';
-
-		// Calculate scroll position to center the element
-		const scrollportRect = scrollport.getBoundingClientRect();
-		const elementRect = element.getBoundingClientRect();
-		const scrollLeft = scrollport.scrollLeft;
-
-		// Calculate the position to center the element
-		const targetScrollLeft =
-			scrollLeft +
-			(elementRect.left - scrollportRect.left) -
-			(scrollportRect.width - elementRect.width) / 2;
-
-		scrollport.scrollTo({
-			left: targetScrollLeft,
-			top: 0,
-			behavior: 'smooth'
-		});
-
-		// Re-enable scroll snap after animation
-		setTimeout(() => {
-			scrollport.style.scrollSnapType = originalScrollSnapType || 'x proximity';
-		}, 500);
-	}
-
 	function document_direction() {
 		return document?.firstElementChild?.getAttribute('dir') || 'ltr';
 	}
 
-	function handle_keydown(event: KeyboardEvent) {
+	function handle_keydown(e: KeyboardEvent) {
 		const dir = document_direction();
-		const idx = get_element_index(event.target as Element);
+		const idx = get_element_index(e.target as Element);
 
-		switch (event.key) {
+		switch (e.key) {
 			case 'ArrowRight':
-				event.preventDefault();
+				e.preventDefault();
 
 				const next_offset = dir === 'ltr' ? 1 : -1;
 				const next_control = dir === 'ltr' ? next : previous;
 
-				if ((event.target as HTMLElement).closest('.gui-carousel-pagination'))
+				if ((e.target as HTMLElement).closest('.gui-carousel-pagination'))
 					(pagination_nav?.children[idx + next_offset] as HTMLElement)?.focus();
 				else {
 					if (document.activeElement === next_control) keypress_animation(next_control);
 					next_control?.focus();
 				}
 
-				dir === 'ltr' ? go_next() : go_previous();
+				dir === 'ltr' ? go_next(e) : go_previous(e);
 				break;
 			case 'ArrowLeft':
-				event.preventDefault();
+				e.preventDefault();
 
 				const previous_offset = dir === 'ltr' ? -1 : 1;
 				const previous_control = dir === 'ltr' ? previous : next;
 
-				if ((event.target as HTMLElement).closest('.gui-carousel-pagination'))
+				if ((e.target as HTMLElement).closest('.gui-carousel-pagination'))
 					(pagination_nav?.children[idx + previous_offset] as HTMLElement)?.focus();
 				else {
 					if (document.activeElement === previous_control) keypress_animation(previous_control);
 					previous_control?.focus();
 				}
 
-				dir === 'ltr' ? go_previous() : go_next();
+				dir === 'ltr' ? go_previous(e) : go_next(e);
 				break;
 		}
 	}
@@ -399,7 +410,6 @@
 <div
 	bind:this={carousel}
 	onkeydown={handle_keydown}
-	class={['gui-carousel', pagination_type === 'none' ? 'no-pagination' : 'pagination']}
 	tabindex="-1"
 	role="region"
 	aria-roledescription="carousel"
@@ -408,9 +418,15 @@
 	data-carousel-scrollbar="auto"
 	data-carousel-snapstop="auto"
 	aria-label="Featured Items Carousel"
+	{...carousel_attributes}
+	class={[
+		'gui-carousel',
+		pagination_type === 'none' ? 'no-pagination' : 'pagination',
+		carousel_attributes?.class
+	]}
 >
 	{#if show_arrows}
-		<div class="arrow-controls">
+		<div class="arrow-controls" {...arrow_controls_container_attributes}>
 			{#if show_previous}
 				<button
 					bind:this={previous}
@@ -424,10 +440,7 @@
 					]}
 					aria-controls="arrow-controls"
 					aria-label="Previous Item"
-					onclick={() => {
-						console.log('Previous button clicked');
-						go_previous();
-					}}
+					onclick={go_previous}
 					{...previous_attributes}
 				>
 					{@render previous_content()}
@@ -442,10 +455,7 @@
 					class={['carousel-control arrow next', is_at_end && 'end', next_attributes?.class]}
 					aria-controls="arrow-controls"
 					aria-label="Next Item"
-					onclick={() => {
-						console.log('Next button clicked');
-						go_next();
-					}}
+					onclick={go_next}
 					{...next_attributes}
 				>
 					{@render next_content()}
@@ -456,10 +466,11 @@
 	<div
 		bind:this={scroller}
 		onscrollend={synchronize}
-		class="gui-carousel--scroller"
 		role="group"
 		aria-label="Items Scroller"
 		aria-live="polite"
+		{...scroller_attributes}
+		class={['gui-carousel--scroller', scroller_attributes?.class]}
 	>
 		{#each items as item, i (i)}
 			<div
@@ -476,7 +487,11 @@
 	</div>
 
 	{#if pagination_type !== 'none' && item_count > 1}
-		<nav bind:this={pagination_nav} class="pagination" onpointerdown={handle_paginate}>
+		<nav
+			bind:this={pagination_nav}
+			{...pagination_attributes}
+			class={['pagination', pagination_attributes?.class]}
+		>
 			{#each Array.from({ length: item_count }) as _, i}
 				{@render marker(i)}
 			{/each}
@@ -508,43 +523,46 @@
 
 {#snippet marker(index: number)}
 	{#if pagination_type === 'dots'}
-		{@render marker_dot(index + 1)} <!-- User-facing index should be 1-based -->
+		{@render marker_dot(index)} <!-- User-facing index should be 1-based -->
 	{:else if pagination_type === 'gallery'}
-		{@render marker_gallery(index + 1)} <!-- User-facing index should be 1-based -->
+		{@render marker_gallery(index)} <!-- User-facing index should be 1-based -->
 	{/if}
 {/snippet}
 
 {#snippet marker_dot(index: number)}
 	{@const carousel_items = get_carousel_items()}
-	{@const itemElement = carousel_items[index - 1]}
+	{@const itemElement = carousel_items[index]}
 	{@const img = itemElement?.querySelector('img')}
 	{@const caption = itemElement?.querySelector('figcaption')}
 	<button
+		onpointerdown={(e) => handle_paginate(e, index)}
 		type="button"
 		role="tab"
 		title={`Item ${index}: ${img?.alt || caption?.innerText || ''}`}
-		class="carousel-control marker dot"
+		class={['carousel-control marker dot', marker_attributes?.class]}
 		aria-selected={index === current_index}
 		aria-label={img?.alt || caption?.innerText || `Item ${index}`}
 		aria-setsize={item_count}
 		aria-posinset={index}
 		aria-controls={`carousel-item-${index}`}
+		{...marker_attributes}
 	>
 	</button>
 {/snippet}
 
 {#snippet marker_gallery(index: number)}
 	{@const carousel_items = get_carousel_items()}
-	{@const itemElement = carousel_items[index - 1]}
+	{@const itemElement = carousel_items[index]}
 	{@const img = itemElement?.querySelector('img')}
 	<button
 		type="button"
+		onpointerdown={(e) => handle_paginate(e, index)}
 		style:background-image={img?.src ? `url(${img.src})` : undefined}
 		title={`Item ${index}: ${img?.alt || ''}`}
-		class="carousel-control marker gallery"
-		aria-selected={index === current_index}
+		class={['carousel-control marker gallery', marker_attributes?.class]}
 		aria-label={img?.alt || `Item ${index}`}
 		aria-controls={`carousel-item-${index}`}
+		{...marker_attributes}
 	>
 	</button>
 {/snippet}
@@ -736,14 +754,21 @@
 
 		&.marker {
 			inline-size: var(--size-3);
-			background-color: var(--surface-4);
 			border: var(--border-size-1) solid transparent;
+			background-color: var(--color-gray-500);
+			transition:
+				transform 0.2s var(--ease-4),
+				background-color 0.2s var(--ease-4);
 			&:where([aria-selected='true']) {
-				background: var(--text-2);
+				background: var(--color-gray-900);
+				transform: scale(1.2);
+				@media (prefers-color-scheme: dark) {
+					background: var(--color-gray-200);
+				}
 			}
 
 			&:where([aria-selected='false']) {
-				transform: scale(0.75);
+				/* transform: scale(0.75); */
 			}
 
 			&.gallery {
