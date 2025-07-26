@@ -102,6 +102,7 @@
 			white-space: nowrap;
 			padding: var(--input-padding, 1.25em);
 			padding-bottom: 0.5em;
+			cursor: text;
 			/* to make room for the cancel button */
 			padding-right: var(--input-button-padding-space, 2.5em);
 
@@ -118,11 +119,11 @@
 
 			/** Moved some of the placeholder styling from the input to the TextLabel component */
 			&:user-invalid {
-				outline: var(--input-invalid-outline, intitial);
-				background-color: var(--input-invalid-background-color, initial);
+				outline: var(--input-invalid-outline, revert);
+				background-color: var(--input-invalid-background-color, revert);
 			}
 			&:user-valid {
-				background-color: var(--input-valid-background-color, initial);
+				background-color: var(--input-valid-background-color, revert);
 			}
 			&:focus-visible {
 				outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
