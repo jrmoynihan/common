@@ -1,20 +1,14 @@
 <script module lang="ts">
-	export interface PlaceholderProps {
+	import type { HTMLAttributes } from 'svelte/elements';
+
+	export interface PlaceholderProps extends HTMLAttributes<HTMLDivElement> {
 		text?: string;
-		dynamic_styles?: DynamicStyleParameters;
 		placeholder_element?: HTMLDivElement;
 	}
 </script>
 
 <script lang="ts">
-	import { dynamic_style, type DynamicStyleParameters } from '$actions/dynamic-styles.svelte.js';
-
-	let {
-		dynamic_styles = $bindable(),
-		placeholder_element = $bindable(),
-		text,
-		...attributes
-	}: PlaceholderProps = $props();
+	let { placeholder_element = $bindable(), text, ...attributes }: PlaceholderProps = $props();
 </script>
 
 <div
@@ -22,8 +16,7 @@
 	role="presentation"
 	inert
 	bind:this={placeholder_element}
-	class="placeholder"
-	use:dynamic_style={dynamic_styles}
+	class={['placeholder', attributes?.class]}
 	{...attributes}
 >
 	{text ?? ''}
