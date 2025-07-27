@@ -4,7 +4,10 @@
 	import { page } from '$app/state';
 	import LightDarkToggleV2 from '$buttons/LightDarkToggle_v2.svelte';
 	import Navigation from '$navigation/Navigation.svelte';
-	import { should_layout_transition_on_navigation } from '$navigation/nav-functions.svelte.js';
+	import {
+		make_subroute_nav_links,
+		should_layout_transition_on_navigation
+	} from '$navigation/nav-functions.svelte.js';
 	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
 	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
 	import { type Snippet } from 'svelte';
@@ -12,11 +15,12 @@
 	import type { LayoutData } from './$types';
 	import { aside_visible } from './stores.svelte.js';
 	import { MediaQuery } from 'svelte/reactivity';
+	import { route } from '$lib/ROUTES';
 
 	type LayoutProps = { data: LayoutData; children: Snippet };
 
 	let { data, children }: LayoutProps = $props();
-	const { nav_links } = data;
+	const { url, icon_map } = data;
 	let trigger: boolean = $state(false);
 	let dark_mode = new MediaQuery('(prefers-color-scheme: dark)');
 	let bg_color: string = $state(dark_mode.current ? '#0e2f39' : '#ffffff');
@@ -60,7 +64,11 @@
 	<h1>
 		<a href="/" class="cool-text">The Commons</a>
 	</h1>
-	<Navigation links={nav_links} />
+	{#await make_subroute_nav_links(url, icon_map) then nav_links}
+		<Navigation links={nav_links} />
+	{:catch error}
+		{error}
+	{/await}
 	<main>
 		<TransitionRunes bind:trigger>
 			{@render children?.()}

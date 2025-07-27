@@ -1,5 +1,3 @@
-import { route } from '$lib/ROUTES';
-import { make_subroute_nav_links } from '$navigation/nav-functions.svelte';
 import type { LayoutLoadEvent } from './$types';
 
 export async function load({ url }: LayoutLoadEvent) {
@@ -12,9 +10,8 @@ export async function load({ url }: LayoutLoadEvent) {
 		['wrappers', { icon: 'carbon:container-software' }]
 	]);
 
-	const nav_links = await make_subroute_nav_links(new URL(route('/'), url.origin), icon_map);
-
 	return {
-		nav_links
+		url,
+		icon_map
 	};
 }

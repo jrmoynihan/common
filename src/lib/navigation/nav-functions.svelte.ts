@@ -4,33 +4,34 @@ import { ErrorLog } from '$functions/logging.js';
 import type { IconProps } from '@iconify/svelte';
 import type { NavigationTarget, Page } from '@sveltejs/kit';
 
-interface INavigationLink {
-	url: URL;
-	link_text?: string;
-	icon?: IconProps;
-	anchors?: NavigationLink[];
-}
-
 export class NavigationLink {
 	/** The URL object describing the link */
-	url: URL = $state(new URL(''));
+	url = $state<URL | null>(null);
 	/** The displayed text for the link (defaults to the link's pathname)*/
 	link_text: string = $state('');
-	/** Pass in an icon to use in a Iconify component. */
+	/** Pass in icon props to use in a Iconify component. */
 	icon_props?: IconProps = $state(undefined);
 	/** Pass in an array of NavigationLinks to use as anchors for the link. */
 	anchors: NavigationLink[] | undefined = $state();
 	/** Whether or not the link is the current page. */
-	is_current_page: boolean = $derived(page.url.pathname === this.url.pathname);
+	is_current_page: boolean = $derived(page.url.pathname === this.url?.pathname);
 	/** Whether or not the link is within the current page's path. */
-	is_page_in_path: boolean = $derived(page.url.pathname.startsWith(this.url.pathname));
+	is_page_in_path: boolean = $derived(
+		this.url !== null && page.url.pathname.startsWith(this.url.pathname)
+	);
 
-	constructor(args: INavigationLink) {
-		this.url = args?.url;
+	constructor(args: Partial<NavigationLink>) {
+		this.url = args?.url ?? null;
 		this.link_text = args?.link_text ? capitalize(dekebab(args?.link_text)) : '';
-		this.icon_props = args?.icon ?? undefined;
+		this.icon_props = args?.icon_props ?? undefined;
 		this.anchors = args?.anchors ?? undefined;
 		this.is_current_page = false;
+	}
+	get href() {
+		return this.url?.href ?? '#';
+	}
+	get is_valid() {
+		return this.url !== null;
 	}
 }
 
@@ -65,13 +66,12 @@ export async function make_subroute_nav_links(
 	const is_root_path = load_event_url.pathname.endsWith('/');
 	const subroutes = await get_subroutes(load_event_url.pathname);
 	const nav_links = subroutes.map((name) => {
-		const subroute_url = new URL(
-			`${load_event_url.origin}${load_event_url.pathname}${is_root_path ? '' : '/'}${name}`
-		);
+		const base_url = new URL(load_event_url.pathname, load_event_url.origin);
+		const subroute_url = new URL(name, base_url);
 		return new NavigationLink({
 			url: subroute_url,
 			link_text: name,
-			icon: icon_map?.get(name)
+			icon_props: icon_map?.get(name)
 		});
 	});
 
