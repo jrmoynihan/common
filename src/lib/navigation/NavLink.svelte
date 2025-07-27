@@ -22,7 +22,7 @@
 
 	beforeNavigate(({ from, to, cancel }) => {
 		const href = to?.url?.href;
-		if (href !== nav_link.url.href) return;
+		if (href !== nav_link.url?.href) return;
 		if (href) {
 			const is_anchor = href.includes('#');
 			const path_segments = href.split('#');
@@ -40,7 +40,7 @@
 		}
 	});
 	afterNavigate(({ to }) => {
-		if (to && !nav_link.url.href.includes(to.url.href)) return;
+		if (to && !nav_link.url?.href.includes(to.url.href)) return;
 		if (anchor_path_to_scroll_to) {
 			scrollToElement();
 		}
@@ -60,7 +60,7 @@
 <!-- TODO: convert/merge dynamic styles to a single attachment using $derived state to trigger style updates -->
 <a
 	data-sveltekit-preload-data="hover"
-	href={nav_link.url.href}
+	href={nav_link.url?.href}
 	{...anchor_attributes}
 	class={[
 		'_link',
