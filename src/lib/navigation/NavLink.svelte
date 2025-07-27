@@ -11,16 +11,13 @@
 
 <script lang="ts">
 	import { afterNavigate, beforeNavigate, goto } from '$app/navigation';
-	import { page } from '$app/state';
 	import Icon from '@iconify/svelte';
 	import type { Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
-	import type { NavigationLink } from './nav-functions.js';
+	import type { NavigationLink } from './nav-functions.svelte.js';
 
 	let { nav_link, current_page_styles, children, ...anchor_attributes }: NavLinkProps = $props();
 
-	let is_current_page = $derived(nav_link.isCurrentPage(page));
-	let is_page_active = $derived(nav_link.is_page_within_path(page));
 	let anchor_path_to_scroll_to: string | undefined = $state();
 
 	beforeNavigate(({ from, to, cancel }) => {
@@ -63,14 +60,17 @@
 <!-- TODO: convert/merge dynamic styles to a single attachment using $derived state to trigger style updates -->
 <a
 	data-sveltekit-preload-data="hover"
-	class={['_link', anchor_attributes.class]}
-	class:current={is_current_page}
-	class:active-path={is_page_active}
 	href={nav_link.url.href}
 	{...anchor_attributes}
+	class={[
+		'_link',
+		anchor_attributes.class,
+		nav_link.is_current_page && '_current',
+		nav_link.is_page_in_path && '_active-path'
+	]}
 >
-	{#if nav_link.icon}
-		<Icon {...nav_link.icon} />
+	{#if nav_link.icon_props}
+		<Icon {...nav_link.icon_props} />
 	{/if}
 	{@render children?.()}
 	{nav_link.link_text}
@@ -93,7 +93,7 @@
 				color: var(--link-hover-color, var(--link-color, var(--text, inherit)));
 				box-shadow: var(--link-hover-box-shadow);
 			}
-			&.current {
+			&._current {
 				box-shadow: var(--current-nav-page-box-shadow);
 				background-color: var(
 					--current-nav-page-background-color,
@@ -101,7 +101,7 @@
 				);
 				color: var(--current-nav-page-color, var(--link-color, var(--text, inherit)));
 			}
-			&.active-path {
+			&._active-path {
 				box-shadow: var(--current-nav-page-box-shadow);
 				background-color: var(
 					--current-nav-page-background-color,

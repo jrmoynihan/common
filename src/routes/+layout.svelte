@@ -4,7 +4,7 @@
 	import { page } from '$app/state';
 	import LightDarkToggleV2 from '$buttons/LightDarkToggle_v2.svelte';
 	import Navigation from '$navigation/Navigation.svelte';
-	import { should_layout_transition_on_navigation } from '$navigation/nav-functions.js';
+	import { should_layout_transition_on_navigation } from '$navigation/nav-functions.svelte.js';
 	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
 	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
 	import { type Snippet } from 'svelte';

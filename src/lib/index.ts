@@ -197,7 +197,7 @@ export {
 	make_subroute_nav_links,
 	NavigationLink,
 	should_layout_transition_on_navigation
-} from './navigation/nav-functions.js';
+} from './navigation/nav-functions.svelte.js';
 export type { ComponentTab, SnippetTab } from './wrappers/Tabs_Runes.svelte';
 export {
 	carousel_item,

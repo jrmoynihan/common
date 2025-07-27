@@ -1,3 +1,4 @@
+import { page } from '$app/state';
 import { capitalize, dekebab } from '$functions/helpers.svelte.js';
 import { ErrorLog } from '$functions/logging.js';
 import type { IconProps } from '@iconify/svelte';
@@ -12,32 +13,25 @@ interface INavigationLink {
 
 export class NavigationLink {
 	/** The URL object describing the link */
-	url: URL;
+	url: URL = $state(new URL(''));
 	/** The displayed text for the link (defaults to the link's pathname)*/
-	link_text: string;
+	link_text: string = $state('');
 	/** Pass in an icon to use in a Iconify component. */
-	icon?: IconProps;
+	icon_props?: IconProps = $state(undefined);
 	/** Pass in an array of NavigationLinks to use as anchors for the link. */
-	anchors: NavigationLink[] | undefined;
-	/** Whether or not the link is the current page.  Can update with the `isCurrentPage()` method. */
-	is_current_page: boolean;
+	anchors: NavigationLink[] | undefined = $state();
+	/** Whether or not the link is the current page. */
+	is_current_page: boolean = $derived(page.url.pathname === this.url.pathname);
+	/** Whether or not the link is within the current page's path. */
+	is_page_in_path: boolean = $derived(page.url.pathname.startsWith(this.url.pathname));
 
 	constructor(args: INavigationLink) {
 		this.url = args?.url;
 		this.link_text = args?.link_text ? capitalize(dekebab(args?.link_text)) : '';
-		this.icon = args?.icon ?? undefined;
+		this.icon_props = args?.icon ?? undefined;
 		this.anchors = args?.anchors ?? undefined;
 		this.is_current_page = false;
 	}
-
-	isCurrentPage = (page: Page): boolean => {
-		const is_current = page?.url?.pathname === this.url?.pathname;
-		this.is_current_page = is_current;
-		return is_current;
-	};
-	is_page_within_path = (page: Page): boolean => {
-		return page?.url?.pathname.startsWith(this.url?.pathname);
-	};
 }
 
 export async function get_subroutes(url_pathname: string, exclude_paths?: string[]) {

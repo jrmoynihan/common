@@ -15,7 +15,7 @@
 	import NavLink from '$navigation/NavLink.svelte';
 	import type { Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes, HTMLAttributes } from 'svelte/elements';
-	import type { NavigationLink } from './nav-functions.js';
+	import type { NavigationLink } from './nav-functions.svelte.js';
 
 	let { links = [], link_attributes, children, ...nav_attributes }: NavigationProps = $props();
 
@@ -34,12 +34,10 @@
 
 <!-- svelte-ignore a11y_no_redundant_roles -->
 <nav role="navigation" {...nav_attributes}>
-	{#if links?.length > 0}
-		{#each links as nav_link, i}
-			{@const attributes = Array.isArray(link_attributes) ? link_attributes[i] : link_attributes}
-			<NavLink {nav_link} {...attributes} />
-		{/each}
-	{/if}
+	{#each links as nav_link, i}
+		{@const attributes = Array.isArray(link_attributes) ? link_attributes[i] : link_attributes}
+		<NavLink {nav_link} {...attributes} />
+	{/each}
 	{@render children?.()}
 </nav>
 

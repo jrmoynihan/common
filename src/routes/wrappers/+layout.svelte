@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
 	import Navigation from '$navigation/Navigation.svelte';
-	import { should_layout_transition_on_navigation } from '$navigation/nav-functions.js';
+	import { should_layout_transition_on_navigation } from '$navigation/nav-functions.svelte.js';
 	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
