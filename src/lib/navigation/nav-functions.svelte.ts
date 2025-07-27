@@ -1,5 +1,5 @@
 import { page } from '$app/state';
-import { capitalize, dekebab } from '$functions/helpers.svelte.js';
+import { capitalize, dekebab, enumerate_runed_properties } from '$functions/helpers.svelte.js';
 import { ErrorLog } from '$functions/logging.js';
 import type { IconProps } from '@iconify/svelte';
 import type { NavigationTarget, Page } from '@sveltejs/kit';
@@ -26,6 +26,7 @@ export class NavigationLink {
 		this.icon_props = args?.icon_props ?? undefined;
 		this.anchors = args?.anchors ?? undefined;
 		this.is_current_page = false;
+		enumerate_runed_properties(this);
 	}
 	get href() {
 		return this.url?.href ?? '#';
