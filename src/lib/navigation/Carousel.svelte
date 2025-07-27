@@ -539,13 +539,13 @@
 		type="button"
 		role="tab"
 		title={`Item ${index}: ${img?.alt || caption?.innerText || ''}`}
-		class={['carousel-control marker dot', marker_attributes?.class]}
 		aria-selected={index === current_index}
 		aria-label={img?.alt || caption?.innerText || `Item ${index}`}
 		aria-setsize={item_count}
 		aria-posinset={index}
 		aria-controls={`carousel-item-${index}`}
 		{...marker_attributes}
+		class={['carousel-control marker dot', marker_attributes?.class]}
 	>
 	</button>
 {/snippet}
@@ -558,11 +558,11 @@
 		type="button"
 		onpointerdown={(e) => handle_paginate(e, index)}
 		style:background-image={img?.src ? `url(${img.src})` : undefined}
-		title={`Item ${index}: ${img?.alt || ''}`}
-		class={['carousel-control marker gallery', marker_attributes?.class]}
 		aria-label={img?.alt || `Item ${index}`}
 		aria-controls={`carousel-item-${index}`}
+		title={`Item ${index}: ${img?.alt || ''}`}
 		{...marker_attributes}
+		class={['carousel-control marker gallery', marker_attributes?.class]}
 	>
 	</button>
 {/snippet}
