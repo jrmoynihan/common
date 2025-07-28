@@ -67,11 +67,8 @@ export async function make_subroute_nav_links(
 	const is_root_path = load_event_url.pathname.endsWith('/');
 	const subroutes = await get_subroutes(load_event_url.pathname);
 	const nav_links = subroutes.map((name) => {
-		const base_url = new URL(
-			load_event_url.pathname,
-			`${load_event_url.origin}${load_event_url.pathname}${is_root_path ? '' : '/'}`
-		);
-		const subroute_url = new URL(name, base_url);
+		// NOTE: This trailing slash is important.  It ensures that the subroute url is a *relative* url to the parent url.
+		const subroute_url = new URL(name, `${load_event_url.href}${is_root_path ? '' : '/'}`);
 		return new NavigationLink({
 			url: subroute_url,
 			link_text: name,
