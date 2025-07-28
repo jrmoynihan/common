@@ -15,11 +15,12 @@
 		"package-publish-minor": "vite build && pnpm version minor && pnpm run package && pnpm publish",
 		"package-publish-major": "vite build && pnpm version major && pnpm run package && pnpm publish",
 		"publish": "pnpm publish",
-		"test": "playwright test",
+		"test": "playwright test && bun run test:unit -- --run",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check --plugin-search-dir=. . && eslint .",
-		"format": "prettier --write --plugin-search-dir=. ."
+		"format": "prettier --write --plugin-search-dir=. .",
+		"test:unit": "vitest"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.1.2",
