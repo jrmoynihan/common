@@ -22,18 +22,22 @@
 		up_spinner_button?: Snippet;
 		/** A spinner button Snippet for the down button */
 		down_spinner_button?: Snippet;
+		/** A function to call when the up button is clicked. */
+		onincrement?: (e: MouseEvent | KeyboardEvent) => void;
+		/** A function to call when the down button is clicked. */
+		ondecrement?: (e: MouseEvent | KeyboardEvent) => void;
 	}
 	// TODO: add a prop for a custom validity function?
 	// TODO: add a SHIFT/CTRL modifier to allow for larger steps too
 </script>
 
 <script lang="ts">
+	import type { IconProps } from '@iconify/svelte';
 	import { type Snippet } from 'svelte';
 	import Input, { type InputProps } from './Input.svelte';
 	import InputButton, { type InputButtonProps } from './InputButton.svelte';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
 	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
-	import type { IconProps } from '@iconify/svelte';
 
 	let {
 		value = $bindable(0),
@@ -48,6 +52,8 @@
 		up_spinner_button,
 		down_spinner_button,
 		children,
+		onincrement,
+		ondecrement,
 		...input_attributes
 	}: NumericInputProps = $props();
 </script>
@@ -90,9 +96,10 @@
 					},
 					{
 						class: 'plus',
-						onclick: () => {
+						onclick: (e) => {
 							if (current + step <= max_num) {
 								value = Number(value) + step;
+								onincrement?.(e);
 							}
 						}
 					}
@@ -108,9 +115,10 @@
 					{ icon: 'mdi:caret-down' },
 					{
 						class: 'minus',
-						onclick: () => {
+						onclick: (e) => {
 							if (current - step >= min_num) {
 								value = Number(value) - step;
+								ondecrement?.(e);
 							}
 						}
 					}
