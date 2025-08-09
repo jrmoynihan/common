@@ -15,12 +15,17 @@
 		/** The attributes to apply to the `<span class="round slider">` element. */
 		slider_attributes?: HTMLAttributes<HTMLSpanElement>;
 		/** A callback that is triggered when the toggle is toggled.  Defaults to `() => { checked = !checked }` which allows a simple binding to the `checked` prop. */
-		ontoggle?: () => void | Promise<void>;
+		ontoggle?: ChangeEventHandler<HTMLInputElement>;
 	}
 </script>
 
 <script lang="ts">
-	import type { HTMLAttributes, HTMLInputAttributes, HTMLLabelAttributes } from 'svelte/elements';
+	import type {
+		ChangeEventHandler,
+		HTMLAttributes,
+		HTMLInputAttributes,
+		HTMLLabelAttributes
+	} from 'svelte/elements';
 
 	let {
 		checked = $bindable(),
