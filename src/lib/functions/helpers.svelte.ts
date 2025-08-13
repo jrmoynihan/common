@@ -349,14 +349,7 @@ export type DeepReadonly<T> = {
 const obj_a: { a: number } = { a: 0 };
 const obj_b: { b: string } = { b: 'hello' };
 const intersected: PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b: 'World' };
-const partially_required: PartiallyRequired<typeof intersected, 'a'> = {
-	a: 1
-};
-const not_required_from_parent: PartiallyOptional<typeof intersected, 'a'> = {
-	b: 'one'
-};
 const totally_optional: { a?: number; b?: string } = {};
-const required_by_union: PartiallyRequired<typeof totally_optional & { a: number }, 'a'> = { a: 0 };
 
 /**
  * Capitalizes the first letter of a string
@@ -1085,3 +1078,20 @@ export function uniqueBy<T, K>(arr: T[], key: (item: T) => K): T[] {
 		return true;
 	});
 }
+
+/**
+ * Extracts all properties of a type that are not functions
+ * @template T - The type to extract properties from
+ * @example
+ * ```typescript
+ * interface MyClass {
+ *   name: string;
+ *   age: number;
+ *   greet: () => void;
+ * }
+ * type ClassProperties = ClassProperties<MyClass>; // { name: string; age: number; }
+ * ```
+ */
+export type ClassProperties<T> = {
+	[K in keyof T as T[K] extends Function ? never : K]: T[K];
+};
