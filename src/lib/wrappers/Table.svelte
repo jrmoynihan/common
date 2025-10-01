@@ -37,6 +37,8 @@
 		omitted_keys?: Array<keyof T>;
 		/** Should the headers be capitalized? */
 		capitalize_headers?: boolean;
+		/** A mapping of keys to custom header names. Example: { number_of_events: '# Events' } */
+		keys_to_rename?: Partial<Record<keyof T, string>>;
 		/** A snippet representing the button to sort the table column */
 		sort_button?: Snippet<[key: keyof T]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, before the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
@@ -64,6 +66,7 @@
 	import type { Snippet } from 'svelte';
 	import { SvelteDate, SvelteMap } from 'svelte/reactivity';
 	import { tooltip } from '$lib/attach/tooltip/tooltip.svelte';
+	import { flip } from 'svelte/animate';
 
 	let {
 		data = $bindable([]),
@@ -78,6 +81,7 @@
 		visible_keys = $bindable([]),
 		omitted_keys = $bindable([]),
 		capitalize_headers = true,
+		keys_to_rename = {},
 		sort_button = default_sort_button,
 		preceding_header_cells = null,
 		subsequent_header_cells = null,
@@ -121,6 +125,26 @@
 	}
 	function capitalize_all_words(s: keyof T) {
 		return replace_camel_case(s).split(' ').map(capitalize).join(' ');
+	}
+
+	function get_display_name(key: keyof T): string {
+		// First check if there's a custom rename for this key
+		if (keys_to_rename && key in keys_to_rename) {
+			return keys_to_rename[key] as string;
+		}
+
+		// Handle special cases
+		if (key === 'id') {
+			return 'ID';
+		}
+
+		// Apply capitalization if enabled
+		if (capitalize_headers) {
+			return capitalize_all_words(key);
+		}
+
+		// Default to the key as-is
+		return String(key);
 	}
 
 	function map_icons(obj: T, key: keyof T, order: Ordering) {
@@ -222,33 +246,31 @@
 {/snippet}
 
 {#snippet default_data_row({ datum, index }: DataRow<T>)}
-	<tr>
-		{@render preceding_data_cells?.({ datum, index })}
-		{#if datum instanceof Object}
-			{#if visible_keys.length > 0}
-				<!-- Visible keys can the provide the order of the columns, since you're already providing a finite set -->
-				{#each visible_keys as key}
-					{@const value = datum[key]}
+	{@render preceding_data_cells?.({ datum, index })}
+	{#if datum instanceof Object}
+		{#if visible_keys.length > 0}
+			<!-- Visible keys can the provide the order of the columns, since you're already providing a finite set -->
+			{#each visible_keys as key}
+				{@const value = datum[key]}
+				{@render data_cell({ datum, key, value, index })}
+			{/each}
+		{:else if omitted_keys.length > 0}
+			{#each Object.keys(datum).filter((k) => !omitted_keys.includes(k)) as k}
+				{@const key = k as keyof T}
+				{@const value = datum[k]}
+				{@render data_cell({ datum, key, value, index })}
+			{/each}
+		{:else if visible_keys.length === 0 && omitted_keys.length === 0}
+			{#each Object.keys(datum) as k}
+				{@const key = k as keyof T}
+				{@const value = datum[k]}
+				{#if typeof value !== 'function'}
 					{@render data_cell({ datum, key, value, index })}
-				{/each}
-			{:else if omitted_keys.length > 0}
-				{#each Object.keys(datum).filter((k) => !omitted_keys.includes(k)) as k}
-					{@const key = k as keyof T}
-					{@const value = datum[k]}
-					{@render data_cell({ datum, key, value, index })}
-				{/each}
-			{:else if visible_keys.length === 0 && omitted_keys.length === 0}
-				{#each Object.keys(datum) as k}
-					{@const key = k as keyof T}
-					{@const value = datum[k]}
-					{#if typeof value !== 'function'}
-						{@render data_cell({ datum, key, value, index })}
-					{/if}
-				{/each}
-			{/if}
+				{/if}
+			{/each}
 		{/if}
-		{@render subsequent_data_cells?.({ datum, index })}
-	</tr>
+	{/if}
+	{@render subsequent_data_cells?.({ datum, index })}
 {/snippet}
 
 {#snippet default_th(content: Snippet)}
@@ -256,19 +278,10 @@
 		{@render content?.()}
 	</th>
 {/snippet}
-{#snippet normal_th_content(key: keyof T)}
+
+{#snippet header_th_content(key: keyof T)}
 	<th scope="col" {...table_header_cell_attributes}>
-		{#if key === 'id'}
-			ID
-		{:else}
-			{key}
-		{/if}
-		{@render sort_button?.(key)}
-	</th>
-{/snippet}
-{#snippet capitalized_th_content(key: keyof T)}
-	<th scope="col" {...table_header_cell_attributes}>
-		{capitalize_all_words(key)}
+		{get_display_name(key)}
 		{@render sort_button?.(key)}
 	</th>
 {/snippet}
@@ -276,17 +289,10 @@
 {#snippet default_data_cell<T>({ datum, key, value, index }: DataCell<T>)}
 	<td>{value}</td>
 {/snippet}
+
 {#snippet default_header_cell({ datum, key, index }: HeaderCell<T>)}
 	{#if key && typeof key === 'string' && !omitted_keys?.includes(key) && typeof datum[key] !== 'function'}
-		{#if capitalize_headers}
-			{#if key === 'id'}
-				{@render normal_th_content(key)}
-			{:else if key}
-				{@render capitalized_th_content(key)}
-			{/if}
-		{:else}
-			{@render normal_th_content(key)}
-		{/if}
+		{@render header_th_content(key)}
 	{/if}
 {/snippet}
 
@@ -314,7 +320,9 @@
 	<tbody {...table_body_attributes}>
 		{#if data}
 			{#each data as datum, index (datum)}
-				{@render data_row?.({ datum, index })}
+				<tr animate:flip={{ duration: 200 }}>
+					{@render data_row?.({ datum, index })}
+				</tr>
 			{/each}
 		{/if}
 	</tbody>
