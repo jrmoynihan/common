@@ -29,6 +29,8 @@
 		summary?: string | Snippet;
 		/** Whether to show the marker. Defaults to `true`. */
 		show_icon?: boolean;
+		/** The content of the accordion. */
+		children?: Snippet;
 	}
 </script>
 
