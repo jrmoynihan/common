@@ -95,7 +95,15 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 	{#if form}
 		{@render form({ ...form_attributes, method: 'dialog' })}
 	{:else}
-		<form method="dialog" class="modal-foreground" {...form_attributes}>
+		<form
+			{...form_attributes}
+			method="dialog"
+			class={['modal-foreground', form_attributes?.class]}
+			onclick={(e) => {
+				e.stopPropagation();
+				form_attributes?.onclick?.(e);
+			}}
+		>
 			{@render children?.()}
 		</form>
 	{/if}
