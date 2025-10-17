@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Inspect } from 'svelte-inspect-value';
 	import Checkbox from '$inputs/Checkbox.svelte';
 	import DatalistTextInput from '$inputs/DatalistTextInput.svelte';
 	import NumericInput from '$inputs/NumericInput.svelte';
@@ -7,8 +6,9 @@
 	import Select from '$inputs/Select.svelte';
 	import TemporalDateInput from '$inputs/TemporalDateInput.svelte';
 	import TextInput from '$inputs/TextInput.svelte';
-	import type { PageData } from './$types';
 	import { tooltip } from '$lib';
+	import { Inspect } from 'svelte-inspect-value';
+	import type { PageData } from './$types';
 
 	let { data } = $props();
 	const { datalist, select_options, date_inputs }: PageData = data;

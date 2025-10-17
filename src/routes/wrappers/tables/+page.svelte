@@ -423,6 +423,7 @@
 		caption_text={'A Basic Table'}
 		--table-border-radius={'1rem'}
 		visible_keys={['name', 'name_length', 'birthday', 'age']}
+		keys_to_rename={{ name_length: 'Length' }}
 		data_cell={custom_data_cell}
 	></Table>
 
@@ -456,7 +457,7 @@
 		background-color: hsl(
 			from light-dark(var(--accent), var(--dark-accent)) h s calc(l * var(--lightness))
 		);
-		color: white;
+		color: inherit;
 	}
 	.shared-grid {
 		display: grid;
