@@ -6,24 +6,6 @@
 @plugin '@tailwindcss/typography';
 
 @layer common {
-	h1 {
-		margin: 2rem auto;
-		max-width: max-content;
-		font-size: var(--font-size-fluid-3);
-	}
-	h2 {
-		font-size: var(--font-size-fluid-2);
-	}
-	h3 {
-		font-size: var(--font-size-fluid-1);
-	}
-	fieldset {
-		border: revert;
-		border-radius: revert;
-		padding: revert;
-	}
-	legend {
-	}
 	:root {
 		font-family:
 			Roboto,
@@ -50,6 +32,25 @@
 		--link-background-color: var(--primary);
 		--input-invalid-background-color: oklch(70% 0.1 30 / 0.4);
 		--input-valid-background-color: oklch(50% 0.1 130 / 0.3);
+		--background: light-dark(hsla(0 0% 100% / 1), hsla(195 61% 14%));
+	}
+	h1 {
+		margin: 2rem auto;
+		max-width: max-content;
+		font-size: var(--font-size-fluid-3);
+	}
+	h2 {
+		font-size: var(--font-size-fluid-2);
+	}
+	h3 {
+		font-size: var(--font-size-fluid-1);
+	}
+	fieldset {
+		border: revert;
+		border-radius: revert;
+		padding: revert;
+	}
+	legend {
 	}
 }
 
