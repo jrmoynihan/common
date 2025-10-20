@@ -72,7 +72,7 @@
 	</svg>
 {/snippet}
 
-<details class={['_details', details_attributes.class]} {...details_attributes}>
+<details {...details_attributes} class={['_details', details_attributes.class]}>
 	<summary
 		onclick={handle_toggle}
 		{...summary_attributes}
