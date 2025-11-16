@@ -19,6 +19,7 @@
 	import Flex, { type FlexProps } from '$wrappers/Flex.svelte';
 	import FlexItem, { type FlexItemProps } from '$wrappers/FlexItem.svelte';
 	import Grid, { type GridProps } from '$wrappers/Grid.svelte';
+	import ResizableGrid from '$wrappers/ResizableGrid.svelte';
 
 	const items = Array(12)
 		.fill(0)
@@ -46,7 +47,11 @@
 	let grid_mode = $state<'Grid' | 'Flex' | 'Both'>('Both');
 </script>
 
-<Flex gap="1rem" style="margin: 1rem; text-align: center; ">
+<Flex
+	gap="1rem"
+	direction="row"
+	style="font-size: 0.7em; margin: 1rem; text-align: center; padding: 1rem; "
+>
 	<RadioGroup
 		label_attributes={{ style: 'flex-basis: 33%; place-content: center; place-items: center;' }}
 		bind:group={grid_mode}
@@ -54,9 +59,10 @@
 	/>
 </Flex>
 <Grid
-	columns={3}
+	columns={2}
 	min_column_size="min(20rem, 100vw)"
 	max_column_size="1fr"
+	style="font-size: 0.7em;"
 	class={['toggler', grid_mode === 'Grid' && 'show-grid', grid_mode === 'Flex' && 'show-flex']}
 >
 	<fieldset
@@ -120,7 +126,7 @@
 	</fieldset>
 	<fieldset style="grid-area: shared_options">
 		<legend>Shared Options</legend>
-		<Flex wrap="wrap" direction="column" align_items="start">
+		<Flex direction="row" align_items="center" justify_content="center">
 			<TextInput bind:value={gap} show_confirm={false} label_props={{ text: 'Gap' }} />
 			<Select bind:value={overflow} input_label_props={{ text: 'Overflow' }}>
 				{#each Object.values(overflow_options) as overflow}
@@ -167,8 +173,8 @@
 	<fieldset
 		id="grid-example"
 		style="grid-area: grid; grid-column: 1 / 3; transform-origin: left;"
-		style:scale={grid_mode ? 1 : 0}
-		style:opacity={grid_mode ? 1 : 0}
+		style:scale={grid_mode === 'Grid' ? 1 : 0}
+		style:opacity={grid_mode === 'Grid' ? 1 : 0}
 	>
 		<legend>Grid</legend>
 		<Grid
@@ -192,11 +198,12 @@
 			{/each}
 		</Grid>
 	</fieldset>
+
 	<fieldset
 		id="flex-example"
 		style="grid-area: flex; grid-column: 2 / 4; transform-origin: right;"
-		style:scale={!grid_mode ? 1 : 0}
-		style:opacity={!grid_mode ? 1 : 0}
+		style:scale={grid_mode === 'Flex' ? 1 : 0}
+		style:opacity={grid_mode === 'Flex' ? 1 : 0}
 	>
 		<legend>Flex</legend>
 		<Flex
@@ -217,6 +224,28 @@
 		</Flex>
 	</fieldset>
 </Grid>
+<ResizableGrid
+	tag="article"
+	divider_size="6px"
+	columns={[
+		{ size: '200px', resizable: true, min: 'max-content' },
+		'1fr',
+		'2fr',
+		'1fr',
+		{ size: '200px', resizable: true, min: 'max-content' }
+	]}
+	rows={[
+		{ size: '200px', resizable: true, min: 'max-content' },
+		'1fr',
+		{ size: '200px', resizable: true, min: 'max-content' },
+		'1fr',
+		{ size: '200px', resizable: true, min: 'max-content' }
+	]}
+>
+	{#each items as item}
+		<div class="item">{item.name}</div>
+	{/each}
+</ResizableGrid>
 
 <style>
 	:global(fieldset ._flex-item .item, fieldset .item) {
@@ -231,21 +260,22 @@
 			grid-template-columns 0.5s ease-in-out,
 			grid-template-areas 0.5s ease-in-out;
 		grid-template-areas:
-			'grid_options shared_options flex_options'
-			'grid _ flex';
+			'shared_options shared_options'
+			'grid_options flex_options'
+			'grid flex';
 		container-type: inline-size;
 	}
 	:global(.toggler) {
-		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-columns: 2fr 1fr;
 		margin-inline: 2rem;
 	}
 	:global(.toggler.show-grid) {
-		grid-template-columns: 1fr 1fr 0fr;
-		margin-inline: 2rem -5rem;
+		grid-template-columns: 1fr 0fr;
+		margin-inline: 2rem 0;
 	}
 	:global(.toggler.show-flex) {
-		grid-template-columns: 0fr 1fr 1fr;
-		margin-inline: -5rem 2rem;
+		grid-template-columns: 0fr 1fr;
+		margin-inline: 0 2rem;
 	}
 	legend {
 		font-weight: bold;
@@ -264,13 +294,8 @@
 				scale 0.5s ease-in-out,
 				opacity 0.5s ease-in-out,
 				display 0.5s ease-in-out,
-				translateX 0.5s ease-in-out;
-			@starting-style {
-				scale: 0;
-				opacity: 0;
-				display: none;
-				translate: -100% 0;
-			}
+				translate 0.5s ease-in-out,
+				overlay 0.5s ease-in-out;
 		}
 		&#flex-example {
 			display: block;
@@ -278,32 +303,49 @@
 				scale 0.5s ease-in-out,
 				opacity 0.5s ease-in-out,
 				display 0.5s ease-in-out,
-				translateX 0.5s ease-in-out;
-			@starting-style {
-				scale: 0;
-				opacity: 0;
-				display: none;
-				translate: 100% 0;
-			}
+				translate 0.5s ease-in-out,
+				overlay 0.5s ease-in-out;
 		}
 		&#grid-options {
 			translate: 0 0;
 			opacity: 1;
+			transition-property: translate, opacity, display, overlay;
+			transition-duration: 0.5s;
+			transition-timing-function: ease-in-out;
 			&.hide-grid {
 				animation: hide-left 0.5s ease-in-out forwards;
+				display: none;
 			}
 		}
 		&#flex-options {
 			translate: 0 0;
 			opacity: 1;
+			transition-property: translate, opacity, display, overlay;
+			transition-duration: 0.5s;
+			transition-timing-function: ease-in-out;
 			&.hide-flex {
 				animation: hide-right 0.5s ease-in-out forwards;
+				display: none;
 			}
 		}
 		& > :global(*) {
 			flex-grow: 1;
 			flex-shrink: 1;
-			flex-basis: max(50px, calc(50% - 2rem));
+			flex-basis: max(50px, calc(33% - 2rem));
+		}
+	}
+	@starting-style {
+		#flex-example {
+			scale: 0;
+			opacity: 0;
+			display: none;
+			translate: 100% 0;
+		}
+		#grid-example {
+			scale: 0;
+			opacity: 0;
+			display: none;
+			translate: -100% 0;
 		}
 	}
 	@keyframes hide-left {
