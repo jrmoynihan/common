@@ -1,11 +1,11 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
+import browserslist from 'browserslist';
+import { browserslistToTargets } from 'lightningcss';
 import examples from 'mdsvexamples/vite';
 import path from 'node:path';
-import { kitRoutes } from 'vite-plugin-kit-routes';
-import tailwindcss from '@tailwindcss/vite';
-import { browserslistToTargets } from 'lightningcss';
-import browserslist from 'browserslist';
 import { defineConfig, type UserConfig } from 'vite';
+import { kitRoutes } from 'vite-plugin-kit-routes';
 
 const $root = path.resolve(__dirname, './src');
 const $lib = path.resolve($root, './lib');
@@ -31,7 +31,8 @@ const config = defineConfig({
 	css: {
 		transformer: 'lightningcss',
 		lightningcss: {
-			targets: browserslistToTargets(browserslist('defaults, not ie 11'))
+			targets: browserslistToTargets(browserslist('defaults, not ie 11')),
+			errorRecovery: true
 		}
 	},
 	experimental: { enableNativePlugin: true }
