@@ -25,14 +25,14 @@
 
 <script lang="ts">
 	let {
-		direction,
-		wrap,
-		justify_content,
-		align_content,
-		align_items,
-		align_self,
+		direction = 'column',
+		wrap = 'nowrap',
+		justify_content = 'normal',
+		align_content = 'normal',
+		align_items = 'normal',
+		align_self = 'normal',
 		gap,
-		overflow,
+		overflow = 'hidden',
 		children,
 		...attributes
 	}: FlexProps = $props();
