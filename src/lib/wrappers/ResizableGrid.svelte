@@ -257,7 +257,7 @@
 				style:grid-row-end={i + 2}
 				style:grid-column-start={1}
 				style:grid-column-end={-1}
-				onmousedown={(e) => startDrag(e, currentIsResizable ? i : i + 1, 'row')}
+				onmousedown={(e) => startDrag(e, currentIsResizable ? i : i + 1, 'row', false)}
 			></button>
 		{/if}
 	{/each}
