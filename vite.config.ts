@@ -34,8 +34,7 @@ const config = defineConfig({
 			targets: browserslistToTargets(browserslist('defaults, not ie 11')),
 			errorRecovery: true
 		}
-	},
-	experimental: { enableNativePlugin: true }
+	}
 }) satisfies UserConfig;
 
 export default config;
