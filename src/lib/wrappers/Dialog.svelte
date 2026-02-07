@@ -76,21 +76,26 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 <dialog
 	bind:this={dialog}
 	use:dialog_action
-	class="dialog"
+	{...attributes}
+	class={[
+		'dialog',
+		{
+			'scale-in': scale === 'in' || scale === 'both',
+			'scale-out': scale === 'out' || scale === 'both',
+			'slide-in-from-left': slide_in_from === 'left' && (slide === 'in' || slide === 'both'),
+			'slide-in-from-right': slide_in_from === 'right' && (slide === 'in' || slide === 'both'),
+			'slide-in-from-top': slide_in_from === 'top' && (slide === 'in' || slide === 'both'),
+			'slide-in-from-bottom': slide_in_from === 'bottom' && (slide === 'in' || slide === 'both'),
+			'slide-out-to-left': slide_out_to === 'left' && (slide === 'out' || slide === 'both'),
+			'slide-out-to-right': slide_out_to === 'right' && (slide === 'out' || slide === 'both'),
+			'slide-out-to-top': slide_out_to === 'top' && (slide === 'out' || slide === 'both'),
+			'slide-out-to-bottom': slide_out_to === 'bottom' && (slide === 'out' || slide === 'both')
+		},
+		attributes?.class
+	]}
 	data-blur={blur}
-	class:scale-in={scale === 'in' || scale === 'both'}
-	class:scale-out={scale === 'out' || scale === 'both'}
-	class:slide-in-from-left={slide_in_from === 'left' && (slide === 'in' || slide === 'both')}
-	class:slide-in-from-right={slide_in_from === 'right' && (slide === 'in' || slide === 'both')}
-	class:slide-in-from-top={slide_in_from === 'top' && (slide === 'in' || slide === 'both')}
-	class:slide-in-from-bottom={slide_in_from === 'bottom' && (slide === 'in' || slide === 'both')}
-	class:slide-out-to-left={slide_out_to === 'left' && (slide === 'out' || slide === 'both')}
-	class:slide-out-to-right={slide_out_to === 'right' && (slide === 'out' || slide === 'both')}
-	class:slide-out-to-top={slide_out_to === 'top' && (slide === 'out' || slide === 'both')}
-	class:slide-out-to-bottom={slide_out_to === 'bottom' && (slide === 'out' || slide === 'both')}
 	data-mode={mode}
 	style:--blur={typeof blur === 'number' ? `${blur}px` : `0`}
-	{...attributes}
 >
 	{#if form}
 		{@render form({ ...form_attributes, method: 'dialog' })}
