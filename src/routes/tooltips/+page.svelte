@@ -1,10 +1,14 @@
 <script lang="ts">
-	import { tooltip, type TooltipDirections } from '$lib/attach/tooltip/tooltip.svelte.js';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import { SvelteMap } from 'svelte/reactivity';
-	import Icon from '@iconify/svelte';
 	import Input from '$inputs/Input.svelte';
 	import { Button, Grid } from '$lib';
+	import {
+		tooltip,
+		type TooltipDirections,
+		type TooltipProps
+	} from '$lib/attach/tooltip/tooltip.svelte.js';
+	import Icon from '@iconify/svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 	let position: TooltipDirections = $state('top');
 	let positions = ['top', 'bottom', 'left', 'right'];
 	let max_width = 200;
@@ -17,12 +21,13 @@
 		`This is a tooltip positioned on the ${position}${position === 'top' ? ' (the default)' : ''}. It will automatically reposition itself to stay within the viewport and can update its position dynamically.`
 	);
 
-	let tooltip_props = $derived({
+	let tooltip_props: TooltipProps = $derived({
 		position,
 		keep_visible,
 		disabled,
 		styles: 'max-width: min(100vw, 300px);',
-		content
+		content,
+		width: '10px'
 	});
 
 	let initially_visible_example = $state(true);
