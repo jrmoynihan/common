@@ -40,7 +40,7 @@
 	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
 
 	let {
-		value = $bindable(0),
+		value = $bindable(),
 		valid = $bindable(true),
 		for_id = $bindable(crypto.randomUUID()),
 		input_element = $bindable(),
