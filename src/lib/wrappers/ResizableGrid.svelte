@@ -311,7 +311,7 @@
 				/* margin-inline: auto; */
 				top: 0;
 				bottom: 0;
-				right: calc(var(--grid-col-gap, var(--grid-gap)) * -1 + var(--divider-size));
+				right: calc(var(--grid-col-gap, var(--grid-gap)) * -1);
 				scale: 0.2 1;
 				&:hover {
 					scale: 1 1;
