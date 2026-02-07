@@ -19,7 +19,7 @@ https://web.dev/building-a-tooltip-component/
 		inert = true,
 		disabled = false,
 		fallback = true,
-		...rest
+		...attributes
 	}: TooltipProps = $props();
 
 	let tooltip: HTMLElement | undefined = $state(undefined);
@@ -35,12 +35,17 @@ https://web.dev/building-a-tooltip-component/
 	style:--tooltip-width={`${tooltip?.offsetWidth}px`}
 	style:--tooltip-height={`${tooltip?.offsetHeight}px`}
 	style:--distance={typeof distance === 'number' ? `${distance}px` : distance}
-	{...rest}
+	{...attributes}
 	role="tooltip"
 	id={`tooltip-${id}`}
 	anchor={id}
 	popover="auto"
-	class={['tooltip', fallback, ((!disabled && visible) || keep_visible) && 'visible', rest.class]}
+	class={[
+		'tooltip',
+		{ fallback },
+		((!disabled && visible) || keep_visible) && 'visible',
+		attributes.class
+	]}
 >
 	{#if content && typeof content === 'string'}
 		{content}
@@ -86,6 +91,10 @@ https://web.dev/building-a-tooltip-component/
 			position: fixed;
 			overflow: visible;
 			margin: 0;
+			anchor-name: --tooltip;
+			anchor-scope: --tooltip;
+			/* Make it an anchored query container */
+			container-type: anchored;
 
 			&[data-tip-position='bottom'] {
 				transform-origin: center top;
@@ -96,7 +105,8 @@ https://web.dev/building-a-tooltip-component/
 				justify-self: anchor-center;
 				/* position-area: bottom; doesn't allow for spacing control though */
 				&.fallback {
-					position-try: flip-block, flip-inline, flip-start;
+					position-try-fallbacks: flip-block, flip-inline, flip-start;
+					/* Use the anchored query to check the fallback */
 				}
 			}
 			&[data-tip-position='top'] {
@@ -108,7 +118,7 @@ https://web.dev/building-a-tooltip-component/
 				justify-self: anchor-center;
 				/* position-area: top; doesn't allow for spacing control though */
 				&.fallback {
-					position-try: flip-block, flip-inline, flip-start;
+					position-try-fallbacks: flip-block, flip-inline, flip-start;
 				}
 			}
 			&[data-tip-position='left'] {
@@ -120,7 +130,7 @@ https://web.dev/building-a-tooltip-component/
 				align-self: anchor-center;
 				/* position-area: left; doesn't allow for spacing control though */
 				&.fallback {
-					position-try: flip-inline, flip-block, flip-start;
+					position-try-fallbacks: flip-inline, flip-block, flip-start;
 				}
 			}
 			&[data-tip-position='right'] {
@@ -132,7 +142,7 @@ https://web.dev/building-a-tooltip-component/
 				align-self: anchor-center;
 				/* position-area: right; doesn't allow for spacing control though */
 				&.fallback {
-					position-try: flip-inline, flip-block, flip-start;
+					position-try-fallbacks: flip-inline, flip-block, flip-start;
 				}
 			}
 			&.visible {
@@ -182,7 +192,7 @@ https://web.dev/building-a-tooltip-component/
 			&[data-tip-position='top'] {
 				width: var(--side-arrow-base);
 				height: var(--side-arrow-length);
-				left: calc(50% - var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)));
+				/* left: calc(50% - var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem))); */
 
 				&::after {
 					border-left: var(--arrow-transparent-border);
@@ -190,6 +200,7 @@ https://web.dev/building-a-tooltip-component/
 				}
 			}
 			&[data-tip-position='bottom'] {
+				position-area: bottom span-all;
 				top: calc(
 					-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 *
 						var(--arrow-cushion, 4px)
@@ -229,6 +240,16 @@ https://web.dev/building-a-tooltip-component/
 					border-left-style: unset;
 				}
 			}
+		}
+	}
+	@container anchored(fallback: flip-inline) {
+		.tooltip {
+			background-color: red;
+		}
+	}
+	@container anchored(fallback: flip-block) {
+		.tooltip {
+			background-color: green;
 		}
 	}
 </style>
