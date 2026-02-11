@@ -62,7 +62,10 @@
 	<InputButton
 		{...button_props}
 		disabled={input_attributes?.disabled}
-		icon_props={{ style: 'color: var(--text-input-button-color, buttontext);', ...icon_props }}
+		icon_props={{
+			...icon_props,
+			style: `color: var(--text-input-button-color, buttontext); ${icon_props?.style}`
+		}}
 	/>
 {/snippet}
 
@@ -76,7 +79,9 @@
 		{...input_attributes}
 		type="number"
 	/>
-	<Placeholder {...placeholder_props} />
+	{#if placeholder_props}
+		<Placeholder {...placeholder_props} />
+	{/if}
 	{@render children?.()}
 	{#if show_spinner_buttons}
 		{@const max_num = Number(input_attributes?.max ?? Infinity)}
@@ -135,10 +140,10 @@
 			--input-border-radius: 1rem;
 			display: grid;
 			margin: 0;
-			place-items: center;
+			/* place-items: center; */
 			place-self: center end;
 			height: 100%;
-			grid-area: input; /* Overlap with the placeholder and input; */
+			grid-area: input;
 			grid-template-rows: repeat(auto-fit, minmax(0, 1fr));
 			grid-template-areas:
 				'plus'

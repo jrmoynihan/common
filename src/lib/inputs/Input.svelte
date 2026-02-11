@@ -103,6 +103,7 @@
 			padding: var(--input-padding, 1.25em);
 			padding-bottom: 0.5em;
 			cursor: text;
+			grid-area: input;
 			/* to make room for the cancel button */
 			padding-right: var(--input-button-padding-space, 2.5em);
 
