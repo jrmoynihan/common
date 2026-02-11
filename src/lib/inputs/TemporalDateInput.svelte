@@ -21,7 +21,7 @@
 	// https://tc39.es/proposal-temporal/docs/cookbook.html#current-date-and-time
 
 	let {
-		date = Temporal.Now.zonedDateTimeISO(),
+		date = $bindable(Temporal.Now.zonedDateTimeISO()),
 		min = date.subtract({ years: 100 }),
 		max = date.add({ years: 100 }),
 		label_props,
@@ -109,10 +109,6 @@
 			date_input.checkValidity();
 			label_props.invalid_text = date_input.validationMessage;
 		}
-	});
-	// Update the date when the input value changes
-	$effect(() => {
-		date = stringToTemporalDate(internal_string_date);
 	});
 </script>
 
