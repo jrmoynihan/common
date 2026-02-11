@@ -1,6 +1,6 @@
 {
 	"name": "@jrmoynihan/common",
-	"version": "12.2.",
+	"version": "13.0.0",
 	"repository": "github:jrmoynihan/common",
 	"author": "James Moynihan",
 	"engines": {
@@ -32,12 +32,12 @@
 		"@tailwindcss/forms": "^0.5.11",
 		"@tailwindcss/typography": "^0.5.19",
 		"@tailwindcss/vite": "^4.1.18",
-		"@types/node": "^24.10.13",
+		"@types/node": "^25.2.3",
 		"@typescript-eslint/eslint-plugin": "^8.55.0",
 		"@typescript-eslint/parser": "^8.55.0",
 		"baseline-browser-mapping": "^2.9.19",
 		"browserslist": "^4.28.1",
-		"eslint": "^9.39.2",
+		"eslint": "^10.0.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.15.0",
 		"lightningcss": "^1.31.1",
