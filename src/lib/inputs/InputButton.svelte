@@ -7,7 +7,7 @@
 <script lang="ts">
 	import { Button } from '$lib';
 
-	let { disabled = $bindable(false), ...button_attributes }: InputButtonProps = $props();
+	let { disabled = $bindable(false), children, ...button_attributes }: InputButtonProps = $props();
 </script>
 
 <Button
@@ -16,7 +16,7 @@
 	{...button_attributes}
 	class={[`_input_button`, button_attributes.class]}
 >
-	{@render button_attributes?.children?.()}
+	{@render children?.()}
 </Button>
 
 <style>
