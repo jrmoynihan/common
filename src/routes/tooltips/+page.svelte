@@ -190,11 +190,9 @@
 				{value}
 				oninput={(e) => styling_green_map.set(rule, e.currentTarget.value)}
 			/>
-			<Button
-				class="delete"
-				onclick={() => styling_green_map.delete(rule)}
-				icon_props={{ icon: 'fa-solid:trash' }}
-			/>
+			<Button class="delete" onclick={() => styling_green_map.delete(rule)}>
+				<Icon icon="fa6-solid:trash" />
+			</Button>
 		{/each}
 		<Button class="add" style="grid-column: span 3;" onclick={() => styling_green_map.set('', '')}>
 			<Icon icon="fa-solid:plus" />

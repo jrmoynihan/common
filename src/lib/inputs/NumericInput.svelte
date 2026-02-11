@@ -33,6 +33,7 @@
 
 <script lang="ts">
 	import type { IconProps } from '@iconify/svelte';
+	import Icon from '@iconify/svelte';
 	import { type Snippet } from 'svelte';
 	import Input, { type InputProps } from './Input.svelte';
 	import InputButton, { type InputButtonProps } from './InputButton.svelte';
@@ -59,14 +60,12 @@
 </script>
 
 {#snippet default_spinner_button(icon_props: IconProps, button_props: InputButtonProps)}
-	<InputButton
-		{...button_props}
-		disabled={input_attributes?.disabled}
-		icon_props={{
-			...icon_props,
-			style: `color: var(--text-input-button-color, buttontext); ${icon_props?.style}`
-		}}
-	/>
+	<InputButton {...button_props} disabled={input_attributes?.disabled}>
+		<Icon
+			{...icon_props}
+			style={`color: var(--text-input-button-color, buttontext); ${icon_props?.style ?? ''}`}
+		/>
+	</InputButton>
 {/snippet}
 
 <InputLabel bind:label_element bind:valid bind:for_id {...label_props}>
@@ -140,7 +139,6 @@
 			--input-border-radius: 1rem;
 			display: grid;
 			margin: 0;
-			/* place-items: center; */
 			place-self: center end;
 			height: 100%;
 			grid-area: input;
@@ -163,7 +161,7 @@
 				var(--text-input-border-radius, 1em)
 			);
 			overflow: hidden;
-			isolation: isolate; /* Contain the z-index stacking context for the buttons to this container. */
+			isolation: isolate; /** Contain the z-index stacking context for the buttons to this container. */
 		}
 	}
 

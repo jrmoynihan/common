@@ -20,6 +20,7 @@
 </script>
 
 <script lang="ts">
+	import Icon from '@iconify/svelte';
 	import Input, { type InputProps } from './Input.svelte';
 	import InputButton, { type InputButtonProps } from './InputButton.svelte';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
@@ -92,24 +93,23 @@
 				tabindex={value && valid ? 0 : -1}
 				onclick={handle_confirm_click}
 				disabled={!value}
-				icon_props={{
-					icon: 'fa6-solid:check',
-					color: 'var(--text-input-button-color, buttontext)'
-				}}
 				{...button_props}
 				style={value === undefined || value === null ? 'display: none;' : undefined}
 				class={['_confirm-btn', { value, valid }]}
-			></InputButton>
+			>
+				<Icon icon="fa6-solid:check" color="var(--text-input_button-color, buttontext)" />
+			</InputButton>
 		{/if}
 		{#if show_cancel}
 			<InputButton
 				tabindex={value ? 0 : -1}
 				onclick={clear_input}
 				disabled={!value}
-				icon_props={{ icon: 'fa6-solid:x', color: 'var(--text-input-button-color, buttontext)' }}
 				{...button_props}
 				class={['_cancel-btn', { valid, value }, !show_confirm && 'no-confirm']}
-			></InputButton>
+			>
+				<Icon icon="fa6-solid:x" color="var(--text-input_button-color, buttontext)" />
+			</InputButton>
 		{/if}
 	</div>
 </InputLabel>
