@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import { mount, unmount } from 'svelte';
-import Tooltip from './AttachedTooltip.svelte';
 import type { Attachment } from 'svelte/attachments';
+import Tooltip from './AttachedTooltip.svelte';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
 const void_elements = [
@@ -115,8 +115,12 @@ export function tooltip(parameters: TooltipProps): Attachment<HTMLElement> {
 
 		// Clean up
 		return () => {
-			remove_event_listeners(node, props);
-			unmount(tooltip);
+			if (node && props) {
+				remove_event_listeners(node, props);
+			}
+			if (tooltip) {
+				unmount(tooltip);
+			}
 		};
 	};
 }
@@ -131,9 +135,6 @@ function setup_node(node: HTMLElement): string {
 	node.setAttribute('popovertarget', `tooltip-${id}`);
 	return id;
 }
-
-/** Store the element's title attribute for re-use */
-async function storeTitle() {}
 
 async function pointerEnter(props: BaseTooltipProps) {
 	if (props.disabled) return;
@@ -154,11 +155,4 @@ async function add_event_listeners(node: HTMLElement, props: BaseTooltipProps) {
 async function remove_event_listeners(node: HTMLElement, props: BaseTooltipProps) {
 	node.removeEventListener('pointerenter', pointerEnter.bind(null, props));
 	node.removeEventListener('pointerleave', pointerLeave.bind(null, props));
-}
-
-async function reassignNode(new_node: HTMLElement, props: BaseTooltipProps) {
-	// Remove the event listeners from the current node
-	await remove_event_listeners(new_node, props);
-	// Add the event listeners to the new node
-	await add_event_listeners(new_node, props);
 }
