@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
 	import Input from '$inputs/Input.svelte';
-	import { Button, Grid } from '$lib';
+	import { Grid } from '$lib';
 	import {
 		tooltip,
 		type TooltipDirections,
@@ -70,7 +70,7 @@
 </script>
 
 {#snippet tooltip_example({ text, num }: { text: string; num: number })}
-	<Button>example from a snippet: {text} {num}</Button>
+	<button>example from a snippet: {text} {num}</button>
 {/snippet}
 <section id="tooltips-section">
 	<div class="settings full-width">
@@ -89,10 +89,10 @@
 			<ToggleSwitch bind:checked={keep_visible} />
 		</label>
 	</div>
-	<Button class="full-width" {@attach tooltip({ ...tooltip_props })}>
+	<button class="full-width" {@attach tooltip({ ...tooltip_props })}>
 		Tooltips Can Adjust Their Position Automatically
-	</Button>
-	<Button
+	</button>
+	<button
 		class="full-width"
 		{@attach tooltip({
 			position,
@@ -104,8 +104,8 @@
 		onclick={() => (initially_visible_example = !initially_visible_example)}
 	>
 		Tooltips Can Be Used Without the Mouse
-	</Button>
-	<Button
+	</button>
+	<button
 		{@attach tooltip({
 			content: dynamic_tooltip_text,
 			position,
@@ -115,7 +115,7 @@
 		})}
 	>
 		Dynamically Updating Tooltip Text
-	</Button>
+	</button>
 	<Input
 		type="text"
 		class="tooltip-text-input"
@@ -131,7 +131,7 @@
 		})}
 	/>
 
-	<Button
+	<button
 		{@attach tooltip({
 			content: keep_visible
 				? `I'll stick around. It's useful for debugging styles on the tip too!`
@@ -141,8 +141,8 @@
 		})}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
-	</Button>
-	<Button
+	</button>
+	<button
 		id="custom-component-button"
 		{@attach tooltip({
 			content: `I've got a <br/> custom component!`,
@@ -152,8 +152,8 @@
 		})}
 	>
 		Tooltips Can Stay Visible Or Be Disabled
-	</Button>
-	<Button
+	</button>
+	<button
 		{@attach tooltip({
 			content: `I'm so stylin'!`,
 			show_arrow: false,
@@ -163,7 +163,7 @@
 		})}
 	>
 		Tooltips Can Be Styled
-	</Button>
+	</button>
 	<Grid
 		columns={3}
 		max_column_size="max-content"
@@ -190,14 +190,14 @@
 				{value}
 				oninput={(e) => styling_green_map.set(rule, e.currentTarget.value)}
 			/>
-			<Button class="delete" onclick={() => styling_green_map.delete(rule)}>
-				<Icon icon="fa6-solid:trash" />
-			</Button>
+			<button class="delete" onclick={() => styling_green_map.delete(rule)}>
+				<Icon icon="fa6-solid:trash" class="h-4 w-4" />
+			</button>
 		{/each}
-		<Button class="add" style="grid-column: span 3;" onclick={() => styling_green_map.set('', '')}>
-			<Icon icon="fa-solid:plus" />
+		<button class="add" style="grid-column: span 3;" onclick={() => styling_green_map.set('', '')}>
+			<Icon icon="fa-solid:plus" class="h-4 w-4" />
 			Add CSS Rule
-		</Button>
+		</button>
 	</Grid>
 </section>
 
