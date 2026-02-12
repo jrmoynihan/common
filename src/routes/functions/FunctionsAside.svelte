@@ -22,19 +22,16 @@
 	onDestroy(() => {
 		$aside_visible = false;
 	});
+	const scroll_to_top_attributes = {
+		button_attributes: {
+			style:
+				'position: absolute; top:0; right: 0; font-size: 0.6rem; padding: 0.5rem 1rem; border: 1px solid hsla(var(--accent-value), 50%); border-radius: 0 0 0 1rem; display: flex; max-width: 40%;'
+		}
+	};
 </script>
 
 <aside in:fly={{ x: -300, duration: 400, delay: 0 }} out:fly={{ x: -300, duration: 400 }}>
-	<ScrollToTopButton
-		button_props={{
-			transition: fly,
-			transition_config: { y: -50 },
-			style:
-				'position: absolute; top:0; right: 0; font-size: 0.6rem; padding: 0.5rem 1rem; border: 1px solid hsla(var(--accent-value), 50%); border-radius: 0 0 0 1rem; display: flex; max-width: 40%;'
-		}}
-	>
-		Return to Top
-	</ScrollToTopButton>
+	<ScrollToTopButton {...scroll_to_top_attributes}>Return to Top</ScrollToTopButton>
 	<!-- {#await makeAnchorLinks( { parent_path: `${parent_path}/${paths[0]}`, paths: context_nav_anchor_paths, link_texts: context_nav_anchor_link_texts } ) then context_nav_anchors}
 		{#await makeNavLinks( { paths: ['contexts#contexts'], parent_path, anchors: context_nav_anchors } ) then topics}
 			{#each topics as nav_link, i}

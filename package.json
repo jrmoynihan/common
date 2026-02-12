@@ -23,7 +23,7 @@
 		"test:unit": "vitest"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.3.14",
+		"@biomejs/biome": "^2.3.15",
 		"@playwright/test": "^1.58.2",
 		"@sveltejs/adapter-auto": "^7.0.0",
 		"@sveltejs/adapter-vercel": "^6.3.1",
@@ -67,7 +67,7 @@
 		"acorn": "^8.15.0",
 		"mdsvexamples": "^0.5.1",
 		"postcss-jit-props": "^1.0.16",
-		"svelte": "^5.50.1",
+		"svelte": "^5.50.2",
 		"svelte-inspect-value": "^0.10.0"
 	},
 	"exports": {

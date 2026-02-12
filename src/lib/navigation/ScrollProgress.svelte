@@ -1,7 +1,8 @@
 <script module lang="ts">
 	export interface ScrollProgressProps {
 		children?: Snippet;
-		button_props?: ButtonProps;
+		/** The attributes to apply to the button that scrolls to the top of the page. */
+		button_attributes?: HTMLButtonAttributes;
 		/** The percent at which the scroll-to-top button becomes visible.  E.g., 10% would be 10*/
 		threshold?: number;
 		/** The scroll progess up and down the page, expressed as a percent. */
@@ -17,13 +18,13 @@
 
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import ButtonRunes, { type ButtonProps } from '$buttons/Button_Runes.svelte';
 	import type { Snippet } from 'svelte';
+	import type { HTMLButtonAttributes, MouseEventHandler } from 'svelte/elements';
 	import { Spring } from 'svelte/motion';
 
 	let {
 		children,
-		button_props,
+		button_attributes,
 		threshold = 10,
 		progress = new Spring<number>(0, { damping: 0.5, stiffness: 0.1 }),
 		show_return_to_top_button = true,
@@ -47,9 +48,10 @@
 			});
 		}
 	}
-	function onclick() {
+	const onclick: MouseEventHandler<HTMLButtonElement> = (e) => {
 		window?.scrollTo({ top: 0, behavior: 'smooth' });
-	}
+		button_attributes?.onclick?.(e);
+	};
 
 	$effect(() => {
 		meets_visibility_threshold = progress.current >= threshold;
@@ -59,9 +61,9 @@
 <svelte:window bind:scrollY on:scroll={checkScrollProgress} />
 {#if meets_visibility_threshold}
 	{#if show_return_to_top_button}
-		<ButtonRunes {...button_props} {onclick}>
+		<button {onclick} {...button_attributes}>
 			{@render children?.()}
-		</ButtonRunes>
+		</button>
 	{/if}
 	{#if show_progress_bar}
 		<progress-indicator style="width:{(progress.current * 100).toString()}%;"> </progress-indicator>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { tooltip, Button } from '$lib';
+	import { tooltip } from '$lib';
 	import FullDialog from '$wrappers/FullDialog.svelte';
 	import MiniDialog from '$wrappers/MiniDialog.svelte';
 
@@ -45,13 +45,13 @@
 	</FullDialog>
 
 	<hr />
-	<Button
+	<button
 		class="mt-4"
 		{@attach tooltip({ content: 'Really, open the dialog!' })}
 		onclick={() => dialog?.open()}
 	>
 		You can open the dialog externally, too!
-	</Button>
+	</button>
 
 	<!-- TODO: replace with mdsvex snippet -->
 	<code>

@@ -1,6 +1,6 @@
 <script module lang="ts">
 	export interface LinkableAnchorHeadingProps extends AnchorHeadingProps {
-		button_props?: ButtonProps;
+		button_attributes?: HTMLButtonAttributes;
 		button_position?: 'before' | 'after';
 		children?: Snippet;
 	}
@@ -8,18 +8,16 @@
 
 <script lang="ts">
 	import { page } from '$app/state';
-	import ButtonRunes, { type ButtonProps } from '$buttons/Button_Runes.svelte';
+	import Icon from '@iconify/svelte';
 	import { onDestroy, type Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import AnchorHeading, { type AnchorHeadingProps } from './AnchorHeading.svelte';
 
-	let style =
-		'border: 0; --button-opacity: 0.5; padding: 0rem 0.5rem; max-height: max-content; margin: 0.25rem 0.5rem;';
-	let copied_styles = 'background: hsla(var(--link-background-value), 75%);';
 	let copied = $state(false);
 	let timeout: ReturnType<Window['setTimeout']> | undefined = $state();
 
 	let {
-		button_props = { style },
+		button_attributes,
 		button_position = 'after',
 		children,
 		...heading_props
@@ -38,14 +36,16 @@
 </script>
 
 {#snippet copy_link_button()}
-	<ButtonRunes
-		icon_props={{ icon: 'fa6-solid:link' }}
+	<button
+		class="border-0, opacity-50, p-0, max-h-max, m-0.5"
 		aria-label="Copy Link"
 		aria-pressed={copied}
 		data-pressed={copied}
 		onpointerdown={copyLinkAddress}
-		{...button_props}
-	/>
+		{...button_attributes}
+	>
+		<Icon icon="fa6-solid:link" />
+	</button>
 {/snippet}
 
 <div class="linkable-heading">

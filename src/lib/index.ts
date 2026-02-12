@@ -6,8 +6,6 @@
 // Buttons
 import ResetButton from '$buttons/ResetButton.svelte';
 import SubmitButton from '$buttons/SubmitButton.svelte';
-import type { ButtonProps } from './buttons/Button_Runes.svelte';
-import Button from './buttons/Button_Runes.svelte';
 import type { DragAnchorProps } from './buttons/DragAnchor.svelte';
 import DragAnchor from './buttons/DragAnchor.svelte';
 import type { LightDarkToggleProps } from './buttons/LightDarkToggle_v2.svelte';
@@ -207,7 +205,6 @@ export {
 	AccordionJson,
 	ActionTooltip,
 	AnchorHeading,
-	Button,
 	Carousel,
 	carousel_item,
 	Checkbox,
@@ -244,7 +241,6 @@ export {
 	type AccordionJsonProps,
 	type AccordionProps,
 	type AnchorHeadingProps,
-	type ButtonProps,
 	type CarouselProps,
 	type CheckboxProps,
 	type DataCell,

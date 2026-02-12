@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	export interface DragAnchorProps extends ButtonProps {
+	export interface DragAnchorProps extends HTMLButtonAttributes {
 		grabbed?: boolean;
 		hovered?: boolean;
 		children?: Snippet;
@@ -7,16 +7,20 @@
 </script>
 
 <script lang="ts">
+	import Icon from '@iconify/svelte';
 	import type { Snippet } from 'svelte';
-	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
-	import type { FocusEventHandler, MouseEventHandler, PointerEventHandler } from 'svelte/elements';
+	import type {
+		FocusEventHandler,
+		HTMLButtonAttributes,
+		MouseEventHandler,
+		PointerEventHandler
+	} from 'svelte/elements';
 
 	let {
 		hovered = $bindable(false),
 		grabbed = $bindable(false),
-		disabled = $bindable(),
 		children,
-		...button_props
+		...button_attributes
 	}: DragAnchorProps = $props();
 
 	export const release = () => {
@@ -29,39 +33,38 @@
 	};
 	const pointerdown: PointerEventHandler<HTMLButtonElement> = (e) => {
 		grab();
-		button_props.onpointerdown?.(e);
+		button_attributes.onpointerdown?.(e);
 	};
 	const pointerup: PointerEventHandler<HTMLButtonElement> = (e) => {
 		release();
-		button_props.onpointerup?.(e);
+		button_attributes.onpointerup?.(e);
 	};
 	const blur: FocusEventHandler<HTMLButtonElement> = (e) => {
 		release();
-		button_props.onblur?.(e);
+		button_attributes.onblur?.(e);
 	};
 	const mousedown: MouseEventHandler<HTMLButtonElement> = (e) => {
 		grab();
-		button_props.onmousedown?.(e);
+		button_attributes.onmousedown?.(e);
 	};
 	const mouseup: MouseEventHandler<HTMLButtonElement> = (e) => {
 		release();
-		button_props.onmouseup?.(e);
+		button_attributes.onmouseup?.(e);
 	};
 </script>
 
-<ButtonRunes
-	bind:disabled
-	icon_props={{ icon: 'fa6-solid:grip-vertical' }}
-	{...button_props}
+<button
+	{...button_attributes}
 	onmousedown={mousedown}
 	onmouseup={mouseup}
 	onpointerdown={pointerdown}
 	onpointerup={pointerup}
 	onblur={blur}
-	class={['_drag-anchor', !hovered && 'faded', grabbed, button_props.class]}
+	class={['_drag-anchor', !hovered && 'faded', grabbed, button_attributes?.class]}
 >
 	{@render children?.()}
-</ButtonRunes>
+	<Icon icon="fa6-solid:grip-vertical" />
+</button>
 
 <style>
 	@layer common.drag-anchor {

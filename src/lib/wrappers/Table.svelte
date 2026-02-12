@@ -57,16 +57,21 @@
 		table_header_attributes?: HTMLAttributes<HTMLTableSectionElement>;
 		/** The attributes to be applied to `<th>` elements */
 		table_header_cell_attributes?: HTMLAttributes<HTMLTableCellElement>;
+		/** A snippet representing the button to sort the table column for strings.  Overrides `sort_button_content` if provided. */
+		sort_string_button_content?: Snippet<[]>;
+		/** A snippet representing the button to sort the table column for numbers.  Overrides `sort_button_content` if provided. */
+		sort_number_button_content?: Snippet<[]>;
+		/** A snippet representing the button to sort the table column.  Used as a fallback if `sort_string_button_content` or `sort_number_button_content` are not provided. */
+		sort_button_content?: Snippet<[]>;
 	}
 </script>
 
 <script lang="ts" generics="T extends Record<string,any>">
-	import ButtonRunes from '$buttons/Button_Runes.svelte';
+	import { tooltip } from '$lib/attach/tooltip/tooltip.svelte';
 	import type { IconProps } from '@iconify/svelte';
 	import type { Snippet } from 'svelte';
-	import { SvelteDate, SvelteMap } from 'svelte/reactivity';
-	import { tooltip } from '$lib/attach/tooltip/tooltip.svelte';
 	import { flip } from 'svelte/animate';
+	import { SvelteDate, SvelteMap } from 'svelte/reactivity';
 
 	let {
 		data = $bindable([]),
@@ -83,6 +88,9 @@
 		capitalize_headers = true,
 		keys_to_rename = {},
 		sort_button = default_sort_button,
+		sort_string_button_content,
+		sort_number_button_content,
+		sort_button_content,
 		preceding_header_cells = null,
 		subsequent_header_cells = null,
 		preceding_data_cells = null,
@@ -223,24 +231,34 @@
 	{@const icon = icons.get(key) ?? 'fa6-solid:arrow-down-wide-short'}
 	{@const order = orders.get(key)}
 	{#if typeof datum_0 === 'string'}
-		<ButtonRunes
+		<button
 			class={['sort-button', order]}
 			onclick={() => sort_strings(key)}
 			style={'padding: 0.25rem;'}
-			icon_props={{ icon }}
 			{@attach tooltip({
 				content: `Sort strings (current: ${order === 'desc' ? 'A-Z' : 'Z-A'})`
 			})}
-		/>
+		>
+			{#if sort_string_button_content}
+				{@render sort_string_button_content?.()}
+			{:else if sort_button_content}
+				{@render sort_button_content?.()}
+			{/if}
+		</button>
 	{:else if typeof datum_0 === 'number' || typeof datum_0 === 'boolean' || datum_0 instanceof Date || datum_0 instanceof BigInt || datum_0 instanceof SvelteDate}
-		<ButtonRunes
+		<button
 			class={['sort-button', order]}
 			onclick={() => sort_numbers_or_boolean_or_dates(key)}
-			icon_props={{ icon }}
 			{@attach tooltip({
 				content: `Sort numbers (current: ${order === 'desc' ? 'low-to-high' : 'high-to-low'})`
 			})}
-		/>
+		>
+			{#if sort_number_button_content}
+				{@render sort_number_button_content?.()}
+			{:else if sort_button_content}
+				{@render sort_button_content?.()}
+			{/if}
+		</button>
 		<!-- TODO: other data types -->
 	{/if}
 {/snippet}

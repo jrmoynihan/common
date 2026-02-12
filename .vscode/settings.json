@@ -1,35 +1,35 @@
 {
-  "conventionalCommits.scopes": [
-    "Tooltips",
-    "Inputs",
-    "Buttons",
-    "Wrappers",
-    "Navigation",
-    "Functions",
-    "Toasts",
-    "Packages",
-    "Actions",
-    "Deployment"
-  ],
-  "files.exclude": {
-    ".DS_Store": true,
-    ".eslintignore": true,
-    ".eslintrc.cjs": true,
-    ".git": true,
-    ".gitignore": true,
-    ".markdownlint.jsonc": true,
-    "README.md": true,
-    "mdsvex.config.js": true,
-    "node_modules": true,
-    "playwright.config.ts": true,
-    ".prettierignore": true,
-    "dist": true,
-    ".svelte-kit": true,
-    ".dccache": true,
-    "jsr.json": true,
-    "biome.jsonc": true
-  },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "evenBetterToml.formatter.allowedBlankLines": 4,
-  "evenBetterToml.formatter.columnWidth": 4
+	"conventionalCommits.scopes": [
+		"Tooltips",
+		"Inputs",
+		"Buttons",
+		"Wrappers",
+		"Navigation",
+		"Functions",
+		"Toasts",
+		"Packages",
+		"Actions",
+		"Deployment"
+	],
+	"files.exclude": {
+		".DS_Store": true,
+		".eslintignore": true,
+		".eslintrc.cjs": true,
+		".git": true,
+		".gitignore": true,
+		".markdownlint.jsonc": true,
+		"README.md": true,
+		"mdsvex.config.js": true,
+		"node_modules": true,
+		"playwright.config.ts": true,
+		".prettierignore": true,
+		"dist": true,
+		".svelte-kit": true,
+		".dccache": true,
+		"jsr.json": true,
+		"biome.jsonc": true
+	},
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"evenBetterToml.formatter.allowedBlankLines": 4,
+	"evenBetterToml.formatter.columnWidth": 4
 }

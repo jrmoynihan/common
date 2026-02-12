@@ -96,7 +96,6 @@
 			class={'tree-item-details'}
 			summary={'CSS selectors'}
 			summary_attributes={{ class: 'tree-item-label' }}
-			transition_props={{ types: ['scale'] }}
 		>
 			<TreeList node_to="--node-1">
 				<TreeItem is_node="--node-1-1">
@@ -104,7 +103,6 @@
 						class={'tree-item-details'}
 						summary={'Basic selectors'}
 						summary_attributes={{ class: 'tree-item-label' }}
-						transition_props={{ types: ['fly'], slide_transition_parameters: { side: 'left' } }}
 					>
 						<TreeList node_to="--node-1-1">
 							{#each node_1_1_items as item, i}
@@ -126,7 +124,6 @@
 						class={'tree-item-details'}
 						summary={'Combinators'}
 						summary_attributes={{ class: 'tree-item-label' }}
-						transition_props={{ types: ['slide'] }}
 					>
 						<TreeList node_to="--node-1-3">
 							{#each node_1_3_items as item, i}

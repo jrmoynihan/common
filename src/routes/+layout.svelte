@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '../app.css';
 	import { beforeNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import LightDarkToggleV2 from '$buttons/LightDarkToggle_v2.svelte';
@@ -11,16 +10,16 @@
 	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
 	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
 	import { type Snippet } from 'svelte';
+	import { MediaQuery } from 'svelte/reactivity';
 	import '../../src/mdsvex.css';
+	import '../app.css';
 	import type { LayoutData } from './$types';
 	import { aside_visible } from './stores.svelte.js';
-	import { MediaQuery } from 'svelte/reactivity';
-	import { route } from '$lib/ROUTES';
 
 	type LayoutProps = { data: LayoutData; children: Snippet };
 
 	let { data, children }: LayoutProps = $props();
-	const { url, icon_map } = data;
+	const { url, icon_map } = $derived(data);
 	let trigger: boolean = $state(false);
 	let dark_mode = new MediaQuery('(prefers-color-scheme: dark)');
 	let bg_color: string = $state(dark_mode.current ? '#0e2f39' : '#ffffff');

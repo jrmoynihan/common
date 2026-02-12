@@ -1,23 +1,16 @@
 <script module lang="ts">
-	import type { ButtonProps } from '$buttons/Button_Runes.svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
-	export interface InputButtonProps extends ButtonProps {}
+	export interface InputButtonProps extends HTMLButtonAttributes {}
 </script>
 
 <script lang="ts">
-	import { Button } from '$lib';
-
-	let { disabled = $bindable(false), children, ...button_attributes }: InputButtonProps = $props();
+	let { children, ...button_attributes }: InputButtonProps = $props();
 </script>
 
-<Button
-	type="button"
-	bind:disabled
-	{...button_attributes}
-	class={[`_input_button`, button_attributes.class]}
->
+<button type="button" {...button_attributes} class={[`_input_button`, button_attributes.class]}>
 	{@render children?.()}
-</Button>
+</button>
 
 <style>
 	@layer common.button {

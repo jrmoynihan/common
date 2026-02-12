@@ -11,14 +11,14 @@
 		/** Modify the default `<header>` element that contains an <h3> element and the close ('X') button. */
 		header_attributes?: HTMLAttributes<HTMLElement>;
 
+		/** Modify the default <h3> element that contains the heading text inside the <header> element. */
 		heading_attributes?: HTMLAttributes<HTMLHeadingElement>;
 
-		close_button_attributes?: ButtonProps;
-
-		close_x_attributes?: ButtonProps;
+		/** Modify the default close ('X') button that is positioned at the top right of the <header> element. */
+		close_x_attributes?: HTMLButtonAttributes;
 
 		/** Props to pass to the button component that toggles the dialog. */
-		button_props?: ButtonProps;
+		button_attributes?: HTMLButtonAttributes;
 		/** Provide an entire button snippet.
         
         When `undefined`, the default button snippet is used, which takes the `button_content` prop for its content and falls back to the `button_text` prop when no `button_content` is provided.
@@ -56,9 +56,9 @@
 </script>
 
 <script lang="ts">
-	import ButtonRunes, { type ButtonProps } from '$buttons/Button_Runes.svelte';
+	import Icon from '@iconify/svelte';
 	import { type Snippet } from 'svelte';
-	import type { HTMLAttributes } from 'svelte/elements';
+	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	import Dialog, { type DialogProps } from './Dialog.svelte';
 
 	export const open = () => {
@@ -74,8 +74,7 @@
 		header_attributes,
 		heading_attributes,
 		close_x_attributes,
-		close_button_attributes,
-		button_props,
+		button_attributes,
 		button_content,
 		footer_children,
 		children,
@@ -92,14 +91,6 @@
 	<footer>
 		<menu>
 			{@render footer_children?.()}
-			<ButtonRunes
-				onclick={dialog?.close}
-				style={'aspect-ratio: 1.5 / 1'}
-				{...close_button_attributes}
-				class={['close-button', close_button_attributes?.class]}
-			>
-				Close
-			</ButtonRunes>
 		</menu>
 	</footer>
 {/snippet}
@@ -109,24 +100,24 @@
 		<h3 {...heading_attributes}>
 			{heading}
 		</h3>
-		<ButtonRunes
+		<button
 			{...close_x_attributes}
 			onclick={dialog?.close}
-			class={['close-button', close_x_attributes?.class]}
+			class={['close-button absolute top-0 right-0 cursor-pointer', close_x_attributes?.class]}
 		>
-			X
-		</ButtonRunes>
+			<Icon icon="fa6-solid:xmark" />
+		</button>
 	</header>
 {/snippet}
 
 {#snippet default_button()}
-	<ButtonRunes {...button_props} onclick={dialog?.open}>
+	<button {...button_attributes} onclick={dialog?.open}>
 		{#if typeof button_content === 'string'}
 			{button_content}
 		{:else if button_content}
 			{@render button_content?.()}
 		{/if}
-	</ButtonRunes>
+	</button>
 {/snippet}
 
 {@render button?.()}
@@ -188,10 +179,8 @@
 
 		@layer button {
 			:global(.button.close-button) {
-				/* position: absolute; */
-
-				top: 0.5rem;
-				right: 0.5rem;
+				top: 0.25rem;
+				right: 0.25rem;
 				border-radius: var(--radius-round);
 				padding: 0.5ch 1ch;
 				aspect-ratio: 1;

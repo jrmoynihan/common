@@ -1,10 +1,9 @@
 <script lang="ts">
-	import type { TooltipDirections } from '$lib/attach/tooltip/tooltip.svelte.js';
-	import ButtonRunes from '$buttons/Button_Runes.svelte';
 	import ResetButton from '$buttons/ResetButton.svelte';
 	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
 	import { Log, checkered_flag } from '$functions/logging.js';
 	import { SubmitButton, tooltip } from '$lib';
+	import type { TooltipDirections } from '$lib/attach/tooltip/tooltip.svelte.js';
 	import { complex_state } from '$routes/stores.svelte';
 
 	let position: TooltipDirections = $state<TooltipDirections>('top');
@@ -36,8 +35,8 @@
 	{#snippet tooltip_one()}
 		Click me!
 	{/snippet}
-	<ButtonRunes
-		bind:disabled
+	<button
+		{disabled}
 		onclick={() => {
 			disabled = !disabled;
 			Log({
@@ -52,16 +51,16 @@
 			keep_visible,
 			args: 'test'
 		})}
-		--shadow-color={'350deg 50% 70%'}
+		style={`--shadow-color: 350deg 50% 70%;`}
 	>
 		I'm a button with low elevation
-	</ButtonRunes>
-	<ButtonRunes
+	</button>
+	<button
 		style={`--shadow-color: 350deg 50% 70%;`}
 		{@attach tooltip({ position, content: tooltip_one, keep_visible })}
 	>
 		I'm a button with medium elevation
-	</ButtonRunes>
+	</button>
 	<ResetButton class="red" {onclick}>I'm a reset button with high elevation!!</ResetButton>
 	<SubmitButton class="green" {onclick}>I'm a submit button with high elevation!!</SubmitButton>
 

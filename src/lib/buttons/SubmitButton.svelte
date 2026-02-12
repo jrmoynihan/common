@@ -1,7 +1,9 @@
 <script lang="ts">
-	import ButtonRunes, { type ButtonProps } from './Button_Runes.svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
 
-	let { disabled = $bindable(), ...button_props }: ButtonProps = $props();
+	let { children, ...button_attributes }: HTMLButtonAttributes = $props();
 </script>
 
-<ButtonRunes bind:disabled {...button_props} type="submit" />
+<button {...button_attributes} type="submit">
+	{@render children?.()}
+</button>
