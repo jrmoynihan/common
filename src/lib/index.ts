@@ -52,9 +52,6 @@ import Navigation from './navigation/Navigation.svelte';
 import type { ScrollProgressProps } from './navigation/ScrollProgress.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 
-// Toasts
-import SeenToast from './toasts/SeenToast.svelte';
-
 // Wrappers
 import type { AccordionDetailsProps } from '$wrappers/AccordionDetails.svelte';
 import AccordionDetails from '$wrappers/AccordionDetails.svelte';
@@ -131,6 +128,8 @@ export {
 	wrap_options,
 	type AtLeastOne,
 	type Brand,
+	type BrandedString,
+	type ClassProperties,
 	type CompareNumbers,
 	type DeepPartial,
 	type DeepReadonly,
@@ -159,8 +158,8 @@ export {
 	type StringLength,
 	type StringLengthBetween,
 	type Tail,
-	type TypeSafeMap,
 	type Tuple,
+	type TypeSafeMap,
 	type ValueOf
 } from '$lib/functions/helpers.svelte.js';
 export { Temporal } from '@js-temporal/polyfill';
@@ -174,7 +173,8 @@ export {
 export {
 	delete_local_storage_item,
 	get_local_storage_item,
-	set_local_storage_item
+	set_local_storage_item,
+	type StorageKey
 } from './functions/local-storage.js';
 export {
 	all_icons,
@@ -232,7 +232,6 @@ export {
 	ResetButton,
 	ResizableGrid,
 	ScrollProgress,
-	SeenToast,
 	Select,
 	SubmitButton,
 	Table,
