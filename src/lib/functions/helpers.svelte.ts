@@ -282,6 +282,37 @@ export function assert_valid_directory_path(
 		throw new Error(message ?? 'Invalid directory path');
 	}
 }
+
+/**
+ * Keys that exist in `First` but not in `Second`. Useful for detecting extra properties or building {@link Exact}.
+ * @typeParam First - Object type whose keys to consider
+ * @typeParam Second - Object type to subtract keys from
+ * @example
+ * ```typescript
+ * type A = { a: number; b: string };
+ * type B = { a: number };
+ * type OnlyInA = KeyOnlyInFirst<A, B>; // 'b'
+ * ```
+ */
+export type KeyOnlyInFirst<First, Second> = Exclude<keyof First, keyof Second>;
+
+/**
+ * Enforces that `Actual` has exactly the same keys as `Expected`; keys only in `Actual` get value `never` so extra properties error.
+ * Use when a function or component must accept only a known shape (e.g. options object, props).
+ * @typeParam Actual - The type being checked (must extend Expected)
+ * @typeParam Expected - The allowed shape; no keys outside this are permitted
+ * @example
+ * ```typescript
+ * type Allowed = { method: 'GET' | 'POST'; url: string };
+ * function request<A extends Allowed>(opts: Exact<A, Allowed>) {}
+ * request({ method: 'GET', url: '/api' }); // ok
+ * request({ method: 'GET', url: '/api', extra: 1 }); // error: 'extra' is not assignable to never
+ * ```
+ */
+export type Exact<Actual extends Expected, Expected> = PrettifyIntersection<{
+	[K in keyof Actual]: K extends KeyOnlyInFirst<Actual, Expected> ? never : Actual[K];
+}>;
+
 /** Creates a type that ensures at least one property is present 
 * @example
 * const obj: AtLeastOne<{ a?: number, b?: string }> = { a: 1 };
