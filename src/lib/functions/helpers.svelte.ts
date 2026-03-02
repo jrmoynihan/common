@@ -1210,13 +1210,6 @@ export interface TypeSafeMap<K, V> extends Omit<Map<K, V>, 'has' | 'get'> {
 	): PossiblyExists extends KeyExists ? V : V | undefined;
 }
 
-/** @internal Augments global Map so `new Map()` returns TypeSafeMap. */
-interface MapConstructor {
-	new (): TypeSafeMap<any, any>;
-	new <K, V>(entries?: readonly (readonly [K, V])[] | null): TypeSafeMap<K, V>;
-	readonly prototype: Map<any, any>;
-}
-
 /**
  * Primitive type that remains after JSON round-trip, or the recursive result for objects.
  * Functions, symbols, and `undefined` become `never` (dropped); objects become {@link JsonifiedObject}.
@@ -1267,3 +1260,145 @@ interface JSON {
 	): PrettifyIntersection<JsonifiedObject<T>>;
 }
 declare const JSON: JSON;
+
+/**
+ * Standard HTTP method verbs. Use with the augmented {@link fetch} and {@link TypedRequestInit}.
+ * @example
+ * ```typescript
+ * const method: HttpVerbs = 'GET';
+ * fetch<ApiResponse>('/api/data', { method });
+ * ```
+ */
+export type HttpVerbs =
+	| 'GET'
+	| 'POST'
+	| 'PUT'
+	| 'DELETE'
+	| 'PATCH'
+	| 'OPTIONS'
+	| 'HEAD'
+	| 'UPDATE'
+	| 'CONNECT'
+	| 'TRACE';
+
+/** HTTP methods that allow a request body. Use with {@link TypedRequestInit} when passing `body`. */
+export type HttpVerbWithBody = Extract<
+	HttpVerbs,
+	'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'UPDATE'
+>;
+
+/** HTTP methods that must not include a request body. Use with {@link TypedRequestInit} to forbid `body`. */
+export type HttpVerbNonBody = Exclude<HttpVerbs, HttpVerbWithBody>;
+
+/**
+ * Discriminated union: either a body-allowed method with optional `body`, or a no-body method with `body?: never`.
+ * Ensures you cannot pass `body` for GET/HEAD/etc. Use as part of {@link TypedRequestInit}.
+ */
+export type MethodBodyCombination =
+	| { method?: HttpVerbWithBody; body?: RequestInit['body'] }
+	| { method?: HttpVerbNonBody; body?: never };
+
+/**
+ * Common request headers with typed values (e.g. {@link MimeTypes} for Content-Type).
+ * Use with {@link TypedRequestInit} for better autocomplete and type safety.
+ */
+export type PreparedHeaders = PrettifyIntersection<
+	Partial<{
+		'Content-Type': MimeTypes;
+		Accept: MimeTypes;
+		Authorization: string;
+		'X-Requested-With': string;
+		'User-Agent': string;
+		'Accept-Language': string;
+		'Accept-Encoding': MimeTypes;
+		'Accept-Charset': MimeTypes;
+		'Accept-Ranges': MimeTypes;
+		'Cache-Control': string;
+		Pragma: string;
+		'X-API-Key': string;
+		'X-API-Secret': string;
+		'X-API-Token': string;
+		'X-API-Version': string;
+		'X-API-Client': string;
+		'X-API-Client-Version': string;
+		'X-API-Client-Secret': string;
+		'X-API-Client-Token': string;
+	}>
+>;
+
+/** Headers init compatible with the global fetch, plus typed {@link PreparedHeaders} for common keys. */
+export type TypedHeaders = PrettifyIntersection<HeadersInit & PreparedHeaders>;
+
+/**
+ * Type-safe second argument for the augmented {@link fetch}: enforces method/body rules and typed headers.
+ * @example
+ * ```typescript
+ * const init: TypedRequestInit = {
+ *   method: 'POST',
+ *   body: JSON.stringify({ name: 'x' }),
+ *   headers: { 'Content-Type': 'application/json' }
+ * };
+ * const res = await fetch<ApiResult>('/api', init);
+ * const data = await res.json(); // typed as ApiResult
+ * ```
+ */
+export type TypedRequestInit = PrettifyIntersection<
+	RequestInit & MethodBodyCombination & { headers?: TypedHeaders }
+>;
+
+/**
+ * MIME types commonly used in {@link PreparedHeaders} (Content-Type, Accept, etc.).
+ */
+export type MimeTypes =
+	| 'application/json'
+	| 'application/xml'
+	| 'application/text'
+	| 'application/html'
+	| 'application/css'
+	| 'application/javascript'
+	| 'application/pdf'
+	| 'application/octet-stream'
+	| 'application/x-www-form-urlencoded'
+	| 'application/x-yaml'
+	| 'application/x-toml'
+	| 'application/x-ini';
+
+/**
+ * Response type from the augmented global {@link fetch}. Use the generic to type the result of `.json()`.
+ * @typeParam T - Type of the JSON response body
+ * @example
+ * ```typescript
+ * const res = await fetch<{ id: number; title: string }>('https://api.example.com/todo/1');
+ * const data = await res.json(); // data is { id: number; title: string }
+ * ```
+ */
+export interface TypedResponse<T> extends Response {
+	json(): Promise<T>;
+}
+
+/**
+ * Augments the global `fetch` so that:
+ * - The second argument is {@link TypedRequestInit} (method/body and typed headers).
+ * - The returned Promise resolves to {@link TypedResponse}<ResponseType>; `.json()` returns the generic type.
+ *
+ * Import this module (or the library entry) so the augmentation is applied.
+ * @typeParam ResponseType - Type of the response body when calling `.json()` on the result
+ * @example
+ * ```typescript
+ * const res = await fetch<{ id: number; title: string }>('https://api.example.com/todo/1');
+ * const data = await res.json(); // { id: number; title: string }
+ * ```
+ * @example
+ * ```typescript
+ * await fetch('/api', {
+ *   method: 'POST',
+ *   body: JSON.stringify({ name: 'x' }),
+ *   headers: { 'Content-Type': 'application/json' }
+ * }); // body allowed
+ * await fetch('/api', { method: 'GET', body: 'x' }); // error: body not allowed for GET
+ * ```
+ */
+declare function fetch<ResponseType = unknown>(
+	input: RequestInfo | URL,
+	init?: TypedRequestInit
+): Promise<TypedResponse<ResponseType>>;
