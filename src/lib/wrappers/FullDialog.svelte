@@ -103,7 +103,10 @@
 		<button
 			{...close_x_attributes}
 			onclick={dialog?.close}
-			class={['close-button absolute top-0 right-0 cursor-pointer', close_x_attributes?.class]}
+			class={[
+				'close-button bold absolute -top-4 -right-4 aspect-square cursor-pointer',
+				close_x_attributes?.class
+			]}
 		>
 			<Icon icon="fa6-solid:xmark" />
 		</button>
@@ -174,21 +177,6 @@
 				&:only-child {
 					margin-inline-start: auto; /* floats lone items to the right */
 				}
-			}
-		}
-
-		@layer button {
-			:global(.button.close-button) {
-				top: 0.25rem;
-				right: 0.25rem;
-				border-radius: var(--radius-round);
-				padding: 0.5ch 1ch;
-				aspect-ratio: 1;
-				flex-shrink: 0;
-				place-items: center;
-				stroke: currentColor;
-				stroke-width: 3px;
-				font-weight: bold;
 			}
 		}
 	}
