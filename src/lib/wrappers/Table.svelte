@@ -38,7 +38,7 @@
 		/** Should the headers be capitalized? */
 		capitalize_headers?: boolean;
 		/** A mapping of keys to custom header names. Example: { number_of_events: '# Events' } */
-		keys_to_rename?: Partial<Record<keyof T, string>>;
+		keys_to_rename?: PrettifyIntersection<Partial<Record<keyof T, string>>>;
 		/** A snippet representing the button to sort the table column */
 		sort_button?: Snippet<[key: keyof T]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, before the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
@@ -67,6 +67,7 @@
 </script>
 
 <script lang="ts" generics="T extends Record<string,any>">
+	import type { PrettifyIntersection } from '$functions/helpers.svelte';
 	import { tooltip } from '$lib/attach/tooltip/tooltip.svelte';
 	import type { IconProps } from '@iconify/svelte';
 	import type { Snippet } from 'svelte';
@@ -86,7 +87,7 @@
 		visible_keys = $bindable([]),
 		omitted_keys = $bindable([]),
 		capitalize_headers = true,
-		keys_to_rename = {},
+		keys_to_rename = {} as PrettifyIntersection<Partial<Record<keyof T, string>>>,
 		sort_button = default_sort_button,
 		sort_string_button_content,
 		sort_number_button_content,
