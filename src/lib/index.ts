@@ -1,6 +1,9 @@
 // NOTE: Use fully specified relative imports to point files to their generated type definitions within the Package folder:
 // https://kit.svelte.dev/docs/packaging#caveats
 
+// Side-effect: augments global Map so new Map() returns TypeSafeMap (has/get narrowing). See helpers.svelte.ts.
+import './functions/helpers.svelte.js';
+
 // Reexport your entry components here
 
 // Buttons
@@ -137,6 +140,7 @@ export {
 	type Head,
 	type HeterogenousArray,
 	type HomogenousArray,
+	type KeyExists,
 	type KeysOfType,
 	type Last,
 	type MaxLength,
@@ -155,6 +159,7 @@ export {
 	type StringLength,
 	type StringLengthBetween,
 	type Tail,
+	type TypeSafeMap,
 	type Tuple,
 	type ValueOf
 } from '$lib/functions/helpers.svelte.js';
