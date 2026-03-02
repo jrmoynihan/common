@@ -204,6 +204,9 @@ export type NonOptional<T> = T extends null | undefined ? never : T;
 */
 export type Brand<T, B> = PrettifyIntersection<T & { readonly __brand: B }>;
 
+/** Convenience type for branding string types (e.g. `BrandedString<'UserId'>` instead of `Brand<string, 'UserId'>`). */
+export type BrandedString<B extends string> = Brand<string, B>;
+
 /** Creates a type that ensures at least one property is present 
 * @example
 * const obj: AtLeastOne<{ a?: number, b?: string }> = { a: 1 };
@@ -1036,7 +1039,7 @@ export function is_object(val: unknown): val is Record<PropertyKey, unknown> {
 export function group_by<T, K extends string | number | symbol>(
 	arr: T[],
 	key: (item: T) => K
-): Record<K, T[]> {
+): PrettifyIntersection<Record<K, T[]>> {
 	return arr.reduce(
 		(acc, item) => {
 			const group = key(item);
