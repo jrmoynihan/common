@@ -1133,7 +1133,7 @@ export interface TypeSafeMap<K, V> extends Omit<Map<K, V>, 'has' | 'get'> {
 	/** Checks if the key exists; when used in an `if`, narrows the key so that `get(key)` returns `V`. */
 	has(key: K): key is K & KeyExists;
 	/** Returns the value for the key; type is `V` when the key was narrowed by a prior `.has()` check. */
-	get<PossiblyMarked extends K>(key: PossiblyMarked): PossiblyMarked extends KeyExists ? V : V | undefined;
+	get<PossiblyExists extends K>(key: PossiblyExists): PossiblyExists extends KeyExists ? V : V | undefined;
 }
 
 /** @internal Augments global Map so `new Map()` returns TypeSafeMap. */
@@ -1143,3 +1143,51 @@ interface MapConstructor {
 	readonly prototype: Map<any, any>;
 }
 declare const Map: MapConstructor;
+
+/**
+ * Primitive type that remains after JSON round-trip, or the recursive result for objects.
+ * Functions, symbols, and `undefined` become `never` (dropped); objects become {@link JsonifiedObject}.
+ */
+export type JsonifiedValue<T> = T extends string | number | null | boolean
+	? T
+	: T extends { toJSON(): infer R }
+		? R
+		: T extends undefined | ((...args: any[]) => any)
+			? never
+			: T extends object
+				? JsonifiedObject<T>
+				: never;
+
+/**
+ * Object type with only JSON-serializable keys; functions, symbols, and undefined are removed.
+ * Use with {@link PrettifyIntersection} so hovers show the resolved shape (e.g. after `JSON.parse`).
+ *
+ * @typeParam T - Source object type
+ *
+ * @example
+ * ```typescript
+ * const obj = { a: 1, b: 'hello', e: () => {} };
+ * const str = JSON.stringify(obj);  // Stringified<typeof obj>
+ * const parsed = JSON.parse(str);   // PrettifyIntersection<JsonifiedObject<typeof obj>> => { a: number; b: string }
+ * parsed.e;  // error: property 'e' does not exist
+ * ```
+ */
+export type JsonifiedObject<T> = {
+	[K in keyof T as [JsonifiedValue<T[K]>] extends [never] ? never : K]: JsonifiedValue<T[K]>;
+};
+
+/** Branded string type carrying the type that was stringified; used by the augmented `JSON` interface. */
+export type Stringified<T> = string & { value: T };
+
+/**
+ * Augments the global `JSON` object so that:
+ * - `JSON.stringify(value)` returns {@link Stringified}<typeof value> (preserves type for round-trip).
+ * - `JSON.parse(text)` returns {@link PrettifyIntersection}<{@link JsonifiedObject}<T>> where `text` is `Stringified<T>` (only JSON-serializable keys; hovers show the resolved shape).
+ *
+ * Import this module (or the library entry) so the augmentation is applied.
+ */
+interface JSON {
+	stringify<T>(value: T, replacer?: null | undefined, space?: string | number): Stringified<T>;
+	parse<T>(text: Stringified<T>, replacer?: null | undefined): PrettifyIntersection<JsonifiedObject<T>>;
+}
+declare const JSON: JSON;

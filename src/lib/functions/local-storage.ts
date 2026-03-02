@@ -1,18 +1,23 @@
 import { browser } from '$app/environment';
 import { Log } from '$functions/logging.js';
-import type { BrandedString } from './helpers.svelte';
+import type { BrandedString, JsonifiedObject, PrettifyIntersection } from './helpers.svelte';
 
 /** Branded string type for localStorage keys. Cast key strings when calling storage functions, e.g. `'user_prefs' as StorageKey`. */
 export type StorageKey = BrandedString<'StorageKey'>;
 
-/** @param key - Must be a {@link StorageKey} (e.g. `'mykey' as StorageKey` or a constant typed as StorageKey) */
-export const get_local_storage_item = async <T>(key: StorageKey): Promise<T | undefined> => {
+/**
+ * Returns the stored value as {@link PrettifyIntersection}<{@link JsonifiedObject}<T>> (only JSON-serializable keys).
+ * @param key - Must be a {@link StorageKey} (e.g. `'mykey' as StorageKey` or a constant typed as StorageKey)
+ */
+export const get_local_storage_item = async <T>(
+	key: StorageKey
+): Promise<PrettifyIntersection<JsonifiedObject<T>> | undefined> => {
 	if (browser) {
 		const item = localStorage.getItem(key as unknown as string);
 		if (item) {
 			try {
 				const parsed_item = JSON.parse(item);
-				return parsed_item as T;
+				return parsed_item as PrettifyIntersection<JsonifiedObject<T>>;
 			} catch (error) {
 				Log({ msg: `Failed to parse localStorage item "${key}": ${error}` });
 				// Optionally remove the corrupted item
