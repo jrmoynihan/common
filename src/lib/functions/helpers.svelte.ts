@@ -348,8 +348,6 @@ export type DeepReadonly<T> = {
 
 const obj_a: { a: number } = { a: 0 };
 const obj_b: { b: string } = { b: 'hello' };
-const intersected: PrettifyIntersection<typeof obj_a & typeof obj_b> = { a: 1, b: 'World' };
-const totally_optional: { a?: number; b?: string } = {};
 
 /**
  * Capitalizes the first letter of a string
@@ -1095,3 +1093,50 @@ export function uniqueBy<T, K>(arr: T[], key: (item: T) => K): T[] {
 export type ClassProperties<T> = {
 	[K in keyof T as T[K] extends Function ? never : K]: T[K];
 };
+
+/**
+ * Brand type used by {@link TypeSafeMap} to narrow key types after a successful `.has()` check.
+ * Exported for advanced typing; most code only needs the augmented `Map` constructor.
+ */
+declare const __key_exists: unique symbol;
+export type KeyExists = { [__key_exists]: true };
+
+/**
+ * Improved `Map` interface that gives correct type narrowing: after `map.has(key)` in an `if` block,
+ * calling `map.get(key)` with the same key is typed as `V` instead of `V | undefined`.
+ *
+ * The global `Map` constructor is augmented so that `new Map<K, V>()` returns `TypeSafeMap<K, V>`.
+ * Use a **variable** for the key when calling `has` and then `get`, so the type predicate can narrow
+ * that variable (string literals do not narrow across calls).
+ *
+ * @typeParam K - Key type
+ * @typeParam V - Value type
+ *
+ * @example
+ * ```typescript
+ * const map = new Map<string, number>();
+ * const key1 = 'hello' as const;
+ * const key2 = 'world' as const;
+ * map.set(key1, 1);
+ * map.set(key2, 2);
+ *
+ * const value_before = map.get(key1); // type: number | undefined
+ * if (map.has(key1)) {
+ *   const value_after = map.get(key1); // type: number (narrowed)
+ * }
+ * ```
+ */
+export interface TypeSafeMap<K, V> extends Omit<Map<K, V>, 'has' | 'get'> {
+	/** Checks if the key exists; when used in an `if`, narrows the key so that `get(key)` returns `V`. */
+	has(key: K): key is K & KeyExists;
+	/** Returns the value for the key; type is `V` when the key was narrowed by a prior `.has()` check. */
+	get<PossiblyMarked extends K>(key: PossiblyMarked): PossiblyMarked extends KeyExists ? V : V | undefined;
+}
+
+/** @internal Augments global Map so `new Map()` returns TypeSafeMap. */
+interface MapConstructor {
+	new (): TypeSafeMap<any, any>;
+	new <K, V>(entries?: readonly (readonly [K, V])[] | null): TypeSafeMap<K, V>;
+	readonly prototype: Map<any, any>;
+}
+declare const Map: MapConstructor;
