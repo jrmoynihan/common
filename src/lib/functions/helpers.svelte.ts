@@ -204,9 +204,84 @@ export type NonOptional<T> = T extends null | undefined ? never : T;
 */
 export type Brand<T, B> = PrettifyIntersection<T & { readonly __brand: B }>;
 
-/** Convenience type for branding string types (e.g. `BrandedString<'UserId'>` instead of `Brand<string, 'UserId'>`). */
+/** Convenience type for branding string types (e.g. `BrandedString<'UserId'>` instead of `Brand<string, 'UserId'>`). See {@link Brand} for more information. */
 export type BrandedString<B extends string> = Brand<string, B>;
+/** Branded string type for email addresses. Use {@link assert_valid_email} to validate and narrow at runtime. */
+export type EmailString = BrandedString<'Email'>;
+/** Branded string type for phone numbers. Use {@link assert_valid_phone} to validate and narrow at runtime. */
+export type PhoneString = BrandedString<'Phone'>;
+/** Branded string type for URLs. Prefer the URL class when possible. Use {@link assert_valid_url} to validate and narrow at runtime. */
+export type UrlString = BrandedString<'Url'>;
+/** Branded string type for UUIDs. Use {@link assert_valid_uuid} to validate and narrow at runtime. */
+export type UUIDString = BrandedString<'UUID'>;
+/** Branded string type for file paths. Use {@link assert_valid_file_path} to validate and narrow at runtime. */
+export type FilePathString = BrandedString<'FilePath'>;
+/** Branded string type for directory paths. Use {@link assert_valid_directory_path} to validate and narrow at runtime. */
+export type DirectoryPathString = BrandedString<'DirectoryPath'>;
 
+/** Throws if invalid; otherwise narrows to {@link EmailString}. Parameter is `string | EmailString` so the assertion type is assignable. */
+export function assert_valid_email(
+	email: string | EmailString,
+	message?: string
+): asserts email is EmailString {
+	const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (typeof email !== 'string' || !re.test(email)) {
+		throw new Error(message ?? 'Invalid email address');
+	}
+}
+
+/** Throws if invalid; otherwise narrows to {@link PhoneString}. */
+export function assert_valid_phone(
+	phone: string | PhoneString,
+	message?: string
+): asserts phone is PhoneString {
+	if (typeof phone !== 'string' || !/^\d{10}$/.test(phone)) {
+		throw new Error(message ?? 'Invalid phone number');
+	}
+}
+
+/** Throws if invalid; otherwise narrows to {@link UrlString}. */
+export function assert_valid_url(
+	url: string | UrlString,
+	message?: string
+): asserts url is UrlString {
+	if (typeof url !== 'string' || !/^https?:\/\//.test(url)) {
+		throw new Error(message ?? 'Invalid URL');
+	}
+}
+
+/** Throws if invalid; otherwise narrows to {@link UUIDString}. */
+export function assert_valid_uuid(
+	uuid: string | UUIDString,
+	message?: string
+): asserts uuid is UUIDString {
+	if (
+		typeof uuid !== 'string' ||
+		!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(uuid)
+	) {
+		throw new Error(message ?? 'Invalid UUID');
+	}
+}
+
+/** Throws if invalid; otherwise narrows to {@link FilePathString}. */
+export function assert_valid_file_path(
+	file_path: string | FilePathString,
+	message?: string
+): asserts file_path is FilePathString {
+	if (typeof file_path !== 'string' || !/^[a-zA-Z0-9/._-]+$/.test(file_path)) {
+		throw new Error(message ?? 'Invalid file path');
+	}
+}
+
+/** Throws if invalid; otherwise narrows to {@link DirectoryPathString}. */
+export function assert_valid_directory_path(
+	directory_path: string | DirectoryPathString,
+	message?: string
+): asserts directory_path is DirectoryPathString {
+	if (typeof directory_path !== 'string' || !/^[a-zA-Z0-9/._-]+$/.test(directory_path)) {
+		throw new Error(message ?? 'Invalid directory path');
+	}
+}
 /** Creates a type that ensures at least one property is present 
 * @example
 * const obj: AtLeastOne<{ a?: number, b?: string }> = { a: 1 };
@@ -348,9 +423,6 @@ const deepReadonlyConfig: DeepReadonlyConfig = {
 export type DeepReadonly<T> = {
 	readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P];
 };
-
-const obj_a: { a: number } = { a: 0 };
-const obj_b: { b: string } = { b: 'hello' };
 
 /**
  * Capitalizes the first letter of a string
@@ -1102,7 +1174,7 @@ export type ClassProperties<T> = {
  * Exported for advanced typing; most code only needs the augmented `Map` constructor.
  */
 declare const __key_exists: unique symbol;
-export type KeyExists = { [__key_exists]: true };
+export type KeyExists = { readonly [__key_exists]: true };
 
 /**
  * Improved `Map` interface that gives correct type narrowing: after `map.has(key)` in an `if` block,
@@ -1133,7 +1205,9 @@ export interface TypeSafeMap<K, V> extends Omit<Map<K, V>, 'has' | 'get'> {
 	/** Checks if the key exists; when used in an `if`, narrows the key so that `get(key)` returns `V`. */
 	has(key: K): key is K & KeyExists;
 	/** Returns the value for the key; type is `V` when the key was narrowed by a prior `.has()` check. */
-	get<PossiblyExists extends K>(key: PossiblyExists): PossiblyExists extends KeyExists ? V : V | undefined;
+	get<PossiblyExists extends K>(
+		key: PossiblyExists
+	): PossiblyExists extends KeyExists ? V : V | undefined;
 }
 
 /** @internal Augments global Map so `new Map()` returns TypeSafeMap. */
@@ -1142,7 +1216,6 @@ interface MapConstructor {
 	new <K, V>(entries?: readonly (readonly [K, V])[] | null): TypeSafeMap<K, V>;
 	readonly prototype: Map<any, any>;
 }
-declare const Map: MapConstructor;
 
 /**
  * Primitive type that remains after JSON round-trip, or the recursive result for objects.
@@ -1188,6 +1261,9 @@ export type Stringified<T> = string & { value: T };
  */
 interface JSON {
 	stringify<T>(value: T, replacer?: null | undefined, space?: string | number): Stringified<T>;
-	parse<T>(text: Stringified<T>, replacer?: null | undefined): PrettifyIntersection<JsonifiedObject<T>>;
+	parse<T>(
+		text: Stringified<T>,
+		replacer?: null | undefined
+	): PrettifyIntersection<JsonifiedObject<T>>;
 }
 declare const JSON: JSON;
