@@ -136,14 +136,19 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 			max-block-size: var(--dialog-max-block-size, min(80dvb, 100%));
 			max-inline-size: var(--dialog-max-inline-size, min(90vw, 70ch));
 			overflow: var(--dialog-overflow, hidden);
-			transition: opacity var(--duration, 0.5s) var(--ease-3);
-			transition-behavior: allow-discrete;
 			animation-timing-function: var(--ease-squish-3);
 			animation-duration: var(--duration, 0.5s);
 			margin: auto; /* centers the dialog for bad browser user-agent stylesheets that default to top-left */
 			padding: 0;
 			position: fixed;
 			inset: 0;
+
+			@media (prefers-reduced-motion: no-preference) {
+				transition-duration: var(--duration, 0.5s);
+				transition-timing-function: var(--ease-3);
+				transition-property: opacity, display, overlay, left, right, top, bottom, width, height;
+				transition-behavior: allow-discrete;
+			}
 
 			/** Future CSS */
 			&,
@@ -224,6 +229,31 @@ https://svelte.dev/docs/typescript#enhancing-built-in-dom-types
 				max-block-size: 80dvb;
 				padding: var(--dialog-form-padding, 0.5rem);
 			}
+
+			/* Use the anchor positioning API to position the dialog relative to the button that opened it? */
+			/* @supports (position-anchor: --dialog-button) {
+				position-anchor: --dialog-button;
+				interpolate-size: allow-keywords;
+
+				@starting-style {
+					&[open] {
+						left: anchor(left);
+						top: anchor(top);
+						right: anchor(right);
+						bottom: anchor(bottom);
+						width: anchor-size(width);
+						height: anchor-size(height);
+					}
+				}
+				&:not([open]) {
+					left: anchor(left);
+					top: anchor(top);
+					right: anchor(right);
+					bottom: anchor(bottom);
+					width: anchor-size(width);
+					height: anchor-size(height);
+				}
+			} */
 		}
 
 		@media (prefers-color-scheme: dark) {

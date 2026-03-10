@@ -114,7 +114,7 @@
 {/snippet}
 
 {#snippet default_button()}
-	<button {...button_attributes} onclick={dialog?.open}>
+	<button style="anchor-name: --dialog-button;" {...button_attributes} onclick={dialog?.open}>
 		{#if typeof button_content === 'string'}
 			{button_content}
 		{:else if button_content}
