@@ -109,7 +109,7 @@ export function tooltip(parameters: TooltipProps): Attachment<HTMLElement> {
 		if (!parameters.disabled && !tooltip) {
 			tooltip = mount(Tooltip, {
 				props,
-				target
+				target: browser ? document.body : target
 			});
 		}
 
