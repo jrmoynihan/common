@@ -18,6 +18,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"package": "svelte-kit sync && svelte-package",
+		"login-to-publish": "npm login --scope=@jrmoynihan --registry=https://registry.npmjs.org/",
 		"package-publish-patch": "vite build && npm version patch && bun run package && bun publish --access public && git push --follow-tags",
 		"package-publish-minor": "vite build && npm version minor && bun run package && bun publish --access public && git push --follow-tags",
 		"package-publish-major": "vite build && npm version major && bun run package && bun publish --access public && git push --follow-tags",
