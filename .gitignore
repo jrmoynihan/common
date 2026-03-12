@@ -13,3 +13,4 @@ launch.json
 ```
 tsconfig.tsbuildinfo
 .vscode/settings.json
+.cursor/hooks/state/continual-learning.json
