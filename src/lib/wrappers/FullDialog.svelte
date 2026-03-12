@@ -8,14 +8,11 @@
 
 		article_attributes?: HTMLAttributes<HTMLElement>;
 
-		/** Modify the default `<header>` element that contains an <h3> element and the close ('X') button. */
+		/** Modify the default `<header>` element that contains an <h3> element. */
 		header_attributes?: HTMLAttributes<HTMLElement>;
 
 		/** Modify the default <h3> element that contains the heading text inside the <header> element. */
 		heading_attributes?: HTMLAttributes<HTMLHeadingElement>;
-
-		/** Modify the default close ('X') button that is positioned at the top right of the <header> element. */
-		close_x_attributes?: HTMLButtonAttributes;
 
 		/** Props to pass to the button component that toggles the dialog. */
 		button_attributes?: HTMLButtonAttributes;
@@ -56,7 +53,6 @@
 </script>
 
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	import { type Snippet } from 'svelte';
 	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	import Dialog, { type DialogProps } from './Dialog.svelte';
@@ -73,7 +69,6 @@
 		article_attributes,
 		header_attributes,
 		heading_attributes,
-		close_x_attributes,
 		button_attributes,
 		button_content,
 		footer_children,
@@ -100,16 +95,6 @@
 		<h3 {...heading_attributes}>
 			{heading}
 		</h3>
-		<button
-			{...close_x_attributes}
-			onclick={dialog?.close}
-			class={[
-				'close-button bold absolute -top-4 -right-4 aspect-square cursor-pointer',
-				close_x_attributes?.class
-			]}
-		>
-			<Icon icon="fa6-solid:xmark" />
-		</button>
 	</header>
 {/snippet}
 
