@@ -25,7 +25,6 @@ export class NavigationLink {
 		this.link_text = args?.link_text ? capitalize(dekebab(args?.link_text)) : '';
 		this.icon_props = args?.icon_props ?? undefined;
 		this.anchors = args?.anchors ?? undefined;
-		this.is_current_page = false;
 		enumerate_runed_properties(this);
 	}
 	get href() {
