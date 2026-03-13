@@ -79,6 +79,7 @@
 		{onconfirm}
 		{onkeypress}
 		type={'text'}
+		class={['text-input rounded-[inherit]', input_attributes.class]}
 		{...input_attributes}
 	/>
 	{#key placeholder_props}

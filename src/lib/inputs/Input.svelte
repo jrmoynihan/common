@@ -69,8 +69,7 @@
 		bind:group
 		{id}
 		{value}
-		class:value
-		class:hidden
+		class={['input pl-[1ch]', { value, hidden }, input_attributes.class]}
 		onkeypress={handle_keypress}
 		{...input_attributes}
 	/>
@@ -78,8 +77,14 @@
 	<input
 		bind:this={input_element}
 		bind:value
-		class:value={input_attributes.type === 'number' ? value !== undefined && value !== null : value}
-		class:hidden
+		class={[
+			'input pl-[1ch]',
+			{
+				value: input_attributes.type === 'number' ? value !== undefined && value !== null : value,
+				hidden
+			},
+			input_attributes.class
+		]}
 		onkeypress={handle_keypress}
 		{id}
 		{...input_attributes}
@@ -92,14 +97,15 @@
 			box-sizing: border-box;
 			appearance: textfield;
 			-moz-appearance: textfield;
-			background-color: var(--background-color, revert);
+			background-color: var(--input-background-color, field);
 			color: var(--input-color, fieldtext);
 			margin: 0;
-			border-radius: var(--input-border-radius, 1em);
+			border-radius: var(--input-border-radius, revert);
 			border: var(--input-border, inset light-dark(rgb(118, 118, 118), rgb(133, 133, 133)));
 			overflow: hidden;
 			text-overflow: ellipsis;
 			white-space: nowrap;
+			/** NOTE: These paddings values will be overridden by tailwind base */
 			padding: var(--input-padding, 1.25em);
 			padding-bottom: 0.5em;
 			cursor: text;

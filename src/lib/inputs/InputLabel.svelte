@@ -103,7 +103,6 @@
 			display: grid;
 			gap: var(--label-gap, 0.35em);
 			transition-property: grid-template-rows;
-			overflow: hidden;
 			transition-duration: var(--invalid-transition-duration);
 			transition-timing-function: ease-in-out;
 			transition-behavior: allow-discrete;
@@ -140,16 +139,9 @@
 				opacity: 0.5;
 			}
 			&:hover {
-				background-color: var(
-					--input-label-hover-background-color,
-					var(--default-input-label-hover-background-color)
-				);
-			}
-			&:focus-visible {
-				outline: var(--input-outline, -webkit-focus-ring-color auto 1px);
+				background-color: var(--input-label-hover-background-color);
 			}
 			&:has(> input:focus-visible:not(:disabled)) {
-				outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
 				background-color: var(
 					--input-label-focus-background-color,
 					oklch(from var(--default-input-label-hover-background-color) l c h / 1)
