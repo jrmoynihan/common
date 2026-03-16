@@ -127,15 +127,15 @@
 			& > :global(.after) {
 				grid-area: after;
 			}
-			&:focus-within > :global(.placeholder) {
+			&:focus-within > :global(._placeholder) {
 				scale: 0.75;
 				translate: -12% -25% 0;
 			}
-			& > :global(:where(input.value, select.value)) ~ :global(.placeholder) {
+			& > :global(:where(input.value, select.value)) ~ :global(._placeholder) {
 				scale: 0.75;
 				translate: -12% -25% 0;
 			}
-			&:hover:not(:focus) > :global(.placeholder) {
+			&:hover:not(:focus) > :global(._placeholder) {
 				opacity: 0.5;
 			}
 			&:hover {

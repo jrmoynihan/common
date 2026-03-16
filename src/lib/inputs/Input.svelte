@@ -137,7 +137,7 @@
 			}
 
 			/* When the input isn't focused, but has a value, continue to fade the placeholder div */
-			&.value:not(:focus) ~ :global(.placeholder) {
+			&.value:not(:focus) ~ :global(._placeholder) {
 				opacity: 0.4;
 			}
 			&.hidden {
