@@ -99,7 +99,12 @@
 {/snippet}
 
 {#snippet default_button()}
-	<button style="anchor-name: --dialog-button;" {...button_attributes} onclick={dialog?.open}>
+	<button
+		aria-haspopup="dialog"
+		style="anchor-name: --dialog-button;"
+		{...button_attributes}
+		onclick={dialog?.open}
+	>
 		{#if typeof button_content === 'string'}
 			{button_content}
 		{:else if button_content}
@@ -129,10 +134,8 @@
 			max-block-size: 100%; /* safari */
 			overscroll-behavior-y: contain;
 			display: grid;
-			justify-items: start;
 			gap: var(--size-3);
 			padding-inline: var(--size-5);
-			/* padding-block: var(--size-3);  /* caused grid overflow when too big */
 		}
 
 		header {
