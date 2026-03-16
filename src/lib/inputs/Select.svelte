@@ -1,18 +1,11 @@
 <script lang="ts" module>
 	import type { Snippet } from 'svelte';
-	import type {
-		HTMLOptgroupAttributes,
-		HTMLOptionAttributes,
-		HTMLSelectAttributes
-	} from 'svelte/elements';
+	import type { HTMLOptionAttributes, HTMLSelectAttributes } from 'svelte/elements';
 	import InputLabel, { type InputLabelProps } from './InputLabel.svelte';
 	import Placeholder, { type PlaceholderProps } from './Placeholder.svelte';
+	import type { SelectOptionGroup, StructuredOptions } from './select.types.js';
 
-	export interface SelectOptionGroup<Item> extends HTMLOptgroupAttributes {
-		label: string;
-		options: (Item | SelectOptionGroup<Item>)[];
-	}
-	export type StructuredOptions<Item> = Item[] | SelectOptionGroup<Item>[];
+	export type { SelectOptionGroup, StructuredOptions } from './select.types.js';
 
 	export interface SelectProps<Item, Value = Item> extends HTMLSelectAttributes {
 		value?: Value;
