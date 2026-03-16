@@ -69,6 +69,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@humanspeak/svelte-virtual-list": "^0.4.3",
 		"@iconify/svelte": "^5.2.1",
 		"@js-temporal/polyfill": "^0.5.1",
 		"@sveltejs/kit": "^2.50.2",
