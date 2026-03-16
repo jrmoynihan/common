@@ -1,6 +1,8 @@
-// NOTE: Use fully specified relative imports to point files to their generated type definitions within the Package folder:
-// https://kit.svelte.dev/docs/packaging#caveats
+// NOTE: Keep $alias for default (component) imports. See https://kit.svelte.dev/docs/packaging#caveats
+// Prop types are derived via ComponentProps<typeof Component> so TS/IDE resolve them without importing from .svelte
+// (see svelte#5817 / shadcn-svelte#1468: named type exports from .svelte are not seen by TS when imported from .ts).
 
+import type { ComponentProps } from 'svelte';
 // Side-effect: augments global Map so new Map() returns TypeSafeMap (has/get narrowing). See helpers.svelte.ts.
 import './functions/helpers.svelte.js';
 
@@ -9,89 +11,95 @@ import './functions/helpers.svelte.js';
 // Buttons
 import ResetButton from '$buttons/ResetButton.svelte';
 import SubmitButton from '$buttons/SubmitButton.svelte';
-import type { DragAnchorProps } from './buttons/DragAnchor.svelte';
 import DragAnchor from './buttons/DragAnchor.svelte';
-import type { LightDarkToggleProps } from './buttons/LightDarkToggle_v2.svelte';
 import LightDarkToggle from './buttons/LightDarkToggle_v2.svelte';
-import type { ToggleSwitchProps } from './buttons/ToggleSwitch.svelte';
 import ToggleSwitch from './buttons/ToggleSwitch.svelte';
 
 // Tooltips
 import ActionTooltip from './attach/tooltip/AttachedTooltip.svelte';
 
 // Inputs
-import type { CheckboxProps } from '$inputs/Checkbox.svelte';
 import Checkbox from '$inputs/Checkbox.svelte';
-import type { InputButtonProps } from '$inputs/InputButton.svelte';
 import InputButton from '$inputs/InputButton.svelte';
-import type { InputLabelProps } from '$inputs/InputLabel.svelte';
 import InputLabel from '$inputs/InputLabel.svelte';
-import type { RadioGroupProps } from '$inputs/RadioGroup.svelte';
 import RadioGroup from '$inputs/RadioGroup.svelte';
-import type { NumericInputProps } from './inputs/NumericInput.svelte';
 import NumericInput from './inputs/NumericInput.svelte';
-import type { SelectOptionGroup, SelectProps } from './inputs/Select.svelte';
 import Select from './inputs/Select.svelte';
-import type { DateInputProps } from './inputs/TemporalDateInput.svelte';
+import type { SelectOptionGroup } from './inputs/select.types.js';
 import DateInput from './inputs/TemporalDateInput.svelte';
-import type { TextInputProps } from './inputs/TextInput.svelte';
 import TextInput from './inputs/TextInput.svelte';
 import type { DatalistOption, TextInputTypes } from './inputs/types.js';
 
 // Navigation
-import type { AnchorHeadingProps } from './navigation/AnchorHeading.svelte';
 import AnchorHeading from './navigation/AnchorHeading.svelte';
-import type { CarouselProps } from './navigation/Carousel.svelte';
 import Carousel, { carousel_item } from './navigation/Carousel.svelte';
-import type { LinkableAnchorHeadingProps } from './navigation/LinkableAnchorHeading.svelte';
 import LinkableAnchorHeading from './navigation/LinkableAnchorHeading.svelte';
-import type { NavLinkProps } from './navigation/NavLink.svelte';
 import NavLink from './navigation/NavLink.svelte';
-import type { NavigationProps } from './navigation/Navigation.svelte';
 import Navigation from './navigation/Navigation.svelte';
-import type { ScrollProgressProps } from './navigation/ScrollProgress.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 
 // Wrappers
-import type { AccordionDetailsProps } from '$wrappers/AccordionDetails.svelte';
 import AccordionDetails from '$wrappers/AccordionDetails.svelte';
-import type { AccordionJsonProps } from '$wrappers/AccordionJSON.svelte';
 import AccordionJson from '$wrappers/AccordionJSON.svelte';
-import type { DialogProps } from '$wrappers/Dialog.svelte';
 import Dialog from '$wrappers/Dialog.svelte';
-import type { FlexProps } from '$wrappers/Flex.svelte';
 import Flex from '$wrappers/Flex.svelte';
-import type { FlexItemProps } from '$wrappers/FlexItem.svelte';
 import FlexItem from '$wrappers/FlexItem.svelte';
-import type { FullDialogProps } from '$wrappers/FullDialog.svelte';
 import FullDialog from '$wrappers/FullDialog.svelte';
-import type { GridProps } from '$wrappers/Grid.svelte';
 import Grid from '$wrappers/Grid.svelte';
-import type { JSONViewProps } from '$wrappers/JSONView.svelte';
 import JsonView from '$wrappers/JSONView.svelte';
-import type { MiniDialogProps } from '$wrappers/MiniDialog.svelte';
-import type { ResizableGridProps } from '$wrappers/ResizableGrid.svelte';
 import ResizableGrid from '$wrappers/ResizableGrid.svelte';
-import type { DataCell, DataRow, HeaderCell, TableProps } from '$wrappers/Table.svelte';
-import type { AccordionProps } from './wrappers/Accordion.svelte';
 import Accordion from './wrappers/Accordion.svelte';
+import DataGrid from './wrappers/DataGrid.svelte';
+import {
+	SortState,
+	type DataColumn as DataGridColumn,
+	type FilterState as DataGridFilterState,
+	type FilterUI as DataGridFilterUI
+} from './wrappers/data_grid_state.svelte.js';
 import MiniDialog from './wrappers/MiniDialog.svelte';
 import Table from './wrappers/Table.svelte';
-import type { TabsProps } from './wrappers/Tabs_Runes.svelte';
+import type { DataCell, DataRow, HeaderCell } from './wrappers/Table.types.js';
 import Tabs from './wrappers/Tabs_Runes.svelte';
-import type { TransitionNativeProps } from './wrappers/TransitionNative_Runes.svelte';
+import type { ComponentTab, SnippetTab } from './wrappers/Tabs_Runes.svelte';
 import TransitionNative_Runes from './wrappers/TransitionNative_Runes.svelte';
-import type { TransitionProps } from './wrappers/Transition_Runes.svelte';
 import Transition from './wrappers/Transition_Runes.svelte';
 
+// Prop types derived from components so TS/IDE resolve without importing from .svelte
+export type DragAnchorProps = ComponentProps<typeof DragAnchor>;
+export type LightDarkToggleProps = ComponentProps<typeof LightDarkToggle>;
+export type ToggleSwitchProps = ComponentProps<typeof ToggleSwitch>;
+export type CheckboxProps = ComponentProps<typeof Checkbox>;
+export type InputButtonProps = ComponentProps<typeof InputButton>;
+export type InputLabelProps = ComponentProps<typeof InputLabel>;
+export type RadioGroupProps = ComponentProps<typeof RadioGroup>;
+export type NumericInputProps = ComponentProps<typeof NumericInput>;
+export type SelectProps = ComponentProps<typeof Select>;
+export type DateInputProps = ComponentProps<typeof DateInput>;
+export type TextInputProps = ComponentProps<typeof TextInput>;
+export type AnchorHeadingProps = ComponentProps<typeof AnchorHeading>;
+export type CarouselProps = ComponentProps<typeof Carousel>;
+export type LinkableAnchorHeadingProps = ComponentProps<typeof LinkableAnchorHeading>;
+export type NavLinkProps = ComponentProps<typeof NavLink>;
+export type NavigationProps = ComponentProps<typeof Navigation>;
+export type ScrollProgressProps = ComponentProps<typeof ScrollProgress>;
+export type AccordionDetailsProps = ComponentProps<typeof AccordionDetails>;
+export type AccordionJsonProps = ComponentProps<typeof AccordionJson>;
+export type DialogProps = ComponentProps<typeof Dialog>;
+export type FlexProps = ComponentProps<typeof Flex>;
+export type FlexItemProps = ComponentProps<typeof FlexItem>;
+export type FullDialogProps = ComponentProps<typeof FullDialog>;
+export type GridProps = ComponentProps<typeof Grid>;
+export type JSONViewProps = ComponentProps<typeof JsonView>;
+export type MiniDialogProps = ComponentProps<typeof MiniDialog>;
+export type ResizableGridProps = ComponentProps<typeof ResizableGrid>;
+export type AccordionProps = ComponentProps<typeof Accordion>;
+export type DataGridProps = ComponentProps<typeof DataGrid>;
+export type TableProps = ComponentProps<typeof Table>;
+export type TabsProps = ComponentProps<typeof Tabs>;
+export type TransitionNativeProps = ComponentProps<typeof TransitionNative_Runes>;
+export type TransitionProps = ComponentProps<typeof Transition>;
+
 // Exports
-// Functions
-// export { tutorial } from '$actions/general.svelte.js';
-// export {
-// 	spotlight,
-// 	type SpotlightParameters,
-// 	type SpotlightStep
-// } from '$actions/spotlight/spotlight.svelte.js';
 export {
 	align_content_options,
 	align_items_options,
@@ -100,8 +108,8 @@ export {
 	assert_valid_email,
 	assert_valid_file_path,
 	assert_valid_phone,
-	assert_valid_uuid,
 	assert_valid_url,
+	assert_valid_uuid,
 	capitalize,
 	clamp,
 	dekebab,
@@ -180,15 +188,14 @@ export {
 	type StringLengthBetween,
 	type Tail,
 	type Tuple,
-	type TypeSafeMap,
 	type TypedHeaders,
 	type TypedRequestInit,
 	type TypedResponse,
+	type TypeSafeMap,
 	type UrlString,
 	type UUIDString,
 	type ValueOf
 } from '$lib/functions/helpers.svelte.js';
-export { Temporal } from '@js-temporal/polyfill';
 export { dynamic_style } from './actions/dynamic-styles.svelte.js';
 export { willChange } from './actions/will-change.js';
 export {
@@ -229,7 +236,7 @@ export {
 	NavigationLink,
 	should_layout_transition_on_navigation
 } from './navigation/nav-functions.svelte.js';
-export type { ComponentTab, SnippetTab } from './wrappers/Tabs_Runes.svelte';
+export { Temporal } from '@js-temporal/polyfill';
 export {
 	Accordion,
 	AccordionDetails,
@@ -239,6 +246,7 @@ export {
 	Carousel,
 	carousel_item,
 	Checkbox,
+	DataGrid,
 	Dialog,
 	DragAnchor,
 	Flex,
@@ -259,6 +267,7 @@ export {
 	ResizableGrid,
 	ScrollProgress,
 	Select,
+	SortState,
 	SubmitButton,
 	Table,
 	Tabs,
@@ -267,42 +276,15 @@ export {
 	ToggleSwitch,
 	Transition,
 	TransitionNative_Runes,
-	type AccordionDetailsProps,
-	type AccordionJsonProps,
-	type AccordionProps,
-	type AnchorHeadingProps,
-	type CarouselProps,
-	type CheckboxProps,
 	type DataCell,
+	type DataGridColumn,
+	type DataGridFilterState,
+	type DataGridFilterUI,
 	type DatalistOption,
 	type DataRow,
-	type DateInputProps,
-	type DialogProps,
-	type DragAnchorProps,
-	type FlexItemProps,
-	type FlexProps,
-	type FullDialogProps,
-	type GridProps,
 	type HeaderCell,
-	type InputButtonProps,
-	type InputLabelProps,
-	type JSONViewProps,
-	type LightDarkToggleProps,
-	type LinkableAnchorHeadingProps,
-	type MiniDialogProps,
-	type NavigationProps,
-	type NavLinkProps,
-	type NumericInputProps,
-	type RadioGroupProps,
-	type ResizableGridProps,
-	type ScrollProgressProps,
 	type SelectOptionGroup,
-	type SelectProps,
-	type TableProps,
-	type TabsProps,
-	type TextInputProps,
-	type TextInputTypes,
-	type ToggleSwitchProps,
-	type TransitionNativeProps,
-	type TransitionProps
+	type ComponentTab,
+	type SnippetTab,
+	type TextInputTypes
 };
