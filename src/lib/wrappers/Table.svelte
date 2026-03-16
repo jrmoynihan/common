@@ -1,34 +1,28 @@
 <script module lang="ts">
+	import type { Snippet as SnippetType } from 'svelte';
 	import type { HTMLAttributes, HTMLTableAttributes } from 'svelte/elements';
+	import type { DataCell, DataRow, HeaderCell } from './Table.types.js';
 
-	export interface DataRow<T> {
-		datum: T;
-		index: number;
-	}
-	export interface HeaderCell<T> extends DataRow<T> {
-		key: keyof T;
-	}
-	export interface DataCell<T> extends HeaderCell<T> {
-		value: any;
-	}
+	export type { DataCell, DataRow, HeaderCell } from './Table.types.js';
+
 	export interface TableProps<T> extends HTMLTableAttributes {
 		data?: T[] | null;
 		/** An snippet representing the table header row(s) (e.g. a `<tr>` element to be rendered within `<thead>`) */
-		header_row?: Snippet<[datum: T]>;
+		header_row?: SnippetType<[datum: T]>;
 		/** A snippet representing the table header cells and how they should be rendered (`<th>` elements within `<thead>` `<tr>` rows).  The default excludes properties on the object that are `typeof === 'function'` and allows capitalization of headers, and then renders the `th` snippet.  */
-		header_cell?: Snippet<[params: HeaderCell<T>]>;
+		header_cell?: SnippetType<[params: HeaderCell<T>]>;
 		/** An snippet representing the table data row(s) */
-		data_row?: Snippet<[params: DataRow<T>]>;
+		data_row?: SnippetType<[params: DataRow<T>]>;
 		/** A snippet representing the table data cells (`<td>` elements within `<tbody>` `<tr>` rows)*/
-		data_cell?: Snippet<[params: DataCell<T>]>;
+		data_cell?: SnippetType<[params: DataCell<T>]>;
 		/** An snippet representing the table caption */
-		caption?: Snippet<[text: string]> | null;
+		caption?: SnippetType<[text: string]> | null;
 		/** The text of the table caption */
 		caption_text?: string;
 		/** The side of the table caption, with respect to the table */
 		caption_side?: 'top' | 'bottom';
 		/** An snippet representing the table footer.  By default, it takes in all data, of type `DataCell<T>` */
-		footer?: Snippet<[params: T[]]> | null;
+		footer?: SnippetType<[params: T[]]> | null;
 		/** The data of the table footer */
 		footer_data?: DataCell<T>;
 		/** A list of keys to include from the objects in the `data` array.  If left empty and `omitted_keys` is also left empty, all keys will be included */
@@ -40,17 +34,17 @@
 		/** A mapping of keys to custom header names. Example: { number_of_events: '# Events' } */
 		keys_to_rename?: PrettifyIntersection<Partial<Record<keyof T, string>>>;
 		/** A snippet representing the button to sort the table column */
-		sort_button?: Snippet<[key: keyof T]> | null;
+		sort_button?: SnippetType<[key: keyof T]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, before the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
-		preceding_header_cells?: Snippet<[]> | null;
+		preceding_header_cells?: SnippetType<[]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<thead>`, after the keys of the `data` array. Wrap your items in a `<th>` within the snippet. */
-		subsequent_header_cells?: Snippet<[]> | null;
+		subsequent_header_cells?: SnippetType<[]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<tbody>`, before the keys of the `data` array.  Wrap your items in a `<td>` within the snippet.  Each item will have access to the `datum` and `index` properties. */
-		preceding_data_cells?: Snippet<[params: DataRow<T>]> | null;
+		preceding_data_cells?: SnippetType<[params: DataRow<T>]> | null;
 		/** A snippet of items that will be rendered in the `<tr>` element within the `<tbody>`, after the keys of the `data` array.  Wrap your items in a `<td>` within the snippet.  Each item will have access to the `datum` and `index` properties. */
-		subsequent_data_cells?: Snippet<[params: DataRow<T>]> | null;
+		subsequent_data_cells?: SnippetType<[params: DataRow<T>]> | null;
 		/** A snippet that will render an `<th>` within the `<thead>` and any snippets passed to it.  This element will receive the `table_header_cell_attributes` spread prop. */
-		th?: Snippet<[content: Snippet<[]>]>;
+		th?: SnippetType<[content: SnippetType<[]>]>;
 		/** The attributes to be applied to the `<tbody>` element */
 		table_body_attributes?: HTMLAttributes<HTMLTableSectionElement>;
 		/** The attributes to be applied to the `<thead>` element */
@@ -58,11 +52,11 @@
 		/** The attributes to be applied to `<th>` elements */
 		table_header_cell_attributes?: HTMLAttributes<HTMLTableCellElement>;
 		/** A snippet representing the button to sort the table column for strings.  Overrides `sort_button_content` if provided. */
-		sort_string_button_content?: Snippet<[]>;
+		sort_string_button_content?: SnippetType<[]>;
 		/** A snippet representing the button to sort the table column for numbers.  Overrides `sort_button_content` if provided. */
-		sort_number_button_content?: Snippet<[]>;
+		sort_number_button_content?: SnippetType<[]>;
 		/** A snippet representing the button to sort the table column.  Used as a fallback if `sort_string_button_content` or `sort_number_button_content` are not provided. */
-		sort_button_content?: Snippet<[]>;
+		sort_button_content?: SnippetType<[]>;
 	}
 </script>
 
