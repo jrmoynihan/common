@@ -242,14 +242,15 @@ https://web.dev/building-a-tooltip-component/
 			}
 		}
 	}
-	@container anchored(fallback: flip-inline) {
+	/** These are not supported by build tools or browsers outside of Chrome yet. */
+	/* @container anchored (fallback: flip-inline) {
 		.tooltip {
 			background-color: red;
 		}
 	}
-	@container anchored(fallback: flip-block) {
+	@container anchored (fallback: flip-block) {
 		.tooltip {
 			background-color: green;
 		}
-	}
+	} */
 </style>
