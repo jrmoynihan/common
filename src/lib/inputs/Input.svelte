@@ -69,7 +69,7 @@
 		bind:group
 		{id}
 		{value}
-		class={['input pl-[1ch]', { value, hidden }, input_attributes.class]}
+		class={[input_attributes.class, 'input pl-[1ch]', { value, hidden }]}
 		onkeypress={handle_keypress}
 		{...input_attributes}
 	/>
@@ -78,12 +78,12 @@
 		bind:this={input_element}
 		bind:value
 		class={[
+			input_attributes.class,
 			'input pl-[1ch]',
 			{
-				value: input_attributes.type === 'number' ? value !== undefined && value !== null : value,
+				value: value !== undefined && value !== null,
 				hidden
-			},
-			input_attributes.class
+			}
 		]}
 		onkeypress={handle_keypress}
 		{id}
