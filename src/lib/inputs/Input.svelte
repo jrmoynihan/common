@@ -69,14 +69,17 @@
 		bind:group
 		{id}
 		{value}
-		class={[input_attributes.class, 'input pl-[1ch]', { value, hidden }]}
 		onkeypress={handle_keypress}
 		{...input_attributes}
+		class={[input_attributes.class, 'input pl-[1ch]', { value, hidden }]}
 	/>
 {:else}
 	<input
 		bind:this={input_element}
 		bind:value
+		onkeypress={handle_keypress}
+		{id}
+		{...input_attributes}
 		class={[
 			input_attributes.class,
 			'input pl-[1ch]',
@@ -85,9 +88,6 @@
 				hidden
 			}
 		]}
-		onkeypress={handle_keypress}
-		{id}
-		{...input_attributes}
 	/>
 {/if}
 
