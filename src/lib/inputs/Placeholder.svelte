@@ -40,10 +40,6 @@
 			color: var(--placeholder-color, oklch(from var(--text) l c h / 0.7));
 			z-index: 0; /* addresses stacking context issue on the same grid-area */
 			/* height: 100%;  /* causes layout bug in Safari */
-			&:has(~ input.value) {
-				scale: 0.75;
-				translate: -12% -25% 0;
-			}
 		}
 	}
 </style>
