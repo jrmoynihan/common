@@ -4,7 +4,13 @@ https://web.dev/building-a-tooltip-component/
 -->
 
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import type { TooltipProps } from './tooltip.svelte.js';
+
+	type Props = TooltipProps & {
+		invoker?: HTMLElement;
+		invoker_anchor_name?: string | null;
+	};
 
 	let {
 		content,
@@ -14,32 +20,75 @@ https://web.dev/building-a-tooltip-component/
 		visible = false,
 		show_arrow = true,
 		keep_visible = false,
-		styles = '',
 		distance = 10,
 		inert = true,
 		disabled = false,
 		fallback = true,
+		invoker,
+		invoker_anchor_name = null,
 		...attributes
-	}: TooltipProps = $props();
+	}: Props = $props();
 
-	let tooltip: HTMLElement | undefined = $state(undefined);
+	let tooltip_el: HTMLElement | undefined = $state(undefined);
+	let tooltip_width = $state(0);
+	let tooltip_height = $state(0);
+
+	$effect(() => {
+		if (!browser || !tooltip_el) return;
+		const el = tooltip_el;
+		const ro = new ResizeObserver(() => {
+			tooltip_width = el.offsetWidth;
+			tooltip_height = el.offsetHeight;
+		});
+		ro.observe(el);
+		return () => ro.disconnect();
+	});
+
+	$effect(() => {
+		if (!browser || !tooltip_el) return;
+		const el = tooltip_el as HTMLElement & {
+			showPopover?: (options?: { source?: HTMLElement }) => void;
+			hidePopover?: () => void;
+		};
+		const should_show = (!disabled && visible) || keep_visible;
+		if (!should_show) {
+			try {
+				if (typeof el.hidePopover === 'function' && el.matches(':popover-open')) {
+					el.hidePopover();
+				}
+			} catch {
+				/* ignore */
+			}
+			return;
+		}
+		try {
+			if (typeof el.showPopover !== 'function') return;
+			if (el.matches(':popover-open')) return;
+			if (invoker && invoker !== document.body) {
+				el.showPopover({ source: invoker });
+			} else {
+				el.showPopover();
+			}
+		} catch {
+			/* ignore */
+		}
+	});
 </script>
 
-<!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. a 'toggle-tip' -->
+<!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. 'toggle-tip' -->
 <tool-tip
-	bind:this={tooltip}
+	bind:this={tooltip_el}
 	{inert}
 	data-tip-position={position}
 	style:--anchor-position={position}
-	style:--anchor={id}
-	style:--tooltip-width={`${tooltip?.offsetWidth}px`}
-	style:--tooltip-height={`${tooltip?.offsetHeight}px`}
+	style:--tooltip-width={`${tooltip_width}px`}
+	style:--tooltip-height={`${tooltip_height}px`}
 	style:--distance={typeof distance === 'number' ? `${distance}px` : distance}
+	style:position-anchor={invoker_anchor_name ?? undefined}
 	{...attributes}
 	role="tooltip"
 	id={`tooltip-${id}`}
-	anchor={id}
-	popover="auto"
+	popover="manual"
 	class={[
 		'tooltip',
 		{ fallback },
@@ -91,22 +140,15 @@ https://web.dev/building-a-tooltip-component/
 			position: fixed;
 			overflow: visible;
 			margin: 0;
-			anchor-name: --tooltip;
-			anchor-scope: --tooltip;
-			/* Make it an anchored query container */
-			container-type: anchored;
 
 			&[data-tip-position='bottom'] {
 				transform-origin: center top;
 				left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
 				top: calc(anchor(bottom) + var(--distance));
 				bottom: auto;
-				/* could replace the `left` property? */
 				justify-self: anchor-center;
-				/* position-area: bottom; doesn't allow for spacing control though */
 				&.fallback {
 					position-try-fallbacks: flip-block, flip-inline, flip-start;
-					/* Use the anchored query to check the fallback */
 				}
 			}
 			&[data-tip-position='top'] {
@@ -114,9 +156,7 @@ https://web.dev/building-a-tooltip-component/
 				left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
 				bottom: calc(anchor(top) + var(--distance));
 				top: auto;
-				/* could replace the `left` property? */
 				justify-self: anchor-center;
-				/* position-area: top; doesn't allow for spacing control though */
 				&.fallback {
 					position-try-fallbacks: flip-block, flip-inline, flip-start;
 				}
@@ -126,9 +166,7 @@ https://web.dev/building-a-tooltip-component/
 				right: calc(anchor(left) + var(--distance));
 				left: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
-				/* could replace the `top` property? */
 				align-self: anchor-center;
-				/* position-area: left; doesn't allow for spacing control though */
 				&.fallback {
 					position-try-fallbacks: flip-inline, flip-block, flip-start;
 				}
@@ -138,9 +176,7 @@ https://web.dev/building-a-tooltip-component/
 				left: calc(anchor(right) + var(--distance));
 				right: auto;
 				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
-				/* could replace the `top` property? */
 				align-self: anchor-center;
-				/* position-area: right; doesn't allow for spacing control though */
 				&.fallback {
 					position-try-fallbacks: flip-inline, flip-block, flip-start;
 				}
@@ -192,7 +228,6 @@ https://web.dev/building-a-tooltip-component/
 			&[data-tip-position='top'] {
 				width: var(--side-arrow-base);
 				height: var(--side-arrow-length);
-				/* left: calc(50% - var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem))); */
 
 				&::after {
 					border-left: var(--arrow-transparent-border);
@@ -205,29 +240,25 @@ https://web.dev/building-a-tooltip-component/
 					-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 *
 						var(--arrow-cushion, 4px)
 				);
-				/* overlap with the tooltip box */
 
 				&::after {
 					border-bottom: var(--arrow-border-and-color);
-					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
 					border-top-style: unset;
 				}
 			}
 			&[data-tip-position='top'] {
-				top: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
+				top: calc(100% + -1 * var(--arrow-cushion, 0px));
 
 				&::after {
 					border-top: var(--arrow-border-and-color);
-					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
 					border-bottom-style: unset;
 				}
 			}
 			&[data-tip-position='left'] {
-				left: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
+				left: calc(100% + -1 * var(--arrow-cushion, 0px));
 
 				&::after {
 					border-left: var(--arrow-border-and-color);
-					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
 					border-right-style: unset;
 				}
 			}
@@ -236,21 +267,9 @@ https://web.dev/building-a-tooltip-component/
 
 				&::after {
 					border-right: var(--arrow-border-and-color);
-					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
 					border-left-style: unset;
 				}
 			}
 		}
 	}
-	/** These are not supported by build tools or browsers outside of Chrome yet. */
-	/* @container anchored (fallback: flip-inline) {
-		.tooltip {
-			background-color: red;
-		}
-	}
-	@container anchored (fallback: flip-block) {
-		.tooltip {
-			background-color: green;
-		}
-	} */
 </style>

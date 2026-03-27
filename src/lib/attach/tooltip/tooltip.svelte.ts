@@ -20,6 +20,12 @@ const void_elements = [
 	'track',
 	'wbr'
 ];
+
+/** Stable `<dashed-ident>` for `anchor-name` / `position-anchor` (UUID hyphens removed). */
+export function invoker_anchor_name(id: string): string {
+	return `--invoker-${id.replace(/-/g, '')}`;
+}
+
 class BaseTooltipProps {
 	/** Choose from top, bottom, right, left anchor positions for the tooltip.
 	 * @default top
@@ -103,9 +109,23 @@ export function tooltip(parameters: TooltipProps): Attachment<HTMLElement> {
 		const target = void_elements.includes(node.nodeName.toLowerCase())
 			? (node.closest('label') ?? document.body)
 			: node;
-		const id = setup_node(target);
-		const props = $state({ ...new BaseTooltipProps({}), ...parameters, id });
-		add_event_listeners(node, props);
+		const { id, anchor_name } = setup_node(target);
+		const props = $state({
+			...new BaseTooltipProps({}),
+			...parameters,
+			id,
+			invoker: target,
+			invoker_anchor_name: anchor_name
+		});
+
+		const on_pointer_enter = () => {
+			void pointerEnter(props);
+		};
+		const on_pointer_leave = () => {
+			void pointerLeave(props);
+		};
+
+		add_event_listeners(node, on_pointer_enter, on_pointer_leave);
 		if (!parameters.disabled && !tooltip) {
 			tooltip = mount(Tooltip, {
 				props,
@@ -116,7 +136,7 @@ export function tooltip(parameters: TooltipProps): Attachment<HTMLElement> {
 		// Clean up
 		return () => {
 			if (node && props) {
-				remove_event_listeners(node, props);
+				remove_event_listeners(node, on_pointer_enter, on_pointer_leave);
 			}
 			if (tooltip) {
 				unmount(tooltip);
@@ -125,34 +145,47 @@ export function tooltip(parameters: TooltipProps): Attachment<HTMLElement> {
 	};
 }
 
-function setup_node(node: HTMLElement): string {
-	// Either use existing id to anchor the tooltip, or create a new one and add it to the node
+function setup_node(node: HTMLElement): { id: string; anchor_name: string | null } {
 	const id = node.id === '' ? crypto.randomUUID() : node.id;
-	// Mark the node with an id so it can be targeted
 	node.setAttribute('id', id);
-	// TODO: See if Popover API (top-layer promotion) is available yet https://chromestatus.com/feature/5463833265045504
-	// Mark the node with a popovertarget so it can be targeted
-	node.setAttribute('popovertarget', `tooltip-${id}`);
-	return id;
+	const name = invoker_anchor_name(id);
+	if (node !== document.body) {
+		node.style.setProperty('anchor-name', name);
+	}
+	return { id, anchor_name: node !== document.body ? name : null };
 }
 
-async function pointerEnter(props: BaseTooltipProps) {
+type TooltipReactiveProps = BaseTooltipProps & {
+	id: string;
+	invoker: HTMLElement;
+	invoker_anchor_name: string | null;
+};
+
+async function pointerEnter(props: TooltipReactiveProps) {
 	if (props.disabled) return;
 	props.visible = true;
 }
 
-async function pointerLeave(props: BaseTooltipProps) {
+async function pointerLeave(props: TooltipReactiveProps) {
 	props.visible = false;
 }
-/** Add event listeners and observers to the parent node */
-async function add_event_listeners(node: HTMLElement, props: BaseTooltipProps) {
+
+function add_event_listeners(
+	node: HTMLElement,
+	on_pointer_enter: () => void,
+	on_pointer_leave: () => void
+) {
 	if (browser) {
-		node.addEventListener('pointerenter', pointerEnter.bind(null, props));
-		node.addEventListener('pointerleave', pointerLeave.bind(null, props));
+		node.addEventListener('pointerenter', on_pointer_enter);
+		node.addEventListener('pointerleave', on_pointer_leave);
 	}
 }
 
-async function remove_event_listeners(node: HTMLElement, props: BaseTooltipProps) {
-	node.removeEventListener('pointerenter', pointerEnter.bind(null, props));
-	node.removeEventListener('pointerleave', pointerLeave.bind(null, props));
+function remove_event_listeners(
+	node: HTMLElement,
+	on_pointer_enter: () => void,
+	on_pointer_leave: () => void
+) {
+	node.removeEventListener('pointerenter', on_pointer_enter);
+	node.removeEventListener('pointerleave', on_pointer_leave);
 }
