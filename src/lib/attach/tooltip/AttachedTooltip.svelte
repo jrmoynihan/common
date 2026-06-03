@@ -60,7 +60,55 @@ https://web.dev/building-a-tooltip-component/
 
 <style>
 	@layer common.tooltip {
+		@position-try --tooltip-top {
+			bottom: calc(anchor(top) + var(--distance));
+			top: auto;
+			left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+			right: auto;
+			justify-self: anchor-center;
+			transform-origin: center bottom;
+			max-width: min(--inline-limit, --preferred-max-inline);
+			max-height: none;
+		}
+
+		@position-try --tooltip-bottom {
+			top: calc(anchor(bottom) + var(--distance));
+			bottom: auto;
+			left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
+			right: auto;
+			justify-self: anchor-center;
+			transform-origin: center top;
+			max-width: min(--inline-limit, --preferred-max-inline);
+			max-height: none;
+		}
+
+		@position-try --tooltip-left {
+			right: calc(anchor(left) + var(--distance));
+			left: auto;
+			top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+			bottom: auto;
+			align-self: anchor-center;
+			transform-origin: right center;
+			max-width: none;
+			max-height: min(--block-limit, --preferred-max-block);
+		}
+
+		@position-try --tooltip-right {
+			left: calc(anchor(right) + var(--distance));
+			right: auto;
+			top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
+			bottom: auto;
+			align-self: anchor-center;
+			transform-origin: left center;
+			max-width: none;
+			max-height: min(--block-limit, --preferred-max-block);
+		}
+
 		.tooltip {
+			--inline-limit: calc(100vw - 2rem);
+			--block-limit: calc(100vh - 2rem);
+			--preferred-max-inline: 33ch;
+			--preferred-max-block: 53ch;
 			box-sizing: border-box;
 			border: var(--tooltip-border, 1px solid #ddd);
 			filter: drop-shadow(var(--tooltip-drop-shadow, 1px 1px 4px hsla(0, 0%, 0%, 0.5)));
@@ -78,10 +126,6 @@ https://web.dev/building-a-tooltip-component/
 			gap: var(--tooltip-gap, 0.25rem);
 			opacity: var(--tooltip-opacity, 1);
 			color: var(--tooltip-color, var(--text, inherit));
-			max-width: min(
-				var(--tooltip-max-width, min(calc(100vw - 2rem)), 250px),
-				min(calc(100vw - 2rem), 250px)
-			);
 			text-align: var(--tooltip-text-align, center);
 			text-wrap: var(--tooltip-text-wrap, balance);
 			z-index: var(--tooltip-z-index, 1000);
@@ -118,7 +162,8 @@ https://web.dev/building-a-tooltip-component/
 				justify-self: anchor-center;
 				/* position-area: top; doesn't allow for spacing control though */
 				&.fallback {
-					position-try-fallbacks: flip-block, flip-inline, flip-start;
+					position-try-fallbacks: --tooltip-bottom, --tooltip-left, --tooltip-right;
+					position-try-order: most-block-size;
 				}
 			}
 			&[data-tip-position='left'] {
@@ -130,7 +175,8 @@ https://web.dev/building-a-tooltip-component/
 				align-self: anchor-center;
 				/* position-area: left; doesn't allow for spacing control though */
 				&.fallback {
-					position-try-fallbacks: flip-inline, flip-block, flip-start;
+					position-try-fallbacks: --tooltip-right, --tooltip-top, --tooltip-bottom;
+					position-try-order: most-inline-size;
 				}
 			}
 			&[data-tip-position='right'] {
@@ -142,7 +188,8 @@ https://web.dev/building-a-tooltip-component/
 				align-self: anchor-center;
 				/* position-area: right; doesn't allow for spacing control though */
 				&.fallback {
-					position-try-fallbacks: flip-inline, flip-block, flip-start;
+					position-try-fallbacks: --tooltip-left, --tooltip-top, --tooltip-bottom;
+					position-try-order: most-inline-size;
 				}
 			}
 			&.visible {
