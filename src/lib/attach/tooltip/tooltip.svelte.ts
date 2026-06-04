@@ -45,7 +45,7 @@ class BaseTooltipProps {
 	 * @default true
 	 */
 	show_arrow? = $state<boolean>(true);
-	/** Dynamic styles that can change on the tooltip.  Note: use '--tooltip'-prefixed CSS custom properties wherever possible (e.g. --tooltip-background: 'white' instead of background: 'white').
+	/** Dynamic styles that can change on the tooltip.  Note: use '--tooltip'-prefixed CSS custom properties wherever possible (e.g. --tooltip-background: 'white' instead 	 background: 'white').
 	 * @default ''
 	 */
 	style? = $state<string>('');
@@ -126,13 +126,16 @@ export function tooltip(parameters: TooltipProps): Attachment<HTMLElement> {
 }
 
 function setup_node(node: HTMLElement): string {
-	// Either use existing id to anchor the tooltip, or create a new one and add it to the node
-	const id = node.id === '' ? crypto.randomUUID() : node.id;
-	// Mark the node with an id so it can be targeted
+	// CSS custom idents shouldn't start with numbers. Prefix it to be safe.
+	const rawId = node.id === '' ? crypto.randomUUID() : node.id;
+	const id = rawId.startsWith('anchor-') ? rawId : `anchor-${rawId}`;
+
 	node.setAttribute('id', id);
-	// TODO: See if Popover API (top-layer promotion) is available yet https://chromestatus.com/feature/5463833265045504
-	// Mark the node with a popovertarget so it can be targeted
 	node.setAttribute('popovertarget', `tooltip-${id}`);
+
+	// Explicitly establish the target as a CSS anchor
+	node.style.setProperty('anchor-name', `--${id}`);
+
 	return id;
 }
 

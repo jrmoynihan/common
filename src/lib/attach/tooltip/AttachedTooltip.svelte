@@ -30,10 +30,9 @@ https://web.dev/building-a-tooltip-component/
 	bind:this={tooltip}
 	{inert}
 	data-tip-position={position}
+	style:position-anchor={`--${id}`}
 	style:--anchor-position={position}
 	style:--anchor={id}
-	style:--tooltip-width={`${tooltip?.offsetWidth}px`}
-	style:--tooltip-height={`${tooltip?.offsetHeight}px`}
 	style:--distance={typeof distance === 'number' ? `${distance}px` : distance}
 	{...attributes}
 	role="tooltip"
@@ -63,8 +62,6 @@ https://web.dev/building-a-tooltip-component/
 		@position-try --tooltip-top {
 			bottom: calc(anchor(top) + var(--distance));
 			top: auto;
-			left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
-			right: auto;
 			justify-self: anchor-center;
 			transform-origin: center bottom;
 			max-width: min(--inline-limit, --preferred-max-inline);
@@ -74,8 +71,6 @@ https://web.dev/building-a-tooltip-component/
 		@position-try --tooltip-bottom {
 			top: calc(anchor(bottom) + var(--distance));
 			bottom: auto;
-			left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
-			right: auto;
 			justify-self: anchor-center;
 			transform-origin: center top;
 			max-width: min(--inline-limit, --preferred-max-inline);
@@ -85,8 +80,6 @@ https://web.dev/building-a-tooltip-component/
 		@position-try --tooltip-left {
 			right: calc(anchor(left) + var(--distance));
 			left: auto;
-			top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
-			bottom: auto;
 			align-self: anchor-center;
 			transform-origin: right center;
 			max-width: none;
@@ -96,8 +89,6 @@ https://web.dev/building-a-tooltip-component/
 		@position-try --tooltip-right {
 			left: calc(anchor(right) + var(--distance));
 			right: auto;
-			top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
-			bottom: auto;
 			align-self: anchor-center;
 			transform-origin: left center;
 			max-width: none;
@@ -142,7 +133,6 @@ https://web.dev/building-a-tooltip-component/
 
 			&[data-tip-position='bottom'] {
 				transform-origin: center top;
-				left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
 				top: calc(anchor(bottom) + var(--distance));
 				bottom: auto;
 				/* could replace the `left` property? */
@@ -155,7 +145,6 @@ https://web.dev/building-a-tooltip-component/
 			}
 			&[data-tip-position='top'] {
 				transform-origin: center bottom;
-				left: calc(anchor(center) - (var(--tooltip-width) * 0.5));
 				bottom: calc(anchor(top) + var(--distance));
 				top: auto;
 				/* could replace the `left` property? */
@@ -170,7 +159,6 @@ https://web.dev/building-a-tooltip-component/
 				transform-origin: right center;
 				right: calc(anchor(left) + var(--distance));
 				left: auto;
-				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
 				/* could replace the `top` property? */
 				align-self: anchor-center;
 				/* position-area: left; doesn't allow for spacing control though */
@@ -183,7 +171,6 @@ https://web.dev/building-a-tooltip-component/
 				transform-origin: left center;
 				left: calc(anchor(right) + var(--distance));
 				right: auto;
-				top: calc(anchor(center) - (var(--tooltip-height) * 0.5));
 				/* could replace the `top` property? */
 				align-self: anchor-center;
 				/* position-area: right; doesn't allow for spacing control though */
@@ -239,7 +226,6 @@ https://web.dev/building-a-tooltip-component/
 			&[data-tip-position='top'] {
 				width: var(--side-arrow-base);
 				height: var(--side-arrow-length);
-				/* left: calc(50% - var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem))); */
 
 				&::after {
 					border-left: var(--arrow-transparent-border);
@@ -289,15 +275,76 @@ https://web.dev/building-a-tooltip-component/
 			}
 		}
 	}
-	/** These are not supported by build tools or browsers outside of Chrome yet. */
-	/* @container anchored (fallback: flip-inline) {
-		.tooltip {
-			background-color: red;
+	@container anchored(fallback: --tooltip-bottom) {
+		.arrow {
+			width: var(--side-arrow-base);
+			height: var(--side-arrow-length);
+			left: auto;
+			right: auto;
+			top: calc(
+				-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 *
+					var(--arrow-cushion, 4px)
+			);
+
+			&::after {
+				border-color: transparent;
+				border-bottom: var(--arrow-border-and-color);
+				border-top-style: unset;
+				border-left: var(--arrow-transparent-border);
+				border-right: var(--arrow-transparent-border);
+			}
 		}
 	}
-	@container anchored (fallback: flip-block) {
-		.tooltip {
-			background-color: green;
+
+	@container anchored(fallback: --tooltip-top) {
+		.arrow {
+			width: var(--side-arrow-base);
+			height: var(--side-arrow-length);
+			left: auto;
+			right: auto;
+			top: calc(100% + -1 * var(--arrow-cushion, 0px));
+
+			&::after {
+				border-color: transparent;
+				border-top: var(--arrow-border-and-color);
+				border-bottom-style: unset;
+				border-left: var(--arrow-transparent-border);
+				border-right: var(--arrow-transparent-border);
+			}
 		}
-	} */
+	}
+
+	@container anchored(fallback: --tooltip-left) {
+		.arrow {
+			width: var(--side-arrow-length);
+			height: var(--side-arrow-base);
+			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
+			left: calc(100% + -1 * var(--arrow-cushion, 0px));
+
+			&::after {
+				border-color: transparent;
+				border-left: var(--arrow-border-and-color);
+				border-right-style: unset;
+				border-top: var(--arrow-transparent-border);
+				border-bottom: var(--arrow-transparent-border);
+			}
+		}
+	}
+
+	@container anchored(fallback: --tooltip-right) {
+		.arrow {
+			width: var(--side-arrow-length);
+			height: var(--side-arrow-base);
+			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
+			left: calc(-1 * var(--tooltip-arrow-width, 0.75rem) + -1 * var(--arrow-cushion, 0px));
+
+			&::after {
+				border-color: transparent;
+				border-right: var(--arrow-border-and-color);
+				border-left-style: unset;
+				border-top: var(--arrow-transparent-border);
+				border-bottom: var(--arrow-transparent-border);
+			}
+		}
+	}
 </style>
