@@ -1,7 +1,5 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
-import browserslist from 'browserslist';
-import { browserslistToTargets } from 'lightningcss';
 import examples from 'mdsvexamples/vite';
 import path from 'node:path';
 import { defineConfig, type UserConfig } from 'vite';
@@ -26,14 +24,10 @@ const config = defineConfig({
 	build: {
 		sourcemap: true,
 		target: 'esnext',
-		cssMinify: 'lightningcss'
+		cssMinify: 'esbuild'
 	},
 	css: {
-		transformer: 'lightningcss',
-		lightningcss: {
-			targets: browserslistToTargets(browserslist('defaults, not ie 11')),
-			errorRecovery: true
-		}
+		transformer: 'esbuild'
 	}
 }) satisfies UserConfig;
 
