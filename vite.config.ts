@@ -25,9 +25,6 @@ const config = defineConfig({
 		sourcemap: true,
 		target: 'esnext',
 		cssMinify: 'esbuild'
-	},
-	css: {
-		transformer: 'esbuild'
 	}
 }) satisfies UserConfig;
 
