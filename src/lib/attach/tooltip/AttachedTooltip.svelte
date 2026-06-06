@@ -65,6 +65,87 @@ https://web.dev/building-a-tooltip-component/
 	{/if}
 </tool-tip>
 
+<!-- TODO: Hack into the document head until the CSS transformer supports it:
+	https://github.com/parcel-bundler/lightningcss/issues/1176
+-->
+<svelte:head>
+	{@html `'<sty' + 'le>' + 
+		${`@container anchored(fallback: --tooltip-bottom) {
+		#tooltip-${id} .arrow {
+			width: var(--side-arrow-base);
+				height: var(--side-arrow-length);
+			left: auto;
+			right: auto;
+			top: calc(
+				-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 *
+					var(--arrow-cushion, 4px)
+			);
+
+			&::after {
+				border-color: transparent;
+				border-bottom: var(--arrow-border-and-color);
+				border-top-style: unset;
+				border-left: var(--arrow-transparent-border);
+				border-right: var(--arrow-transparent-border);
+			}
+		}
+	}
+
+	@container anchored(fallback: --tooltip-top) {
+		#tooltip-${id} .arrow {
+			width: var(--side-arrow-base);
+			height: var(--side-arrow-length);
+			left: auto;
+			right: auto;
+			top: calc(100% + -1 * var(--arrow-cushion, 0px));
+
+			&::after {
+				border-color: transparent;
+				border-top: var(--arrow-border-and-color);
+				border-bottom-style: unset;
+				border-left: var(--arrow-transparent-border);
+				border-right: var(--arrow-transparent-border);
+			}
+		}
+	}
+
+	@container anchored(fallback: --tooltip-left) {
+		#tooltip-${id} .arrow {
+			width: var(--side-arrow-length);
+			height: var(--side-arrow-base);
+			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
+			left: calc(100% + -1 * var(--arrow-cushion, 0px));
+
+			&::after {
+				border-color: transparent;
+				border-left: var(--arrow-border-and-color);
+				border-right-style: unset;
+				border-top: var(--arrow-transparent-border);
+				border-bottom: var(--arrow-transparent-border);
+			}
+		}
+	}
+
+	@container anchored(fallback: --tooltip-right) {
+		#tooltip-${id} .arrow {
+			width: var(--side-arrow-length);
+			height: var(--side-arrow-base);
+			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
+			left: calc(-1 * var(--tooltip-arrow-width, 0.75rem) + -1 * var(--arrow-cushion, 0px));
+
+			&::after {
+				border-color: transparent;
+				border-right: var(--arrow-border-and-color);
+				border-left-style: unset;
+				border-top: var(--arrow-transparent-border);
+				border-bottom: var(--arrow-transparent-border);
+			}
+		}
+	}
+		</style>
+			`}`}
+</svelte:head>
+
 <style>
 	@layer common.tooltip {
 		@position-try --tooltip-top {
@@ -276,78 +357,6 @@ https://web.dev/building-a-tooltip-component/
 					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
 					border-left-style: unset;
 				}
-			}
-		}
-	}
-	@container anchored(fallback: --tooltip-bottom) {
-		.arrow {
-			width: var(--side-arrow-base);
-			height: var(--side-arrow-length);
-			left: auto;
-			right: auto;
-			top: calc(
-				-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 *
-					var(--arrow-cushion, 4px)
-			);
-
-			&::after {
-				border-color: transparent;
-				border-bottom: var(--arrow-border-and-color);
-				border-top-style: unset;
-				border-left: var(--arrow-transparent-border);
-				border-right: var(--arrow-transparent-border);
-			}
-		}
-	}
-
-	@container anchored(fallback: --tooltip-top) {
-		.arrow {
-			width: var(--side-arrow-base);
-			height: var(--side-arrow-length);
-			left: auto;
-			right: auto;
-			top: calc(100% + -1 * var(--arrow-cushion, 0px));
-
-			&::after {
-				border-color: transparent;
-				border-top: var(--arrow-border-and-color);
-				border-bottom-style: unset;
-				border-left: var(--arrow-transparent-border);
-				border-right: var(--arrow-transparent-border);
-			}
-		}
-	}
-
-	@container anchored(fallback: --tooltip-left) {
-		.arrow {
-			width: var(--side-arrow-length);
-			height: var(--side-arrow-base);
-			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
-			left: calc(100% + -1 * var(--arrow-cushion, 0px));
-
-			&::after {
-				border-color: transparent;
-				border-left: var(--arrow-border-and-color);
-				border-right-style: unset;
-				border-top: var(--arrow-transparent-border);
-				border-bottom: var(--arrow-transparent-border);
-			}
-		}
-	}
-
-	@container anchored(fallback: --tooltip-right) {
-		.arrow {
-			width: var(--side-arrow-length);
-			height: var(--side-arrow-base);
-			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
-			left: calc(-1 * var(--tooltip-arrow-width, 0.75rem) + -1 * var(--arrow-cushion, 0px));
-
-			&::after {
-				border-color: transparent;
-				border-right: var(--arrow-border-and-color);
-				border-left-style: unset;
-				border-top: var(--arrow-transparent-border);
-				border-bottom: var(--arrow-transparent-border);
 			}
 		}
 	}
