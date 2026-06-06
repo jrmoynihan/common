@@ -1,8 +1,10 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
 
-	export interface RadioGroupProps<T, K extends keyof T & string>
-		extends Omit<InputProps & InputLabelProps, 'value' | 'children'> {
+	export interface RadioGroupProps<T, K extends keyof T & string> extends Omit<
+		InputProps & InputLabelProps,
+		'value' | 'children'
+	> {
 		/** An array or iterable of items to display in the radio group. */
 		items: ArrayLike<T> | Iterable<T>;
 		/** Attributes to pass to the label of the selected item. */
@@ -111,7 +113,7 @@
 				);
 				cursor: not-allowed;
 			}
-			&:focus-visible:not(:disabled) {
+			&:focus-visible:not:disabled {
 				outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
 				background-color: var(
 					--radiogroup-label-focus-background-color,
