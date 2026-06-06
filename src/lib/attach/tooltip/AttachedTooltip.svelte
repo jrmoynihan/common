@@ -1,3 +1,11 @@
+<!-- <script module lang="ts">
+	import { browser } from '$app/env';
+
+	if (browser && document && !('anchorName' in document?.documentElement.style)) {
+		await fetch('https://unpkg.com/@oddbird/css-anchor-positioning');
+	}
+</script> -->
+
 <!--
 @component
 https://web.dev/building-a-tooltip-component/
@@ -64,8 +72,8 @@ https://web.dev/building-a-tooltip-component/
 			top: auto;
 			justify-self: anchor-center;
 			transform-origin: center bottom;
-			max-width: min(--inline-limit, --preferred-max-inline);
-			max-height: none;
+			max-width: min(var(--inline-limit), var(--preferred-max-inline));
+			max-height: max-content;
 		}
 
 		@position-try --tooltip-bottom {
@@ -73,8 +81,8 @@ https://web.dev/building-a-tooltip-component/
 			bottom: auto;
 			justify-self: anchor-center;
 			transform-origin: center top;
-			max-width: min(--inline-limit, --preferred-max-inline);
-			max-height: none;
+			max-width: min(var(--inline-limit), var(--preferred-max-inline));
+			max-height: max-content;
 		}
 
 		@position-try --tooltip-left {
@@ -82,8 +90,8 @@ https://web.dev/building-a-tooltip-component/
 			left: auto;
 			align-self: anchor-center;
 			transform-origin: right center;
-			max-width: none;
-			max-height: min(--block-limit, --preferred-max-block);
+			max-width: max-content;
+			max-height: min(var(--block-limit), var(--preferred-max-block));
 		}
 
 		@position-try --tooltip-right {
@@ -91,8 +99,8 @@ https://web.dev/building-a-tooltip-component/
 			right: auto;
 			align-self: anchor-center;
 			transform-origin: left center;
-			max-width: none;
-			max-height: min(--block-limit, --preferred-max-block);
+			max-width: max-content;
+			max-height: min(var(--block-limit), var(--preferred-max-block));
 		}
 
 		.tooltip {
@@ -112,71 +120,68 @@ https://web.dev/building-a-tooltip-component/
 			pointer-events: var(--tooltip-pointer-events, none);
 			user-select: var(--tooltip-user-select, none);
 			transform: var(--tooltip-transform);
-			display: var(--tooltip-display, grid);
+			display: var(--tooltip-display, grid-lanes);
 			place-items: var(--tooltip-place-items, center);
 			gap: var(--tooltip-gap, 0.25rem);
 			opacity: var(--tooltip-opacity, 1);
 			color: var(--tooltip-color, var(--text, inherit));
 			text-align: var(--tooltip-text-align, center);
-			text-wrap: var(--tooltip-text-wrap, balance);
+			text-wrap: var(--tooltip-text-wrap, pretty);
 			z-index: var(--tooltip-z-index, 1000);
 			transition: var(--tooltip-transition, all 300ms ease-in-out);
 			scale: 0;
 			opacity: 0;
-			position: fixed;
 			overflow: visible;
+			inset: auto;
+			height: max-content;
 			margin: 0;
 			anchor-name: --tooltip;
 			anchor-scope: --tooltip;
-			/* Make it an anchored query container */
-			container-type: anchored;
+			container-type: anchored; /* Enable container queries relative to the anchored tooltip */
+			max-inline-size: fit-content;
+			max-block-size: max-content;
+			&.fallback {
+				position-try-fallbacks: most-inline-size, most-block-size;
+			}
 
 			&[data-tip-position='bottom'] {
 				transform-origin: center top;
 				top: calc(anchor(bottom) + var(--distance));
 				bottom: auto;
-				/* could replace the `left` property? */
 				justify-self: anchor-center;
-				/* position-area: bottom; doesn't allow for spacing control though */
+				position-area: bottom center;
 				&.fallback {
-					position-try-fallbacks: flip-block, flip-inline, flip-start;
-					/* Use the anchored query to check the fallback */
+					position-try-fallbacks: --tooltip-top, --tooltip-left, --tooltip-right;
 				}
 			}
 			&[data-tip-position='top'] {
 				transform-origin: center bottom;
 				bottom: calc(anchor(top) + var(--distance));
 				top: auto;
-				/* could replace the `left` property? */
 				justify-self: anchor-center;
-				/* position-area: top; doesn't allow for spacing control though */
+				position-area: top center;
 				&.fallback {
 					position-try-fallbacks: --tooltip-bottom, --tooltip-left, --tooltip-right;
-					position-try-order: most-block-size;
 				}
 			}
 			&[data-tip-position='left'] {
 				transform-origin: right center;
 				right: calc(anchor(left) + var(--distance));
 				left: auto;
-				/* could replace the `top` property? */
 				align-self: anchor-center;
-				/* position-area: left; doesn't allow for spacing control though */
+				position-area: left center;
 				&.fallback {
 					position-try-fallbacks: --tooltip-right, --tooltip-top, --tooltip-bottom;
-					position-try-order: most-inline-size;
 				}
 			}
 			&[data-tip-position='right'] {
 				transform-origin: left center;
 				left: calc(anchor(right) + var(--distance));
 				right: auto;
-				/* could replace the `top` property? */
 				align-self: anchor-center;
-				/* position-area: right; doesn't allow for spacing control though */
+				position-area: right center;
 				&.fallback {
 					position-try-fallbacks: --tooltip-left, --tooltip-top, --tooltip-bottom;
-					position-try-order: most-inline-size;
 				}
 			}
 			&.visible {
@@ -233,7 +238,6 @@ https://web.dev/building-a-tooltip-component/
 				}
 			}
 			&[data-tip-position='bottom'] {
-				position-area: bottom span-all;
 				top: calc(
 					-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 *
 						var(--arrow-cushion, 4px)
