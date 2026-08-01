@@ -77,6 +77,7 @@
 		inputmode="numeric"
 		{...input_attributes}
 		type="number"
+		class={['_numeric-input', input_attributes.class]}
 	/>
 	{#if placeholder_props}
 		<Placeholder {...placeholder_props} />
@@ -166,7 +167,7 @@
 	}
 
 	@layer common.input.numeric_input {
-		:global(input[type='number']) {
+		:global(input._numeric-input) {
 			appearance: textfield;
 			-moz-appearance: textfield;
 			text-align: center;
@@ -175,24 +176,19 @@
 			border-radius: var(--input-border-radius, 1rem);
 		}
 	}
-	:global([data-theme='light'] button.button:focus .spinner-button-icon path) {
-		fill: var(--button-outline-hover-or-focus, royalblue);
-	}
-
-	:global([data-theme='dark'] button.button:focus .spinner-button-icon path) {
-		fill: var(--button-outline-hover-or-focus, lightskyblue);
-	}
 
 	@layer common.input.button {
-		:global(.plus) {
-			grid-area: plus;
-			border-top-right-radius: inherit;
-			transform-origin: top right;
-		}
-		:global(.minus) {
-			grid-area: minus;
-			border-bottom-right-radius: inherit;
-			transform-origin: top right;
+		.btn-container {
+			& :global(.plus) {
+				grid-area: plus;
+				border-top-right-radius: inherit;
+				transform-origin: top right;
+			}
+			& :global(.minus) {
+				grid-area: minus;
+				border-bottom-right-radius: inherit;
+				transform-origin: top right;
+			}
 		}
 	}
 </style>

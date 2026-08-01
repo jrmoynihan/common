@@ -426,22 +426,25 @@
 	]}
 >
 	{#if show_arrows}
-		<div class="arrow-controls" {...arrow_controls_container_attributes}>
+		<div
+			{...arrow_controls_container_attributes}
+			class={['arrow-controls', arrow_controls_container_attributes?.class]}
+		>
 			{#if show_previous}
 				<button
 					bind:this={previous}
-					disabled={!can_go_previous}
 					type="button"
 					title="Previous Item"
+					aria-controls="arrow-controls"
+					aria-label="Previous Item"
+					{...previous_attributes}
+					disabled={!can_go_previous}
+					onclick={go_previous}
 					class={[
 						'carousel-control arrow previous',
 						is_at_start && 'start',
 						previous_attributes?.class
 					]}
-					aria-controls="arrow-controls"
-					aria-label="Previous Item"
-					onclick={go_previous}
-					{...previous_attributes}
 				>
 					{@render previous_content()}
 				</button>
@@ -449,14 +452,14 @@
 			{#if show_next}
 				<button
 					bind:this={next}
-					disabled={!can_go_next}
 					type="button"
 					title="Next Item"
-					class={['carousel-control arrow next', is_at_end && 'end', next_attributes?.class]}
 					aria-controls="arrow-controls"
 					aria-label="Next Item"
-					onclick={go_next}
 					{...next_attributes}
+					disabled={!can_go_next}
+					onclick={go_next}
+					class={['carousel-control arrow next', is_at_end && 'end', next_attributes?.class]}
 				>
 					{@render next_content()}
 				</button>
@@ -568,264 +571,266 @@
 {/snippet}
 
 <style>
-	.gui-carousel {
-		--_carousel-item-size: 80%;
-		--_carousel-gutters: max(4rem, calc((100% - var(--_carousel-item-size)) / 2));
-		--_carousel-scrollbar-gutter: var(--size-6);
-		--_carousel-pagination-size: var(--size-8);
+	@layer common.carousel {
+		.gui-carousel {
+			--_carousel-item-size: 80%;
+			--_carousel-gutters: max(4rem, calc((100% - var(--_carousel-item-size)) / 2));
+			--_carousel-scrollbar-gutter: var(--size-6);
+			--_carousel-pagination-size: var(--size-8);
 
-		display: grid;
-		grid-template-columns: [carousel-gutter] var(--_carousel-gutters) 1fr [carousel-gutter] var(
-				--_carousel-gutters
-			);
-		grid-template-rows:
-			[carousel-scroller] 1fr
-			[carousel-pagination] var(--_carousel-pagination-size);
+			display: grid;
+			grid-template-columns: [carousel-gutter] var(--_carousel-gutters) 1fr [carousel-gutter] var(
+					--_carousel-gutters
+				);
+			grid-template-rows:
+				[carousel-scroller] 1fr
+				[carousel-pagination] var(--_carousel-pagination-size);
 
-		&:focus-visible {
-			outline-offset: -5px;
-		}
-
-		/* configuration handlers */
-		&[data-carousel-pagination='gallery'] {
-			--_carousel-pagination-size: var(--size-10);
-
-			& > nav.pagination {
-				mask-image: linear-gradient(to right, #0000 0%, #000 5%, 95%, #000, #0000);
-				-webkit-mask-image: linear-gradient(to right, #0000 0%, #000 5%, 95%, #000, #0000);
+			&:focus-visible {
+				outline-offset: -5px;
 			}
-		}
 
-		&[data-carousel-pagination='none'] {
-			grid-template-rows: [carousel-scroller] 1fr;
+			/* configuration handlers */
+			&[data-carousel-pagination='gallery'] {
+				--_carousel-pagination-size: var(--size-10);
 
-			& > nav.pagination {
-				display: none;
+				& > nav.pagination {
+					mask-image: linear-gradient(to right, #0000 0%, #000 5%, 95%, #000, #0000);
+					-webkit-mask-image: linear-gradient(to right, #0000 0%, #000 5%, 95%, #000, #0000);
+				}
 			}
-		}
 
-		&:global([data-carousel-controls='none']) {
-			grid-template-columns: 0 1fr 0;
+			&[data-carousel-pagination='none'] {
+				grid-template-rows: [carousel-scroller] 1fr;
 
-			& > .arrow-controls {
-				display: none;
-			}
-		}
-
-		&:global([data-carousel-scrollbar='none']) {
-			--_carousel-pagination-size: var(--size-5);
-
-			& > .gui-carousel--scroller {
-				scrollbar-width: none;
-
-				&::-webkit-scrollbar {
+				& > nav.pagination {
 					display: none;
 				}
 			}
 
-			& > nav.pagination {
-				place-self: start center;
-			}
-		}
+			&:global([data-carousel-controls='none']) {
+				grid-template-columns: 0 1fr 0;
 
-		&:global([data-carousel-snapstop='always']) .gui-carousel-item.snap {
-			scroll-snap-stop: always;
-		}
-	}
-
-	.gui-carousel--scroller {
-		grid-row: 1;
-		grid-column: 1/-1;
-
-		display: grid;
-		grid-auto-columns: 100%;
-		grid-auto-flow: column;
-		align-items: center;
-		gap: var(--_carousel-gutters);
-
-		padding-block: var(--size-2) var(--_carousel-scrollbar-gutter);
-		overflow-x: auto;
-		overscroll-behavior-x: contain;
-		scroll-snap-type: x proximity;
-		scroll-padding-inline: var(--_carousel-gutters);
-		padding-inline: var(--_carousel-gutters);
-
-		@media (--motionOK) {
-			scroll-behavior: smooth;
-		}
-	}
-
-	.gui-carousel-item.snap {
-		scroll-snap-align: center;
-	}
-
-	.arrow-controls {
-		display: flex;
-		justify-content: space-between;
-		padding-inline: var(--_carousel-gutters);
-		display: contents;
-
-		& > .carousel-control.arrow {
-			/* margin-block-end: var(--_carousel-scrollbar-gutter); */ /* not sure I really need this */
-			transition: transform 0.2s var(--ease-4);
-
-			&:not(:disabled):active {
-				transform: scale(0.9);
-			}
-		}
-	}
-
-	.carousel-control {
-		--_shadow-size: 0;
-		--_shadow-highlight-light: hsl(0 0% 50% / 10%);
-		--_shadow-highlight-dark: hsl(0 0% 100% / 20%);
-		--_shadow-highlight: var(--_shadow-highlight-light);
-
-		grid-row: 1;
-		place-self: center;
-		background: var(--surface-1);
-		color: var(--text-2);
-		aspect-ratio: var(--ratio-square);
-		border-radius: var(--radius-round);
-		box-shadow: 0 0 0 var(--_shadow-size) var(--_shadow-highlight);
-		border: var(--border-size-1) solid transparent;
-		/* text-indent: 10ch;  what is this doing for the SVG?? */
-		/* overflow: hidden; */
-		padding: 0;
-		z-index: var(--layer-1);
-		transition: opacity 0.5s var(--ease-2) 0.5s;
-
-		@media (--motionOK) {
-			transition:
-				opacity 0.5s var(--ease-2) 0.5s,
-				transform 0.2s var(--ease-4),
-				box-shadow 0.2s var(--ease-4),
-				outline-offset 145ms var(--ease-2);
-		}
-
-		@media (--OSdark) {
-			--_shadow-highlight: var(--_shadow-highlight-dark);
-		}
-
-		&:hover {
-			--_shadow-size: 6px;
-		}
-
-		&.previous {
-			grid-column: 1;
-		}
-
-		&.next {
-			grid-column: 3;
-		}
-
-		[dir='rtl'] & > svg {
-			transform: rotateY(180deg);
-		}
-
-		&:disabled,
-		&:disabled > svg {
-			cursor: not-allowed;
-			transition-delay: 0s;
-			opacity: 0.25;
-		}
-
-		&:not(:disabled):is(:hover, :focus-visible) {
-			color: var(--link);
-		}
-
-		&:not(:disabled) svg > path {
-			@media (--motionOK) {
-				--_transform: translateX(var(--_x)) scale(0.95);
-				transition: transform 0.5s var(--ease-squish-3);
-				transform-origin: center center;
-			}
-		}
-
-		&:global([aria-label='Next Item']):not(:disabled):is(:hover, :focus-visible) svg > path {
-			--_x: 2px;
-			transform: var(--_transform);
-		}
-
-		&:global([aria-label='Previous Item']):not(:disabled):is(:hover, :focus-visible) svg > path {
-			--_x: -2px;
-			transform: var(--_transform);
-		}
-
-		&.marker {
-			inline-size: var(--size-3);
-			border: var(--border-size-1) solid transparent;
-			background-color: var(--color-gray-500);
-			transition:
-				transform 0.2s var(--ease-4),
-				background-color 0.2s var(--ease-4);
-			&:where([aria-selected='true']) {
-				background: var(--color-gray-900);
-				transform: scale(1.2);
-				@media (prefers-color-scheme: dark) {
-					background: var(--color-gray-200);
+				& > .arrow-controls {
+					display: none;
 				}
 			}
 
-			&:where([aria-selected='false']) {
-				/* transform: scale(0.75); */
+			&:global([data-carousel-scrollbar='none']) {
+				--_carousel-pagination-size: var(--size-5);
+
+				& > .gui-carousel--scroller {
+					scrollbar-width: none;
+
+					&::-webkit-scrollbar {
+						display: none;
+					}
+				}
+
+				& > nav.pagination {
+					place-self: start center;
+				}
 			}
 
-			&.gallery {
-				inline-size: var(--size-fluid-5);
-				border-radius: var(--radius-2);
-				border: none;
-				background-origin: border-box;
-				background-size: cover;
+			&:global([data-carousel-snapstop='always']) .gui-carousel-item.snap {
+				scroll-snap-stop: always;
 			}
 		}
-	}
 
-	nav.pagination {
-		grid-column: 1/-1;
-		place-self: center;
+		.gui-carousel--scroller {
+			grid-row: 1;
+			grid-column: 1/-1;
 
-		display: grid;
-		grid-auto-flow: column;
-		gap: var(--size-2);
+			display: grid;
+			grid-auto-columns: 100%;
+			grid-auto-flow: column;
+			align-items: center;
+			gap: var(--_carousel-gutters);
 
-		max-inline-size: 100%;
-		overflow-x: auto;
-		overscroll-behavior-x: contain;
+			padding-block: var(--size-2) var(--_carousel-scrollbar-gutter);
+			overflow-x: auto;
+			overscroll-behavior-x: contain;
+			scroll-snap-type: x proximity;
+			scroll-padding-inline: var(--_carousel-gutters);
+			padding-inline: var(--_carousel-gutters);
 
-		padding-block: var(--size-2);
-		padding-inline: var(--size-4);
-
-		scrollbar-width: none;
-
-		&::-webkit-scrollbar {
-			display: none;
+			@media (--motionOK) {
+				scroll-behavior: smooth;
+			}
 		}
 
-		@media (--motionOK) {
-			scroll-behavior: smooth;
-		}
-
-		:where([data-carousel-pagination='gallery']) & {
-			margin-block-end: 0;
-		}
-	}
-
-	@keyframes gui-carousel--control-keypress {
-		0% {
-			outline-offset: 5px;
-		}
-		50% {
-			outline-offset: 0;
-		}
-	}
-
-	@keyframes carousel-scrollstart {
-		from {
+		.gui-carousel-item.snap {
 			scroll-snap-align: center;
 		}
-		to {
-			scroll-snap-align: unset;
+
+		.arrow-controls {
+			display: flex;
+			justify-content: space-between;
+			padding-inline: var(--_carousel-gutters);
+			display: contents;
+
+			& > .carousel-control.arrow {
+				/* margin-block-end: var(--_carousel-scrollbar-gutter); */ /* not sure I really need this */
+				transition: transform 0.2s var(--ease-4);
+
+				&:not(:disabled):active {
+					transform: scale(0.9);
+				}
+			}
+		}
+
+		.carousel-control {
+			--_shadow-size: 0;
+			--_shadow-highlight-light: hsl(0 0% 50% / 10%);
+			--_shadow-highlight-dark: hsl(0 0% 100% / 20%);
+			--_shadow-highlight: var(--_shadow-highlight-light);
+
+			grid-row: 1;
+			place-self: center;
+			background: var(--surface-1);
+			color: var(--text-2);
+			aspect-ratio: var(--ratio-square);
+			border-radius: var(--radius-round);
+			box-shadow: 0 0 0 var(--_shadow-size) var(--_shadow-highlight);
+			border: var(--border-size-1) solid transparent;
+			/* text-indent: 10ch;  what is this doing for the SVG?? */
+			/* overflow: hidden; */
+			padding: 0;
+			z-index: var(--layer-1);
+			transition: opacity 0.5s var(--ease-2) 0.5s;
+
+			@media (--motionOK) {
+				transition:
+					opacity 0.5s var(--ease-2) 0.5s,
+					transform 0.2s var(--ease-4),
+					box-shadow 0.2s var(--ease-4),
+					outline-offset 145ms var(--ease-2);
+			}
+
+			@media (--OSdark) {
+				--_shadow-highlight: var(--_shadow-highlight-dark);
+			}
+
+			&:hover {
+				--_shadow-size: 6px;
+			}
+
+			&.previous {
+				grid-column: 1;
+			}
+
+			&.next {
+				grid-column: 3;
+			}
+
+			[dir='rtl'] & > svg {
+				transform: rotateY(180deg);
+			}
+
+			&:disabled,
+			&:disabled > svg {
+				cursor: not-allowed;
+				transition-delay: 0s;
+				opacity: 0.25;
+			}
+
+			&:not(:disabled):is(:hover, :focus-visible) {
+				color: var(--link);
+			}
+
+			&:not(:disabled) svg > path {
+				@media (--motionOK) {
+					--_transform: translateX(var(--_x)) scale(0.95);
+					transition: transform 0.5s var(--ease-squish-3);
+					transform-origin: center center;
+				}
+			}
+
+			&:global([aria-label='Next Item']):not(:disabled):is(:hover, :focus-visible) svg > path {
+				--_x: 2px;
+				transform: var(--_transform);
+			}
+
+			&:global([aria-label='Previous Item']):not(:disabled):is(:hover, :focus-visible) svg > path {
+				--_x: -2px;
+				transform: var(--_transform);
+			}
+
+			&.marker {
+				inline-size: var(--size-3);
+				border: var(--border-size-1) solid transparent;
+				background-color: var(--color-gray-500);
+				transition:
+					transform 0.2s var(--ease-4),
+					background-color 0.2s var(--ease-4);
+				&:where([aria-selected='true']) {
+					background: var(--color-gray-900);
+					transform: scale(1.2);
+					@media (prefers-color-scheme: dark) {
+						background: var(--color-gray-200);
+					}
+				}
+
+				&:where([aria-selected='false']) {
+					/* transform: scale(0.75); */
+				}
+
+				&.gallery {
+					inline-size: var(--size-fluid-5);
+					border-radius: var(--radius-2);
+					border: none;
+					background-origin: border-box;
+					background-size: cover;
+				}
+			}
+		}
+
+		nav.pagination {
+			grid-column: 1/-1;
+			place-self: center;
+
+			display: grid;
+			grid-auto-flow: column;
+			gap: var(--size-2);
+
+			max-inline-size: 100%;
+			overflow-x: auto;
+			overscroll-behavior-x: contain;
+
+			padding-block: var(--size-2);
+			padding-inline: var(--size-4);
+
+			scrollbar-width: none;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			@media (--motionOK) {
+				scroll-behavior: smooth;
+			}
+
+			:where([data-carousel-pagination='gallery']) & {
+				margin-block-end: 0;
+			}
+		}
+
+		@keyframes gui-carousel--control-keypress {
+			0% {
+				outline-offset: 5px;
+			}
+			50% {
+				outline-offset: 0;
+			}
+		}
+
+		@keyframes carousel-scrollstart {
+			from {
+				scroll-snap-align: center;
+			}
+			to {
+				scroll-snap-align: unset;
+			}
 		}
 	}
 </style>

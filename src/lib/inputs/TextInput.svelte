@@ -79,8 +79,8 @@
 		{onconfirm}
 		{onkeypress}
 		type={'text'}
-		class={['text-input rounded-[inherit]', input_attributes.class]}
 		{...input_attributes}
+		class={['text-input rounded-[inherit]', input_attributes?.class]}
 	/>
 	{#key placeholder_props}
 		<Placeholder bind:placeholder_element {...placeholder_props} />
@@ -161,57 +161,58 @@
 		}
 	}
 	@layer common.input.button {
-		:global(:is(._cancel-btn.value, ._confirm-btn.value)) {
-			opacity: 0.5;
-		}
-		:global(:is(._cancel-btn.value, ._confirm-btn.value):where(:hover, :focus-visible)) {
-			opacity: 1;
-		}
-		:global(:is(._cancel-btn, ._confirm-btn):where(:focus-visible)) {
-			outline: 1px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) solid;
-		}
-		:global(._cancel-btn) {
-			grid-area: cancel;
-			transform-origin: top right;
-			scale: 1 1;
-			border-bottom-right-radius: max(
-				calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
-				var(--input-border-radius, 1em)
-			);
-		}
-		:global(._cancel-btn:not(.value)) {
-			scale: 0 1;
-		}
-		:global(._cancel-btn:is(.no-confirm), :not(.valid)._cancel-btn) {
-			box-sizing: border-box;
-			margin-bottom: 0;
-			/* padding: calc(var(--max-width) / 3.5) calc(var(--max-width) / 3); */
-			max-height: 100%;
-			height: 100%;
-			justify-self: end;
-			margin-right: 0;
-			aspect-ratio: unset;
-			border-top-right-radius: max(
-				calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
-				var(--input-border-radius, 1em)
-			);
-		}
+		._btn-container {
+			& :global(:is(._cancel-btn.value, ._confirm-btn.value)) {
+				opacity: 0.5;
+			}
+			& :global(:is(._cancel-btn.value, ._confirm-btn.value):where(:hover, :focus-visible)) {
+				opacity: 1;
+			}
+			& :global(:is(._cancel-btn, ._confirm-btn):where(:focus-visible)) {
+				outline: 1px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) solid;
+			}
+			& :global(._cancel-btn) {
+				grid-area: cancel;
+				transform-origin: top right;
+				scale: 1 1;
+				border-bottom-right-radius: max(
+					calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
+					var(--input-border-radius, 1em)
+				);
+			}
+			& :global(._cancel-btn:not(.value)) {
+				scale: 0 1;
+			}
+			& :global(._cancel-btn:is(.no-confirm, :not(.valid))) {
+				box-sizing: border-box;
+				margin-bottom: 0;
+				max-height: 100%;
+				height: 100%;
+				justify-self: end;
+				margin-right: 0;
+				aspect-ratio: unset;
+				border-top-right-radius: max(
+					calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
+					var(--input-border-radius, 1em)
+				);
+			}
 
-		:global(._confirm-btn) {
-			grid-area: confirm;
-			transform-origin: top right;
-			border-top-right-radius: max(
-				calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
-				var(--input-border-radius, 1em)
-			);
-		}
-		:global(._confirm-btn:not(.valid)) {
-			display: none;
-			pointer-events: none;
-			opacity: 0;
-			scale: 1 0;
-			padding: 0;
-			height: 0;
+			& :global(._confirm-btn) {
+				grid-area: confirm;
+				transform-origin: top right;
+				border-top-right-radius: max(
+					calc(var(--input-border-radius, 1em) - var(--input-padding, 1.25em)),
+					var(--input-border-radius, 1em)
+				);
+			}
+			& :global(._confirm-btn:not(.valid)) {
+				display: none;
+				pointer-events: none;
+				opacity: 0;
+				scale: 1 0;
+				padding: 0;
+				height: 0;
+			}
 		}
 	}
 </style>

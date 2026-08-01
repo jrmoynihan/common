@@ -14,9 +14,9 @@
 		valid?: boolean;
 		/** Parameters for the transition. */
 		transition_parameters?: SvelteTransitionParams;
-		invalid_msg_snippet?: Snippet;
+		invalid_msg_snippet?: Snippet | null;
 		/** A snippet for the content of the label. Defaults to a simple <div> that contains the `text` with a class to position it. */
-		label_snippet?: Snippet;
+		label_snippet?: Snippet | null;
 		/** The Svelte transition to use for the label */
 		transition?: SvelteTransition;
 	}
@@ -68,20 +68,14 @@
 	{#if position === 'after'}
 		{@render label_snippet?.()}
 	{/if}
-	<invalid>
-		{@render invalid_msg_snippet()}
-	</invalid>
+	{#if invalid_msg_snippet}
+		<invalid>
+			{@render invalid_msg_snippet()}
+		</invalid>
+	{/if}
 </label>
 
 <style>
-	@layer common.input {
-		@scope (label) {
-			:global(input) {
-				grid-area: input; /* Will overlap with the placeholder; */
-			}
-		}
-	}
-
 	@layer common.input.input_label {
 		label._label-container {
 			--default-input-label-hover-background-color: oklch(
@@ -137,7 +131,7 @@
 			&:hover {
 				background-color: var(--input-label-hover-background-color);
 			}
-			&:has(> input:focus-visible:not(:disabled)) {
+			&:has(> :global(input:focus-visible:not(:disabled))) {
 				background-color: var(
 					--input-label-focus-background-color,
 					oklch(from var(--default-input-label-hover-background-color) l c h / 1)

@@ -45,8 +45,8 @@
 
 <label
 	for={`toggle-${id}`}
-	class={['label-text pointer', label_attributes?.class]}
 	{...label_attributes}
+	class={['label-text pointer', label_attributes?.class]}
 >
 	{#if label_position === 'before'}
 		{#if children}
@@ -79,106 +79,108 @@
 </label>
 
 <style>
-	/* The switch - the box around the slider */
-	.switch,
-	.label-text {
-		--toggle-scale: 1rem;
-		position: relative;
-		display: flex;
-		align-self: center;
-		align-items: center;
-		width: calc(var(--toggle-scale) * 3);
-	}
-	.label-text {
-		justify-content: center;
-		padding-inline: 0.25rem;
-		width: auto;
-		gap: 0.2rem;
-		flex-wrap: wrap;
-		&:has(input:focus-visible) {
-			outline: solid 1px
-				var(--toggle-button-focus-color, var(--toggleBgColorActive, -webkit-focus-ring-color));
+	@layer common.toggle_switch {
+		/* The switch - the box around the slider */
+		.switch,
+		.label-text {
+			--toggle-scale: 1rem;
+			position: relative;
+			display: flex;
+			align-self: center;
+			align-items: center;
+			width: calc(var(--toggle-scale) * 3);
 		}
-		&:hover,
-		&:focus-visible {
-			color: var(--label-text-hover-color, inherit);
-		}
-		&:hover:has(input) {
-			& > .switch > .slider {
-				outline: 1px solid fieldtext;
+		.label-text {
+			justify-content: center;
+			padding-inline: 0.25rem;
+			width: auto;
+			gap: 0.2rem;
+			flex-wrap: wrap;
+			&:has(input:focus-visible) {
+				outline: solid 1px
+					var(--toggle-button-focus-color, var(--toggleBgColorActive, -webkit-focus-ring-color));
 			}
-			&:checked > .switch > .slider {
+			&:hover,
+			&:focus-visible {
+				color: var(--label-text-hover-color, inherit);
+			}
+			&:hover:has(input) {
+				& > .switch > .slider {
+					outline: 1px solid fieldtext;
+				}
+				&:checked > .switch > .slider {
+					background-color: var(--toggleBgColorActiveHovered, hsl(207, 90%, 34%));
+				}
+			}
+		}
+		.switch {
+			background: transparent;
+			box-shadow: none;
+			border: none;
+			border-radius: 1em;
+			height: var(--toggle-height, calc(var(--toggle-scale) * 1.7));
+		}
+		/* The round slider */
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: var(--inactiveBgColor, hsl(0, 0%, 27%));
+			transition: outline;
+			transition-delay: 1s;
+			outline-offset: 1.5px;
+			&.round {
+				border-radius: var(--toggle-height, calc(var(--toggle-scale) * 1.7));
+				padding: 1px;
+				&:before {
+					border-radius: 50%;
+				}
+			}
+		}
+		.slider:before {
+			position: absolute;
+			content: attr(data-slider-text);
+			display: grid;
+			place-content: center;
+			font-size: 0.9em;
+			/* These new responsive sizes allow for asymmetrical toggle sliders when resizing the window*/
+			height: var(--slider-height, var(--toggle-scale));
+			width: var(--slider-width, var(--toggle-scale));
+			left: 10%;
+			top: 20%;
+			background-color: var(--slider-color, white);
+			-webkit-transition: all 300ms ease-in-out;
+			transition: all 300ms ease-in-out;
+		}
+		.slider:hover {
+			background-color: var(--inactiveBgColorDarken, hsl(0, 0%, 27%));
+		}
+
+		input {
+			height: 0;
+			width: 0;
+			box-shadow: none !important;
+			border: none !important;
+
+			&:checked + .switch > .slider {
+				background-color: var(--toggleBgColorActive, hsl(207, 90%, 54%));
+				&:hover {
+					background-color: var(--toggleBgColorActiveHovered, hsl(207, 90%, 34%));
+				}
+				&:before {
+					translate: var(--slider-transform, 130%) 0 0;
+				}
+			}
+			&:disabled + .switch > .slider {
 				background-color: var(--toggleBgColorActiveHovered, hsl(207, 90%, 34%));
 			}
 		}
-	}
-	.switch {
-		background: transparent;
-		box-shadow: none;
-		border: none;
-		border-radius: 1em;
-		height: var(--toggle-height, calc(var(--toggle-scale) * 1.7));
-	}
-	/* The round slider */
-	.slider {
-		position: absolute;
-		cursor: pointer;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-color: var(--inactiveBgColor, hsl(0, 0%, 27%));
-		transition: outline;
-		transition-delay: 1s;
-		outline-offset: 1.5px;
-		&.round {
-			border-radius: var(--toggle-height, calc(var(--toggle-scale) * 1.7));
-			padding: 1px;
-			&:before {
-				border-radius: 50%;
-			}
-		}
-	}
-	.slider:before {
-		position: absolute;
-		content: attr(data-slider-text);
-		display: grid;
-		place-content: center;
-		font-size: 0.9em;
-		/* These new responsive sizes allow for asymmetrical toggle sliders when resizing the window*/
-		height: var(--slider-height, var(--toggle-scale));
-		width: var(--slider-width, var(--toggle-scale));
-		left: 10%;
-		top: 20%;
-		background-color: var(--slider-color, white);
-		-webkit-transition: all 300ms ease-in-out;
-		transition: all 300ms ease-in-out;
-	}
-	.slider:hover {
-		background-color: var(--inactiveBgColorDarken, hsl(0, 0%, 27%));
-	}
 
-	input {
-		height: 0;
-		width: 0;
-		box-shadow: none !important;
-		border: none !important;
-
-		&:checked + .switch > .slider {
-			background-color: var(--toggleBgColorActive, hsl(207, 90%, 54%));
-			&:hover {
-				background-color: var(--toggleBgColorActiveHovered, hsl(207, 90%, 34%));
-			}
-			&:before {
-				translate: var(--slider-transform, 130%) 0 0;
-			}
+		.pointer {
+			cursor: pointer;
 		}
-		&:disabled + .switch > .slider {
-			background-color: var(--toggleBgColorActiveHovered, hsl(207, 90%, 34%));
-		}
-	}
-
-	.pointer {
-		cursor: pointer;
 	}
 </style>

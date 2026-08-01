@@ -45,10 +45,13 @@ class BaseTooltipProps {
 	 * @default true
 	 */
 	show_arrow? = $state<boolean>(true);
-	/** Dynamic styles that can change on the tooltip.  Note: use '--tooltip'-prefixed CSS custom properties wherever possible (e.g. --tooltip-background: 'white' instead 	 background: 'white').
+	/** Dynamic styles on the tip. Prefer `--tooltip-*` custom properties (e.g. `--tooltip-background: white`).
+	 * Also accepts the legacy `styles` key when spreading into the attachment.
 	 * @default ''
 	 */
 	style? = $state<string>('');
+	/** @deprecated Use `style` instead. */
+	styles? = $state<string>('');
 	/** The tooltip's distance from the anchor element. Numbers will be converted to `px`. Strings will be passed as CSS property values.
 	 * @default 10
 	 */
@@ -61,14 +64,15 @@ class BaseTooltipProps {
 	 * @default true
 	 */
 	fallback? = $state<boolean>(true);
-	constructor({ ...args }: Partial<BaseTooltipProps>) {
+	constructor({ ...args }: Partial<BaseTooltipProps> & { styles?: string }) {
 		this.position = args.position ?? 'top';
 		this.id = args.id ?? crypto.randomUUID();
 		this.visible = args.visible ?? false;
 		this.disabled = args.disabled ?? false;
 		this.keep_visible = args.keep_visible ?? false;
 		this.show_arrow = args.show_arrow ?? true;
-		this.style = args.style ?? '';
+		this.style = args.style ?? args.styles ?? '';
+		this.styles = args.styles ?? '';
 		this.distance = args.distance ?? 10;
 		this.inert = args.inert ?? true;
 		this.fallback = args.fallback ?? true;

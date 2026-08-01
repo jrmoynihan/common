@@ -8,6 +8,28 @@
 
 <!--
 @component
+CSS Anchor Positioning tooltip.
+
+Public CSS custom properties (set on the tip via `style` / inherited from a parent):
+
+**Tip chrome**
+- `--tooltip-background`, `--tooltip-color`, `--tooltip-border`, `--tooltip-border-radius`
+- `--tooltip-padding`, `--tooltip-font-size`, `--tooltip-font-weight`, `--tooltip-font-family`
+- `--tooltip-drop-shadow`, `--tooltip-z-index`, `--tooltip-transition`, `--tooltip-gap`
+- `--tooltip-display`, `--tooltip-place-items` (layout of tip *content*; does not move the arrow)
+- `--distance` (gap from the anchor; also settable via the `distance` prop)
+
+**Arrow**
+- `--tooltip-arrow-size` — primary size token (default `0.5rem`)
+- `--tooltip-arrow-width` — depth along the pointing axis (defaults to `--tooltip-arrow-size`)
+- `--tooltip-arrow-height` — half of the cross-axis base (defaults to `--tooltip-arrow-size`; full base = `2 × height`)
+- `--tooltip-arrow-cushion` — how far the arrow overlaps the tip edge (default `0px`)
+- `--tooltip-arrow-offset` — cross-axis nudge from center (default `0px`; positive = toward end/bottom)
+- `--tooltip-arrow-color` — defaults to `--tooltip-background`
+
+Legacy aliases (still honored): `--default-arrow-size` → size, `--arrow-cushion` → cushion,
+`--tooltip-shadow` → arrow drop-shadow, `--tooltip-background-color` → background.
+
 https://web.dev/building-a-tooltip-component/
 -->
 
@@ -22,7 +44,7 @@ https://web.dev/building-a-tooltip-component/
 		visible = false,
 		show_arrow = true,
 		keep_visible = false,
-		styles = '',
+		style = '',
 		distance = 10,
 		inert = true,
 		disabled = false,
@@ -31,6 +53,85 @@ https://web.dev/building-a-tooltip-component/
 	}: TooltipProps = $props();
 
 	let tooltip: HTMLElement | undefined = $state(undefined);
+
+	const tip_style = $derived(
+		[style, typeof attributes.style === 'string' ? attributes.style : ''].filter(Boolean).join('; ')
+	);
+
+	/** Fallback arrow rules when `position-try` flips the tip. Uses `:where()` so consumers can override without fighting ID specificity. */
+	function tooltipFallbackCss() {
+		return `
+	@container anchored(fallback: --tooltip-bottom) {
+		:where(#tooltip-${id}) > .arrow {
+			width: var(--_arrow-base);
+			height: var(--_arrow-length);
+			left: calc(50% + var(--_arrow-offset));
+			right: auto;
+			translate: -50% 0;
+			top: calc(-1 * var(--_arrow-length));
+		}
+		:where(#tooltip-${id}) > .arrow::after {
+			border-color: transparent;
+			border-bottom: var(--_arrow-fill-border);
+			border-top-style: unset;
+			border-left: var(--_arrow-clear-border);
+			border-right: var(--_arrow-clear-border);
+		}
+	}
+
+	@container anchored(fallback: --tooltip-top) {
+		:where(#tooltip-${id}) > .arrow {
+			width: var(--_arrow-base);
+			height: var(--_arrow-length);
+			left: calc(50% + var(--_arrow-offset));
+			right: auto;
+			translate: -50% 0;
+			top: calc(100% - var(--_arrow-cushion));
+		}
+		:where(#tooltip-${id}) > .arrow::after {
+			border-color: transparent;
+			border-top: var(--_arrow-fill-border);
+			border-bottom-style: unset;
+			border-left: var(--_arrow-clear-border);
+			border-right: var(--_arrow-clear-border);
+		}
+	}
+
+	@container anchored(fallback: --tooltip-left) {
+		:where(#tooltip-${id}) > .arrow {
+			width: var(--_arrow-length);
+			height: var(--_arrow-base);
+			top: calc(50% + var(--_arrow-offset));
+			translate: 0 -50%;
+			left: calc(100% - var(--_arrow-cushion));
+		}
+		:where(#tooltip-${id}) > .arrow::after {
+			border-color: transparent;
+			border-left: var(--_arrow-fill-border);
+			border-right-style: unset;
+			border-top: var(--_arrow-clear-border);
+			border-bottom: var(--_arrow-clear-border);
+		}
+	}
+
+	@container anchored(fallback: --tooltip-right) {
+		:where(#tooltip-${id}) > .arrow {
+			width: var(--_arrow-length);
+			height: var(--_arrow-base);
+			top: calc(50% + var(--_arrow-offset));
+			translate: 0 -50%;
+			left: calc(-1 * var(--_arrow-length));
+		}
+		:where(#tooltip-${id}) > .arrow::after {
+			border-color: transparent;
+			border-right: var(--_arrow-fill-border);
+			border-left-style: unset;
+			border-top: var(--_arrow-clear-border);
+			border-bottom: var(--_arrow-clear-border);
+		}
+	}
+	`;
+	}
 </script>
 
 <!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. a 'toggle-tip' -->
@@ -43,6 +144,7 @@ https://web.dev/building-a-tooltip-component/
 	style:--anchor={id}
 	style:--distance={typeof distance === 'number' ? `${distance}px` : distance}
 	{...attributes}
+	style={tip_style || undefined}
 	role="tooltip"
 	id={`tooltip-${id}`}
 	anchor={id}
@@ -61,7 +163,7 @@ https://web.dev/building-a-tooltip-component/
 	{/if}
 
 	{#if show_arrow}
-		<tooltip-arrow class="arrow" data-tip-position={position}> </tooltip-arrow>
+		<tooltip-arrow class="arrow" data-tip-position={position}></tooltip-arrow>
 	{/if}
 </tool-tip>
 
@@ -69,81 +171,7 @@ https://web.dev/building-a-tooltip-component/
 	https://github.com/parcel-bundler/lightningcss/issues/1176
 -->
 <svelte:head>
-	{@html `'<sty' + 'le>' + 
-		${`@container anchored(fallback: --tooltip-bottom) {
-		#tooltip-${id} .arrow {
-			width: var(--side-arrow-base);
-				height: var(--side-arrow-length);
-			left: auto;
-			right: auto;
-			top: calc(
-				-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 *
-					var(--arrow-cushion, 4px)
-			);
-
-			&::after {
-				border-color: transparent;
-				border-bottom: var(--arrow-border-and-color);
-				border-top-style: unset;
-				border-left: var(--arrow-transparent-border);
-				border-right: var(--arrow-transparent-border);
-			}
-		}
-	}
-
-	@container anchored(fallback: --tooltip-top) {
-		#tooltip-${id} .arrow {
-			width: var(--side-arrow-base);
-			height: var(--side-arrow-length);
-			left: auto;
-			right: auto;
-			top: calc(100% + -1 * var(--arrow-cushion, 0px));
-
-			&::after {
-				border-color: transparent;
-				border-top: var(--arrow-border-and-color);
-				border-bottom-style: unset;
-				border-left: var(--arrow-transparent-border);
-				border-right: var(--arrow-transparent-border);
-			}
-		}
-	}
-
-	@container anchored(fallback: --tooltip-left) {
-		#tooltip-${id} .arrow {
-			width: var(--side-arrow-length);
-			height: var(--side-arrow-base);
-			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
-			left: calc(100% + -1 * var(--arrow-cushion, 0px));
-
-			&::after {
-				border-color: transparent;
-				border-left: var(--arrow-border-and-color);
-				border-right-style: unset;
-				border-top: var(--arrow-transparent-border);
-				border-bottom: var(--arrow-transparent-border);
-			}
-		}
-	}
-
-	@container anchored(fallback: --tooltip-right) {
-		#tooltip-${id} .arrow {
-			width: var(--side-arrow-length);
-			height: var(--side-arrow-base);
-			top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
-			left: calc(-1 * var(--tooltip-arrow-width, 0.75rem) + -1 * var(--arrow-cushion, 0px));
-
-			&::after {
-				border-color: transparent;
-				border-right: var(--arrow-border-and-color);
-				border-left-style: unset;
-				border-top: var(--arrow-transparent-border);
-				border-bottom: var(--arrow-transparent-border);
-			}
-		}
-	}
-		</style>
-			`}`}
+	{@html '<sty' + 'le>' + tooltipFallbackCss() + '</' + 'style>'}
 </svelte:head>
 
 <style>
@@ -192,7 +220,7 @@ https://web.dev/building-a-tooltip-component/
 			box-sizing: border-box;
 			border: var(--tooltip-border, 1px solid #ddd);
 			filter: drop-shadow(var(--tooltip-drop-shadow, 1px 1px 4px hsla(0, 0%, 0%, 0.5)));
-			background: var(--tooltip-background, white);
+			background: var(--tooltip-background, var(--tooltip-background-color, white));
 			border-radius: var(--tooltip-border-radius, 4px);
 			padding: var(--tooltip-padding, 0.5rem);
 			font-size: var(--tooltip-font-size, 0.5rem);
@@ -201,10 +229,9 @@ https://web.dev/building-a-tooltip-component/
 			pointer-events: var(--tooltip-pointer-events, none);
 			user-select: var(--tooltip-user-select, none);
 			transform: var(--tooltip-transform);
-			display: var(--tooltip-display, grid-lanes);
+			display: var(--tooltip-display, grid);
 			place-items: var(--tooltip-place-items, center);
 			gap: var(--tooltip-gap, 0.25rem);
-			opacity: var(--tooltip-opacity, 1);
 			color: var(--tooltip-color, var(--text, inherit));
 			text-align: var(--tooltip-text-align, center);
 			text-wrap: var(--tooltip-text-wrap, pretty);
@@ -267,94 +294,98 @@ https://web.dev/building-a-tooltip-component/
 			}
 			&.visible {
 				scale: 1;
-				opacity: 1;
+				opacity: var(--tooltip-opacity, 1);
 			}
 		}
 
 		.arrow {
-			--side-arrow-length: calc(
-				var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) + var(--arrow-cushion, 4px)
+			/*
+			 * Resolved arrow tokens (private). Consumers set the public `--tooltip-arrow-*` vars
+			 * on `.tooltip` / ancestors; these internal names stay stable for fallback CSS too.
+			 */
+			--_arrow-size: var(--tooltip-arrow-size, var(--default-arrow-size, 0.5rem));
+			--_arrow-depth: var(--tooltip-arrow-width, var(--_arrow-size));
+			--_arrow-half-base: var(--tooltip-arrow-height, var(--_arrow-size));
+			--_arrow-base: calc(var(--_arrow-half-base) * 2);
+			--_arrow-cushion: var(--tooltip-arrow-cushion, var(--arrow-cushion, 0px));
+			--_arrow-offset: var(--tooltip-arrow-offset, 0px);
+			--_arrow-length: calc(var(--_arrow-depth) + var(--_arrow-cushion));
+			--_arrow-fill: var(
+				--tooltip-arrow-color,
+				var(--tooltip-background, var(--tooltip-background-color, white))
 			);
-			--side-arrow-base: calc(var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) * 2);
-			--arrow-transparent-border: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem))
-				solid transparent;
-			--arrow-border-and-color: var(--tooltip-arrow-width, var(--default-arrow-size, 0.5rem)) solid
-				var(
-					--tooltip-arrow-color,
-					var(--tooltip-background, var(--tooltip-background-color, white))
-				);
+			--_arrow-clear-border: var(--_arrow-depth) solid transparent;
+			--_arrow-fill-border: var(--_arrow-depth) solid var(--_arrow-fill);
+
 			position: absolute;
 			overflow: hidden;
-			&::after {
+			pointer-events: none;
+
+			&:after {
 				content: '';
 				position: absolute;
 				inset: 0;
 				filter: drop-shadow(var(--tooltip-shadow, 0px 0px 2px #bbb));
-				border-color: var(
-					--tooltip-arrow-color,
-					var(--tooltip-background, var(--tooltip-background-color, white))
-				);
-				border-width: var(--default-arrow-size, 0.5rem);
+				/* Tailwind preflight sets `border: 0 solid`; per-side borders below override. */
+				border-style: solid;
+				border-width: 0;
+				border-color: transparent;
 			}
 
+			/* Cross-axis centering is explicit so `--tooltip-display` / `--tooltip-place-items` do not move the arrow. */
 			&[data-tip-position='left'],
 			&[data-tip-position='right'] {
-				width: var(--side-arrow-length);
-				height: var(--side-arrow-base);
-				top: calc(50% - var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)));
+				width: var(--_arrow-length);
+				height: var(--_arrow-base);
+				top: calc(50% + var(--_arrow-offset));
+				translate: 0 -50%;
 
-				&::after {
-					border-top: var(--arrow-transparent-border);
-					border-bottom: var(--arrow-transparent-border);
+				&:after {
+					border-top: var(--_arrow-clear-border);
+					border-bottom: var(--_arrow-clear-border);
 				}
 			}
 			&[data-tip-position='bottom'],
 			&[data-tip-position='top'] {
-				width: var(--side-arrow-base);
-				height: var(--side-arrow-length);
+				width: var(--_arrow-base);
+				height: var(--_arrow-length);
+				left: calc(50% + var(--_arrow-offset));
+				translate: -50% 0;
 
-				&::after {
-					border-left: var(--arrow-transparent-border);
-					border-right: var(--arrow-transparent-border);
+				&:after {
+					border-left: var(--_arrow-clear-border);
+					border-right: var(--_arrow-clear-border);
 				}
 			}
 			&[data-tip-position='bottom'] {
-				top: calc(
-					-1 * var(--tooltip-arrow-height, var(--default-arrow-size, 0.5rem)) + -1 *
-						var(--arrow-cushion, 4px)
-				);
-				/* overlap with the tooltip box */
+				top: calc(-1 * var(--_arrow-length));
 
-				&::after {
-					border-bottom: var(--arrow-border-and-color);
-					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
+				&:after {
+					border-bottom: var(--_arrow-fill-border);
 					border-top-style: unset;
 				}
 			}
 			&[data-tip-position='top'] {
-				top: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
+				top: calc(100% - var(--_arrow-cushion));
 
-				&::after {
-					border-top: var(--arrow-border-and-color);
-					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
+				&:after {
+					border-top: var(--_arrow-fill-border);
 					border-bottom-style: unset;
 				}
 			}
 			&[data-tip-position='left'] {
-				left: calc(100% + -1 * var(--arrow-cushion, 0px)); /* overlap with the tooltip box */
+				left: calc(100% - var(--_arrow-cushion));
 
-				&::after {
-					border-left: var(--arrow-border-and-color);
-					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
+				&:after {
+					border-left: var(--_arrow-fill-border);
 					border-right-style: unset;
 				}
 			}
 			&[data-tip-position='right'] {
-				left: calc(-1 * var(--tooltip-arrow-width, 0.75rem) + -1 * var(--arrow-cushion, 0px));
+				left: calc(-1 * var(--_arrow-length));
 
-				&::after {
-					border-right: var(--arrow-border-and-color);
-					/* Tailwind's base layer will set `border: 0 solid;` which needs an override on a subsequent layer to avoid this ruining the CSS triangle drawing. */
+				&:after {
+					border-right: var(--_arrow-fill-border);
 					border-left-style: unset;
 				}
 			}

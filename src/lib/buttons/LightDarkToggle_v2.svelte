@@ -103,12 +103,12 @@ However, you can also use the `:global` selector to apply a CSS rules for a give
 <button
 	bind:this={toggle_button}
 	onclick={toggle}
-	class="color-scheme-toggle"
 	id="color-scheme-toggle"
+	{...button_attributes}
+	class="color-scheme-toggle"
 	title="Toggles light & dark"
 	aria-label="auto"
 	aria-live="polite"
-	{...button_attributes}
 >
 	<svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
 		<circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />

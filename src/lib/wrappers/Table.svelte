@@ -319,7 +319,7 @@
 	</tfoot>
 {/snippet}
 
-<table style:--caption-side={caption_side} {...rest}>
+<table style:--caption-side={caption_side} {...rest} class={['_table', rest?.class]}>
 	{#if caption_text}
 		{@render caption?.(caption_text)}
 	{/if}
@@ -348,7 +348,7 @@
 
 <style module="mixed">
 	@layer common.table {
-		table {
+		table._table {
 			--table-border-color: hsla(0, 0%, 80%, 0.3);
 			--table-cell-padding-inline: 0.5rem;
 			--table-cell-padding-block: 0.25rem;
@@ -371,6 +371,12 @@
 			& > tbody {
 				white-space: nowrap;
 			}
+			& :global(tr:last-child > td:first-child) {
+				border-bottom-left-radius: var(--table-border-radius, inherit);
+			}
+			& :global(tr:last-child > td:last-child) {
+				border-bottom-right-radius: var(--table-border-radius, inherit);
+			}
 		}
 		thead {
 			position: sticky;
@@ -392,12 +398,6 @@
 		}
 		th:last-child {
 			border-top-right-radius: var(--table-border-radius, inherit);
-		}
-		:global(tr:last-child > td:first-child) {
-			border-bottom-left-radius: var(--table-border-radius, inherit);
-		}
-		:global(tr:last-child > td:last-child) {
-			border-bottom-right-radius: var(--table-border-radius, inherit);
 		}
 
 		th {

@@ -1,8 +1,18 @@
 <script lang="ts" module>
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
-	import { SortState, type DataColumn, type FilterState, type FilterUI } from './data_grid_state.svelte';
-	export { SortState, type DataColumn, type FilterState, type FilterUI } from './data_grid_state.svelte';
+	import {
+		SortState,
+		type DataColumn,
+		type FilterState,
+		type FilterUI
+	} from './data_grid_state.svelte';
+	export {
+		SortState,
+		type DataColumn,
+		type FilterState,
+		type FilterUI
+	} from './data_grid_state.svelte';
 
 	export interface DataGridProps<T> {
 		data: T[];
@@ -649,7 +659,7 @@
 							</div>
 						</div>
 					{:else}
-						<div class="header-top item-center grid justify-between gap-1">
+						<div class="header-top items-center grid justify-between gap-1">
 							<span>{col.title ?? String(col.key)}</span>
 							{#if col.sortable}
 								<button
@@ -678,9 +688,9 @@
 											show_cancel={false}
 											show_confirm={false}
 											style="border-style: inset;"
-											class="rounded-lg border-2 border-(--AZ-gold) bg-white px-1 py-0.5"
 											placeholder="Filter..."
 											bind:value={FILTERS[key].value}
+											class="rounded-lg border-2 bg-white px-1 py-0.5"
 										/>
 										{#if col.options}
 											<datalist id={`${key}-datalist`}>
@@ -694,7 +704,7 @@
 											<NumericInput
 												type="number"
 												label_props={{ class: 'hover:bg-transparent', placeholder: 'Min' }}
-												class="mx-1 rounded-lg border-2 border-(--AZ-gold) bg-white px-1 py-0.5"
+												class="mx-1 rounded-lg border-2 bg-white px-1 py-0.5"
 												style="border-style: inset;"
 												placeholder_props={{ placeholder: 'min', class: 'text-inherit' }}
 												bind:value={FILTERS[key].min}
@@ -703,7 +713,7 @@
 											<NumericInput
 												type="number"
 												label_props={{ class: 'hover:bg-transparent', placeholder: 'Max' }}
-												class="mx-1 rounded-lg border-2 border-(--AZ-gold) bg-white px-1 py-0.5"
+												class="mx-1 rounded-lg border-2 bg-white px-1 py-0.5"
 												style="border-style: inset;"
 												bind:value={FILTERS[key].max}
 												show_spinner_buttons={false}
@@ -712,9 +722,8 @@
 									{:else if col.type === 'finite' && col.options}
 										<Select
 											--input-label-hover-background-color="transparent"
-											class="m-0.5 rounded-xl border-2 border-(--AZ-gold) p-1 focus-within:outline-(--AZ-gold) focus-visible:outline-2"
+											class="m-0.5 rounded-xl border-2 p-1 focus-visible:outline-2"
 											style="border-style: inset;"
-											--input-valid-outline="1px inset var(--AZ-gold)"
 											bind:value={FILTERS[key].value}
 										>
 											<option value="">All</option>
@@ -783,229 +792,232 @@
 {/if}
 
 <style>
-	.data-grid-container {
-		display: grid;
-		grid-template-rows: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		overflow: auto;
-		max-width: 90%;
-		padding: 0 1rem 1rem;
-		box-sizing: border-box;
-	}
-	.data-grid-header,
-	.row-wrapper {
-		--gap: 0.5rem;
-		display: grid;
-		grid-template-columns: var(
-			--table-grid-template-columns,
-			repeat(var(--table-column-count), minmax(150px, 1fr))
-		);
-		align-items: center;
-		gap: var(--gap, 0.5rem);
-		min-width: 100%;
-		width: fit-content;
-	}
-	.header-cell,
-	.table-cell {
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	.data-grid-header {
-		padding-block: 1rem 0.5rem;
-		margin-block-end: 1rem;
-	}
-	.data-grid-footer {
-		background: linear-gradient(to top, var(--background) 80%, transparent 120%);
-	}
-	.header-cell {
-		font-weight: bold;
-	}
-	.header-top {
-		grid-template-columns: auto 1fr;
-	}
-	.data-grid-body {
-		flex: 1;
-		position: relative;
-	}
-
-	.row-wrapper {
-		border-radius: 0.5rem;
-		cursor: pointer;
-		border-bottom: 1px solid #eee;
-		transition:
-			background,
-			outline 0.2s;
-		align-items: center;
-		&:hover {
-			outline: 1.5px solid oklch(from var(--AZ-mulberry) calc(l * 0.8) calc(c * 1.3) h / 0.5);
-		}
-		&.even {
-			background: var(--even-row-background, var(--primary-20a));
-		}
-		&.selected,
-		&.selected:hover {
-			color: var(--light-text);
-			background: oklch(from var(--primary) calc(l * 0.8) calc(c * 1.3) h / 0.5);
-			border-left: 4px solid var(--primary, #2196f3);
-		}
-		& .table-cell {
-			max-width: 100%;
+	@layer common.data_grid {
+		.data-grid-container {
+			display: grid;
+			grid-template-rows: minmax(0, auto) minmax(0, 1fr) minmax(0, auto);
+			border: 1px solid #ccc;
+			border-radius: 8px;
 			overflow: auto;
-			padding-block: var(--cell-padding-block, var(--cell-padding, 0.5rem));
-			padding-inline: var(--cell-padding-inline, var(--cell-padding, var(--gap, 0.25rem)));
+			max-width: 90%;
+			padding: 0 1rem 1rem;
+			box-sizing: border-box;
 		}
-	}
-	.range {
-		display: flex;
-		gap: 0.25rem;
-	}
+		.data-grid-header,
+		.row-wrapper {
+			--gap: 0.5rem;
+			display: grid;
+			grid-template-columns: var(
+				--table-grid-template-columns,
+				repeat(var(--table-column-count), minmax(150px, 1fr))
+			);
+			align-items: center;
+			gap: var(--gap, 0.5rem);
+			min-width: 100%;
+			width: fit-content;
+		}
+		.header-cell,
+		.table-cell {
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.data-grid-header {
+			padding-block: 1rem 0.5rem;
+			margin-block-end: 1rem;
+		}
+		.data-grid-footer {
+			background: linear-gradient(to top, var(--background) 80%, transparent 120%);
+		}
+		.header-cell {
+			font-weight: bold;
+		}
+		.header-top {
+			grid-template-columns: auto 1fr;
+		}
+		.data-grid-body {
+			flex: 1;
+			position: relative;
+		}
 
-	.header-top-chip {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.35rem;
-	}
-	.filter-chip-popover-wrap {
-		display: inline-flex;
-		align-items: center;
-	}
-	.header-cell .filter-bar-chip {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.35rem;
-		padding: 0.25rem 0.5rem;
-		font-size: 0.8125rem;
-		font-weight: 400;
-		border-radius: var(--radius, 0.375rem);
-		border: 1px solid var(--primary, #2196f3);
-		background: var(--primary, #2196f3);
-		color: var(--light-text, #fff);
-		cursor: pointer;
-		transition:
-			background 0.15s ease,
-			border-color 0.15s ease;
-	}
-	.header-cell .filter-bar-chip:hover {
-		background: var(--primary-hover, oklch(from var(--primary) calc(l * 0.5) c h));
-		border-color: var(--primary-hover);
-	}
-	.header-cell .filter-bar-chip-active {
-		border-color: var(--light-primary, oklch(from var(--primary) calc(l * 0.35) c h));
-		background: var(--light-primary);
-	}
-	.header-cell .filter-bar-chip-summary {
-		font-size: 0.75rem;
-		opacity: 0.9;
-	}
-	.header-cell .filter-bar-chip-summary-below {
-		flex-direction: column;
-		align-items: flex-start;
-	}
-	.header-filter-chip-icon {
-		flex-shrink: 0;
-		width: 1rem;
-		height: 1rem;
-	}
-	.header-filter-string-input {
-		width: 100%;
-		min-width: 10rem;
-		padding: 0.35rem 0.5rem;
-		font-size: 0.875rem;
-		border: 1px solid var(--border-color, #ccc);
-		border-radius: var(--radius, 0.375rem);
-	}
-	@supports (top: anchor(bottom)) {
-		.header-filter-popover {
-			top: calc(anchor(bottom) + 6px);
-			justify-self: anchor-center;
+		.row-wrapper {
+			border-radius: 0.5rem;
+			cursor: pointer;
+			border-bottom: 1px solid #eee;
+			transition:
+				background,
+				outline 0.2s;
+			align-items: center;
+			&:hover {
+				outline: 1.5px solid
+					oklch(from var(--hover-outline-color, currentColor) calc(l * 0.8) calc(c * 1.3) h / 0.5);
+			}
+			&.even {
+				background: var(--even-row-background, var(--primary-20a));
+			}
+			&.selected,
+			&.selected:hover {
+				color: var(--light-text);
+				background: oklch(from var(--primary) calc(l * 0.8) calc(c * 1.3) h / 0.5);
+				border-left: 4px solid var(--primary, #2196f3);
+			}
+			& .table-cell {
+				max-width: 100%;
+				overflow: auto;
+				padding-block: var(--cell-padding-block, var(--cell-padding, 0.5rem));
+				padding-inline: var(--cell-padding-inline, var(--cell-padding, var(--gap, 0.25rem)));
+			}
 		}
-	}
-	.header-filter-popover {
-		position: fixed;
-		margin: unset;
-		min-width: 12rem;
-		max-width: min(90vw, 20rem);
-		max-height: min(70vh, 24rem);
-		overflow-y: auto;
-		background: var(--background, #fff);
-		border: 1px solid var(--border-color, #ddd);
-		border-radius: var(--radius, 0.5rem);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-		padding: 0.5rem;
-		transition-property: opacity, scale;
-		transition-duration: 0.2s;
-		opacity: 0;
-		scale: 0.98 1;
-	}
-	.header-filter-popover:popover-open {
-		opacity: 1;
-		scale: 1 1;
-	}
-	@starting-style {
+		.range {
+			display: flex;
+			gap: 0.25rem;
+		}
+
+		.header-top-chip {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 0.35rem;
+		}
+		.filter-chip-popover-wrap {
+			display: inline-flex;
+			align-items: center;
+		}
+		.header-cell .filter-bar-chip {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.35rem;
+			padding: 0.25rem 0.5rem;
+			font-size: 0.8125rem;
+			font-weight: 400;
+			border-radius: var(--radius, 0.375rem);
+			border: 1px solid var(--primary, #2196f3);
+			background: var(--primary, #2196f3);
+			color: var(--light-text, #fff);
+			cursor: pointer;
+			transition:
+				background 0.15s ease,
+				border-color 0.15s ease;
+		}
+		.header-cell .filter-bar-chip:hover {
+			background: var(--primary-hover, oklch(from var(--primary) calc(l * 0.5) c h));
+			border-color: var(--primary-hover);
+		}
+		.header-cell .filter-bar-chip-active {
+			border-color: var(--light-primary, oklch(from var(--primary) calc(l * 0.35) c h));
+			background: var(--light-primary);
+		}
+		.header-cell .filter-bar-chip-summary {
+			font-size: 0.75rem;
+			opacity: 0.9;
+		}
+		.header-cell .filter-bar-chip-summary-below {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+		.header-filter-chip-icon {
+			flex-shrink: 0;
+			width: 1rem;
+			height: 1rem;
+		}
+		.header-filter-string-input {
+			width: 100%;
+			min-width: 10rem;
+			padding: 0.35rem 0.5rem;
+			font-size: 0.875rem;
+			border: 1px solid var(--border-color, #ccc);
+			border-radius: var(--radius, 0.375rem);
+		}
+		@supports (top: anchor(bottom)) {
+			.header-filter-popover {
+				top: calc(anchor(bottom) + 6px);
+				justify-self: anchor-center;
+			}
+		}
 		.header-filter-popover {
+			position: fixed;
+			margin: unset;
+			min-width: 12rem;
+			max-width: min(90vw, 20rem);
+			max-height: min(70vh, 24rem);
+			overflow-y: auto;
+			background: var(--background, #fff);
+			border: 1px solid var(--border-color, #ddd);
+			border-radius: var(--radius, 0.5rem);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			padding: 0.5rem;
+			transition-property: opacity, scale;
+			transition-duration: 0.2s;
 			opacity: 0;
 			scale: 0.98 1;
 		}
-	}
-	.header-filter-popover-content {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-	.header-filter-popover-header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.5rem;
-		padding-bottom: 0.35rem;
-		border-bottom: 1px solid var(--border-color, #eee);
-	}
-	.header-filter-popover-title {
-		font-size: 0.9375rem;
-		font-weight: 600;
-	}
-	.header-filter-clear {
-		font-size: 0.8125rem;
-		padding: 0.15rem 0.4rem;
-		border: none;
-		background: none;
-		cursor: pointer;
-		color: var(--primary);
-	}
-	.header-filter-clear:hover {
-		text-decoration: underline;
-	}
-	.header-filter-range {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-	}
-	.header-filter-date-range {
-		display: flex;
-		flex-direction: column;
-		gap: 0.35rem;
-	}
-	.header-filter-date-label {
-		display: grid;
-		gap: 0.2rem;
-		font-size: 0.8125rem;
-	}
-	.header-filter-finite-option {
-		display: flex;
-		align-items: center;
-		gap: 0.35rem;
-		width: 100%;
-		padding: 0.35rem 0.5rem;
-		border: none;
-		border-radius: 0.25rem;
-		background: none;
-		cursor: pointer;
-		font-size: 0.875rem;
-		text-align: left;
-	}
-	.header-filter-finite-option:hover {
-		background: color-mix(in srgb, currentColor 10%, transparent);
+		.header-filter-popover:popover-open {
+			opacity: 1;
+			scale: 1 1;
+		}
+		@starting-style {
+			.header-filter-popover {
+				opacity: 0;
+				scale: 0.98 1;
+			}
+		}
+		.header-filter-popover-content {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+		.header-filter-popover-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 0.5rem;
+			padding-bottom: 0.35rem;
+			border-bottom: 1px solid var(--border-color, #eee);
+		}
+		.header-filter-popover-title {
+			font-size: 0.9375rem;
+			font-weight: 600;
+		}
+		.header-filter-clear {
+			font-size: 0.8125rem;
+			padding: 0.15rem 0.4rem;
+			border: none;
+			background: none;
+			cursor: pointer;
+			color: var(--primary);
+		}
+		.header-filter-clear:hover {
+			text-decoration: underline;
+		}
+		.header-filter-range {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+		}
+		.header-filter-date-range {
+			display: flex;
+			flex-direction: column;
+			gap: 0.35rem;
+		}
+		.header-filter-date-label {
+			display: grid;
+			gap: 0.2rem;
+			font-size: 0.8125rem;
+		}
+		.header-filter-finite-option {
+			display: flex;
+			align-items: center;
+			gap: 0.35rem;
+			width: 100%;
+			padding: 0.35rem 0.5rem;
+			border: none;
+			border-radius: 0.25rem;
+			background: none;
+			cursor: pointer;
+			font-size: 0.875rem;
+			text-align: left;
+		}
+		.header-filter-finite-option:hover {
+			background: color-mix(in srgb, currentColor 10%, transparent);
+		}
 	}
 </style>

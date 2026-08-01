@@ -20,11 +20,11 @@
 </script>
 
 <script lang="ts">
+	import Icon, { type IconProps } from '@iconify/svelte';
 	import type { Snippet } from 'svelte';
 	import { cubicInOut } from 'svelte/easing';
-	import type { HTMLButtonAttributes, HTMLAttributes } from 'svelte/elements';
+	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	import type { TransitionProps } from './Transition_Runes.svelte';
-	import Icon, { type IconProps } from '@iconify/svelte';
 	export const toggle = () => {
 		open = !open;
 	};
@@ -53,7 +53,6 @@
 {#snippet default_expand_icon()}
 	<svg
 		class:open
-		style="tran"
 		width="20"
 		height="20"
 		fill="none"

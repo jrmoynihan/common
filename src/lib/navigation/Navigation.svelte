@@ -33,7 +33,7 @@
 </script>
 
 <!-- svelte-ignore a11y_no_redundant_roles -->
-<nav role="navigation" {...nav_attributes}>
+<nav role="navigation" {...nav_attributes} class={['_navigation', nav_attributes?.class]}>
 	{#each links as nav_link, i}
 		{@const attributes = Array.isArray(link_attributes) ? link_attributes[i] : link_attributes}
 		<NavLink {nav_link} {...attributes} />
@@ -42,13 +42,15 @@
 </nav>
 
 <style>
-	nav {
-		display: var(--nav-display, flex);
-		flex-wrap: var(--nav-flex-wrap, wrap);
-		align-items: var(--nav-align-items, center);
-		justify-content: var(--nav-justify-content, center);
-		margin: var(--nav-margin, 1rem auto);
-		max-width: var(--nav-max-width, max-content);
-		gap: var(--nav-gap, 1rem);
+	@layer common.navigation {
+		nav._navigation {
+			display: var(--nav-display, flex);
+			flex-wrap: var(--nav-flex-wrap, wrap);
+			align-items: var(--nav-align-items, center);
+			justify-content: var(--nav-justify-content, center);
+			margin: var(--nav-margin, 1rem auto);
+			max-width: var(--nav-max-width, max-content);
+			gap: var(--nav-gap, 1rem);
+		}
 	}
 </style>

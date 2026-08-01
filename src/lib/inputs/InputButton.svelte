@@ -14,7 +14,7 @@
 
 <style>
 	@layer common.button {
-		:global(._input_button) {
+		._input_button {
 			display: grid;
 			place-items: center;
 			z-index: var(--spinner-z-index, var(--above, 1));
@@ -29,13 +29,14 @@
 			outline: 1px currentColor inset;
 			outline-offset: -1px;
 			border: 0px;
-		}
-		:global(._input_button:active) {
-			background-color: oklch(from var(--text, currentColor) l c h / 0.5);
-			outline: 2px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) inset;
-		}
-		:global(._input_button:focus) {
-			outline: 2px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) outset;
+
+			&:active {
+				background-color: oklch(from var(--text, currentColor) l c h / 0.5);
+				outline: 2px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) inset;
+			}
+			&:focus {
+				outline: 2px var(--button-outline-hover-or-focus, -webkit-focus-ring-color) outset;
+			}
 		}
 	}
 </style>

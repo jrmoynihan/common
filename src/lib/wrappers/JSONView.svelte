@@ -97,14 +97,12 @@
 
 {#snippet bracket(position: 'start' | 'end' | 'both', empty: boolean, collapsed: boolean)}
 	<button
-		class="_jsonBkt"
-		class:empty
-		class:is_array
 		tabindex="0"
 		onclick={clicked}
 		onkeydown={pressed}
 		disabled={empty}
 		{...bracket_button_attributes}
+		class={['_jsonBkt', { empty, is_array }, bracket_button_attributes?.class]}
 	>
 		{#if position === 'start' || position === 'both'}
 			{brackets[0]}

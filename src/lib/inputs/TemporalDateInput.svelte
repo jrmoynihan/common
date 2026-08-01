@@ -122,28 +122,32 @@
 		max={max_internal_string_date}
 		min={min_internal_string_date}
 		{...input_attributes}
-		class={[input_attributes.required && 'required', input_attributes.class]}
+		class={[
+			'_temporal-date-input',
+			input_attributes.required && 'required',
+			input_attributes.class
+		]}
 	/>
 	<!-- TODO: Add datalist option https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist#date_and_time_types -->
 </InputLabel>
 
 <style>
 	@layer common.input.temporal_date_input {
-		:global(label > input[type='date']) {
+		:global(input._temporal-date-input) {
 			border-radius: 1rem;
 			padding: 0.5rem 0.75rem;
 			font-family: var(--date-input-font-family, inherit);
 			background-color: var(--date-input-background-color, field);
 			cursor: pointer;
 			grid-area: input;
-			&:is(:focus-visible, :focus) {
-				outline: var(--date-input-focus-outline, revert);
-				box-shadow: var(--date-input-focus-box-shadow, none);
-				outline-offset: var(--date-input-focus-outline-offset, 2px);
-				&:required:invalid {
-					outline: 2px solid var(--data-input-invalid-outline, var(--accent, revert));
-				}
-			}
+		}
+		:global(input._temporal-date-input:is(:focus-visible, :focus)) {
+			outline: var(--date-input-focus-outline, revert);
+			box-shadow: var(--date-input-focus-box-shadow, none);
+			outline-offset: var(--date-input-focus-outline-offset, 2px);
+		}
+		:global(input._temporal-date-input:is(:focus-visible, :focus):required:invalid) {
+			outline: 2px solid var(--data-input-invalid-outline, var(--accent, revert));
 		}
 	}
 </style>

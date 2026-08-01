@@ -113,30 +113,31 @@
 </InputLabel>
 
 <style>
-	* {
-		/* Avoid miscalculating size of padding/widths by including it in the box mesaurement */
-		box-sizing: border-box;
-	}
-	select {
-		/* appearance: base-select;  /* New CSS if you want custom selects */
-		box-sizing: border-box;
-		grid-area: input;
-		padding: var(--text-input-padding, 1.25em);
-		color: var(--text-input-color, inherit);
-		margin: 0;
-		border-radius: var(--text-input-border-radius, 1rem);
-		border: var(--text-input-border, inset);
-		min-height: 3ch;
-
-		/* Different rules that only get applied to Safari: */
-		background-color: var(--text-input-background, revert);
-
-		&:focus-visible {
-			outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
+	@layer common.select {
+		select,
+		select > :global(*) {
+			box-sizing: border-box;
 		}
+		select {
+			/* appearance: base-select;  /* New CSS if you want custom selects */
+			grid-area: input;
+			padding: var(--text-input-padding, 1.25em);
+			color: var(--text-input-color, inherit);
+			margin: 0;
+			border-radius: var(--text-input-border-radius, 1rem);
+			border: var(--text-input-border, inset);
+			min-height: 3ch;
 
-		&:invalid:not(:focus) {
-			outline: var(--input-invalid-outline, initial);
+			/* Different rules that only get applied to Safari: */
+			background-color: var(--text-input-background, revert);
+
+			&:focus-visible {
+				outline: var(--input-valid-outline, -webkit-focus-ring-color auto 1px);
+			}
+
+			&:invalid:not(:focus) {
+				outline: var(--input-invalid-outline, initial);
+			}
 		}
 	}
 </style>

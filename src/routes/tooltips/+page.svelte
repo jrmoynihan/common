@@ -25,7 +25,7 @@
 		position,
 		keep_visible,
 		disabled,
-		styles: 'max-width: min(100vw, 300px);',
+		style: 'max-width: min(100vw, 300px);',
 		content,
 		width: '10px'
 	});
@@ -99,7 +99,7 @@
 			visible: initially_visible_example && visible,
 			disabled,
 			content: `This is a tooltip that is set to become visible as soon as its parent is mounted (after waiting for a specified delay). Mouseout its parent to hide the tooltip, or do it programmatically by clicking its parent button!`,
-			styles: `max-width: min(100vw, 200px); ${hot_sun_styles}`
+			style: `max-width: min(100vw, 200px); ${hot_sun_styles}`
 		})}
 		onclick={() => (initially_visible_example = !initially_visible_example)}
 	>
@@ -110,7 +110,7 @@
 			content: dynamic_tooltip_text,
 			position,
 			disabled,
-			styles: 'max-width: min(100vw, 200px);',
+			style: 'max-width: min(100vw, 200px);',
 			keep_visible
 		})}
 	>
@@ -182,13 +182,13 @@
 				type="text"
 				style="grid-area: unset"
 				value={rule}
-				onblur={(e) => styling_green_map.set(e.currentTarget.value, value)}
+				onblur={(e: InputEvent) => styling_green_map.set(e.currentTarget.value, value)}
 			/>
 			<Input
 				type="text"
 				style="grid-area: unset"
 				{value}
-				oninput={(e) => styling_green_map.set(rule, e.currentTarget.value)}
+				oninput={(e: InputEvent) => styling_green_map.set(rule, e.currentTarget.value)}
 			/>
 			<button class="delete" onclick={() => styling_green_map.delete(rule)}>
 				<Icon icon="fa6-solid:trash" class="h-4 w-4" />

@@ -40,10 +40,13 @@
 	<AccordionDetails
 		--details-focus-outline={'none'}
 		bind:open
-		class="json"
-		summary_attributes={{ class: 'json' }}
 		{transition_props}
 		{...accordion_details_props}
+		class={['_accordion-json', accordion_details_props.class]}
+		summary_attributes={{
+			...accordion_details_props.summary_attributes,
+			class: ['_accordion-json', accordion_details_props.summary_attributes?.class]
+		}}
 	>
 		{#snippet custom_icon()}
 			{#if value instanceof Array && open}
@@ -91,11 +94,11 @@
 
 <style>
 	@layer common.accordiondetails {
-		:global(details.json) {
+		:global(details._accordion-json) {
 			width: 100%;
 			text-align: left;
 		}
-		:global(details.json > summary.json > label) {
+		:global(details._accordion-json > summary._accordion-json > label) {
 			justify-content: unset;
 			gap: 0.5em;
 		}

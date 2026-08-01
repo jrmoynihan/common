@@ -37,11 +37,11 @@
 
 {#snippet copy_link_button()}
 	<button
-		class="border-0, opacity-50, p-0, max-h-max, m-0.5"
 		aria-label="Copy Link"
 		aria-pressed={copied}
 		data-pressed={copied}
 		onpointerdown={copyLinkAddress}
+		class="border-0, opacity-50, p-0, max-h-max, m-0.5"
 		{...button_attributes}
 	>
 		<Icon icon="fa6-solid:link" />

@@ -68,7 +68,7 @@
 
 <style>
 	@layer common.drag-anchor {
-		:global(._drag-anchor) {
+		._drag-anchor {
 			--default-transition: opacity 200ms, color 200ms;
 			box-sizing: border-box;
 			display: grid;
@@ -96,9 +96,9 @@
 					var(--drag-anchor-background, var(--active-button-background))
 				);
 			}
-		}
-		:global(.button.drag-anchor.grabbed) {
-			cursor: grabbing;
+			&.grabbed {
+				cursor: grabbing;
+			}
 		}
 	}
 </style>

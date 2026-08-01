@@ -173,69 +173,71 @@
 {/snippet}
 
 <style>
-	.tabs {
-		max-width: var(--tabs-max-width, 100%);
-	}
-	[role='tablist'] {
-		gap: 0.2rem;
-		display: flex;
-		overflow-x: scroll;
-		position: relative;
-		top: 2px;
-		background-color: var(--background);
-	}
+	@layer common.tabs {
+		.tabs {
+			max-width: var(--tabs-max-width, 100%);
+		}
+		[role='tablist'] {
+			gap: 0.2rem;
+			display: flex;
+			overflow-x: scroll;
+			position: relative;
+			top: 2px;
+			background-color: var(--background);
+		}
 
-	[role='tab'] {
-		margin: 0;
-		margin-top: var(--tab-margin-top, 0.25rem);
-		padding: var(--tab-padding, 1rem);
-		transition-property: var(--tab-transition-property, border, color, background-color);
-		transition-duration: var(--tab-transition-duration, 200ms);
-		transition-timing-function: var(--tab-transition-timing-function, ease-out);
-		border-radius: var(--tab-border-radius-top, var(--tab-border-radius, 0))
-			var(--tab-border-radius-right, var(--tab-border-radius, 0))
-			var(--tab-border-radius-bottom, var(--tab-border-radius, 0))
-			var(--tab-border-radius-left, var(--tab-border-radius, 0));
-		max-width: var(--tab-max-width, 100%);
-		font-weight: var(--tab-font-weight);
-		font-size: var(--tab-font-size);
-		font: var(--tab-font);
-		color: var(--tab-color, inherit);
-		background-color: var(--tab-background-color, inherit);
-		cursor: pointer;
-		box-shadow: var(--tab-box-shadow, var(--shadow-2));
-		border: var(--tab-border-top, 1px solid);
-	}
+		[role='tab'] {
+			margin: 0;
+			margin-top: var(--tab-margin-top, 0.25rem);
+			padding: var(--tab-padding, 1rem);
+			transition-property: var(--tab-transition-property, border, color, background-color);
+			transition-duration: var(--tab-transition-duration, 200ms);
+			transition-timing-function: var(--tab-transition-timing-function, ease-out);
+			border-radius: var(--tab-border-radius-top, var(--tab-border-radius, 0))
+				var(--tab-border-radius-right, var(--tab-border-radius, 0))
+				var(--tab-border-radius-bottom, var(--tab-border-radius, 0))
+				var(--tab-border-radius-left, var(--tab-border-radius, 0));
+			max-width: var(--tab-max-width, 100%);
+			font-weight: var(--tab-font-weight);
+			font-size: var(--tab-font-size);
+			font: var(--tab-font);
+			color: var(--tab-color, inherit);
+			background-color: var(--tab-background-color, inherit);
+			cursor: pointer;
+			box-shadow: var(--tab-box-shadow, var(--shadow-2));
+			border: var(--tab-border-top, 1px solid);
+		}
 
-	[role='tab'][aria-selected='true'] {
-		box-shadow: var(--tab-box-shadow, var(--shadow-4));
-		border-style: inset;
-		border-bottom: var(--tab-border-bottom-selected, none);
-		background-color: var(--tab-background-color-selected, var(--tab-background-color, inherit));
-		color: var(--tab-color-selected, inherit);
-	}
+		[role='tab'][aria-selected='true'] {
+			box-shadow: var(--tab-box-shadow, var(--shadow-4));
+			border-style: inset;
+			border-bottom: var(--tab-border-bottom-selected, none);
+			background-color: var(--tab-background-color-selected, var(--tab-background-color, inherit));
+			color: var(--tab-color-selected, inherit);
+		}
 
-	[role='tabpanel'] {
-		padding: 5px;
-		border-radius: var(--tab-panel-border-radius-top, var(--tab-panel-border-radius, 0))
-			var(--tab-panel-border-radius-right, var(--tab-panel-border-radius, 0))
-			var(--tab-panel-border-radius-bottom, var(--tab-panel-border-radius, 0))
-			var(--tab-panel-border-radius-left, var(--tab-panel-border-radius, 0));
-		min-height: 10em;
-		overflow: hidden; /* Is there a good reason to have overflow auto instead? */
-	}
+		[role='tabpanel'] {
+			padding: 5px;
+			border-radius: var(--tab-panel-border-radius-top, var(--tab-panel-border-radius, 0))
+				var(--tab-panel-border-radius-right, var(--tab-panel-border-radius, 0))
+				var(--tab-panel-border-radius-bottom, var(--tab-panel-border-radius, 0))
+				var(--tab-panel-border-radius-left, var(--tab-panel-border-radius, 0));
+			min-height: 10em;
+			overflow: hidden; /* Is there a good reason to have overflow auto instead? */
+		}
 
-	.tab-content {
-		border: 2px solid hsl(219deg 1% 72%);
-		display: grid;
-		grid-template-columns: 1fr;
-		grid-template-rows: 1fr;
-		border-radius: var(--tab-content-border-radius-top, var(--tab-content-border-radius, 0))
-			var(--tab-content-border-radius-right, var(--tab-content-border-radius, 0))
-			var(--tab-content-border-radius-bottom, var(--tab-content-border-radius, 0))
-			var(--tab-content-border-radius-left, var(--tab-content-border-radius, 0));
-		& > * {
-			grid-area: 1 / 1;
+		.tab-content {
+			border: 2px solid hsl(219deg 1% 72%);
+			display: grid;
+			grid-template-columns: 1fr;
+			grid-template-rows: 1fr;
+			border-radius: var(--tab-content-border-radius-top, var(--tab-content-border-radius, 0))
+				var(--tab-content-border-radius-right, var(--tab-content-border-radius, 0))
+				var(--tab-content-border-radius-bottom, var(--tab-content-border-radius, 0))
+				var(--tab-content-border-radius-left, var(--tab-content-border-radius, 0));
+			& > * {
+				grid-area: 1 / 1;
+			}
 		}
 	}
 </style>
