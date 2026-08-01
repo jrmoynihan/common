@@ -129,10 +129,10 @@
 						oklch(from var(--radiogroup-default-label-hover-background-color) l c h / 1)
 					);
 				}
-				&:has(input[type='radio']:checked) {
+				&:has(:global(input[type='radio']:checked)) {
 					outline: 2px solid currentColor;
 				}
-				&:has(input[type='radio']:is(:focus, :checked)) {
+				& :global(input[type='radio']:is(:focus, :checked)) {
 					outline: none;
 					box-shadow: none;
 				}

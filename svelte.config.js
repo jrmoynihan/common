@@ -26,6 +26,13 @@ const config = {
 		})
 	],
 
+	compilerOptions: {
+		experimental: {
+			async: true
+		},
+		modernAst: true
+	},
+
 	kit: {
 		adapter: vercel({ runtime: 'nodejs20.x' }),
 		alias: {
@@ -36,8 +43,11 @@ const config = {
 			$inputs: path.resolve($lib, './inputs'),
 			$navigation: path.resolve($lib, './navigation'),
 			$toasts: path.resolve($lib, './toasts'),
-			$tooltip: path.resolve($lib, './tooltip'),
+			$tooltip: path.resolve($lib, './attach/tooltip'),
 			$wrappers: path.resolve($lib, './wrappers')
+		},
+		experimental: {
+			remoteFunctions: true
 		}
 	}
 

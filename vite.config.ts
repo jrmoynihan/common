@@ -15,26 +15,15 @@ const $functions = path.resolve($lib, './functions');
 const $inputs = path.resolve($lib, './inputs');
 const $navigation = path.resolve($lib, './navigation');
 const $toasts = path.resolve($lib, './toasts');
-const $tooltip = path.resolve($lib, './tooltip');
+const $tooltip = path.resolve($lib, './attach/tooltip');
 const $wrappers = path.resolve($lib, './wrappers');
 
 const config = defineConfig({
 	plugins: [
 		examples,
 		tailwindcss(),
-		sveltekit({
-			experimental: {
-				remoteFunctions: true,
-				forkPreloads: true,
-				handleRenderingErrors: true
-			},
-			compilerOptions: {
-				experimental: {
-					async: true
-				},
-				modernAst: true
-			}
-		}),
+		// Pass no options here — otherwise svelte.config.js (aliases, adapter, preprocess) is ignored.
+		sveltekit(),
 		kitRoutes()
 	],
 	resolve: {

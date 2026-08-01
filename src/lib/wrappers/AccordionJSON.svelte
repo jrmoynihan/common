@@ -1,4 +1,6 @@
 <script module lang="ts">
+	import type { AccordionDetailsProps } from './AccordionDetails.svelte';
+
 	export interface AccordionJsonProps extends AccordionDetailsProps {
 		value: unknown;
 		key?: string;
@@ -9,8 +11,7 @@
 
 <script lang="ts">
 	import { AccordionJson } from '$lib';
-	import AccordionDetails, { type AccordionDetailsProps } from './AccordionDetails.svelte';
-	import type { TransitionNativeProps } from './TransitionNative_Runes.svelte';
+	import AccordionDetails from './AccordionDetails.svelte';
 
 	let {
 		value,
@@ -30,25 +31,26 @@
 			return false;
 		}
 	};
-	const transition_props: TransitionNativeProps = {
-		types: ['slide'],
-		slide_transition_parameters: { easing: 'ease' }
-	};
+
+	const details_props = $derived({
+		...accordion_details_props,
+		class: ['_accordion-json', accordion_details_props.class],
+		summary_attributes: {
+			...accordion_details_props.summary_attributes,
+			class: ['_accordion-json', accordion_details_props.summary_attributes?.class]
+		},
+		style: [
+			'--details-focus-outline: none',
+			typeof accordion_details_props.style === 'string' ? accordion_details_props.style : ''
+		]
+			.filter(Boolean)
+			.join('; ')
+	} as AccordionDetailsProps);
 </script>
 
 {#if value instanceof Object && Object.entries(value).length > 0}
-	<AccordionDetails
-		--details-focus-outline={'none'}
-		bind:open
-		{transition_props}
-		{...accordion_details_props}
-		class={['_accordion-json', accordion_details_props.class]}
-		summary_attributes={{
-			...accordion_details_props.summary_attributes,
-			class: ['_accordion-json', accordion_details_props.summary_attributes?.class]
-		}}
-	>
-		{#snippet custom_icon()}
+	<AccordionDetails bind:open {...details_props}>
+		{#snippet icon()}
 			{#if value instanceof Array && open}
 				{'['}
 			{:else if value instanceof Array}

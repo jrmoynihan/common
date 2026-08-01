@@ -182,13 +182,13 @@
 				type="text"
 				style="grid-area: unset"
 				value={rule}
-				onblur={(e: InputEvent) => styling_green_map.set(e.currentTarget.value, value)}
+				onblur={(e) => styling_green_map.set(e.currentTarget.value, value)}
 			/>
 			<Input
 				type="text"
 				style="grid-area: unset"
 				{value}
-				oninput={(e: InputEvent) => styling_green_map.set(rule, e.currentTarget.value)}
+				oninput={(e) => styling_green_map.set(rule, e.currentTarget.value)}
 			/>
 			<button class="delete" onclick={() => styling_green_map.delete(rule)}>
 				<Icon icon="fa6-solid:trash" class="h-4 w-4" />
