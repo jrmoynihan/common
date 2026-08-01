@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
-import { Log } from '$functions/logging.js';
 import type { BrandedString, JsonifiedObject, PrettifyIntersection } from './helpers.svelte';
+import { Log } from './logging.js';
 
 /** Branded string type for localStorage keys. Cast key strings when calling storage functions, e.g. `'user_prefs' as StorageKey`. */
 export type StorageKey = BrandedString<'StorageKey'>;

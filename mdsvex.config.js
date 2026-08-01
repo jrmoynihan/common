@@ -1,5 +1,4 @@
 import { defineMDSveXConfig as defineConfig } from 'mdsvex';
-import codesandbox from 'remark-codesandbox';
 import examples from 'mdsvexamples';
 
 const config = defineConfig({

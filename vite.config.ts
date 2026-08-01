@@ -1,9 +1,12 @@
+import vercel from '@sveltejs/adapter-vercel';
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
+import { mdsvex } from 'mdsvex';
 import examples from 'mdsvexamples/vite';
 import path from 'node:path';
 import { defineConfig, type UserConfig } from 'vite';
 import { kitRoutes } from 'vite-plugin-kit-routes';
+import mdsvexConfig from './mdsvex.config.js';
 
 const $root = path.resolve(__dirname, './src');
 const $lib = path.resolve($root, './lib');
@@ -22,8 +25,33 @@ const config = defineConfig({
 	plugins: [
 		examples,
 		tailwindcss(),
-		// Pass no options here — otherwise svelte.config.js (aliases, adapter, preprocess) is ignored.
-		sveltekit(),
+		sveltekit({
+			preprocess: [mdsvex(mdsvexConfig)],
+			experimental: {
+				remoteFunctions: true,
+				forkPreloads: true,
+				handleRenderingErrors: true
+			},
+			compilerOptions: {
+				experimental: {
+					async: true
+				},
+				modernAst: true
+			},
+
+			adapter: vercel({ runtime: 'nodejs20.x' }),
+			alias: {
+				$routes,
+				$actions: path.resolve($lib, './actions'),
+				$buttons: path.resolve($lib, './buttons'),
+				$functions: path.resolve($lib, './functions'),
+				$inputs: path.resolve($lib, './inputs'),
+				$navigation: path.resolve($lib, './navigation'),
+				$toasts: path.resolve($lib, './toasts'),
+				$tooltip: path.resolve($lib, './attach/tooltip'),
+				$wrappers: path.resolve($lib, './wrappers')
+			}
+		}),
 		kitRoutes()
 	],
 	resolve: {
