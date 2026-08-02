@@ -1,29 +1,29 @@
-// NOTE: Keep $alias for default (component) imports. See https://kit.svelte.dev/docs/packaging#caveats
+// Prefer relative imports in this barrel so the public entry does not depend on path aliases.
 // Prop types are derived via ComponentProps<typeof Component> so TS/IDE resolve them without importing from .svelte
 // (see svelte#5817 / shadcn-svelte#1468: named type exports from .svelte are not seen by TS when imported from .ts).
+// Custom $aliases elsewhere must be declared in svelte.config.js kit.alias so svelte-package rewrites them in dist/.
+// See https://svelte.dev/docs/kit/packaging#Best-practices and #Caveats
 
 import type { ComponentProps } from 'svelte';
-// Side-effect: augments global Map so new Map() returns TypeSafeMap (has/get narrowing). See helpers.svelte.ts.
-import './functions/helpers.svelte.js';
 
 // Reexport your entry components here
 
 // Buttons
-import ResetButton from '$buttons/ResetButton.svelte';
-import SubmitButton from '$buttons/SubmitButton.svelte';
 import DragAnchor from './buttons/DragAnchor.svelte';
 import LightDarkToggle from './buttons/LightDarkToggle_v2.svelte';
+import ResetButton from './buttons/ResetButton.svelte';
+import SubmitButton from './buttons/SubmitButton.svelte';
 import ToggleSwitch from './buttons/ToggleSwitch.svelte';
 
 // Tooltips
 import ActionTooltip from './attach/tooltip/AttachedTooltip.svelte';
 
 // Inputs
-import Checkbox from '$inputs/Checkbox.svelte';
-import InputButton from '$inputs/InputButton.svelte';
-import InputLabel from '$inputs/InputLabel.svelte';
-import RadioGroup from '$inputs/RadioGroup.svelte';
+import Checkbox from './inputs/Checkbox.svelte';
+import InputButton from './inputs/InputButton.svelte';
+import InputLabel from './inputs/InputLabel.svelte';
 import NumericInput from './inputs/NumericInput.svelte';
+import RadioGroup from './inputs/RadioGroup.svelte';
 import Select from './inputs/Select.svelte';
 import type { SelectOptionGroup } from './inputs/select.types.js';
 import DateInput from './inputs/TemporalDateInput.svelte';
@@ -34,35 +34,35 @@ import type { DatalistOption, TextInputTypes } from './inputs/types.js';
 import AnchorHeading from './navigation/AnchorHeading.svelte';
 import Carousel, { carousel_item } from './navigation/Carousel.svelte';
 import LinkableAnchorHeading from './navigation/LinkableAnchorHeading.svelte';
-import NavLink from './navigation/NavLink.svelte';
 import Navigation from './navigation/Navigation.svelte';
+import NavLink from './navigation/NavLink.svelte';
 import ScrollProgress from './navigation/ScrollProgress.svelte';
 
 // Wrappers
-import AccordionDetails from '$wrappers/AccordionDetails.svelte';
-import AccordionJson from '$wrappers/AccordionJSON.svelte';
-import Dialog from '$wrappers/Dialog.svelte';
-import Flex from '$wrappers/Flex.svelte';
-import FlexItem from '$wrappers/FlexItem.svelte';
-import FullDialog from '$wrappers/FullDialog.svelte';
-import Grid from '$wrappers/Grid.svelte';
-import JsonView from '$wrappers/JSONView.svelte';
-import ResizableGrid from '$wrappers/ResizableGrid.svelte';
 import Accordion from './wrappers/Accordion.svelte';
-import DataGrid from './wrappers/DataGrid.svelte';
+import AccordionDetails from './wrappers/AccordionDetails.svelte';
+import AccordionJson from './wrappers/AccordionJSON.svelte';
 import {
 	SortState,
 	type DataColumn as DataGridColumn,
 	type FilterState as DataGridFilterState,
 	type FilterUI as DataGridFilterUI
 } from './wrappers/data_grid_state.svelte.js';
+import DataGrid from './wrappers/DataGrid.svelte';
+import Dialog from './wrappers/Dialog.svelte';
+import Flex from './wrappers/Flex.svelte';
+import FlexItem from './wrappers/FlexItem.svelte';
+import FullDialog from './wrappers/FullDialog.svelte';
+import Grid from './wrappers/Grid.svelte';
+import JsonView from './wrappers/JSONView.svelte';
 import MiniDialog from './wrappers/MiniDialog.svelte';
+import ResizableGrid from './wrappers/ResizableGrid.svelte';
 import Table from './wrappers/Table.svelte';
 import type { DataCell, DataRow, HeaderCell } from './wrappers/Table.types.js';
-import Tabs from './wrappers/Tabs_Runes.svelte';
 import type { ComponentTab, SnippetTab } from './wrappers/Tabs_Runes.svelte';
-import TransitionNative_Runes from './wrappers/TransitionNative_Runes.svelte';
+import Tabs from './wrappers/Tabs_Runes.svelte';
 import Transition from './wrappers/Transition_Runes.svelte';
+import TransitionNative_Runes from './wrappers/TransitionNative_Runes.svelte';
 
 // Prop types derived from components so TS/IDE resolve without importing from .svelte
 export type DragAnchorProps = ComponentProps<typeof DragAnchor>;
@@ -195,7 +195,8 @@ export {
 	type UrlString,
 	type UUIDString,
 	type ValueOf
-} from '$lib/functions/helpers.svelte.js';
+} from './functions/helpers.svelte.js';
+export { Temporal } from '@js-temporal/polyfill';
 export { dynamic_style } from './actions/dynamic-styles.svelte.js';
 export { willChange } from './actions/will-change.js';
 export {
@@ -236,7 +237,6 @@ export {
 	NavigationLink,
 	should_layout_transition_on_navigation
 } from './navigation/nav-functions.svelte.js';
-export { Temporal } from '@js-temporal/polyfill';
 export {
 	Accordion,
 	AccordionDetails,
@@ -276,6 +276,7 @@ export {
 	ToggleSwitch,
 	Transition,
 	TransitionNative_Runes,
+	type ComponentTab,
 	type DataCell,
 	type DataGridColumn,
 	type DataGridFilterState,
@@ -284,7 +285,6 @@ export {
 	type DataRow,
 	type HeaderCell,
 	type SelectOptionGroup,
-	type ComponentTab,
 	type SnippetTab,
 	type TextInputTypes
 };
