@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { mount, unmount } from 'svelte';
+import { mount, unmount, type Snippet } from 'svelte';
 import type { Attachment } from 'svelte/attachments';
 import Tooltip from './AttachedTooltip.svelte';
 
@@ -79,29 +79,36 @@ class BaseTooltipProps {
 	}
 }
 
-type TooltipString = {
-	content?: string;
-	[key: string]: any;
-};
-type TooltipSnippetNoArgs = {
-	content: () => any;
-	[key: string]: any;
-};
-type TooltipSnippetWithArgs<Args> = {
-	content: (...args: [Args]) => any;
-	args: Args;
-	[key: string]: any;
+/**
+ * Shared knobs plus extra keys forwarded onto the tip element.
+ * Index values are `unknown` (not `any`) so intersecting `{ content: ... }` does not widen `content` to `any`.
+ */
+type TooltipBase = Partial<BaseTooltipProps> & {
+	[key: string]: unknown;
 };
 
-export type TooltipProps = TooltipString | TooltipSnippetNoArgs | TooltipSnippetWithArgs<any>;
+/**
+ * String or no-arg snippet. Extra keys are forwarded onto the tip element.
+ * `content` is a field-level union so `string | Snippet<[]>` is assignable (TS does not
+ * distribute a union across overloads or across a union of object types).
+ */
+export type TooltipProps = TooltipBase & {
+	content?: string | Snippet<[]>;
+};
 
-export function tooltip(parameters: TooltipString): Attachment<HTMLElement>;
-export function tooltip(parameters: TooltipSnippetNoArgs): Attachment<HTMLElement>;
-export function tooltip<
-	S extends (...args: any) => any,
-	Args extends Parameters<S>[0] = Parameters<S>[0]
->(parameters: { content: S; args: Args }): Attachment<HTMLElement>;
-export function tooltip(parameters: TooltipProps): Attachment<HTMLElement> {
+/** All runtime shapes, including snippet-with-args. Used by `<AttachedTooltip>` and the implementation. */
+export type TooltipRenderProps<A = unknown> = TooltipBase & {
+	content?: string | Snippet<[]> | Snippet<[A]>;
+	args?: A;
+};
+
+/** String or no-arg snippet. Extra keys are forwarded onto the tip element. */
+export function tooltip(parameters: TooltipProps): Attachment<HTMLElement>;
+/** Snippet that takes an argument; `args` is required so the two stay correlated. */
+export function tooltip<A>(
+	parameters: TooltipBase & { content: Snippet<[A]>; args: A }
+): Attachment<HTMLElement>;
+export function tooltip(parameters: TooltipRenderProps): Attachment<HTMLElement> {
 	let tooltip: ReturnType<typeof mount>;
 	return (node: HTMLElement) => {
 		const target = void_elements.includes(node.nodeName.toLowerCase())

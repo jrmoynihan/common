@@ -202,7 +202,8 @@ export { willChange } from './actions/will-change.js';
 export {
 	tooltip,
 	type TooltipDirections,
-	type TooltipProps
+	type TooltipProps,
+	type TooltipRenderProps
 } from './attach/tooltip/tooltip.svelte.js';
 export {
 	delete_local_storage_item,

@@ -4,29 +4,34 @@ import { mount, type Snippet } from 'svelte';
 import { browser } from '$app/environment';
 import ActionTooltip from './AttachedTooltip.svelte';
 
-type TooltipStringContent = {
-	content: string;
-	[key: string]: any;
+type TooltipAttachBase = {
+	[key: string]: unknown;
 };
 
-type TooltipSnippetNoArgs = {
-	content: Snippet<[]>;
-	[key: string]: any;
+/**
+ * String or no-arg snippet. `content` is a field-level union so `string | Snippet<[]>`
+ * is assignable (object-level unions reject that mix).
+ */
+export type TooltipAttachmentProps = TooltipAttachBase & {
+	content?: string | Snippet<[]>;
 };
 
-type TooltipSnippetWithArgs<T extends any[]> = {
-	content: Snippet<T>;
-	[key: string]: T[number];
+type TooltipAttachRenderProps<A = unknown> = TooltipAttachBase & {
+	content?: string | Snippet<[]> | Snippet<[A]>;
+	args?: A;
 };
 
-export type TooltipAttachmentProps<T> =
-	| TooltipStringContent
-	| TooltipSnippetNoArgs
-	| TooltipSnippetWithArgs<[T]>;
-
-export function tip<T>(
+export function tip(
 	element: HTMLElement,
-	props: TooltipAttachmentProps<T>
+	props: TooltipAttachmentProps
+): Attachment<HTMLElement>;
+export function tip<A>(
+	element: HTMLElement,
+	props: TooltipAttachBase & { content: Snippet<[A]>; args: A }
+): Attachment<HTMLElement>;
+export function tip<A>(
+	element: HTMLElement,
+	props: TooltipAttachRenderProps<A>
 ): Attachment<HTMLElement> {
 	async function pointerEnter(event: PointerEvent) {
 		if (props.disabled) return;

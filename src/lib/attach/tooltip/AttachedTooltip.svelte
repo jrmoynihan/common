@@ -34,7 +34,7 @@ https://web.dev/building-a-tooltip-component/
 -->
 
 <script lang="ts">
-	import type { TooltipProps } from './tooltip.svelte.js';
+	import type { TooltipRenderProps } from './tooltip.svelte.js';
 
 	let {
 		content,
@@ -50,7 +50,7 @@ https://web.dev/building-a-tooltip-component/
 		disabled = false,
 		fallback = true,
 		...attributes
-	}: TooltipProps = $props();
+	}: TooltipRenderProps = $props();
 
 	let tooltip: HTMLElement | undefined = $state(undefined);
 
