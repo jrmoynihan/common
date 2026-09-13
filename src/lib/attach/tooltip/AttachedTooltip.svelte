@@ -36,6 +36,11 @@ https://web.dev/building-a-tooltip-component/
 <script lang="ts">
 	import type { TooltipRenderProps } from './tooltip.svelte.js';
 
+	type Props = TooltipRenderProps & {
+		invoker?: HTMLElement;
+		invoker_anchor_name?: string | null;
+	};
+
 	let {
 		content,
 		args,
@@ -49,8 +54,10 @@ https://web.dev/building-a-tooltip-component/
 		inert = true,
 		disabled = false,
 		fallback = true,
+		invoker,
+		invoker_anchor_name = null,
 		...attributes
-	}: TooltipRenderProps = $props();
+	}: Props = $props();
 
 	let tooltip: HTMLElement | undefined = $state(undefined);
 
@@ -134,21 +141,20 @@ https://web.dev/building-a-tooltip-component/
 	}
 </script>
 
-<!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. a 'toggle-tip' -->
+<!-- NOTE: Use 'inert' attribute unless you need interactivity inside the tip, i.e. 'toggle-tip' -->
 <tool-tip
 	bind:this={tooltip}
 	{inert}
 	data-tip-position={position}
-	style:position-anchor={`--${id}`}
 	style:--anchor-position={position}
 	style:--anchor={id}
 	style:--distance={typeof distance === 'number' ? `${distance}px` : distance}
+	style:position-anchor={invoker_anchor_name ?? undefined}
 	{...attributes}
 	style={tip_style || undefined}
 	role="tooltip"
 	id={`tooltip-${id}`}
-	anchor={id}
-	popover="auto"
+	popover="manual"
 	class={[
 		'tooltip',
 		{ fallback },
@@ -257,7 +263,7 @@ https://web.dev/building-a-tooltip-component/
 				top: calc(anchor(bottom) + var(--distance));
 				bottom: auto;
 				justify-self: anchor-center;
-				position-area: bottom center;
+				position-area: bottom;
 				&.fallback {
 					position-try-fallbacks: --tooltip-top, --tooltip-left, --tooltip-right;
 				}
@@ -267,7 +273,7 @@ https://web.dev/building-a-tooltip-component/
 				bottom: calc(anchor(top) + var(--distance));
 				top: auto;
 				justify-self: anchor-center;
-				position-area: top center;
+				position-area: top;
 				&.fallback {
 					position-try-fallbacks: --tooltip-bottom, --tooltip-left, --tooltip-right;
 				}
@@ -277,7 +283,7 @@ https://web.dev/building-a-tooltip-component/
 				right: calc(anchor(left) + var(--distance));
 				left: auto;
 				align-self: anchor-center;
-				position-area: left center;
+				position-area: left;
 				&.fallback {
 					position-try-fallbacks: --tooltip-right, --tooltip-top, --tooltip-bottom;
 				}
@@ -287,7 +293,7 @@ https://web.dev/building-a-tooltip-component/
 				left: calc(anchor(right) + var(--distance));
 				right: auto;
 				align-self: anchor-center;
-				position-area: right center;
+				position-area: right;
 				&.fallback {
 					position-try-fallbacks: --tooltip-left, --tooltip-top, --tooltip-bottom;
 				}

@@ -35,6 +35,9 @@
 		...input_attributes
 	}: InputProps = $props();
 
+	/** Non-empty or numeric zero — drives `.value` for placeholder styling; excludes `''`, `null`, `undefined`. */
+	const has_nonzero_value = $derived(value !== undefined && value !== null && value !== '');
+
 	function confirm(e: any) {
 		onconfirm?.(e);
 		input_element?.blur();
@@ -71,7 +74,7 @@
 		{value}
 		onkeypress={handle_keypress}
 		{...input_attributes}
-		class={[input_attributes.class, 'input pl-[1ch]', { value, hidden }]}
+		class={[input_attributes.class, 'input group pl-[1ch]', { value: has_nonzero_value, hidden }]}
 	/>
 {:else}
 	<input
@@ -84,7 +87,7 @@
 			input_attributes.class,
 			'input pl-[1ch]',
 			{
-				value: value !== undefined && value !== null,
+				value: has_nonzero_value,
 				hidden
 			}
 		]}
