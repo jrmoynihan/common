@@ -67,7 +67,6 @@
 		"tslib": "^2.8.1",
 		"typescript": "~6",
 		"vite": "^8.3.0",
-		"vite-plugin-kit-routes": "^1.0.6",
 		"vite-plugin-mkcert": "^2.1.0"
 	},
 	"type": "module",

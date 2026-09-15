@@ -1,15 +1,11 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
 	import Navigation from '#navigation/Navigation.svelte';
-	import {
-		make_subroute_nav_links,
-		should_layout_transition_on_navigation
-	} from '#navigation/nav-functions.svelte.js';
+	import { should_layout_transition_on_navigation } from '#navigation/nav-functions.svelte.js';
 	import TransitionRunes from '#wrappers/Transition_Runes.svelte';
 	import type { Snippet } from 'svelte';
-	import type { LayoutData } from './$types';
 
-	let { data, children }: { data: LayoutData; children: Snippet } = $props();
+	let { children }: { children: Snippet } = $props();
 	let trigger = $state(false);
 
 	beforeNavigate(async (nav) => {
@@ -20,7 +16,11 @@
 		if (
 			from &&
 			to &&
-			(await should_layout_transition_on_navigation({ from, to, layout_parent_path: 'wrappers' }))
+			(await should_layout_transition_on_navigation({
+				from,
+				to,
+				layout_parent_path: import.meta.url
+			}))
 		) {
 			trigger = !trigger;
 		}
@@ -28,9 +28,7 @@
 </script>
 
 <section>
-	{#await make_subroute_nav_links(data.url) then nav_links}
-		<Navigation links={nav_links} />
-	{/await}
+	<Navigation />
 
 	<TransitionRunes bind:trigger>
 		{@render children?.()}

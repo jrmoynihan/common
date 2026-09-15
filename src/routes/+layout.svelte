@@ -3,23 +3,27 @@
 	import { page } from '$app/state';
 	import LightDarkToggleV2 from '#buttons/LightDarkToggle_v2.svelte';
 	import Navigation from '#navigation/Navigation.svelte';
-	import {
-		make_subroute_nav_links,
-		should_layout_transition_on_navigation
-	} from '#navigation/nav-functions.svelte.js';
+	import { should_layout_transition_on_navigation } from '#navigation/nav-functions.svelte.js';
 	import FunctionsAside from '#routes/functions/FunctionsAside.svelte';
 	import TransitionRunes from '#wrappers/Transition_Runes.svelte';
+	import type { IconProps } from '@iconify/svelte';
 	import { type Snippet } from 'svelte';
 	import { MediaQuery } from 'svelte/reactivity';
 	import '../../src/mdsvex.css';
 	import '../app.css';
-	import type { LayoutData } from './$types';
 	import { aside_visible } from './stores.svelte.js';
 
-	type LayoutProps = { data: LayoutData; children: Snippet };
+	type LayoutProps = { children: Snippet };
 
-	let { data, children }: LayoutProps = $props();
-	const { url, icon_map } = $derived(data);
+	let { children }: LayoutProps = $props();
+	const icon_map = new Map<string, IconProps>([
+		['buttons', { icon: 'fa6-solid:computer-mouse' }],
+		['functions', { icon: 'fa6-solid:calculator' }],
+		['inputs', { icon: 'fa6-solid:keyboard' }],
+		['recipes', { icon: 'fa6-solid:receipt' }],
+		['tooltips', { icon: 'material-symbols:tooltip-outline' }],
+		['wrappers', { icon: 'carbon:container-software' }]
+	]);
 	let trigger: boolean = $state(false);
 	let dark_mode = new MediaQuery('(prefers-color-scheme: dark)');
 	let bg_color: string = $state(dark_mode.current ? '#0e2f39' : '#ffffff');
@@ -33,7 +37,11 @@
 		if (
 			from &&
 			to &&
-			(await should_layout_transition_on_navigation({ from, to, layout_parent_path: '/' }))
+			(await should_layout_transition_on_navigation({
+				from,
+				to,
+				layout_parent_path: import.meta.url
+			}))
 		) {
 			trigger = !trigger;
 		}
@@ -65,11 +73,7 @@
 	<h1>
 		<a href="/" class="cool-text">The Commons</a>
 	</h1>
-	{#await make_subroute_nav_links(url, icon_map) then nav_links}
-		<Navigation links={nav_links} />
-	{:catch error}
-		{error}
-	{/await}
+	<Navigation {icon_map} />
 	<main>
 		<TransitionRunes bind:trigger>
 			{@render children?.()}

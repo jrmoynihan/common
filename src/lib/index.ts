@@ -234,9 +234,14 @@ export {
 	setWritableStoreContext as setWritableContext
 } from './functions/store.svelte.js';
 export {
+	get_subroutes,
+	layout_route_segment,
 	make_subroute_nav_links,
 	NavigationLink,
-	should_layout_transition_on_navigation
+	route_id_from_filename,
+	should_layout_transition_on_navigation,
+	to_nav_parent_path,
+	type NavParentPath
 } from './navigation/nav-functions.svelte.js';
 export {
 	Accordion,

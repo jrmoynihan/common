@@ -1,8 +1,17 @@
+import { routes } from '$app/manifest';
 import type { NavigationTarget } from '$app/navigation';
-import { page, type Page } from '$app/state';
+import { resolve } from '$app/paths';
+import { page } from '$app/state';
 import { capitalize, dekebab, enumerate_runed_properties } from '#functions/helpers.svelte.js';
 import { ErrorLog } from '#functions/logging.js';
 import type { IconProps } from '@iconify/svelte';
+import {
+	layout_route_segment,
+	route_id_from_filename,
+	to_nav_parent_path
+} from './layout_route_id.js';
+
+export { layout_route_segment, route_id_from_filename, to_nav_parent_path };
 
 export class NavigationLink {
 	/** The URL object describing the link */
@@ -35,47 +44,67 @@ export class NavigationLink {
 	}
 }
 
-export async function get_subroutes(url_pathname: string, exclude_paths?: string[]) {
-	const full_path = `/src/routes${url_pathname === '/' ? '' : url_pathname}/`;
-	const all_path_components = import.meta.glob('/src/routes/**/*.svelte');
-	const subdirectories = Object.entries(all_path_components)
-		.map(([key, value]) => {
-			const trimmed_key = key.replace(full_path, '').replace('/+page.svelte', '');
-			return { path: key, name: trimmed_key };
-		})
-		.filter((path) => filter_path(path, full_path))
-		.map(({ name }) => name);
+function all_page_route_ids(): string[] {
+	const from_manifest = routes.filter((route) => route.page).map((route) => route.id);
+	if (from_manifest.length > 0) return from_manifest;
 
-	return subdirectories;
-}
-function filter_path({ path, name }: { path: string; name: string }, full_path: string) {
-	if (
-		path.includes('+page.svelte') &&
-		path.includes(full_path) &&
-		path !== `${full_path}+page.svelte`
-	) {
-		// Retain only *direct* sub-routes
-		return !name.includes('/');
-	}
+	// Kit writes an empty `$app/manifest` before the first full sync in dev.
+	return Object.keys(import.meta.glob('/src/routes/**/+page.svelte')).map(
+		(file) => route_id_from_filename(file) ?? '/'
+	);
 }
 
-export async function make_subroute_nav_links(
-	load_event_url: URL,
+function normalize_parent_path(pathname: string): string {
+	if (pathname === '/' || pathname === '') return '';
+	return pathname.replace(/\/+$/, '');
+}
+
+function is_direct_child_route(parent_pathname: string, route_id: string): boolean {
+	if (route_id.includes('[')) return false;
+	const parent = normalize_parent_path(parent_pathname);
+	const prefix = parent === '' ? '/' : `${parent}/`;
+	if (!route_id.startsWith(prefix)) return false;
+	const rest = route_id.slice(prefix.length);
+	return rest.length > 0 && !rest.includes('/');
+}
+
+/** Kit `RouteId`, a layout `import.meta.url`, or a `+layout` filename. */
+export type NavParentPath = string;
+
+/** Direct child page segment names of `parent_pathname` from `$app/manifest`. */
+export function get_subroutes(parent_pathname: NavParentPath, exclude_paths?: string[]): string[] {
+	const parent_id = to_nav_parent_path(parent_pathname);
+	const parent = normalize_parent_path(parent_id);
+	const prefix = parent === '' ? '/' : `${parent}/`;
+	return all_page_route_ids()
+		.filter((id) => is_direct_child_route(parent_id, id))
+		.map((id) => id.slice(prefix.length))
+		.filter((name) => !exclude_paths?.includes(name));
+}
+
+/**
+ * Nav links for direct children of a **layout path** (`/` or `/recipes`), not the current page URL.
+ * Prefers Kit 3 `$app/manifest` page routes; falls back to `import.meta.glob` when that list is empty in dev.
+ */
+export function make_subroute_nav_links(
+	parent_path: NavParentPath | URL = '/',
 	icon_map?: Map<string, IconProps>
-) {
-	const is_root_path = load_event_url.pathname.endsWith('/');
-	const subroutes = await get_subroutes(load_event_url.pathname);
-	const nav_links = subroutes.map((name) => {
-		// NOTE: This trailing slash is important.  It ensures that the subroute url is a *relative* url to the parent url.
-		const subroute_url = new URL(name, `${load_event_url.href}${is_root_path ? '' : '/'}`);
-		return new NavigationLink({
-			url: subroute_url,
-			link_text: name,
-			icon_props: icon_map?.get(name)
-		});
-	});
+): NavigationLink[] {
+	const parent_pathname = to_nav_parent_path(parent_path);
+	const parent = normalize_parent_path(parent_pathname);
+	const prefix = parent === '' ? '/' : `${parent}/`;
 
-	return nav_links;
+	return all_page_route_ids().flatMap((route_id) => {
+		if (!is_direct_child_route(parent_pathname, route_id)) return [];
+		const name = route_id.slice(prefix.length);
+		return [
+			new NavigationLink({
+				url: new URL(resolve(route_id as '/'), page.url.href),
+				link_text: name,
+				icon_props: icon_map?.get(name)
+			})
+		];
+	});
 }
 
 /** Compares the navigation targets (from and to) and returns true if layout should transition, and false if it should not */
@@ -86,7 +115,7 @@ export async function should_layout_transition_on_navigation({
 }: {
 	from: NavigationTarget;
 	to: NavigationTarget;
-	layout_parent_path: string;
+	layout_parent_path: NavParentPath | URL;
 }) {
 	try {
 		if (from?.url.pathname === to?.url.pathname) return false;
@@ -107,9 +136,9 @@ export async function should_layout_transition_on_navigation({
 				return false;
 			}
 			if (
-				to_routeID[to_routeID.length - 2] &&
-				to_routeID[to_routeID.length - 2] === layout_parent_path &&
-				from_routeID[from_routeID.length - 1] !== to_routeID[to_routeID.length - 1]
+				to_routeID.at(-2) &&
+				to_routeID.at(-2) === layout_route_segment(layout_parent_path) &&
+				from_routeID.at(-1) !== to_routeID.at(-1)
 			) {
 				return true;
 			}
