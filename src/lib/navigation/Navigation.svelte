@@ -25,7 +25,7 @@
 <script lang="ts">
 	import { browser } from '$app/env';
 	import { beforeNavigate } from '$app/navigation';
-	import NavLink from '#navigation/NavLink.svelte';
+	import NavLink from './NavLink.svelte';
 	import { make_subroute_nav_links } from './nav-functions.svelte.js';
 
 	let {

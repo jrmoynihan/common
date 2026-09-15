@@ -26,7 +26,7 @@
 </script>
 
 <script lang="ts" generics="TooltipType">
-	import { JsonView } from '#lib';
+	import JsonView from './JSONView.svelte';
 
 	import type {
 		HTMLAnchorAttributes,

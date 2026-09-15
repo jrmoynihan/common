@@ -23,7 +23,7 @@
 </script>
 
 <script lang="ts">
-	import type { SvelteTransition, SvelteTransitionParams } from '#lib/lib_types.js';
+	import type { SvelteTransition, SvelteTransitionParams } from '../lib_types.js';
 	import type { Snippet } from 'svelte';
 	import type { HTMLLabelAttributes } from 'svelte/elements';
 	import { fade } from 'svelte/transition';

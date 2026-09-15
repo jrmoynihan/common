@@ -1,4 +1,4 @@
-// import { default_toast, error_toast, type ToastOptions } from '#toasts/toasts.js';
+// import { default_toast, error_toast, type ToastOptions } from '../toasts/toasts.js';
 
 export interface LogOptions {
 	msg: string;

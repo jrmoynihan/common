@@ -34,9 +34,9 @@
 </script>
 
 <script lang="ts" generics="T">
-	import NumericInput from '#inputs/NumericInput.svelte';
-	import Select from '#inputs/Select.svelte';
-	import TextInput from '#inputs/TextInput.svelte';
+	import NumericInput from '../inputs/NumericInput.svelte';
+	import Select from '../inputs/Select.svelte';
+	import TextInput from '../inputs/TextInput.svelte';
 	import VirtualList from '@humanspeak/svelte-virtual-list';
 	import Icon from '@iconify/svelte';
 

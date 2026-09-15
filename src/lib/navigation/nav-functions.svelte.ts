@@ -2,8 +2,8 @@ import { routes } from '$app/manifest';
 import type { NavigationTarget } from '$app/navigation';
 import { resolve } from '$app/paths';
 import { page } from '$app/state';
-import { capitalize, dekebab, enumerate_runed_properties } from '#functions/helpers.svelte.js';
-import { ErrorLog } from '#functions/logging.js';
+import { capitalize, dekebab, enumerate_runed_properties } from '../functions/helpers.svelte.js';
+import { ErrorLog } from '../functions/logging.js';
 import type { IconProps } from '@iconify/svelte';
 import {
 	layout_route_segment,

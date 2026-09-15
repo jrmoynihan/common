@@ -7,7 +7,7 @@
 		justify_items_options,
 		justify_self_options,
 		overflow_options
-	} from '#functions/helpers.svelte.js';
+	} from '../functions/helpers.svelte.js';
 	import type { HTMLAttributes } from 'svelte/elements';
 
 	export interface GridProps extends HTMLAttributes<HTMLDivElement> {

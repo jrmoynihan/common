@@ -1,5 +1,5 @@
 // //@ts-nocheck
-import { clamp } from '#functions/helpers.svelte.js';
+import { clamp } from '../functions/helpers.svelte.js';
 export interface RealShadowParameters {
 	resolution?: number;
 	oomph?: number;

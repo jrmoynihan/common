@@ -1,5 +1,5 @@
 <script module lang="ts">
-	import type { PrettifyIntersection } from '#functions/helpers.svelte.js';
+	import type { PrettifyIntersection } from '../functions/helpers.svelte.js';
 
 	export interface TransitionNativeProps {
 		/** Will trigger the CSS transition when this value changes. */
@@ -97,7 +97,7 @@
 </script>
 
 <script lang="ts">
-	import type { SlideSide, TransitionTypes } from '#lib/lib_types.js';
+	import type { SlideSide, TransitionTypes } from '../lib_types.js';
 
 	// Inspired by https://dev.to/evanwinter/page-transitions-with-svelte-kit-35o6
 

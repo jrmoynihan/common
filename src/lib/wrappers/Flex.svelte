@@ -1,12 +1,13 @@
 <script module lang="ts">
-	import type { align_self_options, overflow_options } from '#functions/helpers.svelte.js';
-	import {
-		type align_content_options,
-		type align_items_options,
-		type direction_options,
-		type justify_content_options,
-		type wrap_options
-	} from '#lib';
+	import type {
+		align_content_options,
+		align_items_options,
+		align_self_options,
+		direction_options,
+		justify_content_options,
+		overflow_options,
+		wrap_options
+	} from '../functions/helpers.svelte.js';
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
