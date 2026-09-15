@@ -17,7 +17,7 @@
 </script>
 
 <script lang="ts">
-	import { browser } from '$app/env';
+	import { BROWSER as browser } from 'esm-env';
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes, MouseEventHandler } from 'svelte/elements';
 	import { Spring } from 'svelte/motion';

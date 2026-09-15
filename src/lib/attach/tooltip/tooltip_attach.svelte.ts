@@ -1,8 +1,7 @@
 // tooltip.ts
 import type { Attachment } from 'svelte/attachments';
-import { mount, type Snippet } from 'svelte';
-import { browser } from '$app/env';
-import ActionTooltip from './AttachedTooltip.svelte';
+import { type Snippet } from 'svelte';
+import { BROWSER as browser } from 'esm-env';
 
 type TooltipAttachBase = {
 	[key: string]: unknown;

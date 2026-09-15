@@ -1,4 +1,3 @@
-import { routes } from '$app/manifest';
 import type { NavigationTarget } from '$app/navigation';
 import { resolve } from '$app/paths';
 import { page } from '$app/state';
@@ -45,10 +44,6 @@ export class NavigationLink {
 }
 
 function all_page_route_ids(): string[] {
-	const from_manifest = routes.filter((route) => route.page).map((route) => route.id);
-	if (from_manifest.length > 0) return from_manifest;
-
-	// Kit writes an empty `$app/manifest` before the first full sync in dev.
 	return Object.keys(import.meta.glob('/src/routes/**/+page.svelte')).map(
 		(file) => route_id_from_filename(file) ?? '/'
 	);
@@ -71,7 +66,7 @@ function is_direct_child_route(parent_pathname: string, route_id: string): boole
 /** Kit `RouteId`, a layout `import.meta.url`, or a `+layout` filename. */
 export type NavParentPath = string;
 
-/** Direct child page segment names of `parent_pathname` from `$app/manifest`. */
+/** Direct child page segment names of `parent_pathname` from the app's `src/routes`. */
 export function get_subroutes(parent_pathname: NavParentPath, exclude_paths?: string[]): string[] {
 	const parent_id = to_nav_parent_path(parent_pathname);
 	const parent = normalize_parent_path(parent_id);
@@ -84,7 +79,7 @@ export function get_subroutes(parent_pathname: NavParentPath, exclude_paths?: st
 
 /**
  * Nav links for direct children of a **layout path** (`/` or `/recipes`), not the current page URL.
- * Prefers Kit 3 `$app/manifest` page routes; falls back to `import.meta.glob` when that list is empty in dev.
+ * Discovers pages with `import.meta.glob` so Kit 2 consumers do not need `$app/manifest`.
  */
 export function make_subroute_nav_links(
 	parent_path: NavParentPath | URL = '/',

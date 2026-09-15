@@ -1,4 +1,4 @@
-import { browser } from '$app/env';
+import { BROWSER as browser } from 'esm-env';
 import { mount, unmount, type Snippet } from 'svelte';
 import type { Attachment } from 'svelte/attachments';
 import Tooltip from './AttachedTooltip.svelte';

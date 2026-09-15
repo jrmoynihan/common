@@ -1,10 +1,3 @@
-<!-- <script module lang="ts">
-	import { browser } from '$app/env';
-
-	if (browser && document && !('anchorName' in document?.documentElement.style)) {
-		await fetch('https://unpkg.com/@oddbird/css-anchor-positioning');
-	}
-</script> -->
 
 <!--
 @component

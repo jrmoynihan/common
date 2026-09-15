@@ -40,7 +40,7 @@
 </script>
 
 <script lang="ts">
-	import { browser } from '$app/env';
+	import { BROWSER as browser } from 'esm-env';
 
 	// Adapted from https://web.dev/patterns/components/carousel/#js
 	// import { scrollend } from 'https://cdn.jsdelivr.net/gh/argyleink/scrollyfills@latest/dist/scrollyfills.modern.js';
