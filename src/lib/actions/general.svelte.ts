@@ -1,4 +1,4 @@
-// import { tooltip, type TooltipProps } from '$actions/tooltip/tooltip.svelte.js';
+// import { tooltip, type TooltipProps } from '#actions/tooltip/tooltip.svelte.js';
 // import { spotlight, type SpotlightParameters } from './spotlight/spotlight.svelte.js';
 
 // export async function waitForAnimations(ticking: boolean) {

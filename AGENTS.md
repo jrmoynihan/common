@@ -29,11 +29,15 @@ After completing the code, ask the user if they want a playground link. Only cal
 - Prefer parent-scoped `:global` (e.g. `.host :global(child)`) over bare `:global(...)` so library CSS does not leak into consumer apps.
 - Prefer CSS variables, `@layer`, and stable hook classes for consumer theming/overrides; avoid relying on Tailwind utilities in published components (Tailwind is only a devDependency).
 - On public hosts, spread attrs/rest before merging `class` so a consumer `class` does not wipe library hook classes.
+- Do not treat Svelte MCP docs as authoritative for SvelteKit 3; use Kit 3 migration/docs (e.g. next.svelte.dev) instead.
+- Keep CSS that styles nested `{#snippet}` content compiler-visible so unused-selector stripping does not drop those rules.
 
 ## Learned Workspace Facts
 
 - This package is `@jrmoynihan/common`, a Svelte library built into `dist/` via `svelte-package`. Run `bun run package` (svelte-kit sync + svelte-package) before `bun publish` so the tarball includes a fresh build; `bun publish` packs the tree but does not replace that step.
-- In `src/lib/index.ts`, TypeScript often does not resolve named type exports from `.svelte` in `.ts` files; use `ComponentProps<typeof Component>` and/or re-export types from `.ts` modules. Prefer relative imports in the barrel; a bare helpers side-effect import is unnecessary (named re-exports cover the API; ambient decls there are not real package globals). Declare custom `$` aliases in `svelte.config.js` `kit.alias` and call bare `sveltekit()` in Vite so `svelte-package` rewrites aliases in `dist/` (inline `sveltekit({...})` options make Kit ignore `svelte.config.js`).
+- In `src/lib/index.ts`, TypeScript often does not resolve named type exports from `.svelte` in `.ts` files; use `ComponentProps<typeof Component>` and/or re-export types from `.ts` modules. Prefer relative imports in the barrel; a bare helpers side-effect import is unnecessary (named re-exports cover the API; ambient decls there are not real package globals).
+- Kit 3 config lives on the Vite `sveltekit()` plugin (no `svelte.config.js`); package-internal aliases use `package.json` `"imports"`; `tsconfig.json` extends `$app/tsconfig`.
 - `Table` targets semantic `<table>`-style APIs; `DataGrid` targets richer grid UIs (sorting, filtering, optional virtualization)—different components on purpose.
+- Local-storage helpers take branded `StorageKey` arguments (cast keys, e.g. `'user_prefs' as StorageKey`).
 - CSS anchor positioning for attached tooltips is separate from the Popover API: MDN does not describe Popover as setting an implicit CSS `anchor-name`; the anchor element needs a proper `anchor-name` and tooltip CSS must reference it (e.g. `anchor(var(--name) …)`).
 - `AttachedTooltip` public arrow theming uses `--tooltip-arrow-size` / `--tooltip-arrow-width` / `--tooltip-arrow-height` / `--tooltip-arrow-cushion` / `--tooltip-arrow-offset` / `--tooltip-arrow-color`; keep structural arrow placement independent of tip layout knobs like `--tooltip-place-items`.

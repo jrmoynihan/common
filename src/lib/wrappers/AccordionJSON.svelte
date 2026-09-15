@@ -10,7 +10,7 @@
 </script>
 
 <script lang="ts">
-	import { AccordionJson } from '$lib';
+	import { AccordionJson } from '#lib';
 	import AccordionDetails from './AccordionDetails.svelte';
 
 	let {

@@ -36,7 +36,7 @@ Inspired by Adam Argyle @ https://web.dev/articles/building/a-dialog-component
 </script>
 
 <script lang="ts">
-	import { dialog as dialog_action } from '$actions/dialog/dialog';
+	import { dialog as dialog_action } from '#actions/dialog/dialog.js';
 	import type { Snippet } from 'svelte';
 	import type { HTMLDialogAttributes, HTMLFormAttributes } from 'svelte/elements';
 

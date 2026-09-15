@@ -9,158 +9,179 @@
  * PAGES
  */
 const PAGES = {
-  "/": `/`,
-  "/buttons": `/buttons`,
-  "/functions": `/functions`,
-  "/functions/contexts": `/functions/contexts`,
-  "/inputs": `/inputs`,
-  "/recipes": `/recipes`,
-  "/recipes/dynamic-highlight": `/recipes/dynamic-highlight`,
-  "/recipes/gallery": `/recipes/gallery`,
-  "/recipes/inverted-border": `/recipes/inverted-border`,
-  "/recipes/navigation": `/recipes/navigation`,
-  "/recipes/orderable-list": `/recipes/orderable-list`,
-  "/tooltips": `/tooltips`,
-  "/wrappers": `/wrappers`,
-  "/wrappers/accordion": `/wrappers/accordion`,
-  "/wrappers/modal": `/wrappers/modal`,
-  "/wrappers/tables": `/wrappers/tables`,
-  "/wrappers/tabs": `/wrappers/tabs`,
-  "/wrappers/transition": `/wrappers/transition`,
-  "/wrappers/transition/[image]": (params: { image: (string | number) }) => {
-    return `/wrappers/transition/${params['image']}`
-  }
-}
+	'/': `/`,
+	'/buttons': `/buttons`,
+	'/functions': `/functions`,
+	'/functions/contexts': `/functions/contexts`,
+	'/inputs': `/inputs`,
+	'/recipes': `/recipes`,
+	'/recipes/dynamic-highlight': `/recipes/dynamic-highlight`,
+	'/recipes/gallery': `/recipes/gallery`,
+	'/recipes/inverted-border': `/recipes/inverted-border`,
+	'/recipes/navigation': `/recipes/navigation`,
+	'/recipes/orderable-list': `/recipes/orderable-list`,
+	'/tooltips': `/tooltips`,
+	'/wrappers': `/wrappers`,
+	'/wrappers/accordion': `/wrappers/accordion`,
+	'/wrappers/modal': `/wrappers/modal`,
+	'/wrappers/tables': `/wrappers/tables`,
+	'/wrappers/tabs': `/wrappers/tabs`,
+	'/wrappers/transition': `/wrappers/transition`,
+	'/wrappers/transition/[image]': (params: { image: string | number }) => {
+		return `/wrappers/transition/${params['image']}`;
+	}
+};
 
 /**
  * SERVERS
  */
-const SERVERS = {
-  
-}
+const SERVERS = {};
 
 /**
  * ACTIONS
  */
 const ACTIONS = {
-  "submit /wrappers/modal": `/wrappers/modal?/submit`
-}
+	'submit /wrappers/modal': `/wrappers/modal?/submit`
+};
 
 /**
  * LINKS
  */
-const LINKS = {
-  
-}
+const LINKS = {};
 
-type ParamValue = string | number | boolean | null | undefined
+type ParamValue = string | number | boolean | null | undefined;
 
 /**
  * Append search params to a string
  */
 export const appendSp = (
-  sp?: Record<string, ParamValue | ParamValue[]>,
-  prefix: '?' | '&' = '?',
+	sp?: Record<string, ParamValue | ParamValue[]>,
+	prefix: '?' | '&' = '?'
 ) => {
-  if (sp === undefined) return ''
+	if (sp === undefined) return '';
 
-  const params = new URLSearchParams()
-  const append = (n: string, v: ParamValue) => {
-    if (v !== undefined) {
-      params.append(n, String(v))
-    }
-  }
+	const params = new URLSearchParams();
+	const append = (n: string, v: ParamValue) => {
+		if (v !== undefined) {
+			params.append(n, String(v));
+		}
+	};
 
-  let anchor = ''
-  for (const [name, val] of Object.entries(sp)) {
-    if (name === '__KIT_ROUTES_ANCHOR__' && val !== undefined) {
-      anchor = `#${val}`
-      continue
-    }
-    if (Array.isArray(val)) {
-      for (const v of val) {
-        append(name, v)
-      }
-    } else {
-      append(name, val)
-    }
-  }
+	let anchor = '';
+	for (const [name, val] of Object.entries(sp)) {
+		if (name === '__KIT_ROUTES_ANCHOR__' && val !== undefined) {
+			anchor = `#${val}`;
+			continue;
+		}
+		if (Array.isArray(val)) {
+			for (const v of val) {
+				append(name, v);
+			}
+		} else {
+			append(name, val);
+		}
+	}
 
-  const formatted = params.toString()
-  if (formatted || anchor) {
-    return `${prefix}${formatted}${anchor}`.replace('?#', '#')
-  }
-  return ''
-}
+	const formatted = params.toString();
+	if (formatted || anchor) {
+		return `${prefix}${formatted}${anchor}`.replace('?#', '#');
+	}
+	return '';
+};
 
 /**
  * get the current search params
- * 
+ *
  * Could be use like this:
  * ```
  * route("/cities", { page: 2 }, { ...currentSP() })
  * ```
- */ 
+ */
 export const currentSp = () => {
-  const params = new URLSearchParams(window.location.search)
-  const record: Record<string, string> = {}
-  for (const [key, value] of params.entries()) {
-    record[key] = value
-  }
-  return record
-}
+	const params = new URLSearchParams(window.location.search);
+	const record: Record<string, string> = {};
+	for (const [key, value] of params.entries()) {
+		record[key] = value;
+	}
+	return record;
+};
 
 /* type helpers for route function */
-type NonFunctionKeys<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T]
-type FunctionKeys<T> = { [K in keyof T]: T[K] extends Function ? K : never }[keyof T]
-type FunctionParams<T> = T extends (...args: infer P) => any ? P : never
+type NonFunctionKeys<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
+type FunctionKeys<T> = { [K in keyof T]: T[K] extends Function ? K : never }[keyof T];
+type FunctionParams<T> = T extends (...args: infer P) => any ? P : never;
 
-const AllObjs = { ...PAGES, ...ACTIONS, ...SERVERS, ...LINKS }
-type AllTypes = typeof AllObjs
+const AllObjs = { ...PAGES, ...ACTIONS, ...SERVERS, ...LINKS };
+type AllTypes = typeof AllObjs;
 
-export type Routes = keyof AllTypes extends `${string}/${infer Route}` ? `/${Route}` : keyof AllTypes
+export type Routes = keyof AllTypes extends `${string}/${infer Route}`
+	? `/${Route}`
+	: keyof AllTypes;
 export const routes = [
-	...new Set(Object.keys(AllObjs).map((route) => /^\/.*|[^ ]?\/.*$/.exec(route)?.[0] ?? route)),
-] as Routes[]
+	...new Set(Object.keys(AllObjs).map((route) => /^\/.*|[^ ]?\/.*$/.exec(route)?.[0] ?? route))
+] as Routes[];
 
 /**
- * To be used like this: 
+ * To be used like this:
  * ```ts
  * import { route } from './ROUTES'
- * 
+ *
  * route('site_id', { id: 1 })
  * ```
  */
-export function route<T extends FunctionKeys<AllTypes>>(key: T, ...params: FunctionParams<AllTypes[T]>): string
-export function route<T extends NonFunctionKeys<AllTypes>>(key: T): string
+export function route<T extends FunctionKeys<AllTypes>>(
+	key: T,
+	...params: FunctionParams<AllTypes[T]>
+): string;
+export function route<T extends NonFunctionKeys<AllTypes>>(key: T): string;
 export function route<T extends keyof AllTypes>(key: T, ...params: any[]): string {
-  if (AllObjs[key] as any instanceof Function) {
-    const element = (AllObjs as any)[key] as (...args: any[]) => string
-    return element(...params)
-  } else {
-    return AllObjs[key] as string
-  }
+	if ((AllObjs[key] as any) instanceof Function) {
+		const element = (AllObjs as any)[key] as (...args: any[]) => string;
+		return element(...params);
+	} else {
+		return AllObjs[key] as string;
+	}
 }
 
 /**
-* Add this type as a generic of the vite plugin `kitRoutes<KIT_ROUTES>`.
-*
-* Full example:
-* ```ts
-* import type { KIT_ROUTES } from '$lib/ROUTES'
-* import { kitRoutes } from 'vite-plugin-kit-routes'
-*
-* kitRoutes<KIT_ROUTES>({
-*  PAGES: {
-*    // here, key of object will be typed!
-*  }
-* })
-* ```
-*/
+ * Add this type as a generic of the vite plugin `kitRoutes<KIT_ROUTES>`.
+ *
+ * Full example:
+ * ```ts
+ * import type { KIT_ROUTES } from '#lib/ROUTES.js'
+ * import { kitRoutes } from 'vite-plugin-kit-routes'
+ *
+ * kitRoutes<KIT_ROUTES>({
+ *  PAGES: {
+ *    // here, key of object will be typed!
+ *  }
+ * })
+ * ```
+ */
 export type KIT_ROUTES = {
-  PAGES: { '/': never, '/buttons': never, '/functions': never, '/functions/contexts': never, '/inputs': never, '/recipes': never, '/recipes/dynamic-highlight': never, '/recipes/gallery': never, '/recipes/inverted-border': never, '/recipes/navigation': never, '/recipes/orderable-list': never, '/tooltips': never, '/wrappers': never, '/wrappers/accordion': never, '/wrappers/modal': never, '/wrappers/tables': never, '/wrappers/tabs': never, '/wrappers/transition': never, '/wrappers/transition/[image]': 'image' }
-  SERVERS: Record<string, never>
-  ACTIONS: { 'submit /wrappers/modal': never }
-  LINKS: Record<string, never>
-  Params: { 'image': never }
-}
+	PAGES: {
+		'/': never;
+		'/buttons': never;
+		'/functions': never;
+		'/functions/contexts': never;
+		'/inputs': never;
+		'/recipes': never;
+		'/recipes/dynamic-highlight': never;
+		'/recipes/gallery': never;
+		'/recipes/inverted-border': never;
+		'/recipes/navigation': never;
+		'/recipes/orderable-list': never;
+		'/tooltips': never;
+		'/wrappers': never;
+		'/wrappers/accordion': never;
+		'/wrappers/modal': never;
+		'/wrappers/tables': never;
+		'/wrappers/tabs': never;
+		'/wrappers/transition': never;
+		'/wrappers/transition/[image]': 'image';
+	};
+	SERVERS: Record<string, never>;
+	ACTIONS: { 'submit /wrappers/modal': never };
+	LINKS: Record<string, never>;
+	Params: { image: never };
+};

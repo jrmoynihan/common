@@ -1,12 +1,12 @@
 <script lang="ts">
-	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import Input from '$inputs/Input.svelte';
-	import { Grid } from '$lib';
+	import ToggleSwitch from '#buttons/ToggleSwitch.svelte';
+	import Input from '#inputs/Input.svelte';
+	import { Grid } from '#lib';
 	import {
 		tooltip,
 		type TooltipDirections,
 		type TooltipProps
-	} from '$lib/attach/tooltip/tooltip.svelte.js';
+	} from '#lib/attach/tooltip/tooltip.svelte.js';
 	import Icon from '@iconify/svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	let position: TooltipDirections = $state('top');

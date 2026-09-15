@@ -27,7 +27,8 @@
 		background-color: transparent;
 		padding: 0 0.25rem;
 		border-radius: 0.25rem;
-		&:has(code) {
+		
+		&:has(:global(code)) {
 			padding: 0;
 		}
 	}

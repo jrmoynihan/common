@@ -164,7 +164,8 @@
 			&.no-icon {
 				grid-template-columns: 1fr;
 			}
-			&:has(input.open) {
+			&[open],
+			&:has(:global(input.open)) {
 				border-radius: 1rem 1rem 0 0;
 				max-height: var(
 					--details-max-height-open,

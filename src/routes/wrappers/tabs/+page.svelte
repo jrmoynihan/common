@@ -1,6 +1,6 @@
 <script lang="ts">
-	import CustomComponent from '$routes/tooltips/CustomComponent.svelte';
-	import TabsRunes, { type ComponentTab, type SnippetTab } from '$wrappers/Tabs_Runes.svelte';
+	import CustomComponent from '#routes/tooltips/CustomComponent.svelte';
+	import TabsRunes, { type ComponentTab, type SnippetTab } from '#wrappers/Tabs_Runes.svelte';
 	import { fly } from 'svelte/transition';
 
 	const tabs: SnippetTab[] = [

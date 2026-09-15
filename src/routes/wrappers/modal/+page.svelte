@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { tooltip } from '$lib';
-	import FullDialog from '$wrappers/FullDialog.svelte';
-	import MiniDialog from '$wrappers/MiniDialog.svelte';
+	import { tooltip } from '#lib';
+	import FullDialog from '#wrappers/FullDialog.svelte';
+	import MiniDialog from '#wrappers/MiniDialog.svelte';
 
 	let dialog = $state<FullDialog>();
 </script>

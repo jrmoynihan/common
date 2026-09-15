@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { tooltip } from '$lib';
-	import Accordion from '$wrappers/Accordion.svelte';
-	import AccordionDetails, { type AccordionDetailsProps } from '$wrappers/AccordionDetails.svelte';
-	import AccordionJson from '$wrappers/AccordionJSON.svelte';
-	import JsonView from '$wrappers/JSONView.svelte';
+	import { tooltip } from '#lib';
+	import Accordion from '#wrappers/Accordion.svelte';
+	import AccordionDetails, { type AccordionDetailsProps } from '#wrappers/AccordionDetails.svelte';
+	import AccordionJson from '#wrappers/AccordionJSON.svelte';
+	import JsonView from '#wrappers/JSONView.svelte';
 	import Treecordion from './Treecordion.svelte';
 
 	// const details_styles = 'max-width: max-content;';

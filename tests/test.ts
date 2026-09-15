@@ -1,4 +1,4 @@
-import { make_subroute_nav_links } from '$lib';
+import { make_subroute_nav_links } from '#lib';
 import { expect, test } from '@playwright/test';
 
 test('make correct subroute nav links', async () => {

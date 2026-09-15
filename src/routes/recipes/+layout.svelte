@@ -3,9 +3,9 @@
 	import {
 		make_subroute_nav_links,
 		should_layout_transition_on_navigation
-	} from '$navigation/nav-functions.svelte';
-	import Navigation from '$navigation/Navigation.svelte';
-	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
+	} from '#navigation/nav-functions.svelte.js';
+	import Navigation from '#navigation/Navigation.svelte';
+	import TransitionRunes from '#wrappers/Transition_Runes.svelte';
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 
@@ -17,11 +17,13 @@
 	}
 
 	let { data, children }: LayoutProps = $props();
-	const { url } = data;
 
 	let trigger: boolean = $state(false);
 	beforeNavigate(async (nav) => {
+		if (nav.shallow) return;
+
 		const { from, to } = nav;
+
 		if (
 			from &&
 			to &&
@@ -33,7 +35,7 @@
 </script>
 
 <section>
-	{#await make_subroute_nav_links(url) then nav_links}
+	{#await make_subroute_nav_links(data.url) then nav_links}
 		<Navigation links={nav_links} />
 	{/await}
 

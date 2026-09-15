@@ -61,8 +61,8 @@
 </script>
 
 <script lang="ts" generics="T extends Record<string,any>">
-	import type { PrettifyIntersection } from '$functions/helpers.svelte';
-	import { tooltip } from '$lib/attach/tooltip/tooltip.svelte';
+	import type { PrettifyIntersection } from '#functions/helpers.svelte.js';
+	import { tooltip } from '#lib/attach/tooltip/tooltip.svelte.js';
 	import type { IconProps } from '@iconify/svelte';
 	import type { Snippet } from 'svelte';
 	import { flip } from 'svelte/animate';

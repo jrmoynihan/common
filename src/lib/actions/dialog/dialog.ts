@@ -15,10 +15,9 @@ export function dialog(dialog: HTMLDialogElement) {
 		}
 	});
 
-  dialog_attribute_observer.observe(dialog, {
+	dialog_attribute_observer.observe(dialog, {
 		attributes: true
 	});
-
 
 	// track deletion
 	const dialog_deletion_observer = new MutationObserver((mutations, observer) => {
@@ -33,18 +32,18 @@ export function dialog(dialog: HTMLDialogElement) {
 		}
 	});
 
-  dialog_deletion_observer.observe(document.body, {
-    attributes: false,
-    subtree: false,
-    childList: true,
-  })
+	dialog_deletion_observer.observe(document.body, {
+		attributes: false,
+		subtree: false,
+		childList: true
+	});
 
 	return {
 		destroy() {
 			dialog?.removeEventListener('close', dialogClose);
 			dialog.removeEventListener('click', lightDismiss);
-      dialog_attribute_observer.disconnect();
-      dialog_deletion_observer.disconnect();
+			dialog_attribute_observer.disconnect();
+			dialog_deletion_observer.disconnect();
 		}
 	};
 }
@@ -52,7 +51,7 @@ export function dialog(dialog: HTMLDialogElement) {
 const lightDismiss = ({ target }: Event) => {
 	const dialog = target as HTMLDialogElement;
 	if (dialog.nodeName === 'DIALOG') dialog.close('dismiss');
-}
+};
 
 const dialogClose = async ({ target }: Event) => {
 	try {
@@ -93,4 +92,4 @@ const wait_for_animations = async (mutation: MutationRecord) => {
 	} catch (error) {
 		console.error(error);
 	}
-}
+};

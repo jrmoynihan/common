@@ -1,7 +1,7 @@
 // tooltip.ts
 import type { Attachment } from 'svelte/attachments';
 import { mount, type Snippet } from 'svelte';
-import { browser } from '$app/environment';
+import { browser } from '$app/env';
 import ActionTooltip from './AttachedTooltip.svelte';
 
 type TooltipAttachBase = {
@@ -21,10 +21,7 @@ type TooltipAttachRenderProps<A = unknown> = TooltipAttachBase & {
 	args?: A;
 };
 
-export function tip(
-	element: HTMLElement,
-	props: TooltipAttachmentProps
-): Attachment<HTMLElement>;
+export function tip(element: HTMLElement, props: TooltipAttachmentProps): Attachment<HTMLElement>;
 export function tip<A>(
 	element: HTMLElement,
 	props: TooltipAttachBase & { content: Snippet<[A]>; args: A }

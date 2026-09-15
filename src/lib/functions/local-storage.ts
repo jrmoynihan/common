@@ -1,4 +1,4 @@
-import { browser } from '$app/environment';
+import { browser } from '$app/env';
 import type { BrandedString, JsonifiedObject, PrettifyIntersection } from './helpers.svelte';
 import { Log } from './logging.js';
 

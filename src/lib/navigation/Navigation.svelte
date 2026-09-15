@@ -10,9 +10,9 @@
 </script>
 
 <script lang="ts">
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import { beforeNavigate } from '$app/navigation';
-	import NavLink from '$navigation/NavLink.svelte';
+	import NavLink from '#navigation/NavLink.svelte';
 	import type { Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes, HTMLAttributes } from 'svelte/elements';
 	import type { NavigationLink } from './nav-functions.svelte.js';
@@ -20,7 +20,9 @@
 	let { links = [], link_attributes, children, ...nav_attributes }: NavigationProps = $props();
 
 	// Close any open dialog elements before navigating.
-	beforeNavigate(() => {
+	beforeNavigate(({ shallow }) => {
+		if (shallow) return;
+
 		if (browser) {
 			const dialogs = document.getElementsByTagName('dialog');
 			if (dialogs?.length > 0) {

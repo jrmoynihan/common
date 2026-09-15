@@ -1,8 +1,8 @@
-import { page } from '$app/state';
-import { capitalize, dekebab, enumerate_runed_properties } from '$functions/helpers.svelte.js';
-import { ErrorLog } from '$functions/logging.js';
+import type { NavigationTarget } from '$app/navigation';
+import { page, type Page } from '$app/state';
+import { capitalize, dekebab, enumerate_runed_properties } from '#functions/helpers.svelte.js';
+import { ErrorLog } from '#functions/logging.js';
 import type { IconProps } from '@iconify/svelte';
-import type { NavigationTarget, Page } from '@sveltejs/kit';
 
 export class NavigationLink {
 	/** The URL object describing the link */

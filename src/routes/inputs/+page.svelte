@@ -1,22 +1,20 @@
 <script lang="ts">
-	import Checkbox from '$inputs/Checkbox.svelte';
-	import DatalistTextInput from '$inputs/DatalistTextInput.svelte';
-	import NumericInput from '$inputs/NumericInput.svelte';
-	import RadioGroup from '$inputs/RadioGroup.svelte';
-	import Select from '$inputs/Select.svelte';
-	import TemporalDateInput from '$inputs/TemporalDateInput.svelte';
-	import TextInput from '$inputs/TextInput.svelte';
-	import { tooltip } from '$lib';
+	import Checkbox from '#inputs/Checkbox.svelte';
+	import DatalistTextInput from '#inputs/DatalistTextInput.svelte';
+	import NumericInput from '#inputs/NumericInput.svelte';
+	import RadioGroup from '#inputs/RadioGroup.svelte';
+	import Select from '#inputs/Select.svelte';
+	import TemporalDateInput from '#inputs/TemporalDateInput.svelte';
+	import TextInput from '#inputs/TextInput.svelte';
+	import { tooltip } from '#lib';
 	import { Inspect } from 'svelte-inspect-value';
 	import type { PageData } from './$types';
 
 	let { data } = $props();
-	const { datalist, select_options, date_inputs }: PageData = data;
-	const name_list = datalist.map((d) => d.label);
+	const { datalist, select_options, date_inputs }: PageData = $derived(data);
 	let selected_fruit: (typeof datalist)[0] | undefined = $state();
 	let selected_option: (typeof select_options)[0] | undefined = $state();
 	let selected_fruit_name: string | undefined = $state();
-	let selected_number = $state<number>(1);
 	let selected_value = $state<(typeof select_options)[0][keyof (typeof select_options)[0]]>();
 	let valid_email: string = $state('');
 	let valid_password: string = $state('');

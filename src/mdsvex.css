@@ -4,8 +4,9 @@ code[class*='language-'] {
 	/* color: hsla(210, 50%, 60%); */
 	font-size: 13px;
 	text-shadow: none;
-	font-family: 'Fira Code iScript', 'Fira Code', Menlo, Monaco, Consolas, 'Andale Mono',
-		'Ubuntu Mono', 'Courier New', monospace;
+	font-family:
+		'Fira Code iScript', 'Fira Code', Menlo, Monaco, Consolas, 'Andale Mono', 'Ubuntu Mono',
+		'Courier New', monospace;
 	direction: ltr;
 	text-align: left;
 	white-space: pre;

@@ -1,7 +1,7 @@
 <!--TODO: Try page-transitions instead with shallow routing -->
 <script lang="ts">
-	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import Dialog from '$wrappers/Dialog.svelte';
+	import ToggleSwitch from '#buttons/ToggleSwitch.svelte';
+	import Dialog from '#wrappers/Dialog.svelte';
 	import { flip } from 'svelte/animate';
 	import { crossfade } from 'svelte/transition';
 	import type { PageData } from './$types';
@@ -9,7 +9,7 @@
 	let { data }: { data: PageData } = $props();
 
 	type Image = (typeof images)[0];
-	const { images } = data;
+	const { images } = $derived(data);
 	const [send, receive] = crossfade({ duration: 500 });
 
 	let selected_image: Image | null = $state(null);

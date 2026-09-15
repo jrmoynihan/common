@@ -5,21 +5,21 @@
 		justify_items_options,
 		justify_self_options,
 		wrap_options
-	} from '$functions/helpers.svelte';
-	import NumericInput from '$inputs/NumericInput.svelte';
-	import RadioGroup from '$inputs/RadioGroup.svelte';
-	import Select from '$inputs/Select.svelte';
-	import TextInput from '$inputs/TextInput.svelte';
+	} from '#functions/helpers.svelte.js';
+	import NumericInput from '#inputs/NumericInput.svelte';
+	import RadioGroup from '#inputs/RadioGroup.svelte';
+	import Select from '#inputs/Select.svelte';
+	import TextInput from '#inputs/TextInput.svelte';
 	import {
 		align_content_options,
 		align_items_options,
 		justify_content_options,
 		overflow_options
-	} from '$lib';
-	import Flex, { type FlexProps } from '$wrappers/Flex.svelte';
-	import FlexItem, { type FlexItemProps } from '$wrappers/FlexItem.svelte';
-	import Grid, { type GridProps } from '$wrappers/Grid.svelte';
-	import ResizableGrid from '$wrappers/ResizableGrid.svelte';
+	} from '#lib';
+	import Flex, { type FlexProps } from '#wrappers/Flex.svelte';
+	import FlexItem, { type FlexItemProps } from '#wrappers/FlexItem.svelte';
+	import Grid, { type GridProps } from '#wrappers/Grid.svelte';
+	import ResizableGrid from '#wrappers/ResizableGrid.svelte';
 
 	const items = Array(12)
 		.fill(0)

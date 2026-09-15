@@ -1,17 +1,11 @@
 {
-	"extends": "./.svelte-kit/tsconfig.json",
+	"extends": "$app/tsconfig",
 	"compilerOptions": {
-		// https://kit.svelte.dev/docs/packaging#caveats
-		"moduleResolution": "bundler",
-		"esModuleInterop": true,
 		"incremental": true,
-		"forceConsistentCasingInFileNames": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
 		"strict": true,
-		"verbatimModuleSyntax": true,
-		"isolatedModules": true,
-		"noUncheckedIndexedAccess": true, // Added to avoid errors with indexed access
-		"types": ["svelte"]
-	}
+		"noUncheckedIndexedAccess": true,
+		"types": ["svelte", "$app/types"]
+	},
+	"include": ["src", "tests", "*"],
+	"exclude": ["src/service-worker", "vitest-setup-client.ts"]
 }

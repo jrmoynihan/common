@@ -14,10 +14,11 @@ export function load(event: LoadEvent): {
 		'modern',
 		'space',
 		'exercise',
-		'outdoors',
+		'outdoors'
 	];
 	const double_seeds = [...seeds];
-	const images: { path: string; text: string; href: string; uuid: string }[] = Array.from({length: double_seeds.length},
+	const images: { path: string; text: string; href: string; uuid: string }[] = Array.from(
+		{ length: double_seeds.length },
 		(_: unknown, i: number) => {
 			return {
 				path: `route-${i}`,

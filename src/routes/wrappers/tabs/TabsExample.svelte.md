@@ -1,8 +1,8 @@
 ```svelte example Wrapper="/src/routes/NoBackgroundWrapper.svelte"
 <script lang="ts">
-	import Tooltips from '$routes/tooltips/+page.svelte';
-	import { Tab } from '$wrappers/tab';
-	import Tabs from '$wrappers/Tabs.svelte';
+	import Tooltips from '#routes/tooltips/+page.svelte';
+	import { Tab } from '#wrappers/tab';
+	import Tabs from '#wrappers/Tabs.svelte';
 	import Accordions from '../accordion/+page.svelte';
 	import Buttons from '../../buttons/+page.svelte';
 	import { fly } from 'svelte/transition';

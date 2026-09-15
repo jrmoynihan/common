@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { JsonView } from '$lib';
-	import BreadcrumbRunes from '$navigation/BreadcrumbRunes.svelte';
-	import Carousel from '$navigation/Carousel.svelte';
+	import { JsonView } from '#lib';
+	import BreadcrumbRunes from '#navigation/BreadcrumbRunes.svelte';
+	import Carousel from '#navigation/Carousel.svelte';
 
 	let { data } = $props();
 	let crumbs = {
@@ -21,7 +21,7 @@
 		puzzle: {}
 	};
 
-	const items = data.picture_data;
+	const items = $derived(data.picture_data);
 	let carousel = $state<Carousel>();
 </script>
 

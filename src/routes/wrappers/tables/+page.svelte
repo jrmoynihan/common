@@ -1,8 +1,8 @@
 <script lang="ts">
-	import ToggleSwitch from '$buttons/ToggleSwitch.svelte';
-	import { enumerate_runed_properties, get_max } from '$functions/helpers.svelte';
-	import Input from '$inputs/Input.svelte';
-	import Table, { type DataCell } from '$wrappers/Table.svelte';
+	import ToggleSwitch from '#buttons/ToggleSwitch.svelte';
+	import { enumerate_runed_properties, get_max } from '#functions/helpers.svelte.js';
+	import Input from '#inputs/Input.svelte';
+	import Table, { type DataCell } from '#wrappers/Table.svelte';
 	import { MediaQuery } from 'svelte/reactivity';
 	import { fly } from 'svelte/transition';
 

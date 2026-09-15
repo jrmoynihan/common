@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { beforeNavigate } from '$app/navigation';
 	import { page } from '$app/state';
-	import LightDarkToggleV2 from '$buttons/LightDarkToggle_v2.svelte';
-	import Navigation from '$navigation/Navigation.svelte';
+	import LightDarkToggleV2 from '#buttons/LightDarkToggle_v2.svelte';
+	import Navigation from '#navigation/Navigation.svelte';
 	import {
 		make_subroute_nav_links,
 		should_layout_transition_on_navigation
-	} from '$navigation/nav-functions.svelte.js';
-	import FunctionsAside from '$routes/functions/FunctionsAside.svelte';
-	import TransitionRunes from '$wrappers/Transition_Runes.svelte';
+	} from '#navigation/nav-functions.svelte.js';
+	import FunctionsAside from '#routes/functions/FunctionsAside.svelte';
+	import TransitionRunes from '#wrappers/Transition_Runes.svelte';
 	import { type Snippet } from 'svelte';
 	import { MediaQuery } from 'svelte/reactivity';
 	import '../../src/mdsvex.css';
@@ -26,6 +26,8 @@
 	let accent_color: string = $state(dark_mode.current ? '#ffa600' : '#ffa600');
 
 	beforeNavigate(async (nav) => {
+		if (nav.shallow) return;
+
 		const { from, to } = nav;
 
 		if (

@@ -1,4 +1,4 @@
-import type { DateInputProps } from '$inputs/TemporalDateInput.svelte';
+import type { DateInputProps } from '#inputs/TemporalDateInput.svelte';
 import { Temporal } from '@js-temporal/polyfill';
 import type { PageLoadEvent } from './$types';
 

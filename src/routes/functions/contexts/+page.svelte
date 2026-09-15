@@ -1,7 +1,7 @@
 <script lang="ts">
-	import LinkableAnchorHeading from '$navigation/LinkableAnchorHeading.svelte';
-	import Code from '$routes/internal/Code.svelte';
-	import ExternalLink from '$routes/internal/ExternalLink.svelte';
+	import LinkableAnchorHeading from '#navigation/LinkableAnchorHeading.svelte';
+	import Code from '#routes/internal/Code.svelte';
+	import ExternalLink from '#routes/internal/ExternalLink.svelte';
 </script>
 
 <a id="contexts"><h2>Contexts</h2></a>

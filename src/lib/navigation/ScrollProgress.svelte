@@ -17,7 +17,7 @@
 </script>
 
 <script lang="ts">
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes, MouseEventHandler } from 'svelte/elements';
 	import { Spring } from 'svelte/motion';
@@ -44,6 +44,7 @@
 			window.requestAnimationFrame(() => {
 				const total_scroll_distance =
 					document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
 				progress.set((scrollY * 100) / total_scroll_distance);
 			});
 		}
@@ -61,9 +62,7 @@
 <svelte:window bind:scrollY on:scroll={checkScrollProgress} />
 {#if meets_visibility_threshold}
 	{#if show_return_to_top_button}
-		<button {onclick} {...button_attributes}>
-			{@render children?.()}
-		</button>
+		<button {onclick} {...button_attributes}>{@render children?.()}</button>
 	{/if}
 	{#if show_progress_bar}
 		<progress-indicator style="width:{(progress.current * 100).toString()}%;"> </progress-indicator>

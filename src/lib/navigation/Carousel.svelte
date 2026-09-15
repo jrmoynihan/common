@@ -40,7 +40,7 @@
 </script>
 
 <script lang="ts">
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 
 	// Adapted from https://web.dev/patterns/components/carousel/#js
 	// import { scrollend } from 'https://cdn.jsdelivr.net/gh/argyleink/scrollyfills@latest/dist/scrollyfills.modern.js';
@@ -723,12 +723,13 @@
 				grid-column: 3;
 			}
 
-			[dir='rtl'] & > svg {
+			/* svg/path live in {#snippet} defaults (or consumer overrides); scoped analysis cannot see them */
+			:global([dir='rtl']) & > :global(svg) {
 				transform: rotateY(180deg);
 			}
 
 			&:disabled,
-			&:disabled > svg {
+			&:disabled > :global(svg) {
 				cursor: not-allowed;
 				transition-delay: 0s;
 				opacity: 0.25;
@@ -738,7 +739,7 @@
 				color: var(--link);
 			}
 
-			&:not(:disabled) svg > path {
+			&:not(:disabled) :global(svg > path) {
 				@media (--motionOK) {
 					--_transform: translateX(var(--_x)) scale(0.95);
 					transition: transform 0.5s var(--ease-squish-3);
@@ -746,12 +747,12 @@
 				}
 			}
 
-			&:global([aria-label='Next Item']):not(:disabled):is(:hover, :focus-visible) svg > path {
+			&[aria-label='Next Item']:not(:disabled):is(:hover, :focus-visible) :global(svg > path) {
 				--_x: 2px;
 				transform: var(--_transform);
 			}
 
-			&:global([aria-label='Previous Item']):not(:disabled):is(:hover, :focus-visible) svg > path {
+			&[aria-label='Previous Item']:not(:disabled):is(:hover, :focus-visible) :global(svg > path) {
 				--_x: -2px;
 				transform: var(--_transform);
 			}
@@ -769,10 +770,6 @@
 					@media (prefers-color-scheme: dark) {
 						background: var(--color-gray-200);
 					}
-				}
-
-				&:where([aria-selected='false']) {
-					/* transform: scale(0.75); */
 				}
 
 				&.gallery {

@@ -11,9 +11,7 @@ import {
 
 /** One or more `Readable`s. */
 declare type Stores =
-	| Readable<any>
-	| [Readable<any>, ...Array<Readable<any>>]
-	| Array<Readable<any>>;
+	Readable<any> | [Readable<any>, ...Array<Readable<any>>] | Array<Readable<any>>;
 /** One or more values from `Readable` stores. */
 declare type StoresValues<T> =
 	T extends Readable<infer U>

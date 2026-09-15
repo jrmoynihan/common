@@ -1301,22 +1301,10 @@ declare const JSON: JSON;
  * ```
  */
 export type HttpVerbs =
-	| 'GET'
-	| 'POST'
-	| 'PUT'
-	| 'DELETE'
-	| 'PATCH'
-	| 'OPTIONS'
-	| 'HEAD'
-	| 'UPDATE'
-	| 'CONNECT'
-	| 'TRACE';
+	'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD' | 'UPDATE' | 'CONNECT' | 'TRACE';
 
 /** HTTP methods that allow a request body. Use with {@link TypedRequestInit} when passing `body`. */
-export type HttpVerbWithBody = Extract<
-	HttpVerbs,
-	'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'UPDATE'
->;
+export type HttpVerbWithBody = Extract<HttpVerbs, 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'UPDATE'>;
 
 /** HTTP methods that must not include a request body. Use with {@link TypedRequestInit} to forbid `body`. */
 export type HttpVerbNonBody = Exclude<HttpVerbs, HttpVerbWithBody>;

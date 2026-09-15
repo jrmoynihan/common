@@ -1,10 +1,10 @@
-import { browser } from '$app/environment';
+import { browser } from '$app/env';
 import { mount, unmount, type Snippet } from 'svelte';
 import type { Attachment } from 'svelte/attachments';
 import Tooltip from './AttachedTooltip.svelte';
 
 export type TooltipDirections = 'top' | 'bottom' | 'left' | 'right';
-const void_elements = [
+const void_elements = new Set([
 	'area',
 	'base',
 	'br',
@@ -19,11 +19,11 @@ const void_elements = [
 	'source',
 	'track',
 	'wbr'
-];
+]);
 
 /** Stable `<dashed-ident>` for `anchor-name` / `position-anchor` (UUID hyphens removed). */
 export function invoker_anchor_name(id: string): string {
-	return `--invoker-${id.replace(/-/g, '')}`;
+	return `--invoker-${id.replaceAll('-', '')}`;
 }
 
 class BaseTooltipProps {
@@ -56,8 +56,6 @@ class BaseTooltipProps {
 	 * @default ''
 	 */
 	style? = $state<string>('');
-	/** @deprecated Use `style` instead. */
-	styles? = $state<string>('');
 	/** The tooltip's distance from the anchor element. Numbers will be converted to `px`. Strings will be passed as CSS property values.
 	 * @default 10
 	 */
@@ -78,7 +76,6 @@ class BaseTooltipProps {
 		this.keep_visible = args.keep_visible ?? false;
 		this.show_arrow = args.show_arrow ?? true;
 		this.style = args.style ?? args.styles ?? '';
-		this.styles = args.styles ?? '';
 		this.distance = args.distance ?? 10;
 		this.inert = args.inert ?? true;
 		this.fallback = args.fallback ?? true;
@@ -117,7 +114,7 @@ export function tooltip<A>(
 export function tooltip(parameters: TooltipRenderProps): Attachment<HTMLElement> {
 	let tooltip: ReturnType<typeof mount>;
 	return (node: HTMLElement) => {
-		const target = void_elements.includes(node.nodeName.toLowerCase())
+		const target = void_elements.has(node.nodeName.toLowerCase())
 			? (node.closest('label') ?? document.body)
 			: node;
 		const { id, anchor_name } = setup_node(target);

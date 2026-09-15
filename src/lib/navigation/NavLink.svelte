@@ -20,7 +20,9 @@
 
 	let anchor_path_to_scroll_to: string | undefined = $state();
 
-	beforeNavigate(({ from, to, cancel }) => {
+	beforeNavigate(({ from, to, cancel, shallow }) => {
+		if (shallow) return;
+
 		const href = to?.url?.href;
 		if (href !== nav_link.url?.href) return;
 		if (href) {
@@ -39,7 +41,9 @@
 			}
 		}
 	});
-	afterNavigate(({ to }) => {
+
+	afterNavigate(({ to, shallow }) => {
+		if (shallow) return;
 		if (to && !nav_link.url?.href.includes(to.url.href)) return;
 		if (anchor_path_to_scroll_to) {
 			scrollToElement();

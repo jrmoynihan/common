@@ -39,7 +39,7 @@
 <script lang="ts" generics="T extends Component<any>">
 	import TransitionNativeRunes, {
 		type TransitionNativeProps
-	} from '$wrappers/TransitionNative_Runes.svelte';
+	} from '#wrappers/TransitionNative_Runes.svelte';
 	import type { Component, ComponentProps, Snippet } from 'svelte';
 	import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	let {

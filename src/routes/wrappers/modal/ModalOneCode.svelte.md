@@ -1,7 +1,7 @@
 ```svelte example Wrapper="./ModalExample.svelte"
 <script lang="ts">
-	import Button from '$buttons/Button.svelte';
-	import ModalRunes from '$wrappers/ModalRunes.svelte';
+	import Button from '#buttons/Button.svelte';
+	import ModalRunes from '#wrappers/ModalRunes.svelte';
 
 	let open_modal: () => Promise<void>;
 </script>

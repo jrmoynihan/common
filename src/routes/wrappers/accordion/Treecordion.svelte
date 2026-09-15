@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AccordionDetails from '$wrappers/AccordionDetails.svelte';
+	import AccordionDetails from '#wrappers/AccordionDetails.svelte';
 	import type { ComponentProps, Snippet } from 'svelte';
 	import TreeItem from './TreeItem.svelte';
 	import TreeList from './TreeList.svelte';

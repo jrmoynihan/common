@@ -34,9 +34,9 @@
 </script>
 
 <script lang="ts" generics="T">
-	import NumericInput from '$inputs/NumericInput.svelte';
-	import Select from '$inputs/Select.svelte';
-	import TextInput from '$inputs/TextInput.svelte';
+	import NumericInput from '#inputs/NumericInput.svelte';
+	import Select from '#inputs/Select.svelte';
+	import TextInput from '#inputs/TextInput.svelte';
 	import VirtualList from '@humanspeak/svelte-virtual-list';
 	import Icon from '@iconify/svelte';
 
@@ -559,8 +559,7 @@
 												</div>
 											{:else if (col.type === 'finite' || col.type === 'boolean') && col.options}
 												{@const opt_list = col.options as
-													| string[]
-													| { value: string; label: string }[]}
+													string[] | { value: string; label: string }[]}
 												{@const search_val = finite_search[popover_id] ?? ''}
 												{@const filtered_opts = opt_list.filter((o) => {
 													const label = typeof o === 'object' ? o.label : o;
@@ -659,7 +658,7 @@
 							</div>
 						</div>
 					{:else}
-						<div class="header-top items-center grid justify-between gap-1">
+						<div class="header-top grid items-center justify-between gap-1">
 							<span>{col.title ?? String(col.key)}</span>
 							{#if col.sortable}
 								<button
