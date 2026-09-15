@@ -17,7 +17,7 @@ const config = defineConfig({
 			extensions: ['.svelte', ...(mdsvexConfig.extensions ?? [])],
 			preprocess: [mdsvex(mdsvexConfig)],
 			compilerOptions: { experimental: { async: true }, modernAst: true },
-			adapter: adapter({ runtime: 'nodejs20.x' }),
+			adapter: adapter(),
 			experimental: { remoteFunctions: true, forkPreloads: true }
 		}),
 		kitRoutes()
